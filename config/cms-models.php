@@ -66,6 +66,33 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Model Analyzer
+    |--------------------------------------------------------------------------
+    |
+    | Settings for the analyzer that builds model information based on
+    | Eloquent models.
+    |
+    */
+
+    'analyzer' => [
+
+        'scopes' => [
+
+            // Scopes (without the scope prefix) to always ignore
+            'ignore' => [
+                'translatedIn',
+                'notTranslatedIn',
+                'translated',
+                'listsTranslations',
+                'withTranslation',
+                'whereTranslation',
+                'whereTranslationLike',
+            ],
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Controllers
     |--------------------------------------------------------------------------
     |

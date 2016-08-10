@@ -6,6 +6,7 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use LimitIterator;
 use phpDocumentor\Reflection\DocBlockFactory;
 use ReflectionMethod;
@@ -64,6 +65,7 @@ class ModelAnalyzer
              ->fillBasicInformation()
              ->analyzeAttributes()
              ->analyzeTraits()
+             ->analyzeScopes()
              ->analyzeRelationships();
 
         return $this->info;
@@ -206,27 +208,83 @@ class ModelAnalyzer
     }
 
     /**
+     * Analyzes the model's scopes.
+     *
+     * @return $this
+     */
+    protected function analyzeScopes()
+    {
+        $scopes = [];
+
+        foreach ($this->reflection->getMethods() as $method) {
+
+            if ( ! starts_with($method->name, 'scope')) {
+                continue;
+            }
+
+            $scopeName = camel_case(substr($method->name, 5));
+
+            $cmsTags = $this->getCmsDocBlockTags($method);
+
+            if (    array_get($cmsTags, 'ignore')
+                ||  in_array($scopeName, $this->getIgnoredScopeNames())
+            ) {
+                continue;
+            }
+
+            // store the scope name without the scope prefix
+            $scopes[] = $scopeName;
+        }
+
+        $this->info['scopes'] = $scopes;
+
+        return $this;
+    }
+
+    /**
      * Analyzes the model's relations.
      *
      * @return $this
      */
     protected function analyzeRelationships()
     {
+        $relations = [];
+
         foreach ($this->reflection->getMethods() as $method) {
 
-            // Relations should only be expected on the model itself
-            if ($method->getDeclaringClass()->name !== $this->class) {
+            if (
+                // Relations should only be expected on the model itself
+                    $method->getDeclaringClass()->name !== $this->class
+                // If the method has required parameters, we cannot call or use it
+                ||  $method->getNumberOfRequiredParameters()
+                // Skip anything that is not detected as a relation method
+                ||  ! $this->isReflectionMethodEloquentRelation($method)
+            ) {
                 continue;
             }
 
-            if ( ! $this->isReflectionMethodEloquentRelation($method)) {
+            // It's a relationship method; get information from method
+            try {
+                $relation = $this->model->{$method->name}();
+
+            } catch (\Exception $e) {
+                // If an exception occurs, ignore it and ignore the method
                 continue;
             }
 
-            // todo
-            // it's a relationship method; get information from method
+            if ( ! ($relation instanceof Relation)) {
+                continue;
+            }
+
+            $relations[ $method->name ] = [
+                'name'          => snake_case($method->name),
+                'method'        => $method->name,
+                'type'          => camel_case(class_basename($relation)),
+                'relationClass' => get_class($relation),
+                'relatedModel'  => get_class($relation->getRelated()),
+            ];
         }
-
+        
         return $this;
     }
 
@@ -241,33 +299,60 @@ class ModelAnalyzer
         // Check if there is a docblock cms tag
         // this may either 'ignore' the method, or confirm it as a 'relation'
 
-        if ($docBlock = $method->getDocComment()) {
-            $factory = DocBlockFactory::createInstance();
-            $doc     = $factory->create( $docBlock );
+        $cmsTags = $this->getCmsDocBlockTags($method);
 
-            $tags = $doc->getTagsByName('cms');
+        if (array_get($cmsTags, 'relation')) {
+            return true;
+        }
 
-            if ($tags && count($tags)) {
-                foreach ($tags as $tag) {
-
-                    $description = strtolower(trim($tag->getDescription()));
-
-                    if ($description == 'relation') {
-                        return true;
-                    } elseif ($description == 'ignore') {
-                        return false;
-                    }
-                }
-            }
+        if (array_get($cmsTags, 'ignore')) {
+            return false;
         }
 
         // analyze the method to see whether it is a relation
         $body = $this->getMethodBody($method);
 
-        var_dump($method->name);
-        dd($body);
+        return (bool) $this->findRelationMethodCall($body);
+    }
 
-        return false;
+    /**
+     * Returns associative array representing the CMS docblock tag content.
+     *
+     * @param ReflectionMethod $method
+     * @return array
+     */
+    protected function getCmsDocBlockTags(ReflectionMethod $method)
+    {
+        if ( ! ($docBlock = $method->getDocComment())) {
+            return [];
+        }
+
+        $factory = DocBlockFactory::createInstance();
+        $doc     = $factory->create( $docBlock );
+
+        $tags = $doc->getTagsByName('cms');
+
+        if ( ! $tags || ! count($tags)) {
+            return [];
+        }
+
+        $cmsTags = [];
+
+        foreach ($tags as $tag) {
+            $description = strtolower(trim($tag->getDescription()));
+
+            if ($description == 'relation') {
+                $cmsTags['relation'] = true;
+                continue;
+            }
+
+            if ($description == 'ignore') {
+                $cmsTags['ignore'] = true;
+                continue;
+            }
+        }
+
+        return $cmsTags;
     }
 
     /**
@@ -291,6 +376,67 @@ class ModelAnalyzer
         );
 
         return implode("\n", $methodBodyLines);
+    }
+
+    /**
+     * Attempts to find the relation method call in a string method body.
+     *
+     * This looks for $this->belongsTo(...) and the like.
+     *
+     * @param string $methodBody
+     * @return string|false
+     */
+    protected function findRelationMethodCall($methodBody)
+    {
+        $methodBody = trim(str_replace("\n", '', $methodBody));
+
+        // find the last potential relation method opener and position
+        $foundOpener  = null;
+        $lastPosition = -1;
+
+        foreach ($this->relationMethodCallOpeners() as $opener) {
+
+            if (    false === ($pos = strrpos($methodBody, $opener))
+                ||  $pos <= $lastPosition
+            ) {
+                continue;
+            }
+
+            $foundOpener  = $opener;
+            $lastPosition = $pos;
+        }
+
+
+        if ( ! $foundOpener || $lastPosition < 0) {
+            return false;
+        }
+
+        // todo further checks to prevent false positives
+        // use https://github.com/nikic/PHP-Parser/
+
+        return $foundOpener;
+    }
+
+    /**
+     * Returns openers for relation instance Eloquent calls.
+     *
+     * If these are found in a method body, the method may be a relation method.
+     *
+     * @return string[]
+     */
+    protected function relationMethodCallOpeners()
+    {
+        return [
+            "\$this->hasOne(",
+            "\$this->hasMany(",
+            "\$this->belongsTo(",
+            "\$this->belongsToMany(",
+            "\$this->morphTo(",
+            "\$this->morphOne(",
+            "\$this->morphMany(",
+
+            "\$this->belongsToThrough(",
+        ];
     }
 
 
@@ -320,4 +466,13 @@ class ModelAnalyzer
         return $this;
     }
 
+    /**
+     * Returns list of scope names to ignore.
+     *
+     * @return string[]
+     */
+    protected function getIgnoredScopeNames()
+    {
+        return config('cms-models.analyzer.scopes.ignore', []);
+    }
 }
