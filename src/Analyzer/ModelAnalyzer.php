@@ -5,6 +5,7 @@ use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use LimitIterator;
@@ -227,7 +228,9 @@ class ModelAnalyzer
             $cmsTags = $this->getCmsDocBlockTags($method);
 
             if (    array_get($cmsTags, 'ignore')
-                ||  in_array($scopeName, $this->getIgnoredScopeNames())
+                ||  (   ! array_get($cmsTags, 'scope')
+                    &&  in_array($scopeName, $this->getIgnoredScopeNames() )
+                )
             ) {
                 continue;
             }
@@ -255,6 +258,8 @@ class ModelAnalyzer
             if (
                 // Relations should only be expected on the model itself
                     $method->getDeclaringClass()->name !== $this->class
+                // Check if we should ignore the method always
+                ||  in_array($method->name, $this->getIgnoredRelationNames())
                 // If the method has required parameters, we cannot call or use it
                 ||  $method->getNumberOfRequiredParameters()
                 // Skip anything that is not detected as a relation method
@@ -267,7 +272,7 @@ class ModelAnalyzer
             try {
                 $relation = $this->model->{$method->name}();
 
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // If an exception occurs, ignore it and ignore the method
                 continue;
             }
@@ -284,6 +289,8 @@ class ModelAnalyzer
                 'relatedModel'  => get_class($relation->getRelated()),
             ];
         }
+
+        $this->info['relations'] = $relations;
         
         return $this;
     }
@@ -343,6 +350,11 @@ class ModelAnalyzer
 
             if ($description == 'relation') {
                 $cmsTags['relation'] = true;
+                continue;
+            }
+
+            if ($description == 'scope') {
+                $cmsTags['scope'] = true;
                 continue;
             }
 
@@ -474,5 +486,15 @@ class ModelAnalyzer
     protected function getIgnoredScopeNames()
     {
         return config('cms-models.analyzer.scopes.ignore', []);
+    }
+
+    /**
+     * Returns list of relation names to ignore.
+     *
+     * @return mixed
+     */
+    protected function getIgnoredRelationNames()
+    {
+        return config('cms-models.analyzer.relations.ignore', []);
     }
 }

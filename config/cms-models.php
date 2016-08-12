@@ -89,6 +89,14 @@ return [
                 'whereTranslationLike',
             ],
         ],
+
+        'relations' => [
+
+            // Relations to always ignore
+            'ignore' => [
+                'translations',
+            ],
+        ],
     ],
 
     /*
