@@ -5,6 +5,9 @@ use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\Support\Data\ModelRelationData;
+use Czim\CmsModels\Support\Data\ModelScopeData;
+use Czim\CmsModels\Support\Enums\AttributeCast;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -20,6 +23,16 @@ class ModelAnalyzer
      * @var DatabaseAnalyzerInterface
      */
     protected $databaseAnalyzer;
+
+    /**
+     * @var AttributeStrategyResolver
+     */
+    protected $attributeStrategyResolver;
+
+    /**
+     * @var RelationStrategyResolver
+     */
+    protected $relationStrategyResolver;
 
     /**
      * @var string
@@ -44,10 +57,17 @@ class ModelAnalyzer
 
     /**
      * @param DatabaseAnalyzerInterface $databaseAnalyzer
+     * @param AttributeStrategyResolver $attributeStrategyResolver
+     * @param RelationStrategyResolver  $relationStrategyResolver
      */
-    public function __construct(DatabaseAnalyzerInterface $databaseAnalyzer)
-    {
-        $this->databaseAnalyzer = $databaseAnalyzer;
+    public function __construct(
+        DatabaseAnalyzerInterface $databaseAnalyzer,
+        AttributeStrategyResolver $attributeStrategyResolver,
+        RelationStrategyResolver $relationStrategyResolver
+    ) {
+        $this->databaseAnalyzer          = $databaseAnalyzer;
+        $this->attributeStrategyResolver = $attributeStrategyResolver;
+        $this->relationStrategyResolver  = $relationStrategyResolver;
     }
 
     /**
@@ -108,7 +128,7 @@ class ModelAnalyzer
 
         foreach ($tableFields as $field) {
 
-            $cast = $this->getAttributeTypeForColumnType($field['type']);
+            $cast = $this->getAttributeCastForColumnType($field['type']);
 
             $attributes[ $field['name'] ] = new ModelAttributeData([
                 'name'     => $field['name'],
@@ -131,6 +151,10 @@ class ModelAnalyzer
             $attributes[ $attribute ]['cast'] = $cast;
         }
 
+        foreach ($attributes as $attribute) {
+            $attribute['strategy'] = $this->attributeStrategyResolver->determineStrategy($attribute);
+        }
+
         $this->info['attributes'] = $attributes;
 
         return $this;
@@ -141,29 +165,31 @@ class ModelAnalyzer
      * @param null   $length
      * @return string
      */
-    protected function getAttributeTypeForColumnType($type, $length = null)
+    protected function getAttributeCastForColumnType($type, $length = null)
     {
         switch ($type) {
 
             case 'bool':
+                return AttributeCast::BOOLEAN;
+
             case 'tinyint':
                 if ($length === 1) {
-                    return 'boolean';
+                    return AttributeCast::BOOLEAN;
                 }
-                return 'int';
+                return AttributeCast::INTEGER;
 
             case 'int':
             case 'integer':
             case 'mediumint':
             case 'smallint':
             case 'bigint':
-                return 'int';
+                return AttributeCast::INTEGER;
 
             case 'dec':
             case 'decimal':
             case 'double':
             case 'float':
-                return 'float';
+                return AttributeCast::FLOAT;
 
             case 'varchar':
             case 'char':
@@ -178,13 +204,13 @@ class ModelAnalyzer
             case 'longblob';
             case 'binary';
             case 'varbinary';
-                return 'string';
+                return AttributeCast::STRING;
 
             case 'date':
             case 'datetime':
             case 'time':
             case 'timestamp':
-                return 'date';
+                return AttributeCast::DATE;
 
             default:
                 return $type;
@@ -236,7 +262,11 @@ class ModelAnalyzer
             }
 
             // store the scope name without the scope prefix
-            $scopes[] = $scopeName;
+            $scopes[] = new ModelScopeData([
+                'method'   => $scopeName,
+                'label'    => $scopeName,
+                'strategy' => null,
+            ]);
         }
 
         $this->info['scopes'] = $scopes;
@@ -281,13 +311,17 @@ class ModelAnalyzer
                 continue;
             }
 
-            $relations[ $method->name ] = [
+            $relations[ $method->name ] = new ModelRelationData([
                 'name'          => snake_case($method->name),
                 'method'        => $method->name,
                 'type'          => camel_case(class_basename($relation)),
                 'relationClass' => get_class($relation),
                 'relatedModel'  => get_class($relation->getRelated()),
-            ];
+            ]);
+        }
+
+        foreach ($relations as $relation) {
+            $relation['strategy_form'] = $this->relationStrategyResolver->determineFormStrategy($relation);
         }
 
         $this->info['relations'] = $relations;
