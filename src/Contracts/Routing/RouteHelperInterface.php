@@ -7,6 +7,13 @@ interface RouteHelperInterface
 {
 
     /**
+     * Returns whether the current route is for handling a model.
+     *
+     * @return bool
+     */
+    public function isModelRoute();
+
+    /**
      * Returns the model module key for the current route.
      *
      * @return false|string     false if this is not a model module route

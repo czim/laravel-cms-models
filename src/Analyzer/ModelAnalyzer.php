@@ -25,6 +25,11 @@ class ModelAnalyzer
     protected $databaseAnalyzer;
 
     /**
+     * @var TranslationAnalyzer
+     */
+    protected $translationAnalyzer;
+
+    /**
      * @var AttributeStrategyResolver
      */
     protected $attributeStrategyResolver;
@@ -57,17 +62,22 @@ class ModelAnalyzer
 
     /**
      * @param DatabaseAnalyzerInterface $databaseAnalyzer
+     * @param TranslationAnalyzer       $translationAnalyzer
      * @param AttributeStrategyResolver $attributeStrategyResolver
      * @param RelationStrategyResolver  $relationStrategyResolver
      */
     public function __construct(
         DatabaseAnalyzerInterface $databaseAnalyzer,
+        TranslationAnalyzer $translationAnalyzer,
         AttributeStrategyResolver $attributeStrategyResolver,
         RelationStrategyResolver $relationStrategyResolver
     ) {
         $this->databaseAnalyzer          = $databaseAnalyzer;
+        $this->translationAnalyzer       = $translationAnalyzer;
         $this->attributeStrategyResolver = $attributeStrategyResolver;
         $this->relationStrategyResolver  = $relationStrategyResolver;
+
+        $this->translationAnalyzer->setModelAnalyzer(clone $this);
     }
 
     /**
@@ -87,7 +97,8 @@ class ModelAnalyzer
              ->analyzeAttributes()
              ->analyzeTraits()
              ->analyzeScopes()
-             ->analyzeRelationships();
+             ->analyzeRelationships()
+             ->analyzeTranslation();
 
         return $this->info;
     }
@@ -103,7 +114,7 @@ class ModelAnalyzer
         $this->info['model']          = $this->class;
         $this->info['original_model'] = $this->class;
 
-        $this->info['verbose_name']        = strtolower(class_basename($this->model));
+        $this->info['verbose_name']        = strtolower(snake_case(class_basename($this->model), ' '));
         $this->info['verbose_name_plural'] = str_plural($this->info['verbose_name']);
 
         $this->info['incrementing']      = $this->model->getIncrementing();
@@ -326,6 +337,33 @@ class ModelAnalyzer
 
         $this->info['relations'] = $relations;
         
+        return $this;
+    }
+
+    /**
+     * Analyzes the related translation, if this model is translated.
+     *
+     * @return $this
+     */
+    protected function analyzeTranslation()
+    {
+        if ($this->info->translated) {
+
+            $translationInfo = $this->translationAnalyzer->analyze($this->model);
+
+            $attributes = $this->info['attributes'];
+
+            // Mark the fillable fields on the translation model
+            foreach ($translationInfo['attributes'] as $key => $attribute) {
+                /** @var ModelAttributeData $attribute */
+                if ( ! $attribute->translated || ! isset($attributes[$key])) continue;
+
+                $attributes[$key]['translated'] = true;
+            }
+
+            $this->info['attributes'] = $attributes;
+        }
+
         return $this;
     }
 

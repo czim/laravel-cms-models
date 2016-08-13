@@ -4,9 +4,12 @@ namespace Czim\CmsModels\Providers;
 use Czim\CmsModels\Analyzer\DatabaseAnalyzer;
 use Czim\CmsModels\Console\Commands\ClearModelInformationCache;
 use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
+use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationCollectorInterface;
+use Czim\CmsModels\Contracts\Repositories\CurrentModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
+use Czim\CmsModels\Repositories\CurrentModelInformation;
 use Czim\CmsModels\Repositories\ModelInformationRepository;
 use Czim\CmsModels\Support\Routing\RouteHelper;
 use Illuminate\Support\ServiceProvider;
@@ -75,9 +78,12 @@ class CmsModelsServiceProvider extends ServiceProvider
     protected function registerInterfaceBindings()
     {
         $this->app->singleton(ModelInformationRepositoryInterface::class, ModelInformationRepository::class);
+        $this->app->singleton(CurrentModelInformationInterface::class, CurrentModelInformation::class);
         $this->app->singleton(RouteHelperInterface::class, RouteHelper::class);
-
         $this->app->singleton(DatabaseAnalyzerInterface::class, DatabaseAnalyzer::class);
+
+        // Register facade names
+        $this->app->bind('cms-models-modelinfo', CurrentModelInformationInterface::class);
 
         return $this;
     }

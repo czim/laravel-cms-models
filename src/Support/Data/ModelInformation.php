@@ -9,7 +9,21 @@ use Czim\DataObject\AbstractDataObject;
  *
  * Data container that represents model information for the model module generator.
  *
- * @property string $model_class
+ * @property string $model
+ * @property string $original_model
+ * @property array $meta
+ * @property string $verbose_name
+ * @property string $verbose_name_plural
+ * @property bool $single
+ * @property bool $allow_delete
+ * @property mixed $delete_condition
+ * @property string $reference
+ * @property bool $incrementing
+ * @property bool $timestamps
+ * @property string $timestamp_created
+ * @property string $timestamp_updated
+ * @property bool $translated
+ * @property string $translation_strategy
  */
 class ModelInformation extends AbstractDataObject implements ModelInformationInterface
 {

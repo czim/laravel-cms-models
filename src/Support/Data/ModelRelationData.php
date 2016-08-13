@@ -12,6 +12,7 @@ use Czim\DataObject\AbstractDataObject;
  * @property string $type
  * @property string $relationClass
  * @property string $relatedModel
+ * @property string[] $morphModels
  * @property string $strategy
  * @property string $strategy_form
  * @property string $strategy_list
@@ -32,6 +33,9 @@ class ModelRelationData extends AbstractDataObject
 
         // Related model class name
         'relatedModel' => '',
+
+        // Related model classnames  for polymorphic relations
+        'morphModels' => [],
 
         // General strategy for treating or displaying attribute
         'strategy' => '',
