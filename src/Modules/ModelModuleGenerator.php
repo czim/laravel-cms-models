@@ -6,6 +6,7 @@ use Czim\CmsCore\Contracts\Modules\ModuleInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
+use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Illuminate\Support\Collection;
 
 class ModelModuleGenerator implements ModuleGeneratorInterface
@@ -16,13 +17,20 @@ class ModelModuleGenerator implements ModuleGeneratorInterface
      */
     protected $repository;
 
+    /**
+     * @var ModuleHelperInterface
+     */
+    protected $moduleHelper;
+
 
     /**
      * @param ModelInformationRepositoryInterface $repository
+     * @param ModuleHelperInterface               $moduleHelper
      */
-    public function __construct(ModelInformationRepositoryInterface $repository)
+    public function __construct(ModelInformationRepositoryInterface $repository, ModuleHelperInterface $moduleHelper)
     {
-        $this->repository = $repository;
+        $this->repository   = $repository;
+        $this->moduleHelper = $moduleHelper;
     }
 
 
@@ -57,6 +65,7 @@ class ModelModuleGenerator implements ModuleGeneratorInterface
 
         $module = new ModelModule(
             app(ModelInformationRepositoryInterface::class),
+            $this->moduleHelper,
             app(RouteHelperInterface::class),
             $this->makeModuleKey($modelClass),
             $this->makeModuleName($modelClass)
@@ -73,7 +82,7 @@ class ModelModuleGenerator implements ModuleGeneratorInterface
      */
     protected function makeModuleKey($modelClass)
     {
-        return 'models.' . strtolower(str_replace('\\', '-', $modelClass));
+        return 'models.' . $this->moduleHelper->moduleKeyForModel($modelClass);
     }
 
     /**

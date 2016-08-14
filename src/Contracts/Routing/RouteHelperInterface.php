@@ -72,4 +72,19 @@ interface RouteHelperInterface
      */
     public function getRouteSlugForModelClass($modelClass);
 
+    /**
+     * Returns the full permission prefix for a model module's key.
+     *
+     * @param string $key    module key to add to the prefix
+     * @return string
+     */
+    public function getPermissionPrefixForModuleKey($key);
+
+    /**
+     * Returns the full permission prefix for the current route's model.
+     *
+     * @return string|false
+     */
+    public function getPermissionPrefixForCurrentRoute();
+
 }

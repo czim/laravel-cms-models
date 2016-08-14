@@ -25,8 +25,8 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
  * @property bool $translated
  * @property string $translation_strategy
  * @property array|ModelIncludesData $includes
- * @property array|ModelAttributeData $attributes
- * @property array|ModelRelationData $relations
+ * @property array|ModelAttributeData[] $attributes
+ * @property array|ModelRelationData[] $relations
  * @property array|ModelListData $list
  * @property array|ModelFormData $form
  * @property array $validation
@@ -38,6 +38,8 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
     protected $objects = [
         'meta'     => ModelMetaData::class,
         'includes' => ModelIncludesData::class,
+        'list'     => ModelListData::class,
+        'form'     => ModelFormData::class,
     ];
 
     protected $attributes = [

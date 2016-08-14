@@ -9,8 +9,10 @@ use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationCollectorIn
 use Czim\CmsModels\Contracts\Repositories\CurrentModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
+use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Repositories\CurrentModelInformation;
 use Czim\CmsModels\Repositories\ModelInformationRepository;
+use Czim\CmsModels\Support\ModuleHelper;
 use Czim\CmsModels\Support\Routing\RouteHelper;
 use Illuminate\Support\ServiceProvider;
 use Czim\CmsCore\Contracts\Core\CoreInterface;
@@ -37,6 +39,7 @@ class CmsModelsServiceProvider extends ServiceProvider
 
         $this->registerConfig()
              ->registerCommands()
+             ->loadViews()
              ->registerInterfaceBindings()
              ->registerConfiguredCollector();
     }
@@ -71,6 +74,21 @@ class CmsModelsServiceProvider extends ServiceProvider
     }
 
     /**
+     * Loads basic CMS views.
+     *
+     * @return $this
+     */
+    protected function loadViews()
+    {
+        $this->loadViewsFrom(
+            realpath(dirname(__DIR__) . '/../resources/views'),
+            'cms-models'
+        );
+
+        return $this;
+    }
+
+    /**
      * Binds the model information collector.
      *
      * @return $this
@@ -80,6 +98,7 @@ class CmsModelsServiceProvider extends ServiceProvider
         $this->app->singleton(ModelInformationRepositoryInterface::class, ModelInformationRepository::class);
         $this->app->singleton(CurrentModelInformationInterface::class, CurrentModelInformation::class);
         $this->app->singleton(RouteHelperInterface::class, RouteHelper::class);
+        $this->app->singleton(ModuleHelperInterface::class, ModuleHelper::class);
         $this->app->singleton(DatabaseAnalyzerInterface::class, DatabaseAnalyzer::class);
 
         // Register facade names

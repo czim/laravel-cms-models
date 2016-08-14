@@ -145,6 +145,31 @@ class RouteHelper implements RouteHelperInterface
     }
 
     /**
+     * Returns the full permission prefix for a model module's key.
+     *
+     * @param string $key    module key to add to the prefix
+     * @return string
+     */
+    public function getPermissionPrefixForModuleKey($key)
+    {
+        return "models.{$key}.";
+    }
+
+    /**
+     * Returns the full permission prefix for the current route's model.
+     *
+     * @return string|false
+     */
+    public function getPermissionPrefixForCurrentRoute()
+    {
+        $moduleKey = $this->getModuleKeyForCurrentRoute();
+
+        if ( ! $moduleKey) return false;
+
+        return $this->getPermissionPrefixForModuleKey($moduleKey);
+    }
+
+    /**
      * Returns the model module key for a model route name segment.
      *
      * @param string $nameSegment

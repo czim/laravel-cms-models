@@ -8,6 +8,7 @@ use Czim\CmsCore\Support\Enums\AclPresenceType;
 use Czim\CmsCore\Support\Enums\MenuPresenceType;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
+use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Illuminate\Routing\Router;
 
@@ -46,6 +47,11 @@ class ModelModule implements ModuleInterface
     protected $repository;
 
     /**
+     * @var ModuleHelperInterface
+     */
+    protected $moduleHelper;
+
+    /**
      * @var RouteHelperInterface
      */
     protected $routeHelper;
@@ -53,20 +59,23 @@ class ModelModule implements ModuleInterface
 
     /**
      * @param ModelInformationRepositoryInterface $repository
+     * @param ModuleHelperInterface               $moduleHelper
      * @param RouteHelperInterface                $routeHelper
      * @param string                              $key
      * @param string|null                         $name
      */
     public function __construct(
         ModelInformationRepositoryInterface $repository,
+        ModuleHelperInterface $moduleHelper,
         RouteHelperInterface $routeHelper,
         $key,
         $name = null
     ) {
-        $this->repository  = $repository;
-        $this->routeHelper = $routeHelper;
-        $this->key         = $key;
-        $this->name        = $name;
+        $this->repository   = $repository;
+        $this->moduleHelper = $moduleHelper;
+        $this->routeHelper  = $routeHelper;
+        $this->key          = $key;
+        $this->name         = $name;
     }
 
 
@@ -129,16 +138,17 @@ class ModelModule implements ModuleInterface
      */
     public function mapWebRoutes(Router $router)
     {
+        $permissionPrefix = $this->routeHelper->getPermissionPrefixForModuleKey($this->key);
+
         $router->group(
             [
                 'prefix'    => $this->getRoutePrefix(),
                 'as'        => $this->getRouteNamePrefix(),
-                'middleware' => [ cms_mw_permission('models.' . $this->getRouteSlug()  . '*') ],
+                'middleware' => [ cms_mw_permission("{$permissionPrefix}*") ],
             ],
-            function (Router $router) {
+            function (Router $router) use ($permissionPrefix) {
 
-                $controller     = $this->getModelWebController();
-                $permissionSlug = $this->getRouteSlug();
+                $controller = $this->getModelWebController();
 
                 $router->get('/', [
                     'as'   => 'index',
@@ -147,13 +157,13 @@ class ModelModule implements ModuleInterface
 
                 $router->get('create', [
                     'as'         => 'create',
-                    'middleware' => [cms_mw_permission("models.users.{$permissionSlug}.create")],
+                    'middleware' => [cms_mw_permission("{$permissionPrefix}reate")],
                     'uses'       => $controller . '@create',
                 ]);
 
                 $router->post('/', [
                     'as'         => 'store',
-                    'middleware' => [cms_mw_permission("models.users.{$permissionSlug}.create")],
+                    'middleware' => [cms_mw_permission("{$permissionPrefix}create")],
                     'uses'       => $controller . '@store',
                 ]);
 
@@ -164,19 +174,19 @@ class ModelModule implements ModuleInterface
 
                 $router->get('{key}/edit', [
                     'as'         => 'edit',
-                    'middleware' => [cms_mw_permission("models.users.{$permissionSlug}.edit")],
+                    'middleware' => [cms_mw_permission("{$permissionPrefix}edit")],
                     'uses'       => $controller . '@edit',
                 ]);
 
                 $router->put('{key}', [
                     'as'         => 'update',
-                    'middleware' => [cms_mw_permission("models.users.{$permissionSlug}.edit")],
+                    'middleware' => [cms_mw_permission("{$permissionPrefix}edit")],
                     'uses'       => $controller . '@update',
                 ]);
 
                 $router->delete('{key}', [
                     'as'         => 'destroy',
-                    'middleware' => [cms_mw_permission("models.users.{$permissionSlug}.delete")],
+                    'middleware' => [cms_mw_permission("{$permissionPrefix}delete")],
                     'uses'       => $controller . '@destroy',
                 ]);
             }
@@ -191,13 +201,15 @@ class ModelModule implements ModuleInterface
      */
     public function mapApiRoutes(Router $router)
     {
+        $permissionPrefix = $this->routeHelper->getPermissionPrefixForModuleKey($this->key);
+
         $router->group(
             [
                 'prefix'     => $this->getRoutePrefix(),
                 'as'         => $this->getRouteNamePrefix(),
-                'middleware' => [ cms_mw_permission('models.' . $this->getRouteSlug()  . '*') ],
+                'middleware' => [ cms_mw_permission("{$permissionPrefix}*") ],
             ],
-            function (Router $router) {
+            function (Router $router) use ($permissionPrefix) {
 
                 $controller     = $this->getModelApiController();
                 $permissionSlug = $this->getRouteSlug();
@@ -209,13 +221,13 @@ class ModelModule implements ModuleInterface
 
                 $router->get('create', [
                     'as'         => 'create',
-                    'middleware' => [cms_mw_permission("models.users.{$permissionSlug}.create")],
+                    'middleware' => [cms_mw_permission("{$permissionPrefix}create")],
                     'uses'       => $controller . '@create',
                 ]);
 
                 $router->post('/', [
                     'as'         => 'store',
-                    'middleware' => [cms_mw_permission("models.users.{$permissionSlug}.create")],
+                    'middleware' => [cms_mw_permission("{$permissionPrefix}create")],
                     'uses'       => $controller . '@store',
                 ]);
 
@@ -226,19 +238,19 @@ class ModelModule implements ModuleInterface
 
                 $router->get('{key}/edit', [
                     'as'         => 'edit',
-                    'middleware' => [cms_mw_permission("models.users.{$permissionSlug}.edit")],
+                    'middleware' => [cms_mw_permission("{$permissionPrefix}edit")],
                     'uses'       => $controller . '@edit',
                 ]);
 
                 $router->put('{key}', [
                     'as'         => 'update',
-                    'middleware' => [cms_mw_permission("models.users.{$permissionSlug}.edit")],
+                    'middleware' => [cms_mw_permission("{$permissionPrefix}edit")],
                     'uses'       => $controller . '@update',
                 ]);
 
                 $router->delete('{key}', [
                     'as'         => 'destroy',
-                    'middleware' => [cms_mw_permission("models.users.{$permissionSlug}.delete")],
+                    'middleware' => [cms_mw_permission("{$permissionPrefix}delete")],
                     'uses'       => $controller . '@destroy',
                 ]);
             }
@@ -377,6 +389,5 @@ class ModelModule implements ModuleInterface
     {
         return $this->routeHelper->getRouteSlugForModelClass($this->class);
     }
-
 
 }

@@ -7,6 +7,17 @@ use Czim\CmsCore\Support\Data\AbstractDataObject;
  * Class ModelListInformation
  *
  * Data container that represents list representation for the model.
+ *
+ * @property int|array $page_size
+ * @property array|ModelListColumnData[] $columns
+ * @property array|ModelListFilterData[] $filters
+ * @property array|ModelIncludesData $includes
+ * @property array|ModelScopeData[] $scopes
+ * @property string|array $default_sort
+ * @property bool $orderable
+ * @property string $order_strategy
+ * @property bool $activatable
+ * @property string $active_column
  */
 class ModelListData extends AbstractDataObject
 {
@@ -14,7 +25,7 @@ class ModelListData extends AbstractDataObject
     protected $objects = [
         'columns'  => ModelListColumnData::class . '[]',
         'filters'  => ModelListFilterData::class . '[]',
-        'includes' => ModelMetaData::class,
+        'includes' => ModelIncludesData::class,
     ];
 
     protected $attributes = [
