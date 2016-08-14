@@ -356,9 +356,16 @@ class ModelAnalyzer
             // Mark the fillable fields on the translation model
             foreach ($translationInfo['attributes'] as $key => $attribute) {
                 /** @var ModelAttributeData $attribute */
-                if ( ! $attribute->translated || ! isset($attributes[$key])) continue;
+                if ( ! $attribute->translated) continue;
 
-                $attributes[$key]['translated'] = true;
+                if ( ! isset($attributes[$key])) {
+                    $attributes[$key] = $attribute;
+                }
+
+                /** @var ModelAttributeData $attributeData */
+                $attributeData = $attributes[$key];
+                $attributeData->merge($attribute);
+                $attributes[$key] = $attributeData;
             }
 
             $this->info['attributes'] = $attributes;

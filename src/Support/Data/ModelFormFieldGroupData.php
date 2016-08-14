@@ -1,22 +1,32 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\DataObject\AbstractDataObject;
+use Czim\CmsCore\Support\Data\AbstractDataObject;
 
 /**
  * Class ModelFormFieldData
  *
  * Data container that describes an (in-row) group of editable fields on a model's edit form.
- * This
+ *
+ * @property bool $in_row
+ * @property bool $create
+ * @property bool $update
+ * @property string $label
+ * @property string $type
+ * @property string $presenter
+ * @property array|ModelFormFieldData[]
  */
 class ModelFormFieldGroupData extends AbstractDataObject
 {
+    protected $objects = [
+        'fields' => ModelFormFieldData::class . '[]',
+    ];
 
     protected $attributes = [
 
         // Whether this is a group for fields within the same form row.
         // If false, forms a normal multi-row form group
-        'in-row' => true,
+        'in_row' => true,
 
         // Whether the field should be present on a create form
         'create' => true,

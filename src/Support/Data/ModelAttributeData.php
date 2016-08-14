@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\DataObject\AbstractDataObject;
+use Czim\CmsCore\Support\Data\AbstractDataObject;
 
 /**
  * Class ModelAttributeData
@@ -31,10 +31,10 @@ class ModelAttributeData extends AbstractDataObject
         'name' => '',
 
         // Cast type of attribute
-        'cast' => 'string',
+        'cast' => '',
 
         // Database type of attribute
-        'type' => 'varchar',
+        'type' => '',
 
         // General strategy for treating or displaying attribute
         'strategy' => '',
@@ -65,5 +65,35 @@ class ModelAttributeData extends AbstractDataObject
         'values' => [],
 
     ];
+
+
+    /**
+     * @param ModelAttributeData $data
+     */
+    public function merge(ModelAttributeData $data)
+    {
+        $mergeEmptyAttributes = [
+            'name',
+            'cast',
+            'type',
+            'strategy',
+            'strategy_form',
+            'strategy_list',
+        ];
+
+        foreach ($mergeEmptyAttributes as $key) {
+            if ( ! empty($this[$key])) continue;
+
+            $this->mergeAttribute($key, $data[$key]);
+        }
+    }
+
+    /**
+     * @param ModelAttributeData $data
+     */
+    public function mergeTranslation(ModelAttributeData $data)
+    {
+        $this->merge($data);
+    }
 
 }

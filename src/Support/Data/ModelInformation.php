@@ -1,8 +1,8 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
+use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
-use Czim\DataObject\AbstractDataObject;
 
 /**
  * Class ModelInformation
@@ -11,7 +11,7 @@ use Czim\DataObject\AbstractDataObject;
  *
  * @property string $model
  * @property string $original_model
- * @property array $meta
+ * @property array|ModelMetaData $meta
  * @property string $verbose_name
  * @property string $verbose_name_plural
  * @property bool $single
@@ -24,9 +24,21 @@ use Czim\DataObject\AbstractDataObject;
  * @property string $timestamp_updated
  * @property bool $translated
  * @property string $translation_strategy
+ * @property array|ModelIncludesData $includes
+ * @property array|ModelAttributeData $attributes
+ * @property array|ModelRelationData $relations
+ * @property array|ModelListData $list
+ * @property array|ModelFormData $form
+ * @property array $validation
+ * @property array $export
  */
 class ModelInformation extends AbstractDataObject implements ModelInformationInterface
 {
+
+    protected $objects = [
+        'meta'     => ModelMetaData::class,
+        'includes' => ModelIncludesData::class,
+    ];
 
     protected $attributes = [
 
@@ -35,6 +47,7 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
         // FQN Even if model_class isn't this should always be the original Model described
         'original_model' => null,
 
+        // Instance of ModelMetaData
         'meta' => [
             // FQN for the controller class to handle the model's web & API presence
             'controller' => null,
@@ -84,7 +97,7 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
         // The strategy by which the model is translated. For now, this should always be 'translatable'.
         'translation_strategy' => 'translatable',
 
-        // Includes for model eager loading
+        // Includes for model eager loading, instance of ModelIncludesData
         'includes' => [
             // List of default includes to use for loading a model
             'default' => [],
@@ -100,8 +113,9 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
         'relations' => [],
 
 
-        // Settings for rendering the index/listing of records for this model
+        // Settings for rendering the index/listing of records for this model, ModelListData
         'list' => [
+
             // Arrays (instances of ModelListColumnData) with information about a single column.
             // These should appear in the order in which they should be displayed, and exclude standard/global list columns.
             // The entries should be keyed with an identifiying string that may be referred to by other list options.
@@ -199,6 +213,15 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
     public function labelPlural()
     {
         return $this->getAttribute('verbose_name_plural');
+    }
+
+    /**
+     * @param ModelInformationInterface|ModelInformation $with
+     */
+    public function merge(ModelInformationInterface $with)
+    {
+        if (empty($this->model)) $this->model = $with->model;
+        if (empty($this->original_model)) $this->original_model = $with->original_model;
     }
 
 }

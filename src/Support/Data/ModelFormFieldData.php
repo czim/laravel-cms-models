@@ -1,12 +1,22 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\DataObject\AbstractDataObject;
+use Czim\CmsCore\Support\Data\AbstractDataObject;
 
 /**
  * Class ModelFormFieldData
  *
  * Data container that describes an editable field on a model's create/update form
+ *
+ * @property string $key
+ * @property bool $create
+ * @property bool $update
+ * @property string $label
+ * @property string $source
+ * @property string $type
+ * @property string $presenter
+ * @property string $style
+
  */
 class ModelFormFieldData extends AbstractDataObject
 {

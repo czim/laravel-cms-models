@@ -76,6 +76,10 @@ return [
 
     'analyzer' => [
 
+        'attributes' => [
+
+        ],
+
         'scopes' => [
 
             // Scopes (without the scope prefix) to always ignore

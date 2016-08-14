@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\DataObject\AbstractDataObject;
+use Czim\CmsCore\Support\Data\AbstractDataObject;
 
 /**
  * Class ModelListFilterInformation
