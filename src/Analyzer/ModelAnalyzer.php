@@ -139,7 +139,9 @@ class ModelAnalyzer
 
         foreach ($tableFields as $field) {
 
-            $cast = $this->getAttributeCastForColumnType($field['type']);
+            $length = $field['length'];
+
+            $cast = $this->getAttributeCastForColumnType($field['type'], $length);
 
             $attributes[ $field['name'] ] = new ModelAttributeData([
                 'name'     => $field['name'],
@@ -147,7 +149,7 @@ class ModelAnalyzer
                 'type'     => $field['type'],
                 'nullable' => $field['nullable'],
                 'unsigned' => $field['unsigned'],
-                'length'   => $field['length'],
+                'length'   => $length,
                 'values'   => $field['values'],
             ]);
         }
