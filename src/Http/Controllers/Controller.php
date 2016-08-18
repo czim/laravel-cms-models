@@ -10,7 +10,6 @@ use Czim\CmsModels\Support\Data\ModelInformation;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use RuntimeException;
 
 abstract class Controller extends BaseController
 {
@@ -34,7 +33,7 @@ abstract class Controller extends BaseController
     /**
      * @var ModelInformationRepositoryInterface
      */
-    protected $repository;
+    protected $infoRepository;
 
     /**
      * @var string
@@ -62,36 +61,18 @@ abstract class Controller extends BaseController
      * @param CoreInterface                       $core
      * @param AuthenticatorInterface              $auth
      * @param RouteHelperInterface                $routeHelper
-     * @param ModelInformationRepositoryInterface $repository
+     * @param ModelInformationRepositoryInterface $infoRepository
      */
     public function __construct(
         CoreInterface $core,
         AuthenticatorInterface $auth,
         RouteHelperInterface $routeHelper,
-        ModelInformationRepositoryInterface $repository
+        ModelInformationRepositoryInterface $infoRepository
     ) {
-        $this->core        = $core;
-        $this->auth        = $auth;
-        $this->routeHelper = $routeHelper;
-        $this->repository  = $repository;
-
-        $this->moduleKey        = $this->routeHelper->getModuleKeyForCurrentRoute();
-        $this->permissionPrefix = $this->routeHelper->getPermissionPrefixForModuleKey($this->moduleKey);
-
-        if ( ! $this->moduleKey) {
-            throw new RuntimeException("Could not determine module key for route");
-        }
-
-        $this->modelInformation = $this->repository->getByKey($this->moduleKey);
-
-        if ( ! $this->modelInformation) {
-            throw new RuntimeException("Could not load information for module key '{$this->moduleKey}'");
-        }
-
-        $this->routePrefix = $this->routeHelper->getRouteNameForModelClass(
-            $this->modelInformation->modelClass(),
-            true
-        );
+        $this->core           = $core;
+        $this->auth           = $auth;
+        $this->routeHelper    = $routeHelper;
+        $this->infoRepository = $infoRepository;
     }
 
 }
