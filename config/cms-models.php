@@ -131,6 +131,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Display Strategies
+    |--------------------------------------------------------------------------
+    |
+    | Strategies for displaying list and form field content.
+    |
+    */
+
+    'strategies' => [
+
+        'list' => [
+
+            // The default namespace to prefix for relative strategy class names
+            'default-namespace' => 'Czim\\CmsModels\\View\\ListStrategies\\',
+        ],
+
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Views
     |--------------------------------------------------------------------------
     |
