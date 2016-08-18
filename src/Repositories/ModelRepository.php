@@ -1,10 +1,12 @@
 <?php
 namespace Czim\CmsModels\Repositories;
 
+use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
 use Czim\Repository\BaseRepository;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Collection;
 
-class ModelRepository extends BaseRepository
+class ModelRepository extends BaseRepository implements ModelRepositoryInterface
 {
 
     /**
@@ -17,9 +19,9 @@ class ModelRepository extends BaseRepository
      */
     public function __construct($modelClass = null)
     {
-        parent::__construct(app(), new Collection);
-
         $this->modelClass = $modelClass;
+
+        parent::__construct(app(Application::class), new Collection);
     }
 
     /**
