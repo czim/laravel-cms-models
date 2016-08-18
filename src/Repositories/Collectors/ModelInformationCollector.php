@@ -7,7 +7,6 @@ use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationCollectorIn
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelListColumnData;
-use Czim\CmsModels\Support\ModuleHelper;
 use Illuminate\Support\Collection;
 
 class ModelInformationCollector implements ModelInformationCollectorInterface
@@ -113,6 +112,7 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
 
                     $columns[] = new ModelListColumnData([
                         'source'   => $attribute->name,
+                        'strategy' => $attribute->strategy_list ?: $attribute->strategy,
                         'label'    => snake_case($attribute->name, ' '),
                         'style'    => $attribute->name === 'id' && $modelInfo->incrementing ? 'primary-id' : null,
                         'editable' => $attribute->fillable,

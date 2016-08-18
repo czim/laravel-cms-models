@@ -7,6 +7,13 @@ use Czim\CmsCore\Support\Data\AbstractDataObject;
  * Class ModelListColumnInformation
  *
  * Data container that represents a column presence in an index/listing for a model.
+ *
+ * @property string $source
+ * @property string|array $strategy
+ * @property string $label
+ * @property string $label_translated
+ * @property string $style
+ * @property bool $editable
  */
 class ModelListColumnData extends AbstractDataObject
 {
@@ -16,8 +23,9 @@ class ModelListColumnData extends AbstractDataObject
         // The source column or strategy to use. This may be a column on the model, or on models related to it,
         // or a present() method on the model, if it has a presenter.
         'source' => null,
+
         // Strategy <FQN>@<method> for decorating the source in the list with
-        'presenter' => null,
+        'strategy' => null,
 
         // Column header or label (or translation key) to show
         'label' => null,
