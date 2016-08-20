@@ -1,11 +1,18 @@
 <?php
 namespace Czim\CmsModels\Http\Controllers;
 
+use Czim\CmsModels\Http\Controllers\Traits\DefaultModelSorting;
+
 class DefaultModelController extends BaseModelController
 {
+    use DefaultModelSorting;
 
     public function index()
     {
+        $this->applySort();
+
+        // filtering (session stored)
+
         $records = $this->modelRepository->paginate(
             $this->modelInformation->list->page_size
         );
@@ -16,6 +23,8 @@ class DefaultModelController extends BaseModelController
             'permissionPrefix' => $this->permissionPrefix,
             'model'            => $this->modelInformation,
             'records'          => $records,
+            'sortColumn'       => $this->activeSort,
+            'sortDirection'    => $this->getActualSortDirection(),
         ]);
     }
 
@@ -53,4 +62,25 @@ class DefaultModelController extends BaseModelController
 
     }
 
+
+    /**
+     * Applies active sorting to model repository.
+     *
+     * @return $this
+     */
+    protected function applySort()
+    {
+        $this->checkActiveSort();
+
+        $sort = $this->getActualSort();
+
+        if ($sort) {
+            $criteria = $this->getModelSortCriteria();
+            if ($criteria) {
+                $this->modelRepository->pushCriteria($criteria);
+            }
+        }
+
+        return $this;
+    }
 }

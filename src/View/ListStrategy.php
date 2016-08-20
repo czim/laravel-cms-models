@@ -89,6 +89,66 @@ class ListStrategy implements ListStrategyInterface
         return $model->{$source};
     }
 
+    /**
+     * Returns an optional style string for the list display value container.
+     *
+     * @param Model  $model
+     * @param string $strategy
+     * @param string $source source column, method name or value
+     * @return null|string
+     */
+    public function style(Model $model, $strategy, $source)
+    {
+        // Resolve strategy if possible
+        $resolved = $this->resolver->resolve($strategy);
+
+        if ($resolved) {
+            $strategy = $resolved;
+        }
+
+        // If the strategy indicates the FQN of display strategy,
+        // or a classname that can be found in the default strategy name path, use it.
+        if ($strategyClass = $this->resolveStrategyClass($strategy)) {
+
+            /** @var ListDisplayInterface $instance */
+            $instance = app($strategyClass);
+
+            return $instance->style($model, $source);
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns an optional set of attribute values to merge into the list display value container.
+     *
+     * @param Model  $model
+     * @param string $strategy
+     * @param string $source source column, method name or value
+     * @return array associative, key value pairs with html tag attributes
+     */
+    public function attributes(Model $model, $strategy, $source)
+    {
+        // Resolve strategy if possible
+        $resolved = $this->resolver->resolve($strategy);
+
+        if ($resolved) {
+            $strategy = $resolved;
+        }
+
+        // If the strategy indicates the FQN of display strategy,
+        // or a classname that can be found in the default strategy name path, use it.
+        if ($strategyClass = $this->resolveStrategyClass($strategy)) {
+
+            /** @var ListDisplayInterface $instance */
+            $instance = app($strategyClass);
+
+            return $instance->attributes($model, $source);
+        }
+
+        return [];
+    }
+
 
     /**
      * Resolves strategy assuming it is the class name or FQN of a list display interface implementation.

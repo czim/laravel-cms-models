@@ -14,6 +14,9 @@ use Czim\CmsCore\Support\Data\AbstractDataObject;
  * @property string $label_translated
  * @property string $style
  * @property bool $editable
+ * @property bool $sortable
+ * @property string $sort_strategy
+ * @property string $sort_direction asc|desc
  */
 class ModelListColumnData extends AbstractDataObject
 {
@@ -40,6 +43,15 @@ class ModelListColumnData extends AbstractDataObject
 
         // Whether this column is supported for in-line editing.
         'editable' => false,
+
+        // Whether it is possible to sort the list for this column
+        'sortable' => false,
+
+        // The sort strategy (class/FQN) to use for sorting
+        'sort_strategy' => null,
+
+        // Default sort direction for this column, if sortable
+        'sort_direction' => 'asc',
     ];
 
 }

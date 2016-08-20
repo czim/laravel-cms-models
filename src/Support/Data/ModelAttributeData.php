@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Support\Data;
 
 use Czim\CmsCore\Support\Data\AbstractDataObject;
+use Czim\CmsModels\Support\Enums\AttributeCast;
 
 /**
  * Class ModelAttributeData
@@ -94,6 +95,17 @@ class ModelAttributeData extends AbstractDataObject
     public function mergeTranslation(ModelAttributeData $data)
     {
         $this->merge($data);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNumeric()
+    {
+        return in_array($this->cast, [
+            AttributeCast::INTEGER,
+            AttributeCast::FLOAT,
+        ] );
     }
 
 }

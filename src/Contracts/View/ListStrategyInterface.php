@@ -16,4 +16,24 @@ interface ListStrategyInterface
      */
     public function render(Model $model, $strategy, $source);
 
+    /**
+     * Returns an optional style string for the list display value container.
+     *
+     * @param Model  $model
+     * @param string $strategy
+     * @param string $source source column, method name or value
+     * @return null|string
+     */
+    public function style(Model $model, $strategy, $source);
+
+    /**
+     * Returns an optional set of attribute values to merge into the list display value container.
+     *
+     * @param Model  $model
+     * @param string $strategy
+     * @param string $source source column, method name or value
+     * @return array associative, key value pairs with html tag attributes
+     */
+    public function attributes(Model $model, $strategy, $source);
+
 }

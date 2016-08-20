@@ -75,4 +75,29 @@ abstract class Controller extends BaseController
         $this->infoRepository = $infoRepository;
     }
 
+
+    /**
+     * @return CoreInterface
+     */
+    protected function getCore()
+    {
+        return $this->core;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModuleKey()
+    {
+        return $this->moduleKey;
+    }
+
+    /**
+     * @return ModelInformationInterface|ModelInformation|null
+     */
+    protected function getModelInformation()
+    {
+        return $this->modelInformation;
+    }
+
 }
