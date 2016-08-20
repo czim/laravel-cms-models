@@ -142,6 +142,10 @@ return [
 
         'list' => [
 
+            // The default page size and selectable page size options
+            'page-size'         => 25,
+            'page-size-options' => [ 25, 50, 100 ],
+
             // The default namespace to prefix for relative strategy class names
             'default-namespace' => 'Czim\\CmsModels\\View\\ListStrategies\\',
 

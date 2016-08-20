@@ -19,6 +19,13 @@ trait DefaultModelSorting
      */
     protected $activeSortDescending;
 
+    /**
+     * Whether this request updated the sorting column or direction.
+     *
+     * @var bool
+     */
+    protected $sortSetByRequest = false;
+
 
     /**
      * Checks and sets the active sort settings.
@@ -38,6 +45,8 @@ trait DefaultModelSorting
             } else {
                 $this->activeSortDescending = null;
             }
+
+            $this->sortSetByRequest = true;
 
             $this->storeActiveSortInSession();
 
@@ -164,6 +173,14 @@ trait DefaultModelSorting
         $source   = $this->getModelInformation()->list->columns[$sort]->source ?: $sort;
 
         return new ModelOrderStrategy($strategy, $source, $this->getActualSortDirection());
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isSortSetByRequest()
+    {
+        return $this->sortSetByRequest;
     }
 
 

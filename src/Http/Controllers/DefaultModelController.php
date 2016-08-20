@@ -1,20 +1,27 @@
 <?php
 namespace Czim\CmsModels\Http\Controllers;
 
+use Czim\CmsModels\Http\Controllers\Traits\DefaultModelPagination;
 use Czim\CmsModels\Http\Controllers\Traits\DefaultModelSorting;
 
 class DefaultModelController extends BaseModelController
 {
-    use DefaultModelSorting;
+    use DefaultModelSorting,
+        DefaultModelPagination;
 
     public function index()
     {
-        $this->applySort();
+        $this->applySort()
+             ->checkActivePage();
 
-        // filtering (session stored)
+        // todo: filtering (session stored)
+
 
         $records = $this->modelRepository->paginate(
-            $this->modelInformation->list->page_size
+            $this->getActualPageSize(),
+            ['*'],
+            'page',
+            $this->getActualPage()
         );
 
         return view(config('cms-models.views.index'), [
@@ -23,8 +30,10 @@ class DefaultModelController extends BaseModelController
             'permissionPrefix' => $this->permissionPrefix,
             'model'            => $this->modelInformation,
             'records'          => $records,
-            'sortColumn'       => $this->activeSort,
+            'sortColumn'       => $this->getActualSort(),
             'sortDirection'    => $this->getActualSortDirection(),
+            'pageSize'         => $this->getActualPageSize(),
+            'pageSizeOptions'  => $this->getPageSizeOptions(),
         ]);
     }
 
@@ -83,4 +92,5 @@ class DefaultModelController extends BaseModelController
 
         return $this;
     }
+
 }
