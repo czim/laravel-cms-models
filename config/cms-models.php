@@ -144,6 +144,10 @@ return [
 
             // The default namespace to prefix for relative strategy class names
             'default-namespace' => 'Czim\\CmsModels\\View\\ListStrategies\\',
+
+            // The default strategy for sorting columns
+            'default-sort-namespace' => 'Czim\\CmsModels\\Repositories\\SortStrategies\\',
+            'default-sort-strategy'  => Czim\CmsModels\Repositories\SortStrategies\NullLast::class,
         ],
 
     ],
