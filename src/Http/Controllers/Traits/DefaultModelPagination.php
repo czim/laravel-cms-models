@@ -18,6 +18,13 @@ trait DefaultModelPagination
      */
     protected $activePageSize;
 
+    /**
+     * Whether other updates or settings should force a page reset.
+     *
+     * @var bool
+     */
+    protected $resetActivePage = false;
+
 
     /**
      * Checks and sets the active sort settings.
@@ -28,7 +35,7 @@ trait DefaultModelPagination
     {
         $request = request();
 
-        $pageSetByRequest     = $request->has('page') || $this->isSortSetByRequest();
+        $pageSetByRequest     = $request->has('page') || $this->resetActivePage;
         $pageSizeSetByRequest = $request->has('pagesize');
 
         if ($pageSetByRequest) {
@@ -88,8 +95,8 @@ trait DefaultModelPagination
     protected function getPageSessionKey()
     {
         return $this->getCore()->config('session.prefix')
-            . 'model:' . $this->getModuleKey()
-            . ':page';
+             . 'model:' . $this->getModuleKey()
+             . ':page';
     }
 
     /**
@@ -98,8 +105,8 @@ trait DefaultModelPagination
     protected function getPageSizeSessionKey()
     {
         return $this->getCore()->config('session.prefix')
-        . 'model:' . $this->getModuleKey()
-        . ':pagesize';
+             . 'model:' . $this->getModuleKey()
+             . ':pagesize';
     }
 
     /**
@@ -148,9 +155,25 @@ trait DefaultModelPagination
         return config('cms-models.strategies.list.page-size', 25);
     }
 
+    /**
+     * Returns the page size options that users can choose from.
+     *
+     * @return int[]|false
+     */
     protected function getPageSizeOptions()
     {
         return config('cms-models.strategies.list.page-size-options', false);
+    }
+
+    /**
+     * @param bool $reset
+     * @return $this
+     */
+    protected function markResetActivePage($reset = true)
+    {
+        $this->resetActivePage = (bool) $reset;
+
+        return $this;
     }
 
 
@@ -168,10 +191,5 @@ trait DefaultModelPagination
      * @return ModelInformationInterface|ModelInformation|null
      */
     abstract protected function getModelInformation();
-
-    /**
-     * @return bool
-     */
-    abstract protected function isSortSetByRequest();
 
 }

@@ -19,13 +19,6 @@ trait DefaultModelSorting
      */
     protected $activeSortDescending;
 
-    /**
-     * Whether this request updated the sorting column or direction.
-     *
-     * @var bool
-     */
-    protected $sortSetByRequest = false;
-
 
     /**
      * Checks and sets the active sort settings.
@@ -46,9 +39,8 @@ trait DefaultModelSorting
                 $this->activeSortDescending = null;
             }
 
-            $this->sortSetByRequest = true;
-
-            $this->storeActiveSortInSession();
+            $this->markResetActivePage()
+                 ->storeActiveSortInSession();
 
         } elseif (session()->has($this->getSortSessionKey())) {
 
@@ -99,8 +91,8 @@ trait DefaultModelSorting
     protected function getSortSessionKey()
     {
         return $this->getCore()->config('session.prefix')
-            . 'model:' . $this->getModuleKey()
-            . ':sort';
+             . 'model:' . $this->getModuleKey()
+             . ':sort';
     }
 
     /**
@@ -175,14 +167,6 @@ trait DefaultModelSorting
         return new ModelOrderStrategy($strategy, $source, $this->getActualSortDirection());
     }
 
-    /**
-     * @return bool
-     */
-    protected function isSortSetByRequest()
-    {
-        return $this->sortSetByRequest;
-    }
-
 
     /**
      * @return CoreInterface
@@ -199,4 +183,9 @@ trait DefaultModelSorting
      */
     abstract protected function getModelInformation();
 
+    /**
+     * @param bool $reset
+     * @return $this
+     */
+    abstract protected function markResetActivePage($reset = true);
 }
