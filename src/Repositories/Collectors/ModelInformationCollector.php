@@ -4,12 +4,9 @@ namespace Czim\CmsModels\Repositories\Collectors;
 use Czim\CmsModels\Analyzer\ModelAnalyzer;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationCollectorInterface;
+use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
-use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
-use Czim\CmsModels\Support\Data\ModelListColumnData;
-use Czim\CmsModels\Support\Enums\AttributeCast;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class ModelInformationCollector implements ModelInformationCollectorInterface
@@ -35,15 +32,25 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
      */
     protected $modelClasses;
 
+    /**
+     * @var ModelInformationEnricherInterface
+     */
+    protected $informationEnricher;
+
 
     /**
-     * @param ModuleHelperInterface $moduleHelper
-     * @param ModelAnalyzer         $modelAnalyzer
+     * @param ModuleHelperInterface             $moduleHelper
+     * @param ModelAnalyzer                     $modelAnalyzer
+     * @param ModelInformationEnricherInterface $informationEnricher
      */
-    public function __construct(ModuleHelperInterface $moduleHelper, ModelAnalyzer $modelAnalyzer)
-    {
-        $this->moduleHelper  = $moduleHelper;
-        $this->modelAnalyzer = $modelAnalyzer;
+    public function __construct(
+        ModuleHelperInterface $moduleHelper,
+        ModelAnalyzer $modelAnalyzer,
+        ModelInformationEnricherInterface $informationEnricher
+    ) {
+        $this->moduleHelper        = $moduleHelper;
+        $this->modelAnalyzer       = $modelAnalyzer;
+        $this->informationEnricher = $informationEnricher;
     }
 
 
@@ -103,79 +110,11 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
     protected function enrichModelInformation()
     {
         foreach ($this->information as $key => $info) {
-            $this->enrichSingleModelInformationSet($info);
+
+            $this->informationEnricher->enrich($info);
         }
 
         return $this;
-    }
-
-    /**
-     * Enriches the information for a single collected model.
-     *
-     * @param ModelInformationInterface|ModelInformation $info
-     */
-    protected function enrichSingleModelInformationSet(ModelInformationInterface $info)
-    {
-        /** @var Model $model */
-        $class = $info->modelClass();
-        $model = new $class;
-
-        // Fill list references if they are empty
-        if ( ! count($info->list->columns)) {
-            $columns = [];
-
-            foreach ($info->attributes as $attribute) {
-                if ($attribute->hidden) {
-                    continue;
-                }
-
-                $columns[$attribute->name] = $this->makeModelListColumnDataForAttributeData($attribute, $info);
-            }
-
-            $info->list->columns = $columns;
-        }
-
-        // Default sorting order
-        if ($info->timestamps) {
-            $info->list->default_sort = $info->timestamp_created;
-        } elseif ($info->incrementing) {
-            $info->list->default_sort = $model->getKeyName();
-        }
-    }
-
-    /**
-     * @param ModelAttributeData                         $attribute
-     * @param ModelInformationInterface|ModelInformation $info
-     * @return ModelListColumnData
-     */
-    protected function makeModelListColumnDataForAttributeData(ModelAttributeData $attribute, ModelInformationInterface $info)
-    {
-        $primaryIncrementing = $attribute->name === 'id' && $info->incrementing;
-
-        $sortable = (   ! $attribute->translated
-                    &&  ( $attribute->isNumeric() || in_array($attribute->cast, [
-                                AttributeCast::BOOLEAN,
-                                AttributeCast::DATE,
-                                AttributeCast::STRING,
-                            ])
-                        )
-                    );
-
-        $sortDirection = (  $primaryIncrementing
-                        ||  in_array($attribute->cast, [ AttributeCast::BOOLEAN, AttributeCast::DATE ])
-                        )
-            ? 'desc' : 'asc';
-
-
-        return new ModelListColumnData([
-            'source'         => $attribute->name,
-            'strategy'       => $attribute->strategy_list ?: $attribute->strategy,
-            'label'          => snake_case($attribute->name, ' '),
-            'style'          => $primaryIncrementing ? 'primary-id' : null,
-            'editable'       => $attribute->fillable,
-            'sortable'       => $sortable,
-            'sort_direction' => $sortDirection,
-        ]);
     }
 
 
