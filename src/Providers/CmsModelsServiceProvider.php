@@ -13,6 +13,7 @@ use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
+use Czim\CmsModels\Contracts\View\FilterStrategyResolverInterface;
 use Czim\CmsModels\Contracts\View\ListStrategyInterface;
 use Czim\CmsModels\Contracts\View\ListStrategyResolverInterface;
 use Czim\CmsModels\Repositories\Collectors\ModelInformationEnricher;
@@ -22,6 +23,7 @@ use Czim\CmsModels\Repositories\ModelRepository;
 use Czim\CmsModels\Support\ModuleHelper;
 use Czim\CmsModels\Support\Routing\RouteHelper;
 use Czim\CmsModels\View\FilterStrategy;
+use Czim\CmsModels\View\FilterStrategyResolver;
 use Czim\CmsModels\View\ListStrategy;
 use Czim\CmsModels\View\ListStrategyResolver;
 use Illuminate\Support\ServiceProvider;
@@ -115,6 +117,7 @@ class CmsModelsServiceProvider extends ServiceProvider
         $this->app->singleton(ListStrategyInterface::class, ListStrategy::class);
         $this->app->singleton(ListStrategyResolverInterface::class, ListStrategyResolver::class);
         $this->app->singleton(FilterStrategyInterface::class, FilterStrategy::class);
+        $this->app->singleton(FilterStrategyResolverInterface::class, FilterStrategyResolver::class);
 
 
         // Register facade names

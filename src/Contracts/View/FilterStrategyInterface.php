@@ -2,7 +2,6 @@
 namespace Czim\CmsModels\Contracts\View;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
 interface FilterStrategyInterface
 {
@@ -10,12 +9,12 @@ interface FilterStrategyInterface
     /**
      * Applies a strategy to render a filter field.
      *
-     * @param Model  $model
      * @param string $strategy
      * @param string $key
+     * @param mixed  $value
      * @return string
      */
-    public function render(Model $model, $strategy, $key);
+    public function render($strategy, $key, $value);
 
     /**
      * Applies the filter value for

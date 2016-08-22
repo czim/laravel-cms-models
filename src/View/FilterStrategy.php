@@ -7,7 +7,6 @@ use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
 use Czim\CmsModels\Contracts\View\FilterStrategyResolverInterface;
 use Czim\CmsModels\View\Traits\ResolvesStrategies;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use RuntimeException;
 
 class FilterStrategy implements FilterStrategyInterface
@@ -32,12 +31,12 @@ class FilterStrategy implements FilterStrategyInterface
     /**
      * Applies a strategy to render a filter field.
      *
-     * @param Model  $model
      * @param string $strategy
      * @param string $key
+     * @param mixed  $value
      * @return string
      */
-    public function render(Model $model, $strategy, $key)
+    public function render($strategy, $key, $value)
     {
         // Resolve strategy if possible
         $resolved = $this->resolver->resolve($strategy);
@@ -54,7 +53,7 @@ class FilterStrategy implements FilterStrategyInterface
         /** @var FilterStrategyInterface $instance */
         $instance = app($strategyClass);
 
-        return $instance->render($model, $strategy, $key);
+        return $instance->render($strategy, $key, $value);
     }
 
     /**
