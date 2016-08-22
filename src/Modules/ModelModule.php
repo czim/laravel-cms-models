@@ -167,6 +167,11 @@ class ModelModule implements ModuleInterface
                     'uses'       => $controller . '@store',
                 ]);
 
+                $router->post('filter', [
+                    'as'   => 'filter',
+                    'uses' => $controller . '@filter',
+                ]);
+
                 $router->get('{key}', [
                     'as'   => 'show',
                     'uses' => $controller . '@show',

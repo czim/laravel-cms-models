@@ -6,17 +6,23 @@ use Czim\CmsModels\Console\Commands\ClearModelInformationCache;
 use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationCollectorInterface;
+use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
 use Czim\CmsModels\Contracts\Repositories\CurrentModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
+use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
+use Czim\CmsModels\Contracts\View\ListStrategyInterface;
 use Czim\CmsModels\Contracts\View\ListStrategyResolverInterface;
+use Czim\CmsModels\Repositories\Collectors\ModelInformationEnricher;
 use Czim\CmsModels\Repositories\CurrentModelInformation;
 use Czim\CmsModels\Repositories\ModelInformationRepository;
 use Czim\CmsModels\Repositories\ModelRepository;
 use Czim\CmsModels\Support\ModuleHelper;
 use Czim\CmsModels\Support\Routing\RouteHelper;
+use Czim\CmsModels\View\FilterStrategy;
+use Czim\CmsModels\View\ListStrategy;
 use Czim\CmsModels\View\ListStrategyResolver;
 use Illuminate\Support\ServiceProvider;
 use Czim\CmsCore\Contracts\Core\CoreInterface;
@@ -102,10 +108,14 @@ class CmsModelsServiceProvider extends ServiceProvider
         $this->app->singleton(ModelInformationRepositoryInterface::class, ModelInformationRepository::class);
         $this->app->singleton(CurrentModelInformationInterface::class, CurrentModelInformation::class);
         $this->app->singleton(ModelRepositoryInterface::class, ModelRepository::class);
+        $this->app->singleton(ModelInformationEnricherInterface::class, ModelInformationEnricher::class);
         $this->app->singleton(RouteHelperInterface::class, RouteHelper::class);
         $this->app->singleton(ModuleHelperInterface::class, ModuleHelper::class);
         $this->app->singleton(DatabaseAnalyzerInterface::class, DatabaseAnalyzer::class);
+        $this->app->singleton(ListStrategyInterface::class, ListStrategy::class);
         $this->app->singleton(ListStrategyResolverInterface::class, ListStrategyResolver::class);
+        $this->app->singleton(FilterStrategyInterface::class, FilterStrategy::class);
+
 
         // Register facade names
         $this->app->bind('cms-models-modelinfo', CurrentModelInformationInterface::class);

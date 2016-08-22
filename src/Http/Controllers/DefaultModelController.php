@@ -1,17 +1,20 @@
 <?php
 namespace Czim\CmsModels\Http\Controllers;
 
+use Czim\CmsModels\Http\Controllers\Traits\DefaultModelFiltering;
 use Czim\CmsModels\Http\Controllers\Traits\DefaultModelPagination;
 use Czim\CmsModels\Http\Controllers\Traits\DefaultModelSorting;
 
 class DefaultModelController extends BaseModelController
 {
     use DefaultModelSorting,
-        DefaultModelPagination;
+        DefaultModelPagination,
+        DefaultModelFiltering;
 
     public function index()
     {
         $this->applySort()
+             ->checkFilters()
              ->checkActivePage();
 
         // todo: filtering (session stored)
@@ -34,6 +37,7 @@ class DefaultModelController extends BaseModelController
             'sortDirection'    => $this->getActualSortDirection(),
             'pageSize'         => $this->getActualPageSize(),
             'pageSizeOptions'  => $this->getPageSizeOptions(),
+            'filters'          => $this->getActiveFilters(),
         ]);
     }
 
@@ -69,6 +73,13 @@ class DefaultModelController extends BaseModelController
     public function destroy($id)
     {
 
+    }
+
+    public function filter()
+    {
+        $this->updateFilters();
+
+        return redirect()->back();
     }
 
 

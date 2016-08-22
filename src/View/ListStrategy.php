@@ -4,11 +4,12 @@ namespace Czim\CmsModels\View;
 use Czim\CmsModels\Contracts\View\ListDisplayInterface;
 use Czim\CmsModels\Contracts\View\ListStrategyInterface;
 use Czim\CmsModels\Contracts\View\ListStrategyResolverInterface;
+use Czim\CmsModels\View\Traits\ResolvesStrategies;
 use Illuminate\Database\Eloquent\Model;
-use RuntimeException;
 
 class ListStrategy implements ListStrategyInterface
 {
+    use ResolvesStrategies;
 
     /**
      * @var ListStrategyResolverInterface
@@ -26,7 +27,7 @@ class ListStrategy implements ListStrategyInterface
 
 
     /**
-     * Applies a strategy to renders a list value from its source.
+     * Applies a strategy to render a list value from its source.
      *
      * @param Model  $model
      * @param string $strategy
@@ -53,34 +54,16 @@ class ListStrategy implements ListStrategyInterface
         }
 
         // If the strategy indicates a method to be called on the model itself, do so
-        if (starts_with($strategy, '@')) {
-
-            $method = substr($strategy, 1);
-
-            if ( ! method_exists($model, $method)) {
-                throw new RuntimeException(
-                    "Could not find list strategy method '{$method}' on Model '" . get_class($model) . "'"
-                );
-            }
+        if ($method = $this->parseAsModelMethodStrategyString($strategy, $model)) {
 
             return $model->{$method}($model->{$source});
         }
 
         // If the strategy indicates an instantiable/callable 'class@method' combination
-        if (preg_match('#^(?<class>.*)@(?<method>.*)$#', $strategy, $matches)) {
+        if ($data = $this->parseAsInstantiableClassMethodStrategyString($strategy)) {
 
-            $class  = $matches['class'];
-            $method = $matches['method'];
-
-            if ( ! class_exists($class)) {
-                throw new RuntimeException("Could not find list strategy class '{$class}'");
-            }
-
-            $instance = app($class);
-
-            if ( ! is_object($instance) || ! method_exists($instance, $method)) {
-                throw new RuntimeException("Could not find list strategy method '{$method}' on '{$class}'");
-            }
+            $method   = $data['method'];
+            $instance = $data['instance'];
 
             return $instance->{$method}($model->{$source});
         }

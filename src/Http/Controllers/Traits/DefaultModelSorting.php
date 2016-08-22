@@ -29,7 +29,7 @@ trait DefaultModelSorting
     {
         $request = request();
 
-        if (request()->has('sort')) {
+        if ($request->has('sort')) {
 
             $this->activeSort = $request->get('sort');
 
