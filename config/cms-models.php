@@ -154,6 +154,13 @@ return [
             'default-sort-strategy'  => Czim\CmsModels\Repositories\SortStrategies\NullLast::class,
         ],
 
+        'filter' => [
+
+            // The default namespace to prefix for relative strategy class names
+            'default-namespace' => 'Czim\\CmsModels\\View\\FilterStrategies\\',
+
+        ],
+
     ],
 
     /*
