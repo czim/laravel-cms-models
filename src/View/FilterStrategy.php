@@ -1,11 +1,14 @@
 <?php
 namespace Czim\CmsModels\View;
 
+use Czim\CmsModels\Contracts\View\FilterApplicationInterface;
+use Czim\CmsModels\Contracts\View\FilterDisplayInterface;
 use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
 use Czim\CmsModels\Contracts\View\FilterStrategyResolverInterface;
 use Czim\CmsModels\View\Traits\ResolvesStrategies;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use RuntimeException;
 
 class FilterStrategy implements FilterStrategyInterface
 {
@@ -43,63 +46,77 @@ class FilterStrategy implements FilterStrategyInterface
             $strategy = $resolved;
         }
 
-        // If the strategy indicates the FQN of display strategy,
-        // or a classname that can be found in the default strategy name path, use it.
-        if ($strategyClass = $this->resolveStrategyClass($strategy)) {
-
-            /** @var FilterStrategyInterface $instance */
-            $instance = app($strategyClass);
-
-            return $instance->render($model, $strategy, $key);
+        // A filter must have a resolvable strategy for displaying
+        if ( ! ($strategyClass = $this->resolveDisplayStrategyClass($strategy))) {
+            throw new RuntimeException("Could not resolve display strategy class for {$key}: '{$strategy}'");
         }
 
-        // If the strategy indicates a method to be called on the model itself, do so
-        if ($method = $this->parseAsModelMethodStrategyString($strategy, $model)) {
+        /** @var FilterStrategyInterface $instance */
+        $instance = app($strategyClass);
 
-            return $model->{$method}($model->{$source});
-        }
-
-        // If the strategy indicates an instantiable/callable 'class@method' combination
-        if ($data = $this->parseAsInstantiableClassMethodStrategyString($strategy)) {
-
-            $method   = $data['method'];
-            $instance = $data['instance'];
-
-            return $instance->{$method}($model->{$source});
-        }
-
-        // If nothing special is defined, simply return the source value
-        return $model->{$source};
+        return $instance->render($model, $strategy, $key);
     }
 
     /**
-     * Applies the filter value for
+     * Applies the filter value for a strategy to a query builder.
      *
      * @param Builder $query
      * @param string  $strategy
-     * @param string  $key
+     * @param string  $target
      * @param mixed   $value
      */
-    public function apply($query, $strategy, $key, $value)
+    public function apply($query, $strategy, $target, $value)
     {
-        // todo
+        // A filter must have a resolvable strategy for applying
+        if ( ! ($strategyClass = $this->resolveApplicationStrategyClass($strategy))) {
+            throw new RuntimeException("Could not resolve application strategy class for {$target}: '{$strategy}'");
+        }
+
+        /** @var FilterApplicationInterface $instance */
+        $instance = app($strategyClass);
+
+        return $instance->apply($query, $target, $value);
     }
 
+
     /**
-     * Resolves strategy assuming it is the class name or FQN of a filter display interface implementation.
+     * Resolves display strategy assuming it is the class name or FQN of a filter interface implementation.
      *
      * @param $strategy
      * @return string|false     returns full class namespace if it was resolved succesfully
      */
-    protected function resolveStrategyClass($strategy)
+    protected function resolveDisplayStrategyClass($strategy)
     {
-        if (class_exists($strategy) && is_a($strategy, FilterStrategyInterface::class, true)) {
+        return $this->resolveStrategyClass($strategy, FilterDisplayInterface::class);
+    }
+
+    /**
+     * Resolves application strategy assuming it is the class name or FQN of a filter interface implementation.
+     *
+     * @param $strategy
+     * @return string|false     returns full class namespace if it was resolved succesfully
+     */
+    protected function resolveApplicationStrategyClass($strategy)
+    {
+        return $this->resolveStrategyClass($strategy, FilterApplicationInterface::class);
+    }
+
+    /**
+     * Resolves a filter strategy class.
+     *
+     * @param $strategy
+     * @param $interfaceFqn
+     * @return bool|string
+     */
+    protected function resolveStrategyClass($strategy, $interfaceFqn)
+    {
+        if (class_exists($strategy) && is_a($strategy, $interfaceFqn, true)) {
             return $strategy;
         }
 
         $strategy = $this->prefixStrategyNamespace($strategy);
 
-        if (class_exists($strategy) && is_a($strategy, FilterStrategyInterface::class, true)) {
+        if (class_exists($strategy) && is_a($strategy, $interfaceFqn, true)) {
             return $strategy;
         }
 

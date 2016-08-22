@@ -36,6 +36,8 @@ class ListStrategy implements ListStrategyInterface
      */
     public function render(Model $model, $strategy, $source)
     {
+        $source = $this->resolveModelSource($model, $source);
+
         // Resolve strategy if possible
         $resolved = $this->resolver->resolve($strategy);
 
@@ -65,11 +67,11 @@ class ListStrategy implements ListStrategyInterface
             $method   = $data['method'];
             $instance = $data['instance'];
 
-            return $instance->{$method}($model->{$source});
+            return $instance->{$method}($source);
         }
 
         // If nothing special is defined, simply return the source value
-        return $model->{$source};
+        return $source;
     }
 
     /**
@@ -77,7 +79,7 @@ class ListStrategy implements ListStrategyInterface
      *
      * @param Model  $model
      * @param string $strategy
-     * @param string $source source column, method name or value
+     * @param string $source    source column, method name or value (unresolved)
      * @return null|string
      */
     public function style(Model $model, $strategy, $source)

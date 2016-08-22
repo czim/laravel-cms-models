@@ -10,7 +10,7 @@ interface ListDisplayInterface
      * Renders a display value to print to the list view.
      *
      * @param Model  $model
-     * @param string $source    source column, method name or value
+     * @param mixed  $source    source value, relation instance, etc.
      * @return string
      */
     public function render(Model $model, $source);

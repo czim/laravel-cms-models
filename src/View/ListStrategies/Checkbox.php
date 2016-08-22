@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\View\ListStrategies;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class Checkbox extends AbstractListDisplayStrategy
 {
@@ -9,13 +10,13 @@ class Checkbox extends AbstractListDisplayStrategy
     /**
      * Renders a display value to print to the list view.
      *
-     * @param Model  $model
-     * @param string $source source column, method name or value
+     * @param Model $model
+     * @param mixed $source     source column, method name or value
      * @return string
      */
     public function render(Model $model, $source)
     {
-        if ($this->interpretAsBoolean($model->{$source})) {
+        if ($this->interpretAsBoolean($source)) {
             return '<i class="fa fa-check text-success"></i>';
         }
 
@@ -47,6 +48,10 @@ class Checkbox extends AbstractListDisplayStrategy
             }
 
             return true;
+        }
+
+        if (is_array($value) || $value instanceof Collection) {
+            return count($value) > 0;
         }
 
         return (bool) $value;

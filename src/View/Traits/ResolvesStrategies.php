@@ -2,10 +2,42 @@
 namespace Czim\CmsModels\View\Traits;
 
 use Czim\CmsModels\Support\Data\Strategies\InstantiableClassStrategy;
+use Illuminate\Database\Eloquent\Model;
 use RuntimeException;
 
 trait ResolvesStrategies
 {
+
+    /**
+     * Resolves and returns source content for a list strategy.
+     *
+     * @param Model  $model
+     * @param string $source
+     * @return mixed
+     */
+    protected function resolveModelSource(Model $model, $source)
+    {
+        // If the strategy indicates a method to be called on the model itself, do so
+        if ($method = $this->parseAsModelMethodStrategyString($source, $model)) {
+            return $model->{$method}($source);
+        }
+
+        // If the strategy indicates an instantiable/callable 'class@method' combination
+        if ($data = $this->parseAsInstantiableClassMethodStrategyString($source)) {
+
+            $method   = $data['method'];
+            $instance = $data['instance'];
+
+            return $instance->{$method}($model->{$source});
+        }
+
+        // If the name matches a method name on the model, call it
+        if (method_exists($model, $source)) {
+            return $model->{$source}();
+        }
+
+        return $model->{$source};
+    }
 
     /**
      * @param string $strategy

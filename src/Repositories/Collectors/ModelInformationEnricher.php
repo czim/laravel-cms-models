@@ -6,6 +6,7 @@ use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInt
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelListColumnData;
+use Czim\CmsModels\Support\Data\ModelListFilterData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 use Illuminate\Database\Eloquent\Model;
 
@@ -61,6 +62,27 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
             $this->info->list->default_sort = $model->getKeyName();
         }
 
+        // Set default filters if they are empty
+        if ( ! count($this->info->list->filters)) {
+            $filters = [];
+
+            foreach ($this->info->attributes as $attribute) {
+                if ($attribute->hidden) {
+                    continue;
+                }
+
+                $filterData = $this->makeModelListFilterDataForAttributeData($attribute, $this->info);
+
+                if ( ! $filterData) {
+                    continue;
+                }
+
+                $filters[$attribute->name] = $filterData;
+            }
+
+            $this->info->list->filters = $filters;
+        }
+
         return $this;
     }
 
@@ -99,4 +121,35 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
         ]);
     }
 
+    /**
+     * @param ModelAttributeData                         $attribute
+     * @param ModelInformationInterface|ModelInformation $info
+     * @return ModelListFilterData|false
+     */
+    protected function makeModelListFilterDataForAttributeData(ModelAttributeData $attribute, ModelInformationInterface $info)
+    {
+        $strategy = false;
+        $options  = [];
+
+        if ($attribute->cast === AttributeCast::BOOLEAN) {
+
+            $strategy = 'DropdownBoolean';
+
+        } elseif ($attribute->type === 'enum') {
+
+            $strategy = 'DropdownEnum';
+            $options  = $attribute->values;
+        }
+
+        if ( ! $strategy) {
+            return false;
+        }
+
+        return new ModelListFilterData([
+            'source'   => $attribute->name,
+            'target'   => $attribute->name,
+            'strategy' => $strategy,
+            'values'   => $options,
+        ]);
+    }
 }
