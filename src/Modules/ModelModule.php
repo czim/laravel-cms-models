@@ -157,7 +157,7 @@ class ModelModule implements ModuleInterface
 
                 $router->get('create', [
                     'as'         => 'create',
-                    'middleware' => [cms_mw_permission("{$permissionPrefix}reate")],
+                    'middleware' => [cms_mw_permission("{$permissionPrefix}create")],
                     'uses'       => $controller . '@create',
                 ]);
 
