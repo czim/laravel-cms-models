@@ -27,6 +27,12 @@ abstract class BaseModelController extends Controller
     ) {
         parent::__construct($core, $auth, $routeHelper, $infoRepository);
 
+
+        // artisan commands, like route:list, may instantiate this without requiring
+        // any actions to be called; no exceptions should be thrown in that case.
+        if (app()->runningInConsole()) return;
+
+
         $this->initializeForModelRoute()
              ->initializeModelRepository();
     }

@@ -210,11 +210,15 @@ class RouteHelper implements RouteHelperInterface
     /**
      * Returns the name of the current route.
      *
-     * @return string
+     * @return string|null
      */
     protected function getRouteName()
     {
-        return request()->route()->getName();
+        $route = request()->route();
+
+        if ( ! $route) return null;
+
+        return $route->getName();
     }
 
 }
