@@ -17,10 +17,11 @@ class DefaultModelController extends BaseModelController
              ->checkFilters()
              ->checkActivePage();
 
-        // todo: filtering (session stored)
+        $query = $this->modelRepository->query();
 
+        $this->applyFilter($query);
 
-        $records = $this->modelRepository->paginate(
+        $records = $query->paginate(
             $this->getActualPageSize(),
             ['*'],
             'page',
@@ -77,7 +78,8 @@ class DefaultModelController extends BaseModelController
 
     public function filter()
     {
-        $this->updateFilters();
+        $this->updateFilters()
+             ->checkActivePage();
 
         return redirect()->back();
     }

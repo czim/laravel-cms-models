@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Support\Data;
 
 use Czim\CmsCore\Support\Data\AbstractDataObject;
+use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
 
 /**
  * Class ModelListFilterInformation
@@ -15,7 +16,7 @@ use Czim\CmsCore\Support\Data\AbstractDataObject;
  * @property string $strategy
  * @property array  $values
  */
-class ModelListFilterData extends AbstractDataObject
+class ModelListFilterData extends AbstractDataObject implements ModelFilterDataInterface
 {
 
     protected $attributes = [
@@ -38,4 +39,57 @@ class ModelListFilterData extends AbstractDataObject
 
     ];
 
+    /**
+     * Returns friendly display label for the model.
+     *
+     * @return string
+     */
+    public function label()
+    {
+        if ($this->label_translated) {
+            return cms_trans($this->label_translated);
+        }
+
+        return $this->label;
+    }
+
+    /**
+     * Returns the source that the filter is made for (attribute or relationship).
+     *
+     * @return string
+     */
+    public function source()
+    {
+        return $this->source;
+    }
+
+    /**
+     * Returns target column, relation, or other strategy to filter against.
+     *
+     * @return string
+     */
+    public function target()
+    {
+        return $this->target;
+    }
+
+    /**
+     * Returns the filter strategy to apply for rendering & application.
+     *
+     * @return string
+     */
+    public function strategy()
+    {
+        return $this->strategy;
+    }
+
+    /**
+     * Return values for strategies that require a list of values.
+     *
+     * @return array
+     */
+    public function values()
+    {
+        return $this->values ?: [];
+    }
 }

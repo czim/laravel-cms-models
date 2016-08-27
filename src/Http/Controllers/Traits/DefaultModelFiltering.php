@@ -3,7 +3,10 @@ namespace Czim\CmsModels\Http\Controllers\Traits;
 
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Filters\ModelFilter;
+use Czim\CmsModels\Filters\ModelFilterData;
 use Czim\CmsModels\Support\Data\ModelInformation;
+use Illuminate\Database\Eloquent\Builder;
 
 trait DefaultModelFiltering
 {
@@ -32,6 +35,23 @@ trait DefaultModelFiltering
     {
         if (session()->has($this->getFilterSessionKey())) {
             $this->retrieveFiltersFromSession();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Applies the current filters, if any, to the model's query builder.
+     *
+     * @param Builder $query
+     * @return $this
+     */
+    protected function applyFilter($query)
+    {
+        $filter = $this->makeFilter();
+
+        if ($filter) {
+            $filter->apply($query);
         }
 
         return $this;
@@ -94,6 +114,17 @@ trait DefaultModelFiltering
              . ':filters';
     }
 
+    /**
+     * Makes and returns filter instance given current context.
+     *
+     * @return ModelFilter
+     */
+    protected function makeFilter()
+    {
+        $data = new ModelFilterData($this->getModelInformation(), $this->filters);
+
+        return new ModelFilter($this->getModelInformation(), $data);
+    }
 
     /**
      * @return CoreInterface

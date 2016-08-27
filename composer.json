@@ -6,6 +6,7 @@
     "require": {
         "php": ">=5.5.9",
         "czim/laravel-cms-core": "^0.9.1",
+        "czim/laravel-filter": "^1.0",
         "czim/laravel-repository": "^1.0",
         "phpdocumentor/reflection-docblock": "^3.1"
     },

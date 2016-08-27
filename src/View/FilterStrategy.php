@@ -1,11 +1,14 @@
 <?php
 namespace Czim\CmsModels\View;
 
+use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
 use Czim\CmsModels\Contracts\View\FilterApplicationInterface;
 use Czim\CmsModels\Contracts\View\FilterDisplayInterface;
 use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
 use Czim\CmsModels\Contracts\View\FilterStrategyResolverInterface;
+use Czim\CmsModels\Support\Data\ModelListFilterData;
 use Czim\CmsModels\View\Traits\ResolvesStrategies;
+use Czim\DataObject\Contracts\DataObjectInterface;
 use Illuminate\Database\Eloquent\Builder;
 use RuntimeException;
 
@@ -31,12 +34,13 @@ class FilterStrategy implements FilterStrategyInterface
     /**
      * Applies a strategy to render a filter field.
      *
-     * @param string $strategy
-     * @param string $key
-     * @param mixed  $value
+     * @param string  $strategy
+     * @param string  $key
+     * @param mixed   $value
+     * @param ModelFilterDataInterface|ModelListFilterData $info
      * @return string
      */
-    public function render($strategy, $key, $value)
+    public function render($strategy, $key, $value, ModelFilterDataInterface $info)
     {
         // Resolve strategy if possible
         $resolved = $this->resolver->resolve($strategy);
@@ -50,10 +54,10 @@ class FilterStrategy implements FilterStrategyInterface
             throw new RuntimeException("Could not resolve display strategy class for {$key}: '{$strategy}'");
         }
 
-        /** @var FilterStrategyInterface $instance */
+        /** @var FilterDisplayInterface $instance */
         $instance = app($strategyClass);
 
-        return $instance->render($strategy, $key, $value);
+        return $instance->render($key, $value, $info);
     }
 
     /**
