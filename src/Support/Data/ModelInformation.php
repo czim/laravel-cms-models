@@ -54,7 +54,7 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
             // FQN for the controller class to handle the model's web & API presence
             'controller' => null,
             // Default controller action to link to for the basic model's menu presence ('index', 'create', for instance)
-            'default_controller_method' => 'index',
+            'default_controller_method' => null,
 
             // List of FQNs for form requests, keyed by the relevant POST controller method name ('update', 'create')
             'form_requests' => [],

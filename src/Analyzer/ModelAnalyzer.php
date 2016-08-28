@@ -13,8 +13,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use LimitIterator;
 use phpDocumentor\Reflection\DocBlockFactory;
+use ReflectionClass;
 use ReflectionMethod;
 use SplFileObject;
+use UnexpectedValueException;
 
 class ModelAnalyzer
 {
@@ -50,7 +52,7 @@ class ModelAnalyzer
     protected $model;
 
     /**
-     * @var \ReflectionClass
+     * @var ReflectionClass
      */
     protected $reflection;
 
@@ -239,7 +241,7 @@ class ModelAnalyzer
     {
         $traitNames = $this->reflection->getTraitNames();
 
-        if (in_array("Dimsav\\Translatable\\Translatable", $traitNames)) {
+        if (in_array('Dimsav\\Translatable\\Translatable', $traitNames)) {
             $this->info['translated']           = true;
             $this->info['translation_strategy'] = 'translatable';
         }
@@ -543,18 +545,18 @@ class ModelAnalyzer
         $class = $this->class;
 
         if ( ! class_exists($class)) {
-            throw new \UnexpectedValueException("Class '{$this->class}' does not exist");
+            throw new UnexpectedValueException("Class '{$this->class}' does not exist");
         }
 
         $instance = new $class;
 
         if ( ! $instance instanceof Model) {
-            throw new \UnexpectedValueException("Instance of '{$this->class}' is not a model");
+            throw new UnexpectedValueException("Instance of '{$this->class}' is not a model");
         }
 
         $this->model = $instance;
 
-        $this->reflection = new \ReflectionClass($this->class);
+        $this->reflection = new ReflectionClass($this->class);
 
         return $this;
     }

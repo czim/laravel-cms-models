@@ -76,6 +76,11 @@ class DefaultModelController extends BaseModelController
 
     }
 
+    /**
+     * Applies posted filters.
+     *
+     * @return mixed
+     */
     public function filter()
     {
         $this->updateFilters()

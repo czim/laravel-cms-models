@@ -8,11 +8,11 @@ use Czim\CmsCore\Support\Data\AbstractDataObject;
  *
  * Meta-information about a model in the context of the CMS.
  *
- * @property string $controller
- * @property string $default_controller_method
+ * @property string   $controller
+ * @property string   $default_controller_method
  * @property string[] $form_requests
  * @property string[] $views
- * @property string $transformer
+ * @property string   $transformer
  */
 class ModelMetaData extends AbstractDataObject
 {

@@ -8,7 +8,6 @@ use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
 use Czim\CmsModels\Contracts\View\FilterStrategyResolverInterface;
 use Czim\CmsModels\Support\Data\ModelListFilterData;
 use Czim\CmsModels\View\Traits\ResolvesStrategies;
-use Czim\DataObject\Contracts\DataObjectInterface;
 use Illuminate\Database\Eloquent\Builder;
 use RuntimeException;
 
@@ -51,7 +50,9 @@ class FilterStrategy implements FilterStrategyInterface
 
         // A filter must have a resolvable strategy for displaying
         if ( ! ($strategyClass = $this->resolveDisplayStrategyClass($strategy))) {
-            throw new RuntimeException("Could not resolve display strategy class for {$key}: '{$strategy}'");
+            throw new RuntimeException(
+                "Could not resolve display strategy class for {$key}: '{$strategy}'"
+            );
         }
 
         /** @var FilterDisplayInterface $instance */
@@ -72,7 +73,9 @@ class FilterStrategy implements FilterStrategyInterface
     {
         // A filter must have a resolvable strategy for applying
         if ( ! ($strategyClass = $this->resolveApplicationStrategyClass($strategy))) {
-            throw new RuntimeException("Could not resolve application strategy class for {$target}: '{$strategy}'");
+            throw new RuntimeException(
+                "Could not resolve application strategy class for {$target}: '{$strategy}'"
+            );
         }
 
         /** @var FilterApplicationInterface $instance */

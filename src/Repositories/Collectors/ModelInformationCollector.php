@@ -28,6 +28,8 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
     protected $information;
 
     /**
+     * List of model classes included for the CMS.
+     *
      * @var string[]
      */
     protected $modelClasses;
@@ -116,7 +118,6 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
 
         return $this;
     }
-
 
     /**
      * Returns a list of model FQNs for which to collect information.
