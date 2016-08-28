@@ -68,11 +68,13 @@ return [
 
         'source' => [
 
-            // The directory that contains the model representation
+            // The directory that contains the model representations
             'dir' => app_path('Cms/Models'),
 
-            // The base directory that contains the application's models
-            'models-dir' => app_path('Models'),
+            // The base directory that contains the application's models,
+            // and the corresponding namespace
+            'models-dir'       => app_path('Models'),
+            'models-namespace' => 'App\\Models\\',
         ],
     ],
 
