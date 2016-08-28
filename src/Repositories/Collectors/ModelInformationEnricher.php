@@ -26,7 +26,7 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
     {
         $this->info = $information;
 
-        $this->enrichtListInformation();
+        $this->enrichListInformation();
 
         return $information;
     }
@@ -34,7 +34,7 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
     /**
      * @return $this
      */
-    protected function enrichtListInformation()
+    protected function enrichListInformation()
     {
         /** @var Model $model */
         $class = $this->info->modelClass();
