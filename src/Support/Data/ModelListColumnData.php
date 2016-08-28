@@ -54,4 +54,14 @@ class ModelListColumnData extends AbstractDataObject
         'sort_direction' => 'asc',
     ];
 
+    /**
+     * @param ModelListColumnData $with
+     */
+    public function merge(ModelListColumnData $with)
+    {
+        foreach ($this->getKeys() as $key) {
+            $this->mergeAttribute($key, $with->{$key});
+        }
+    }
+
 }

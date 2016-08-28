@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Support\Data;
 
 use Czim\CmsCore\Support\Data\AbstractDataObject;
+use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 
 /**
  * Class ModelMetaData
@@ -34,5 +35,24 @@ class ModelMetaData extends AbstractDataObject
         'transformer' => null,
 
     ];
+
+
+    /**
+     * @param ModelMetaData $with
+     */
+    public function merge(ModelMetaData $with)
+    {
+        $this->mergeAttribute('controller', $with->controller);
+        $this->mergeAttribute('default_controller_method', $with->default_controller_method);
+        $this->mergeAttribute('transformer', $with->transformer);
+
+        if ( ! empty($with->form_requests)) {
+            $this->form_requests = array_merge($this->form_requests, $with->form_requests);
+        }
+
+        if ( ! empty($with->views)) {
+            $this->views = array_merge($this->views, $with->views);
+        }
+    }
 
 }

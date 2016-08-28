@@ -218,12 +218,28 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
     }
 
     /**
+     * Merges information into this information set, with the new information being leading.
+     *
      * @param ModelInformationInterface|ModelInformation $with
      */
     public function merge(ModelInformationInterface $with)
     {
-        if (empty($this->model)) $this->model = $with->model;
-        if (empty($this->original_model)) $this->original_model = $with->original_model;
+        if ( ! empty($with->model)) {
+            $this->model = $with->model;
+        }
+
+        if ( ! empty($with->original_model)) {
+            $this->original_model = $with->original_model;
+        }
+
+        // Meta information
+
+        $this->mergeAttribute('meta', $with->meta);
+        $this->mergeAttribute('verbose_name', $with->verbose_name);
+        $this->mergeAttribute('verbose_name_plural', $with->verbose_name_plural);
+        
+        $this->mergeAttribute('list', $with->list);
+
     }
 
 }

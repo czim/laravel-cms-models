@@ -27,4 +27,9 @@ interface ModelInformationInterface extends DataObjectInterface
      */
     public function labelPlural();
 
+    /**
+     * @param ModelInformationInterface $with
+     */
+    public function merge(ModelInformationInterface $with);
+
 }

@@ -9,6 +9,7 @@ use Czim\CmsModels\Support\Data\ModelListColumnData;
 use Czim\CmsModels\Support\Data\ModelListFilterData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 use Illuminate\Database\Eloquent\Model;
+use UnexpectedValueException;
 
 class ModelInformationEnricher implements ModelInformationEnricherInterface
 {
@@ -40,8 +41,8 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
         $class = $this->info->modelClass();
         $model = new $class;
 
-        // Fill list references if they are empty
         if ( ! count($this->info->list->columns)) {
+            // Fill list references if they are empty
             $columns = [];
 
             foreach ($this->info->attributes as $attribute) {
@@ -50,6 +51,27 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
                 }
 
                 $columns[$attribute->name] = $this->makeModelListColumnDataForAttributeData($attribute, $this->info);
+            }
+
+            $this->info->list->columns = $columns;
+
+        } else {
+            // Check filled columns and enrich them as required
+            $columns = [];
+
+            foreach ($this->info->list->columns as $key => $column) {
+
+                if ( ! isset($this->info->attributes[ $key ])) {
+                    throw new UnexpectedValueException(
+                        "Unenriched list column set with non-attribute key; make sure full column data is provided"
+                    );
+                }
+
+                $attributeColumnInfo = $this->makeModelListColumnDataForAttributeData($this->info->attributes[ $key ], $this->info);
+
+                $attributeColumnInfo->merge($column);
+
+                $columns[ $key ] = $attributeColumnInfo;
             }
 
             $this->info->list->columns = $columns;
@@ -62,8 +84,9 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
             $this->info->list->default_sort = $model->getKeyName();
         }
 
-        // Set default filters if they are empty
+
         if ( ! count($this->info->list->filters)) {
+            // Set default filters if they are empty
             $filters = [];
 
             foreach ($this->info->attributes as $attribute) {
@@ -78,6 +101,37 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
                 }
 
                 $filters[$attribute->name] = $filterData;
+            }
+
+            $this->info->list->filters = $filters;
+        } else {
+            // Check set filters and enrich them as required
+            $filters = [];
+
+            foreach ($this->info->list->filters as $key => $filter) {
+
+                // If the filter information is fully provided, do not try to enrich
+                if ($filter->strategy && $filter->target) {
+                    continue;
+                }
+
+                if ( ! isset($this->info->attributes[ $key ])) {
+                    throw new UnexpectedValueException(
+                        "Unenriched list filter set with non-attribute key; make sure full filter data is provided ({$key})"
+                    );
+                }
+
+                $attributeFilterInfo = $this->makeModelListFilterDataForAttributeData($this->info->attributes[ $key ], $this->info);
+
+                if (false === $attributeFilterInfo) {
+                    throw new UnexpectedValueException(
+                        "Unenriched list filter set for uninterpretable attribute for filter data; make sure full filter data is provided ({$key})"
+                    );
+                }
+
+                $attributeFilterInfo->merge($filter);
+
+                $filters[ $key ] = $attributeFilterInfo;
             }
 
             $this->info->list->filters = $filters;
@@ -139,6 +193,10 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
 
             $strategy = 'DropdownEnum';
             $options  = $attribute->values;
+
+        } elseif ($attribute->cast === AttributeCast::STRING) {
+
+            $strategy = 'BasicString';
         }
 
         if ( ! $strategy) {
