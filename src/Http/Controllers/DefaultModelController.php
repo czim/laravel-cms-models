@@ -86,7 +86,25 @@ class DefaultModelController extends BaseModelController
         $this->updateFilters()
              ->checkActivePage();
 
-        return redirect()->back();
+        $previousUrl = app('url')->previous();
+        $previousUrl = $this->removePageQueryFromUrl($previousUrl);
+
+        return redirect()->to($previousUrl);
+    }
+
+    /**
+     * Removes the page query parameter from a full URL.
+     *
+     * @param string $url
+     * @return string
+     */
+    protected function removePageQueryFromUrl($url)
+    {
+        $parts = parse_url($url);
+
+        $query = preg_replace('#page=\d+&?#i', '', array_get($parts, 'query', ''));
+
+        return array_get($parts, 'path') . ($query ? '?' . $query : null);
     }
 
 
@@ -101,12 +119,13 @@ class DefaultModelController extends BaseModelController
 
         $sort = $this->getActualSort();
 
-        if ($sort) {
-            $criteria = $this->getModelSortCriteria();
-            if ($criteria) {
-                $this->modelRepository->pushCriteria($criteria);
-            }
-        }
+        if ( ! $sort) return $this;
+
+        $criteria = $this->getModelSortCriteria();
+
+        if ( ! $criteria) return $this;
+
+        $this->modelRepository->pushCriteria($criteria);
 
         return $this;
     }
