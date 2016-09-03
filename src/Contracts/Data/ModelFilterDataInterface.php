@@ -42,5 +42,10 @@ interface ModelFilterDataInterface extends ArrayAccess, Arrayable
      * @return array
      */
     public function values();
+    
+    /**
+     * @param ModelFilterDataInterface $with
+     */
+    public function merge(ModelFilterDataInterface $with);
 
 }

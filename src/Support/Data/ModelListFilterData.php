@@ -94,11 +94,16 @@ class ModelListFilterData extends AbstractDataObject implements ModelFilterDataI
     }
 
     /**
-     * @param ModelListFilterData $with
+     * @param ModelFilterDataInterface|ModelListFilterData $with
      */
-    public function merge(ModelListFilterData $with)
+    public function merge(ModelFilterDataInterface $with)
     {
-        foreach ($this->getKeys() as $key) {
+        $standardMergeKeys = array_diff($this->getKeys(), ['values']);
+
+        // Merge values separately
+        $this->values = array_merge($this->values ?: [], $with->values ?: []);
+
+        foreach ($standardMergeKeys as $key) {
             $this->mergeAttribute($key, $with->{$key});
         }
     }

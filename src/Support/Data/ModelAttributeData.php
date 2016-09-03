@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Support\Data;
 
 use Czim\CmsCore\Support\Data\AbstractDataObject;
+use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 
 /**
@@ -23,7 +24,7 @@ use Czim\CmsModels\Support\Enums\AttributeCast;
  * @property bool $unsigned
  * @property array $values
  */
-class ModelAttributeData extends AbstractDataObject
+class ModelAttributeData extends AbstractDataObject implements ModelAttributeDataInterface
 {
 
     protected $attributes = [
@@ -69,9 +70,9 @@ class ModelAttributeData extends AbstractDataObject
 
 
     /**
-     * @param ModelAttributeData $data
+     * @param ModelAttributeDataInterface|ModelAttributeData $data
      */
-    public function merge(ModelAttributeData $data)
+    public function merge(ModelAttributeDataInterface $data)
     {
         $mergeEmptyAttributes = [
             'name',
@@ -90,9 +91,11 @@ class ModelAttributeData extends AbstractDataObject
     }
 
     /**
-     * @param ModelAttributeData $data
+     * Merges data for an attribute's translated column.
+     *
+     * @param ModelAttributeDataInterface|ModelAttributeData $data
      */
-    public function mergeTranslation(ModelAttributeData $data)
+    public function mergeTranslation(ModelAttributeDataInterface $data)
     {
         $this->merge($data);
     }
