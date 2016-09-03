@@ -50,7 +50,7 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
                     continue;
                 }
 
-                $columns[$attribute->name] = $this->makeModelListColumnDataForAttributeData($attribute, $this->info);
+                $columns[ $attribute->name ] = $this->makeModelListColumnDataForAttributeData($attribute, $this->info);
             }
 
             $this->info->list->columns = $columns;
@@ -76,6 +76,8 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
 
             $this->info->list->columns = $columns;
         }
+
+
 
         // Default sorting order
         if ($this->info->timestamps) {
@@ -149,7 +151,8 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
     {
         $primaryIncrementing = $attribute->name === 'id' && $info->incrementing;
 
-        $sortable = (   ! $attribute->translated
+        $sortable = (
+                ! $attribute->translated
             &&  ( $attribute->isNumeric() || in_array($attribute->cast, [
                     AttributeCast::BOOLEAN,
                     AttributeCast::DATE,
@@ -158,11 +161,12 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
             )
         );
 
-        $sortDirection = (  $primaryIncrementing
+        $sortDirection = 'asc';
+        if (    $primaryIncrementing
             ||  in_array($attribute->cast, [ AttributeCast::BOOLEAN, AttributeCast::DATE ])
-        )
-            ? 'desc' : 'asc';
-
+        ) {
+            $sortDirection = 'desc';
+        }
 
         return new ModelListColumnData([
             'source'         => $attribute->name,

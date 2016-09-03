@@ -4,7 +4,6 @@ namespace Czim\CmsModels\Providers;
 use Czim\CmsModels\Analyzer\DatabaseAnalyzer;
 use Czim\CmsModels\Console\Commands\ClearModelInformationCache;
 use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationCollectorInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationInterpreterInterface;
@@ -149,21 +148,6 @@ class CmsModelsServiceProvider extends ServiceProvider
         $this->publishes([
             realpath(dirname(__DIR__) . '/../config/cms-models.php') => config_path('cms-models.php'),
         ]);
-
-        return $this;
-    }
-
-    /**
-     * Initializes the repository with collected model information.
-     *
-     * @return $this
-     */
-    protected function initializeModelInformationRepository()
-    {
-        /** @var ModelInformationRepositoryInterface $repository */
-        $repository = app(ModelInformationRepositoryInterface::class);
-
-        $repository->initialize();
 
         return $this;
     }

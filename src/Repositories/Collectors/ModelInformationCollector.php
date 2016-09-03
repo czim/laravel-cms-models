@@ -1,6 +1,8 @@
 <?php
 namespace Czim\CmsModels\Repositories\Collectors;
 
+use Czim\CmsCore\Contracts\Core\CoreInterface;
+use Czim\CmsCore\Support\Enums\Component;
 use Czim\CmsModels\Analyzer\ModelAnalyzer;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationCollectorInterface;
@@ -147,7 +149,7 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
             $key = $this->moduleHelper->moduleKeyForModel($modelClass);
 
             if ( ! $this->information->has($key)) {
-                Log::debug("CMS model data for unset model information key '{$key}'");
+                $this->getCore()->log('debug', "CMS model data for unset model information key '{$key}'");
                 continue;
             }
 
@@ -260,6 +262,14 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
 
         return rtrim(config('cms-models.collector.source.models-namespace'), '\\')
              . '\\' . str_replace('/', '\\', $path);
+    }
+
+    /**
+     * @return CoreInterface
+     */
+    protected function getCore()
+    {
+        return app(Component::CORE);
     }
 
 }

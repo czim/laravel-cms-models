@@ -5,7 +5,6 @@ use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
 use Czim\CmsModels\Contracts\View\FilterApplicationInterface;
 use Czim\CmsModels\Contracts\View\FilterDisplayInterface;
 use Czim\CmsModels\Support\Data\ModelListFilterData;
-use Czim\DataObject\Contracts\DataObjectInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 
