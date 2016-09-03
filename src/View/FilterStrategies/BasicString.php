@@ -11,6 +11,13 @@ class BasicString implements FilterDisplayInterface, FilterApplicationInterface
 {
 
     /**
+     * Whether a single string match should be exact.
+     *
+     * @var bool
+     */
+    protected $exact = false;
+
+    /**
      * Applies a strategy to render a filter field.
      *
      * @param string  $key
@@ -91,6 +98,10 @@ class BasicString implements FilterDisplayInterface, FilterApplicationInterface
     {
         if (is_array($value)) {
             return $query->whereIn($target, $value);
+        }
+
+        if ( ! $this->exact) {
+            return $query->where($target, 'like', '%' . $value . '%');
         }
 
         return $query->where($target, $value);
