@@ -75,6 +75,8 @@ class ModelInformationRepository implements ModelInformationRepositoryInterface
 
         $this->fillModelClassIndex();
 
+        $this->initialized = true;
+
         return $this;
     }
 
