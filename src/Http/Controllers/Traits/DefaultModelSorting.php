@@ -66,7 +66,7 @@ trait DefaultModelSorting
     }
 
     /**
-     * Retrieves the sort settions from the session and restores them as active.
+     * Retrieves the sort settings from the session and restores them as active.
      */
     protected function retrieveActiveSortFromSession()
     {
