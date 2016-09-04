@@ -1,6 +1,6 @@
 
 <a class="sort {{ $active ? 'active' : null }}" href="?sort={{ $key }}&sortdir={{ $active ? ($direction === 'desc' ? 'asc' : 'desc') : null }}">
-    {{ $column->label }}
+    {{ ucfirst($column->label) }}
 
     &nbsp;&nbsp;
 

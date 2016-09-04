@@ -55,7 +55,7 @@
                                         ])
 
                                     @else
-                                        {{ $column->label }}
+                                        {{ ucfirst($column->label) }}
                                     @endif
 
                                 </th>
