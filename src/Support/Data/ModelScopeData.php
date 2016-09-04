@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Support\Data;
 
 use Czim\CmsCore\Support\Data\AbstractDataObject;
+use Czim\CmsModels\Contracts\Data\ModelScopeDataInterface;
 
 /**
  * Class ModelScopeData
@@ -12,12 +13,12 @@ use Czim\CmsCore\Support\Data\AbstractDataObject;
  * @property string $label
  * @property string $strategy
  */
-class ModelScopeData extends AbstractDataObject
+class ModelScopeData extends AbstractDataObject implements ModelScopeDataInterface
 {
 
     protected $attributes = [
 
-        // Relation method name
+        // Scope method name
         'method' => '',
 
         // Display label (or translation key)
@@ -27,5 +28,30 @@ class ModelScopeData extends AbstractDataObject
         'strategy' => '',
 
     ];
+
+
+    /**
+     * Returns display text for the scope.
+     *
+     * @return string
+     */
+    public function display()
+    {
+        if ($this->label) {
+            return $this->label;
+        }
+
+        return snake_case($this->method, ' ');
+    }
+
+    /**
+     * @param ModelScopeDataInterface $with
+     */
+    public function merge(ModelScopeDataInterface $with)
+    {
+        foreach ($this->getKeys() as $key) {
+            $this->mergeAttribute($key, $with[$key]);
+        }
+    }
 
 }
