@@ -50,23 +50,27 @@ class TranslatedAttribute implements SortStrategyInterface
             ->select("{$modelTable}.*")
             ->leftJoin(
                 $translationTable,
-                "{$translationForeign}",
-                '=',
-                "{$modelTable}.{$modelKey}"
-            )
-            ->where(function ($query) use ($translationTable, $localeKey) {
+                function ($join) use (
+                    $translationForeign,
+                    $translationTable,
+                    $modelTable,
+                    $modelKey,
+                    $localeKey
+                ) {
+                    $join->on("{$translationForeign}", '=', "{$modelTable}.{$modelKey}");
 
-                // Check if we need to work with a fallback locale
-                $locale   = app()->getLocale();
-                $fallback = $this->getFallbackLocale();
+                    // Check if we need to work with a fallback locale
+                    $locale   = app()->getLocale();
+                    $fallback = $this->getFallbackLocale();
 
-                $query->where("{$translationTable}.{$localeKey}", $locale);
+                    $join->where("{$translationTable}.{$localeKey}", '=', $locale);
 
-                if ($fallback && $fallback != $locale) {
-                    $query->orWhere("{$translationTable}.{$localeKey}", $fallback);
+                    if ($fallback && $fallback != $locale) {
+                        $join->orWhere("{$translationTable}.{$localeKey}", '=', $fallback);
+                    }
                 }
 
-            })
+            )
             ->groupBy("{$modelTable}.{$modelKey}");
 
         if ($this->nullLast) {
