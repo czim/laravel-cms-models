@@ -1,9 +1,12 @@
 <?php
 namespace Czim\CmsModels\Repositories\Collectors;
 
+use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationInterpreterInterface;
 use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\Support\Data\ModelListColumnData;
+use Czim\CmsModels\Support\Data\ModelListFilterData;
 
 class CmsModelInformationInterpreter implements ModelInformationInterpreterInterface
 {
@@ -50,12 +53,14 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
 
             $this->raw['list']['columns'] = $this->normalizeStandardArrayProperty(
                 array_get($this->raw['list'], 'columns', []),
-                'strategy'
+                'strategy',
+                ModelListColumnData::class
             );
 
             $this->raw['list']['filters'] = $this->normalizeStandardArrayProperty(
                 array_get($this->raw['list'], 'filters', []),
-                'strategy'
+                'strategy',
+                ModelListFilterData::class
             );
         }
 
@@ -65,11 +70,12 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
     /**
      * Normalizes a standard array property.
      *
-     * @param array  $source
-     * @param string $standardProperty property to set for string values in normalized array
+     * @param array       $source
+     * @param string      $standardProperty     property to set for string values in normalized array
+     * @param null|string $objectClass          dataobject FQN to interpret as
      * @return array
      */
-    protected function normalizeStandardArrayProperty(array $source, $standardProperty)
+    protected function normalizeStandardArrayProperty(array $source, $standardProperty, $objectClass = null)
     {
         $normalized = [];
 
@@ -88,10 +94,32 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
                 ];
             }
 
+            if ($objectClass) {
+                $value = $this->makeClearedDataObject($objectClass, $value);
+            }
+
             $normalized[ $key ] = $value;
         }
 
         return $normalized;
+    }
+
+    /**
+     * Makes a fresh dataobject with its defaults cleared before filling it with data.
+     *
+     * @param string $objectClass
+     * @param array  $data
+     * @return AbstractDataObject
+     */
+    protected function makeClearedDataObject($objectClass, array $data)
+    {
+        /** @var AbstractDataObject $object */
+        $object = new $objectClass();
+        $object->clear();
+
+        $object->setAttributes($data);
+
+        return $object;
     }
 
 }
