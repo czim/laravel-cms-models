@@ -171,7 +171,7 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
         return new ModelListColumnData([
             'source'         => $attribute->name,
             'strategy'       => $attribute->strategy_list ?: $attribute->strategy,
-            'label'          => snake_case($attribute->name, ' '),
+            'label'          => str_replace('_', ' ', snake_case($attribute->name)),
             'style'          => $primaryIncrementing ? 'primary-id' : null,
             'editable'       => $attribute->fillable,
             'sortable'       => $sortable,
@@ -209,6 +209,7 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
 
         return new ModelListFilterData([
             'source'   => $attribute->name,
+            'label'    => str_replace('_', ' ', snake_case($attribute->name)),
             'target'   => $attribute->name,
             'strategy' => $strategy,
             'values'   => $options,

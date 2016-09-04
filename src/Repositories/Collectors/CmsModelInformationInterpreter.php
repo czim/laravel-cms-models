@@ -33,7 +33,11 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
      */
     protected function createInformationInstance()
     {
-        return new ModelInformation($this->raw);
+        $info = (new ModelInformation([]))->clear();
+
+        $info->setAttributes($this->raw);
+
+        return $info;
     }
 
 
@@ -89,4 +93,5 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
 
         return $normalized;
     }
+
 }

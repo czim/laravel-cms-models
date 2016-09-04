@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Support\Data;
 
 use Czim\CmsCore\Support\Data\AbstractDataObject;
+use Czim\CmsModels\Contracts\Data\ModelListColumnDataInterface;
 
 /**
  * Class ModelListColumnInformation
@@ -18,7 +19,7 @@ use Czim\CmsCore\Support\Data\AbstractDataObject;
  * @property string $sort_strategy
  * @property string $sort_direction asc|desc
  */
-class ModelListColumnData extends AbstractDataObject
+class ModelListColumnData extends AbstractDataObject implements ModelListColumnDataInterface
 {
 
     protected $attributes = [
@@ -42,22 +43,22 @@ class ModelListColumnData extends AbstractDataObject
         'style' => null,
 
         // Whether this column is supported for in-line editing.
-        'editable' => null,
+        'editable' => false,
 
         // Whether it is possible to sort the list for this column
-        'sortable' => null,
+        'sortable' => false,
 
         // The sort strategy (class/FQN) to use for sorting
         'sort_strategy' => null,
 
         // Default sort direction for this column, if sortable
-        'sort_direction' => null,
+        'sort_direction' => 'asc',
     ];
 
     /**
-     * @param ModelListColumnData $with
+     * @param ModelListColumnDataInterface|ModelListColumnData $with
      */
-    public function merge(ModelListColumnData $with)
+    public function merge(ModelListColumnDataInterface $with)
     {
         foreach ($this->getKeys() as $key) {
             $this->mergeAttribute($key, $with->{$key});
