@@ -175,6 +175,7 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
             'style'          => $primaryIncrementing ? 'primary-id' : null,
             'editable'       => $attribute->fillable,
             'sortable'       => $sortable,
+            'sort_strategy'  => $attribute->translated ? 'translated' : null,
             'sort_direction' => $sortDirection,
         ]);
     }
@@ -191,16 +192,16 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
 
         if ($attribute->cast === AttributeCast::BOOLEAN) {
 
-            $strategy = 'DropdownBoolean';
+            $strategy = 'boolean';
 
         } elseif ($attribute->type === 'enum') {
 
-            $strategy = 'DropdownEnum';
+            $strategy = 'enum';
             $options  = $attribute->values;
 
         } elseif ($attribute->cast === AttributeCast::STRING) {
 
-            $strategy = 'BasicString';
+            $strategy = 'string';
         }
 
         if ( ! $strategy) {

@@ -136,13 +136,18 @@ class ListStrategy implements ListStrategyInterface
 
 
     /**
-     * Resolves strategy assuming it is the class name or FQN of a list display interface implementation.
+     * Resolves strategy assuming it is the class name or FQN of a list display interface
+     * implementation or an alias for one.
      *
      * @param $strategy
      * @return string|false     returns full class namespace if it was resolved succesfully
      */
     protected function resolveStrategyClass($strategy)
     {
+        if ( ! str_contains($strategy, '.')) {
+            $strategy = config('cms-models.strategies.list.aliases.' . $strategy, $strategy);
+        }
+
         if (class_exists($strategy) && is_a($strategy, ListDisplayInterface::class, true)) {
             return $strategy;
         }

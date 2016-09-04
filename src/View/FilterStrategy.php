@@ -116,6 +116,10 @@ class FilterStrategy implements FilterStrategyInterface
      */
     protected function resolveStrategyClass($strategy, $interfaceFqn)
     {
+        if ( ! str_contains($strategy, '.')) {
+            $strategy = config('cms-models.strategies.filter.aliases.' . $strategy, $strategy);
+        }
+
         if (class_exists($strategy) && is_a($strategy, $interfaceFqn, true)) {
             return $strategy;
         }

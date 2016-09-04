@@ -154,6 +154,18 @@ return [
             // The default strategy for sorting columns
             'default-sort-namespace' => 'Czim\\CmsModels\\Repositories\\SortStrategies\\',
             'default-sort-strategy'  => Czim\CmsModels\Repositories\SortStrategies\NullLast::class,
+
+            // Aliases for list display strategy classes
+            'aliases' => [
+                'check' => Czim\CmsModels\View\ListStrategies\Checkbox::class,
+            ],
+
+            // Aliases for sort strategy classes
+            'sort-aliases' => [
+                'null-last'  => Czim\CmsModels\Repositories\SortStrategies\NullLast::class,
+                'translated' => Czim\CmsModels\Repositories\SortStrategies\TranslatedAttribute::class,
+            ],
+
         ],
 
         'filter' => [
@@ -161,6 +173,12 @@ return [
             // The default namespace to prefix for relative strategy class names
             'default-namespace' => 'Czim\\CmsModels\\View\\FilterStrategies\\',
 
+            // Aliases for filter strategy classes
+            'aliases' => [
+                'boolean' => Czim\CmsModels\View\FilterStrategies\DropdownBoolean::class,
+                'enum'    => Czim\CmsModels\View\FilterStrategies\DropdownEnum::class,
+                'string'  => Czim\CmsModels\View\FilterStrategies\BasicString::class,
+            ],
         ],
 
     ],

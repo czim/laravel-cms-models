@@ -69,13 +69,18 @@ class ModelOrderStrategy implements CriteriaInterface
     }
 
     /**
-     * Resolves strategy assuming it is the class name or FQN of a sort interface implementation.
+     * Resolves strategy assuming it is the class name or FQN of a sort interface implementation,
+     * or a configured alias.
      *
      * @param $strategy
      * @return string|false     returns full class namespace if it was resolved succesfully
      */
     protected function resolveStrategyClass($strategy)
     {
+        if ( ! str_contains($strategy, '.')) {
+            $strategy = config('cms-models.strategies.list.sort-aliases.' . $strategy, $strategy);
+        }
+
         if (class_exists($strategy) && is_a($strategy, SortStrategyInterface::class, true)) {
             return $strategy;
         }
