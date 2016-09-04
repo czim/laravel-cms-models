@@ -152,8 +152,7 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
         $primaryIncrementing = $attribute->name === 'id' && $info->incrementing;
 
         $sortable = (
-                ! $attribute->translated
-            &&  ( $attribute->isNumeric() || in_array($attribute->cast, [
+             ( $attribute->isNumeric() || in_array($attribute->cast, [
                     AttributeCast::BOOLEAN,
                     AttributeCast::DATE,
                     AttributeCast::STRING,

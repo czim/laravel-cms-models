@@ -5,10 +5,12 @@ use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
 use Czim\CmsModels\Contracts\View\FilterApplicationInterface;
 use Czim\CmsModels\Contracts\View\FilterDisplayInterface;
 use Czim\CmsModels\Support\Data\ModelListFilterData;
+use Czim\CmsModels\View\Traits\HandlesTranslatedTarget;
 use Illuminate\Database\Eloquent\Builder;
 
 class BasicString implements FilterDisplayInterface, FilterApplicationInterface
 {
+    use HandlesTranslatedTarget;
 
     /**
      * Whether a single string match should be exact.
@@ -16,6 +18,14 @@ class BasicString implements FilterDisplayInterface, FilterApplicationInterface
      * @var bool
      */
     protected $exact = false;
+
+    /**
+     * Whether this filter is for a translated attribute.
+     *
+     * @var bool
+     */
+    protected $translated = false;
+
 
     /**
      * Applies a strategy to render a filter field.
@@ -51,6 +61,8 @@ class BasicString implements FilterDisplayInterface, FilterApplicationInterface
 
         $targetParts = $this->parseTarget($target);
 
+        $this->translated = $this->isTranslatedTargetAttribute($targetParts, $query->getModel());
+
         $this->applyRecursive($query, $targetParts, $value);
     }
 
@@ -65,6 +77,11 @@ class BasicString implements FilterDisplayInterface, FilterApplicationInterface
     protected function applyRecursive($query, array $targetParts, $value)
     {
         if (count($targetParts) < 2) {
+
+            if ($this->translated) {
+                return $this->applyTranslatedValue($query, head($targetParts), $value);
+            }
+
             return $this->applyValue($query, head($targetParts), $value);
         }
 
@@ -105,6 +122,24 @@ class BasicString implements FilterDisplayInterface, FilterApplicationInterface
         }
 
         return $query->where($target, $value);
+    }
+
+    /**
+     * Applies a value directly to a builder object.
+     *
+     * @param Builder $query
+     * @param string  $target
+     * @param mixed   $value
+     * @return mixed
+     */
+    protected function applyTranslatedValue($query, $target, $value)
+    {
+        return $query->whereHas('translations', function ($query) use ($target, $value) {
+
+            $this->applyLocaleRestriction($query);
+
+            return $this->applyValue($query, $target, $value);
+        });
     }
 
 }
