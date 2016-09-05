@@ -18,7 +18,9 @@
         <div class="btn-toolbar pull-right">
             <div class="btn-group">
                 @if (cms_auth()->can("{$permissionPrefix}create"))
-                    <a href="{{ cms_route("{$routePrefix}.create") }}" class="btn btn-primary">New {{ $model->verbose_name }}</a>
+                    <a href="{{ cms_route("{$routePrefix}.create") }}" class="btn btn-primary">
+                        {{ cms_trans('models.button.new-record', [ 'name' => $model->verbose_name ]) }}
+                    </a>
                 @endif
             </div>
         </div>
@@ -127,14 +129,37 @@
                     </tbody>
                 </table>
 
-                @if (method_exists($records, 'links'))
-                    {{ $records->links() }}
-                @endif
+                <div class="listing-footer clearfix">
+
+                    <div class="listing-pagination pull-left">
+                        @if (method_exists($records, 'links'))
+                            {{ $records->links() }}
+                        @endif
+                    </div>
+
+                    <?php
+                        $currentCount = method_exists($records, 'total') ? $records->total() : 0;
+                    ?>
+
+                    @if ($totalCount)
+
+                        <div class="well well-sm listing-counts pull-right">
+                            @include('cms-models::model.partials.list.counts', [
+                                'total'   => $totalCount,
+                                'current' => $currentCount,
+                            ])
+                        </div>
+
+                    @endif
+
+                </div>
 
             @else
 
                 <div>
-                    <em>No {{ $model->verbose_name_plural }} found.</em>
+                    <em>
+                        {{ cms_trans('models.no-records-found', [ 'name' => $model->verbose_name_plural ]) }}
+                    </em>
                 </div>
 
             @endif

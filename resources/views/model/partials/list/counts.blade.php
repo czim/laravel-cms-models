@@ -1,11 +1,11 @@
 
-<div class="well well-sm">
+@if ($current != $total)
+    {{ $current }}
+    {{ cms_trans('models.counts.out-of') }}
+@endif
 
-    @if ($current != $total)
-        {{ $current }}
-        {{ cms_trans('models.counts.out-of') }}
-    @endif
+{{ $total }}
 
-    {{ $total }}
-
-</div>
+@if ($current == $total)
+    {{ cms_trans('models.counts.total') }}
+@endif
