@@ -152,12 +152,16 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
         $primaryIncrementing = $attribute->name === 'id' && $info->incrementing;
 
         $sortable = (
-             ( $attribute->isNumeric() || in_array($attribute->cast, [
+                $attribute->isNumeric()
+            ||  in_array($attribute->cast, [
                     AttributeCast::BOOLEAN,
                     AttributeCast::DATE,
                     AttributeCast::STRING,
                 ])
-            )
+            &&  ! in_array($attribute->type, [
+                    'text', 'longtext', 'mediumtext',
+                    'blob', 'longblob', 'mediumblob',
+                ])
         );
 
         $sortDirection = 'asc';
