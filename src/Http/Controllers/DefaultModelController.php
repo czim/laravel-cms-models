@@ -3,19 +3,24 @@ namespace Czim\CmsModels\Http\Controllers;
 
 use Czim\CmsModels\Http\Controllers\Traits\DefaultModelFiltering;
 use Czim\CmsModels\Http\Controllers\Traits\DefaultModelPagination;
+use Czim\CmsModels\Http\Controllers\Traits\DefaultModelScoping;
 use Czim\CmsModels\Http\Controllers\Traits\DefaultModelSorting;
 
 class DefaultModelController extends BaseModelController
 {
-    use DefaultModelSorting,
+    use DefaultModelFiltering,
         DefaultModelPagination,
-        DefaultModelFiltering;
+        DefaultModelScoping,
+        DefaultModelSorting;
 
     public function index()
     {
         $this->applySort()
+             ->checkScope()
              ->checkFilters()
              ->checkActivePage();
+
+        $this->applyScope($this->modelRepository);
 
         $query = $this->modelRepository->query();
 
@@ -39,6 +44,7 @@ class DefaultModelController extends BaseModelController
             'pageSize'         => $this->getActualPageSize(),
             'pageSizeOptions'  => $this->getPageSizeOptions(),
             'filters'          => $this->getActiveFilters(),
+            'activeScope'      => $this->getActiveScope(),
         ]);
     }
 

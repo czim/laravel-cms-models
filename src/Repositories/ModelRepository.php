@@ -2,11 +2,11 @@
 namespace Czim\CmsModels\Repositories;
 
 use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
-use Czim\Repository\BaseRepository;
+use Czim\Repository\ExtendedRepository;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Collection;
 
-class ModelRepository extends BaseRepository implements ModelRepositoryInterface
+class ModelRepository extends ExtendedRepository implements ModelRepositoryInterface
 {
 
     /**

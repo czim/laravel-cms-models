@@ -277,14 +277,14 @@ class ModelAnalyzer
             }
 
             // store the scope name without the scope prefix
-            $scopes[] = new ModelScopeData([
+            $scopes[ $scopeName ] = new ModelScopeData([
                 'method'   => $scopeName,
                 'label'    => null,
                 'strategy' => null,
             ]);
         }
 
-        $this->info['scopes'] = $scopes;
+        $this->info->list->scopes = $scopes;
 
         return $this;
     }

@@ -6,13 +6,14 @@ use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
+use Czim\Repository\Contracts\ExtendedRepositoryInterface;
 use RuntimeException;
 
 abstract class BaseModelController extends Controller
 {
 
     /**
-     * @var ModelRepositoryInterface
+     * @var ModelRepositoryInterface|ExtendedRepositoryInterface
      */
     protected $modelRepository;
 
