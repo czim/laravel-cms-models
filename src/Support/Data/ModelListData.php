@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Support\Data;
 
 use Czim\CmsCore\Support\Data\AbstractDataObject;
+use Czim\CmsModels\Contracts\Data\ModelListDataInterface;
 
 /**
  * Class ModelListInformation
@@ -10,8 +11,10 @@ use Czim\CmsCore\Support\Data\AbstractDataObject;
  *
  * @property int|array $page_size
  * @property array|ModelListColumnData[] $columns
+ * @property bool $disable_filters
  * @property array|ModelListFilterData[] $filters
  * @property array|ModelIncludesData $includes
+ * @property bool $disable_scopes
  * @property array|ModelScopeData[] $scopes
  * @property string|array $default_sort
  * @property bool $orderable
@@ -19,13 +22,14 @@ use Czim\CmsCore\Support\Data\AbstractDataObject;
  * @property bool $activatable
  * @property string $active_column
  */
-class ModelListData extends AbstractDataObject
+class ModelListData extends AbstractDataObject implements ModelListDataInterface
 {
 
     protected $objects = [
         'columns'  => ModelListColumnData::class . '[]',
         'filters'  => ModelListFilterData::class . '[]',
         'includes' => ModelIncludesData::class,
+        'scopes'   => ModelScopeData::class . '[]',
     ];
 
     protected $attributes = [
@@ -35,6 +39,8 @@ class ModelListData extends AbstractDataObject
         // The entries should be keyed with an identifiying string that may be referred to by other list options.
         'columns' => [],
 
+        // Whether to disable filters even if they're set
+        'disable_filters' => false,
         // Arrays (instances of ModelListFilterData) with information about available filters in the listing.
         // These should appear in the order in which they should be displayed. They should be keyed by strings
         // that may be referred to in filter POST data.
@@ -60,7 +66,9 @@ class ModelListData extends AbstractDataObject
         // The column that should be toggled when toggling 'active' status for the model.
         'active_column' => 'active',
 
-        // Scopes or scoping strategies to present for getting selected sets of the model's records
+        // Whether to disable the use and display of scopes.
+        'disable_scopes' => false,
+        // Scopes or scoping strategies, keyed by the scope name.
         'scopes' => [],
 
         // Includes for listing (overrides normal includes, if set), MetaIncludesData instance
@@ -74,5 +82,58 @@ class ModelListData extends AbstractDataObject
         ],
 
     ];
+
+    /**
+     * @param ModelListDataInterface|ModelListData $with
+     * @return $this
+     */
+    public function merge(ModelListDataInterface $with)
+    {
+        // Overwrite columns intelligently: keep only the columns for keys that were set
+        // and merge those for which data is set.
+        if ($with->columns && count($with->columns)) {
+
+            $mergedColumns = [];
+
+            foreach ($with->columns as $key => $data) {
+
+                if (array_has($this->columns, $key)) {
+                    $data = $this->columns[ $key ]->merge($data);
+                }
+
+                $mergedColumns[ $key ] = $data;
+            }
+
+            $this->columns = $mergedColumns;
+        }
+
+        // Overwrite filters if specifically set
+        if ($with->filters && count($with->filters)) {
+            $this->filters = $with->filters;
+        }
+
+        // Overwrite scopes if they are specifically set
+        if ($with->scopes && count($with->scopes)) {
+            $this->scopes = $with->scopes;
+        }
+
+
+        $standardMergeKeys = [
+            'page_size',
+            'orderable',
+            'order_strategy',
+            'activated',
+            'active_column',
+            'default_sort',
+            'disable_filters',
+            'disable_scopes',
+        ];
+
+        foreach ($standardMergeKeys as $key) {
+            $this->mergeAttribute($key, $with->{$key});
+        }
+
+        return $this;
+    }
 
 }

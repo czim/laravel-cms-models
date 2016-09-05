@@ -7,6 +7,7 @@ use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationInterpreter
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelListColumnData;
 use Czim\CmsModels\Support\Data\ModelListFilterData;
+use Czim\CmsModels\Support\Data\ModelScopeData;
 
 class CmsModelInformationInterpreter implements ModelInformationInterpreterInterface
 {
@@ -57,14 +58,53 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
                 ModelListColumnData::class
             );
 
-            $this->raw['list']['filters'] = $this->normalizeStandardArrayProperty(
-                array_get($this->raw['list'], 'filters', []),
-                'strategy',
-                ModelListFilterData::class
-            );
+
+            $filters = array_get($this->raw['list'], 'filters', []);
+            if (false === $filters) {
+                $this->raw['list']['disable_filters'] = true;
+            } else {
+                $this->raw['list']['filters'] = $this->normalizeStandardArrayProperty(
+                    $filters,
+                    'strategy',
+                    ModelListFilterData::class
+                );
+            }
+
+            $scopes = array_get($this->raw['list'], 'scopes', []);
+            if (false === $scopes) {
+                $this->raw['list']['disable_scopes'] = true;
+            } else {
+                $this->raw['list']['scopes'] = $this->normalizeScopeArray($scopes);
+            }
         }
 
         return $this;
+    }
+
+    /**
+     * Normalizes an array with scope data.
+     *
+     * @param array $scopes
+     * @return array
+     */
+    protected function normalizeScopeArray(array $scopes)
+    {
+        $scopes = $this->normalizeStandardArrayProperty(
+            $scopes,
+            'strategy',
+            ModelScopeData::class
+        );
+
+        // Make sure that each scope entry has at least a method or a strategy
+        foreach ($scopes as $key => &$value) {
+            if ( ! $value['method'] && ! $value['strategy']) {
+                $value['method'] = $key;
+            }
+        }
+
+        unset($value);
+
+        return $scopes;
     }
 
     /**

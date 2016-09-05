@@ -3,7 +3,7 @@
     $filterData = $model->list->filters;
 ?>
 
-@if ($filterData && count($filterData))
+@if ( ! $model->list->disable_filters && $filterData && count($filterData))
 
 <div class="filter-container">
 

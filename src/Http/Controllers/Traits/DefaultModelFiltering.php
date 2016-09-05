@@ -33,6 +33,10 @@ trait DefaultModelFiltering
      */
     protected function checkFilters()
     {
+        if ($this->getModelInformation()->list->disable_filters) {
+            return $this;
+        }
+
         if (session()->has($this->getFilterSessionKey())) {
             $this->retrieveFiltersFromSession();
         }
@@ -48,6 +52,10 @@ trait DefaultModelFiltering
      */
     protected function applyFilter($query)
     {
+        if ($this->getModelInformation()->list->disable_filters) {
+            return $this;
+        }
+
         $filter = $this->makeFilter();
 
         if ($filter) {

@@ -148,6 +148,8 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
             // The column that should be toggled when toggling 'active' status for the model.
             'active_column' => 'active',
 
+            // Whether to disable the use and display of scopes.
+            'disable_scopes' => false,
             // Scopes or scoping strategies to present for getting selected sets of the model's records
             'scopes' => [],
 
