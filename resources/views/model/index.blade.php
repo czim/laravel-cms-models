@@ -29,6 +29,13 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
 
+            @if ( ! $model->list->disable_scopes && $model->list->scopes && count($model->list->scopes))
+                @include('cms-models::model.partials.list_scopes', [
+                    'model'  => $model,
+                    'scopes' => $model->list->scopes,
+                ])
+            @endif
+
             @include('cms-models::model.partials.list_filters', [
                 'model'   => $model,
                 'filters' => $filters,
