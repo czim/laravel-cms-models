@@ -20,6 +20,8 @@ class DefaultModelController extends BaseModelController
              ->checkFilters()
              ->checkActivePage();
 
+        $totalCount = $this->getTotalCount();
+
         $this->applyScope($this->modelRepository);
 
         $query = $this->modelRepository->query();
@@ -39,12 +41,14 @@ class DefaultModelController extends BaseModelController
             'permissionPrefix' => $this->permissionPrefix,
             'model'            => $this->modelInformation,
             'records'          => $records,
+            'totalCount'       => $totalCount,
             'sortColumn'       => $this->getActualSort(),
             'sortDirection'    => $this->getActualSortDirection(),
             'pageSize'         => $this->getActualPageSize(),
             'pageSizeOptions'  => $this->getPageSizeOptions(),
             'filters'          => $this->getActiveFilters(),
             'activeScope'      => $this->getActiveScope(),
+            'scopeCounts'      => $this->getScopeCounts(),
         ]);
     }
 
@@ -111,6 +115,16 @@ class DefaultModelController extends BaseModelController
         $query = preg_replace('#page=\d+&?#i', '', array_get($parts, 'query', ''));
 
         return array_get($parts, 'path') . ($query ? '?' . $query : null);
+    }
+
+    /**
+     * Returns total count of all models.
+     *
+     * @return int
+     */
+    protected function getTotalCount()
+    {
+        return $this->modelRepository->count();
     }
 
 }

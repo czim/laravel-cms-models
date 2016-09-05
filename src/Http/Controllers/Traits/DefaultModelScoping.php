@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Http\Controllers\Traits;
 
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\Repository\Contracts\ExtendedRepositoryInterface;
 
@@ -49,17 +50,56 @@ trait DefaultModelScoping
      * Applies the currently active scope to a repository.
      *
      * @param ExtendedRepositoryInterface $repository
+     * @param null|string                 $scope        active if not given
      * @return $this
      */
-    protected function applyScope(ExtendedRepositoryInterface $repository)
+    protected function applyScope(ExtendedRepositoryInterface $repository, $scope = null)
     {
+        $scope = (null === $scope) ? $this->activeScope : $scope;
+
         $repository->clearScopes();
 
-        if ($this->activeScope) {
-            $repository->addScope($this->activeScope);
+        $info = $this->getModelInformation();
+
+        if ($scope) {
+
+            $method = $info->list->scopes[ $scope ]->method ?: $scope;
+
+            $repository->addScope($method);
         }
 
         return $this;
+    }
+
+    /**
+     * Returns total amount of matches for each available scope.
+     *
+     * @return int[]    assoc, keyed by scope key
+     */
+    protected function getScopeCounts()
+    {
+        if ( ! $this->areScopesEnabled()) {
+            return [];
+        }
+
+        $info = $this->getModelInformation();
+
+        if ( ! $info->list->scopes || ! count($info->list->scopes)) {
+            return [];
+        }
+
+        $counts = [];
+
+        $repository = $this->getModelRepository();
+
+        foreach (array_keys($info->list->scopes) as $key) {
+
+            $this->applyScope($repository, $key);
+
+            $counts[ $key ] = $repository->count();
+        }
+
+        return $counts;
     }
 
     /**
@@ -102,13 +142,23 @@ trait DefaultModelScoping
      */
     protected function isValidScopeKey($key)
     {
-        $info = $this->getModelInformation();
-
-        if ($info->list->disable_scopes) {
+        if ( ! $this->areScopesEnabled()) {
             return false;
         }
 
-        return in_array($key, array_keys($info->list->scopes));
+        return in_array($key, array_keys($this->getModelInformation()->list->scopes));
+    }
+
+    /**
+     * Returns whether scopes are enabled at all.
+     *
+     * @return bool
+     */
+    protected function areScopesEnabled()
+    {
+        $info = $this->getModelInformation();
+
+        return ! $info->list->disable_scopes;
     }
 
 
@@ -128,8 +178,14 @@ trait DefaultModelScoping
     abstract protected function getModelInformation();
 
     /**
+     * @return ModelRepositoryInterface|ExtendedRepositoryInterface
+     */
+    abstract protected function getModelRepository();
+
+    /**
      * @param bool $reset
      * @return $this
      */
     abstract protected function markResetActivePage($reset = true);
+
 }

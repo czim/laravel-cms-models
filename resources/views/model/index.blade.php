@@ -31,8 +31,10 @@
 
             @if ( ! $model->list->disable_scopes && $model->list->scopes && count($model->list->scopes))
                 @include('cms-models::model.partials.list_scopes', [
-                    'model'  => $model,
-                    'scopes' => $model->list->scopes,
+                    'model'       => $model,
+                    'totalCount'  => $totalCount,
+                    'scopes'      => $model->list->scopes,
+                    'scopeCounts' => $scopeCounts,
                 ])
             @endif
 
