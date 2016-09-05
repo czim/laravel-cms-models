@@ -80,4 +80,12 @@ abstract class BaseModelController extends Controller
         return $this;
     }
 
+    /**
+     * @return ModelRepositoryInterface|ExtendedRepositoryInterface
+     */
+    protected function getModelRepository()
+    {
+        return $this->modelRepository;
+    }
+
 }

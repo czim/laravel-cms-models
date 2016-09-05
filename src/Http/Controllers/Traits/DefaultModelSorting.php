@@ -3,8 +3,10 @@ namespace Czim\CmsModels\Http\Controllers\Traits;
 
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
 use Czim\CmsModels\Repositories\Criteria\ModelOrderStrategy;
 use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\Repository\Contracts\ExtendedRepositoryInterface;
 
 trait DefaultModelSorting
 {
@@ -167,6 +169,28 @@ trait DefaultModelSorting
         return new ModelOrderStrategy($strategy, $source, $this->getActualSortDirection());
     }
 
+    /**
+     * Applies active sorting to model repository.
+     *
+     * @return $this
+     */
+    protected function applySort()
+    {
+        $this->checkActiveSort();
+
+        $sort = $this->getActualSort();
+
+        if ( ! $sort) return $this;
+
+        $criteria = $this->getModelSortCriteria();
+
+        if ( ! $criteria) return $this;
+
+        $this->getModelRepository()->pushCriteria($criteria);
+
+        return $this;
+    }
+
 
     /**
      * @return CoreInterface
@@ -182,6 +206,11 @@ trait DefaultModelSorting
      * @return ModelInformationInterface|ModelInformation|null
      */
     abstract protected function getModelInformation();
+
+    /**
+     * @return ModelRepositoryInterface|ExtendedRepositoryInterface
+     */
+    abstract protected function getModelRepository();
 
     /**
      * @param bool $reset

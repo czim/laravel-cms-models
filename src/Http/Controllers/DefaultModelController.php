@@ -113,27 +113,4 @@ class DefaultModelController extends BaseModelController
         return array_get($parts, 'path') . ($query ? '?' . $query : null);
     }
 
-
-    /**
-     * Applies active sorting to model repository.
-     *
-     * @return $this
-     */
-    protected function applySort()
-    {
-        $this->checkActiveSort();
-
-        $sort = $this->getActualSort();
-
-        if ( ! $sort) return $this;
-
-        $criteria = $this->getModelSortCriteria();
-
-        if ( ! $criteria) return $this;
-
-        $this->modelRepository->pushCriteria($criteria);
-
-        return $this;
-    }
-
 }
