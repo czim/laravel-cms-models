@@ -30,7 +30,7 @@
         <div class="col-md-10 col-md-offset-1">
 
             @if ( ! $model->list->disable_scopes && $model->list->scopes && count($model->list->scopes))
-                @include('cms-models::model.partials.list_scopes', [
+                @include('cms-models::model.partials.list.scopes', [
                     'model'       => $model,
                     'totalCount'  => $totalCount,
                     'scopes'      => $model->list->scopes,
@@ -38,7 +38,7 @@
                 ])
             @endif
 
-            @include('cms-models::model.partials.list_filters', [
+            @include('cms-models::model.partials.list.filters', [
                 'model'   => $model,
                 'filters' => $filters,
             ])
@@ -58,7 +58,7 @@
                                 <th class="column {{ $column->style }}">
                                     @if ($column->sortable)
 
-                                        @include('cms-models::model.partials.list_column_header_sort', [
+                                        @include('cms-models::model.partials.list.column_header_sort', [
                                             'active'    => $key === $sortColumn,
                                             'direction' => $sortDirection,
                                         ])
@@ -95,7 +95,7 @@
 
                                 @foreach ($model->list->columns as $column)
 
-                                    @include('cms-models::model.partials.list_column_strategy', [
+                                    @include('cms-models::model.partials.list.column_strategy', [
                                         'record' => $record,
                                         'model'  => $model,
                                     ])

@@ -14,7 +14,7 @@
 
         @foreach ($filterData as $key => $filter)
 
-            @include('cms-models::model.partials.list_filters_strategy', [
+            @include('cms-models::model.partials.list.filters_strategy', [
                 'filter' => $filter,
                 'value'  => array_get($filters, $key),
             ])
