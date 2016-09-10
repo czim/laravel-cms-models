@@ -53,8 +53,6 @@ abstract class AbstractFilterStrategy implements FilterDisplayInterface, FilterA
      */
     public function apply($query, $target, $value, $parameters = [])
     {
-        // todo: detect special targets, including raw strategies
-
         $this->modelInfo  = $this->getModelInformation($query);
         $this->parameters = $parameters;
 
@@ -68,7 +66,9 @@ abstract class AbstractFilterStrategy implements FilterDisplayInterface, FilterA
             return;
         }
 
-        // If there are more, we need to group them and combine the conditions with 'or'.
+        // If we combine with the 'or' operator, group the filter's conditions
+        // so the relation with the other filters is kept inclusive.
+
         $query->where(function ($query) use ($targets, $value) {
 
             $this->combineOr = true;
@@ -90,16 +90,6 @@ abstract class AbstractFilterStrategy implements FilterDisplayInterface, FilterA
     protected function applyForSingleTarget($query, array $targetParts, $value)
     {
         $this->translated = $this->isTranslatedTargetAttribute($targetParts, $query->getModel());
-
-        // If we combine with the 'or' operator, group the filter's conditions
-        // so the relation with the other filters is kept inclusive.
-        if ($this->combineOr) {
-
-            $query->where(function ($query) use ($targetParts, $value) {
-                $this->applyRecursive($query, $targetParts, $value);
-            });
-            return;
-        }
 
         $this->applyRecursive($query, $targetParts, $value);
     }
@@ -165,12 +155,13 @@ abstract class AbstractFilterStrategy implements FilterDisplayInterface, FilterA
     /**
      * Applies a value directly to a builder object.
      *
-     * @param Builder $query
-     * @param string  $target
-     * @param mixed   $value
+     * @param Builder   $query
+     * @param string    $target
+     * @param mixed     $value
+     * @param null|bool $combineOr    overrides global value if non-null
      * @return mixed
      */
-    abstract protected function applyValue($query, $target, $value);
+    abstract protected function applyValue($query, $target, $value, $combineOr = null);
 
     /**
      * Applies a value directly to a builder object.
@@ -188,7 +179,7 @@ abstract class AbstractFilterStrategy implements FilterDisplayInterface, FilterA
 
             $this->applyLocaleRestriction($query);
 
-            return $this->applyValue($query, $target, $value);
+            return $this->applyValue($query, $target, $value, false);
         });
     }
 

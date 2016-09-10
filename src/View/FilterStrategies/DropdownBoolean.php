@@ -43,18 +43,21 @@ class DropdownBoolean extends AbstractFilterStrategy
     /**
      * Applies a value directly to a builder object.
      *
-     * @param Builder $query
-     * @param string  $target
-     * @param mixed   $value
+     * @param Builder   $query
+     * @param string    $target
+     * @param mixed     $value
+     * @param null|bool $combineOr    overrides global value if non-null
      * @return mixed
      */
-    protected function applyValue($query, $target, $value)
+    protected function applyValue($query, $target, $value, $combineOr = null)
     {
+        $combineOr = $combineOr === null ? $this->combineOr : $combineOr;
+
         if (is_array($value)) {
-            return $query->whereIn($target, $value);
+            return $query->whereIn($target, $value, $combineOr ? 'or' : 'and');
         }
 
-        return $query->where($target, $value);
+        return $query->where($target, '=', $value, $combineOr ? 'or' : 'and');
     }
 
 }

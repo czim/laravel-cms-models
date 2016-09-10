@@ -58,13 +58,16 @@ class BasicString extends AbstractFilterStrategy
      * @param Builder $query
      * @param string  $target
      * @param mixed   $value
+     * @param null|bool $combineOr    overrides global value if non-null
      * @return mixed
      */
-    protected function applyValue($query, $target, $value)
+    protected function applyValue($query, $target, $value, $combineOr = null)
     {
         // If we're splitting terms, the terms will first be split by whitespace
         // otherwise the whole search value will treated at a single string.
         // Array values will always be treated as split string search terms.
+
+        $combineOr = $combineOr === null ? $this->combineOr : $combineOr;
 
         if ( ! $this->splitTerms && ! is_array($value)) {
             return $this->applyTerm($query, $target, $value);
@@ -74,7 +77,7 @@ class BasicString extends AbstractFilterStrategy
             $value = $this->splitTerms($value);
         }
 
-        $whereMethod = $this->combineOr ? 'orWhere' : 'where';
+        $whereMethod = $combineOr ? 'orWhere' : 'where';
 
         $query->{$whereMethod}(function ($query) use ($value, $target) {
 
@@ -108,7 +111,7 @@ class BasicString extends AbstractFilterStrategy
      */
     protected function applyTerm($query, $target, $value)
     {
-        $combine = $this->combineOr ? 'or' : 'and';
+        $combine = $this->combineSplitTermsOr ? 'or' : 'and';
 
         if (is_array($value)) {
             return $query->whereIn($target, $value, $combine);

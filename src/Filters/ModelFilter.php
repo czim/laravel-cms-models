@@ -58,7 +58,7 @@ class ModelFilter extends Filter
         $this->getFilterStrategy()->apply(
             $query,
             $information->strategy(),
-            $parameterName,
+            $information->target(),
             $parameterValue
         );
     }
