@@ -70,7 +70,7 @@ class BasicString extends AbstractFilterStrategy
         $combineOr = $combineOr === null ? $this->combineOr : $combineOr;
 
         if ( ! $this->splitTerms && ! is_array($value)) {
-            return $this->applyTerm($query, $target, $value);
+            return $this->applyTerm($query, $target, $value, false);
         }
 
         if ( ! is_array($value)) {
@@ -104,14 +104,16 @@ class BasicString extends AbstractFilterStrategy
     /**
      * Applies a single (potentially) split off value directly to a builder object.
      *
-     * @param Builder $query
-     * @param string  $target
-     * @param mixed   $value
+     * @param Builder   $query
+     * @param string    $target
+     * @param mixed     $value
+     * @param null|bool $combineOr
      * @return mixed
      */
-    protected function applyTerm($query, $target, $value)
+    protected function applyTerm($query, $target, $value, $combineOr = null)
     {
-        $combine = $this->combineSplitTermsOr ? 'or' : 'and';
+        $combineOr = $combineOr === null ? $this->combineSplitTermsOr : $combineOr;
+        $combine   = $combineOr ? 'or' : 'and';
 
         if (is_array($value)) {
             return $query->whereIn($target, $value, $combine);

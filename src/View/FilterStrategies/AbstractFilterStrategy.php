@@ -36,6 +36,13 @@ abstract class AbstractFilterStrategy implements FilterDisplayInterface, FilterA
     protected $parameters = [];
 
     /**
+     * FQN of the currently relevant query's model.
+     *
+     * @var null|string
+     */
+    protected $modelClass;
+
+    /**
      * The model information for the model currently relevant for building the query.
      * This may be exchanged for nested relation models' information, if required & available.
      *
@@ -53,7 +60,7 @@ abstract class AbstractFilterStrategy implements FilterDisplayInterface, FilterA
      */
     public function apply($query, $target, $value, $parameters = [])
     {
-        $this->modelInfo  = $this->getModelInformation($query);
+        $this->modelClass = $query->getModel();
         $this->parameters = $parameters;
 
         $targets = $this->parseTargets($target);
@@ -218,13 +225,15 @@ abstract class AbstractFilterStrategy implements FilterDisplayInterface, FilterA
      */
     protected function makeTargetsForAllAttributes()
     {
-        if ( ! $this->modelInfo) {
+        $modelInfo = $this->getModelInformation();
+
+        if ( ! $modelInfo) {
             return [];
         }
 
         $targets = [];
 
-        foreach ($this->modelInfo->attributes as $key => $attribute) {
+        foreach ($modelInfo->attributes as $key => $attribute) {
             if ( ! $this->isAttributeRelevant($attribute)) continue;
 
             $targets[] = $this->parseTarget($key);
@@ -248,13 +257,15 @@ abstract class AbstractFilterStrategy implements FilterDisplayInterface, FilterA
     /**
      * Returns model information instance for query, if possible.
      *
-     * @param Builder $query
      * @return ModelInformation|false
      */
-    protected function getModelInformation($query)
+    protected function getModelInformation()
     {
-        return $this->getModelInformationRepository()
-            ->getByModel($query->getModel());
+        if (null === $this->modelClass) {
+            return false;
+        }
+
+        return $this->getModelInformationRepository()->getByModelClass($this->modelClass);
     }
 
     /**
