@@ -15,14 +15,16 @@ class DefaultModelController extends BaseModelController
 
     public function index()
     {
-        $this->applySort()
+        $this->checkActiveSort()
              ->checkScope()
              ->checkFilters()
              ->checkActivePage();
 
-        $totalCount = $this->getTotalCount();
+        $totalCount  = $this->getTotalCount();
+        $scopeCounts = $this->getScopeCounts();
 
-        $this->applyScope($this->modelRepository);
+        $this->applySort()
+             ->applyScope($this->modelRepository);
 
         $query = $this->modelRepository->query();
 
@@ -48,7 +50,7 @@ class DefaultModelController extends BaseModelController
             'pageSizeOptions'  => $this->getPageSizeOptions(),
             'filters'          => $this->getActiveFilters(),
             'activeScope'      => $this->getActiveScope(),
-            'scopeCounts'      => $this->getScopeCounts(),
+            'scopeCounts'      => $scopeCounts,
         ]);
     }
 

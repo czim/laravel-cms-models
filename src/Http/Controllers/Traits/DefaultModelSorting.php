@@ -7,6 +7,7 @@ use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
 use Czim\CmsModels\Repositories\Criteria\ModelOrderStrategy;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\Repository\Contracts\ExtendedRepositoryInterface;
+use Czim\Repository\Enums\CriteriaKey;
 
 trait DefaultModelSorting
 {
@@ -25,7 +26,7 @@ trait DefaultModelSorting
     /**
      * Checks and sets the active sort settings.
      *
-     * @return array
+     * @return $this
      */
     protected function checkActiveSort()
     {
@@ -48,6 +49,8 @@ trait DefaultModelSorting
 
             $this->retrieveActiveSortFromSession();
         }
+
+        return $this;
     }
 
     /**
@@ -176,8 +179,6 @@ trait DefaultModelSorting
      */
     protected function applySort()
     {
-        $this->checkActiveSort();
-
         $sort = $this->getActualSort();
 
         if ( ! $sort) return $this;
@@ -186,7 +187,7 @@ trait DefaultModelSorting
 
         if ( ! $criteria) return $this;
 
-        $this->getModelRepository()->pushCriteria($criteria);
+        $this->getModelRepository()->pushCriteria($criteria, CriteriaKey::ORDER);
 
         return $this;
     }
