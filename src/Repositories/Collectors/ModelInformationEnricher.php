@@ -114,6 +114,7 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
 
                 // If the filter information is fully provided, do not try to enrich
                 if ($filter->strategy && $filter->target) {
+                    $filters[ $key ] = $filter;
                     continue;
                 }
 
