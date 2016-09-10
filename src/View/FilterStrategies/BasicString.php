@@ -2,7 +2,9 @@
 namespace Czim\CmsModels\View\FilterStrategies;
 
 use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
+use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelListFilterData;
+use Czim\CmsModels\Support\Enums\AttributeCast;
 use Illuminate\Database\Eloquent\Builder;
 
 class BasicString extends AbstractFilterStrategy
@@ -14,6 +16,21 @@ class BasicString extends AbstractFilterStrategy
      * @var bool
      */
     protected $exact = false;
+
+    /**
+     * Whether to split the terms and search for them separately
+     *
+     * @var bool
+     */
+    protected $splitTerms = false;
+
+    /**
+     * Whether conditions for split terms should be combined with 'or'.
+     *
+     * @var bool
+     */
+    protected $combineSplitTermsOr = true;
+
 
     /**
      * Applies a strategy to render a filter field.
@@ -45,15 +62,76 @@ class BasicString extends AbstractFilterStrategy
      */
     protected function applyValue($query, $target, $value)
     {
+        // If we're splitting terms, the terms will first be split by whitespace
+        // otherwise the whole search value will treated at a single string.
+        // Array values will always be treated as split string search terms.
+
+        if ( ! $this->splitTerms && ! is_array($value)) {
+            return $this->applyTerm($query, $target, $value);
+        }
+
+        if ( ! is_array($value)) {
+            $value = $this->splitTerms($value);
+        }
+
+        $whereMethod = $this->combineOr ? 'orWhere' : 'where';
+
+        $query->{$whereMethod}(function ($query) use ($value, $target) {
+
+            foreach ($value as $term) {
+                $this->applyTerm($query, $target, $term);
+            }
+
+        });
+
+        return $query;
+    }
+
+    /**
+     * Splits a search string into separate terms.
+     *
+     * @param $value
+     * @return string[]
+     */
+    protected function splitTerms($value)
+    {
+        return array_filter(preg_split('#\s#', $value));
+    }
+
+    /**
+     * Applies a single (potentially) split off value directly to a builder object.
+     *
+     * @param Builder $query
+     * @param string  $target
+     * @param mixed   $value
+     * @return mixed
+     */
+    protected function applyTerm($query, $target, $value)
+    {
+        $combine = $this->combineOr ? 'or' : 'and';
+
         if (is_array($value)) {
-            return $query->whereIn($target, $value);
+            return $query->whereIn($target, $value, $combine);
         }
 
         if ( ! $this->exact) {
-            return $query->where($target, 'like', '%' . $value . '%');
+            return $query->where($target, 'like', '%' . $value . '%', $combine);
         }
 
-        return $query->where($target, $value);
+        return $query->where($target, '=', $value, $combine);
+    }
+
+    /**
+     * Returns whether given attribute data represents an attribute that is relevant
+     * for performing the filter on.
+     *
+     * @param ModelAttributeData $attribute
+     * @return bool
+     */
+    protected function isAttributeRelevant(ModelAttributeData $attribute)
+    {
+        // Only target string based attributes
+        return $attribute->cast == AttributeCast::STRING;
     }
 
 }

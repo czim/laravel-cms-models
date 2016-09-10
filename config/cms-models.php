@@ -175,9 +175,10 @@ return [
 
             // Aliases for filter strategy classes
             'aliases' => [
-                'boolean' => Czim\CmsModels\View\FilterStrategies\DropdownBoolean::class,
-                'enum'    => Czim\CmsModels\View\FilterStrategies\DropdownEnum::class,
-                'string'  => Czim\CmsModels\View\FilterStrategies\BasicString::class,
+                'boolean'      => Czim\CmsModels\View\FilterStrategies\DropdownBoolean::class,
+                'enum'         => Czim\CmsModels\View\FilterStrategies\DropdownEnum::class,
+                'string'       => Czim\CmsModels\View\FilterStrategies\BasicString::class,
+                'string-split' => Czim\CmsModels\View\FilterStrategies\BasicSplitString::class,
             ],
         ],
 
