@@ -70,7 +70,7 @@ class BasicString extends AbstractFilterStrategy
         $combineOr = $combineOr === null ? $this->combineOr : $combineOr;
 
         if ( ! $this->splitTerms && ! is_array($value)) {
-            return $this->applyTerm($query, $target, $value, false);
+            return $this->applyTerm($query, $target, $value, $combineOr);
         }
 
         if ( ! is_array($value)) {

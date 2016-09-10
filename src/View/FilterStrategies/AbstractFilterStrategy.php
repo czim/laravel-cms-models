@@ -9,6 +9,7 @@ use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\View\Traits\HandlesTranslatedTarget;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 abstract class AbstractFilterStrategy implements FilterDisplayInterface, FilterApplicationInterface
 {
@@ -36,11 +37,11 @@ abstract class AbstractFilterStrategy implements FilterDisplayInterface, FilterA
     protected $parameters = [];
 
     /**
-     * FQN of the currently relevant query's model.
+     * The currently relevant query's model.
      *
-     * @var null|string
+     * @var null|Model
      */
-    protected $modelClass;
+    protected $model;
 
     /**
      * The model information for the model currently relevant for building the query.
@@ -60,7 +61,7 @@ abstract class AbstractFilterStrategy implements FilterDisplayInterface, FilterA
      */
     public function apply($query, $target, $value, $parameters = [])
     {
-        $this->modelClass = $query->getModel();
+        $this->model      = $query->getModel();
         $this->parameters = $parameters;
 
         $targets = $this->parseTargets($target);
@@ -261,11 +262,11 @@ abstract class AbstractFilterStrategy implements FilterDisplayInterface, FilterA
      */
     protected function getModelInformation()
     {
-        if (null === $this->modelClass) {
+        if (null === $this->model) {
             return false;
         }
 
-        return $this->getModelInformationRepository()->getByModelClass($this->modelClass);
+        return $this->getModelInformationRepository()->getByModel($this->model);
     }
 
     /**
