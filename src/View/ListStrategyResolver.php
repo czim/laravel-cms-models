@@ -21,6 +21,12 @@ class ListStrategyResolver implements ListStrategyResolverInterface
             case AttributeFormStrategy::BOOLEAN_DROPDOWN:
                 return 'Checkbox';
 
+            case AttributeFormStrategy::ATTACHMENT_STAPLER_FILE:
+                return 'StaplerFile';
+
+            case AttributeFormStrategy::ATTACHMENT_STAPLER_IMAGE:
+                return 'StaplerImage';
+
             default:
                 return null;
         }
