@@ -131,11 +131,13 @@
 
                 <div class="listing-footer clearfix">
 
-                    <div class="listing-pagination pull-left">
-                        @if (method_exists($records, 'links'))
-                            {{ $records->links() }}
-                        @endif
-                    </div>
+                    @if (method_exists($records, 'links'))
+                        @include('cms-models::model.partials.list.pagination', [
+                            'records'         => $records,
+                            'pageSize'        => $pageSize,
+                            'pageSizeOptions' => $pageSizeOptions,
+                        ])
+                    @endif
 
                     <?php
                         $currentCount = method_exists($records, 'total') ? $records->total() : 0;
