@@ -1,13 +1,17 @@
 <?php
 namespace Czim\CmsModels\Analyzer;
 
+use Codesleeve\Stapler\Interfaces\Attachment;
+use Codesleeve\Stapler\ORM\StaplerableInterface;
 use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Support\Data\Analysis\StaplerAttachment;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelRelationData;
 use Czim\CmsModels\Support\Data\ModelScopeData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
+use Czim\CmsModels\Support\Enums\AttributeFormStrategy;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -156,6 +160,31 @@ class ModelAnalyzer
             ]);
         }
 
+        foreach ($attributes as $attribute) {
+            $attribute['strategy'] = $this->attributeStrategyResolver->determineStrategy($attribute);
+        }
+
+
+        // Stapler / attachment attributes
+        $attachments = $this->detectStaplerAttachments();
+
+        foreach ($attachments as $key => $attachment) {
+
+            $strategy = $attachment->image
+                ?   AttributeFormStrategy::ATTACHMENT_STAPLER_IMAGE
+                :   AttributeFormStrategy::ATTACHMENT_STAPLER_FILE;
+
+            $attribute = new ModelAttributeData([
+                'name'     => $key,
+                'cast'     => null,
+                'type'     => null,
+                'strategy' => $strategy,
+            ]);
+
+            $attributes = $this->insertInArray($attributes, $key, $attribute, $key . '_file_name');
+        }
+
+
         foreach ($this->model->getFillable() as $attribute) {
             if ( ! isset($attributes[ $attribute ])) continue;
             $attributes[ $attribute ]['fillable'] = true;
@@ -166,13 +195,44 @@ class ModelAnalyzer
             $attributes[ $attribute ]['cast'] = $cast;
         }
 
-        foreach ($attributes as $attribute) {
-            $attribute['strategy'] = $this->attributeStrategyResolver->determineStrategy($attribute);
-        }
 
         $this->info['attributes'] = $attributes;
 
         return $this;
+    }
+
+    /**
+     * Returns list of stapler attachments, if the model has any.
+     *
+     * @return StaplerAttachment[]  assoc, keyed by attribute name
+     */
+    protected function detectStaplerAttachments()
+    {
+        if ( ! ($this->model instanceof StaplerableInterface)) {
+            return [];
+        }
+
+        $files = $this->model->getAttachedFiles();
+
+        $attachments = [];
+
+        foreach ($files as $attribute => $file) {
+            /** @var Attachment $file */
+            $styles = $file->getConfig()->styles;
+
+            $normalizedStyles = [];
+            foreach ($styles as $style) {
+                if ($style->name === 'original') continue;
+                $normalizedStyles[ $style->name ] = $style->dimensions;
+            }
+
+            $attachments[ $attribute ] = new StaplerAttachment([
+                'image'   => (is_array($styles) && count($styles) > 1),
+                'resizes' => $normalizedStyles,
+            ]);
+        }
+
+        return $attachments;
     }
 
     /**
@@ -579,5 +639,35 @@ class ModelAnalyzer
     protected function getIgnoredRelationNames()
     {
         return config('cms-models.analyzer.relations.ignore', []);
+    }
+
+
+    /**
+     * Insert an item into an associative array at the position before a given key.
+     *
+     * @param array  $array
+     * @param string $key
+     * @param mixed  $value
+     * @param string $beforeKey
+     * @return array
+     */
+    protected function insertInArray($array, $key, $value, $beforeKey)
+    {
+        // Find the position of the array
+        $position = array_search($beforeKey, array_keys($array));
+
+        if (false === $position) {
+            $array[ $key ] = $value;
+            return $array;
+        }
+
+        if (0 === $position) {
+            return [ $key => $value ] + $array;
+        }
+
+        // Slice the array up with the new entry in between
+        return array_slice($array, 0, $position, true)
+             + [ $key => $value ]
+             + array_slice($array, $position, count($array) - $position, true);
     }
 }
