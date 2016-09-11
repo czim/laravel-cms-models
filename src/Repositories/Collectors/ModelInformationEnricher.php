@@ -8,6 +8,7 @@ use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelListColumnData;
 use Czim\CmsModels\Support\Data\ModelListFilterData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
+use Czim\CmsModels\Support\Enums\AttributeFormStrategy;
 use Illuminate\Database\Eloquent\Model;
 use UnexpectedValueException;
 
@@ -46,7 +47,8 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
             $columns = [];
 
             foreach ($this->info->attributes as $attribute) {
-                if ($attribute->hidden) {
+
+                if ($attribute->hidden || ! $this->shouldAttributeBeDisplayedByDefault($attribute, $this->info)) {
                     continue;
                 }
 
@@ -144,6 +146,33 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
     }
 
     /**
+     * Returns whether an attribute should be displayed if no user-defined list columns are configured.
+     *
+     * @param ModelAttributeData                         $attribute
+     * @param ModelInformationInterface|ModelInformation $info
+     * @return bool
+     */
+    protected function shouldAttributeBeDisplayedByDefault(ModelAttributeData $attribute, ModelInformationInterface $info)
+    {
+        if (in_array($attribute->type, [
+            'text', 'longtext', 'mediumtext',
+            'blob', 'longblob', 'mediumblob',
+        ])) {
+            return false;
+        }
+
+        // Hide stapler fields other than the main field
+        if (preg_match('#^(?<field>[^_]+)_(file_name|file_size|content_type|updated_at)$#', $attribute->name, $matches)) {
+            if (array_has($info->attributes, $matches['field'])) {
+                $strategy = $info->attributes[ $matches['field'] ]->strategy_list ?: $info->attributes[ $matches['field'] ]->strategy;
+                return ! in_array($strategy, $this->getStaplerStrategies());
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * @param ModelAttributeData                         $attribute
      * @param ModelInformationInterface|ModelInformation $info
      * @return ModelListColumnData
@@ -219,5 +248,19 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
             'strategy' => $strategy,
             'values'   => $options,
         ]);
+    }
+
+
+    /**
+     * Returns (list) strategies that are associated with stapler fields.
+     *
+     * @return string[]
+     */
+    protected function getStaplerStrategies()
+    {
+        return [
+            AttributeFormStrategy::ATTACHMENT_STAPLER_IMAGE,
+            AttributeFormStrategy::ATTACHMENT_STAPLER_FILE,
+        ];
     }
 }
