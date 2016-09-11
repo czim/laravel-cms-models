@@ -131,7 +131,7 @@ trait DefaultModelPagination
     protected function getActualPageSize()
     {
         return $this->activePageSize
-            ?: $this->getModelInformation()->list->page_size
+            ?: $this->getModelPageSize()
             ?: $this->getDefaultPageSize();
     }
 
@@ -143,6 +143,22 @@ trait DefaultModelPagination
     protected function getDefaultPage()
     {
         return null;
+    }
+
+    /**
+     * Returns model defined default page size.
+     *
+     * @return int
+     */
+    protected function getModelPageSize()
+    {
+        $pageSize = $this->getModelInformation()->list->page_size;
+
+        if (is_array($pageSize)) {
+            return (int) head($pageSize);
+        }
+
+        return (int) $pageSize;
     }
 
     /**
@@ -162,6 +178,12 @@ trait DefaultModelPagination
      */
     protected function getPageSizeOptions()
     {
+        $pageSizes = $this->getModelInformation()->list->page_size;
+
+        if (is_array($pageSizes)) {
+            return $pageSizes;
+        }
+
         return config('cms-models.strategies.list.page-size-options', false);
     }
 
