@@ -11,7 +11,6 @@
 
     <div class="pagination-part-container pagination-pagesize-container">
         <form id="form-pagination-page-size" class="form-inline" role="form" method="get">
-            {{ csrf_field() }}
 
             <label for="input-pagination-page-size">
                 {{ ucfirst(cms_trans('models.pagination.page-size')) }}:
