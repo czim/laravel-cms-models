@@ -18,11 +18,15 @@ use Czim\CmsModels\Contracts\Data\ModelListColumnDataInterface;
  * @property bool $sortable
  * @property string $sort_strategy
  * @property string $sort_direction asc|desc
+ * @proeprty bool $hide
  */
 class ModelListColumnData extends AbstractDataObject implements ModelListColumnDataInterface
 {
 
     protected $attributes = [
+
+        // Whether to hide the list column.
+        'hide' => false,
 
         // The source column or strategy to use. This may be a column on the model, or on models related to it,
         // or a present() method on the model, if it has a presenter.

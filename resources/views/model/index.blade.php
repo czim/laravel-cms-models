@@ -56,6 +56,7 @@
                             @endif
 
                             @foreach ($model->list->columns as $key => $column)
+                                @continue($column->hide)
 
                                 <th class="column {{ $column->style }}">
                                     @if ($column->sortable)
@@ -96,6 +97,7 @@
                                 @endif
 
                                 @foreach ($model->list->columns as $column)
+                                    @continue($column->hide)
 
                                     @include('cms-models::model.partials.list.column_strategy', [
                                         'record' => $record,
