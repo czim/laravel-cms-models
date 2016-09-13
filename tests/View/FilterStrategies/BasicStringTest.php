@@ -59,7 +59,27 @@ class BasicStringTest extends AbstractFilterStrategyTestCase
      */
     function it_filters_on_a_single_translated_attribute_for_the_current_locale()
     {
-        // todo
+        app()->setLocale('nl');
+
+        $strategy = $this->makeFilterStrategy();
+        $query = $this->getPostQuery();
+
+        $strategy->apply($query, 'title', 'nederland');
+
+        $this->assertEquals(1, $query->count());
+        $this->assertEquals(1, $query->first()->id);
+
+        // For translated attribute on related model
+        $query = $this->getPostQuery();
+        $strategy->apply($query, 'comments.title', 'nederland');
+
+        $this->assertEquals(1, $query->count());
+        $this->assertEquals(1, $query->first()->id);
+
+        // Make sure we get no hits for a non-matching term
+        $query = $this->getPostQuery();
+        $strategy->apply($query, 'title', 'doesnotexistatall');
+        $this->assertEquals(0, $query->count());
     }
 
     /**
@@ -67,7 +87,22 @@ class BasicStringTest extends AbstractFilterStrategyTestCase
      */
     function it_filters_on_a_single_translated_attribute_for_the_fallback_locale()
     {
-        // todo
+        app()->setLocale('nl');
+
+        $strategy = $this->makeFilterStrategy();
+        $query = $this->getPostQuery();
+
+        $strategy->apply($query, 'title', 'some basic title');
+
+        $this->assertEquals(1, $query->count());
+        $this->assertEquals(1, $query->first()->id);
+
+        // For translated attribute on related model
+        $query = $this->getPostQuery();
+        $strategy->apply($query, 'comments.title', 'Comment Title A');
+
+        $this->assertEquals(1, $query->count());
+        $this->assertEquals(1, $query->first()->id);
     }
 
 

@@ -44,7 +44,8 @@ abstract class AbstractFilterStrategyTestCase extends TestCase
 
         $translation = $post->getNewTranslation('nl');
         $translation->title = 'Nederlandse titel';
-        $translation->body  = 'Nederlandse algemene tekst';
+        $translation->body = 'Nederlandse algemene tekst';
+        $translation->test_post_id = $post->id;
         $translation->save();
 
 
@@ -83,7 +84,8 @@ abstract class AbstractFilterStrategyTestCase extends TestCase
 
         $translation = $comment->getNewTranslation('nl');
         $translation->title = 'Nederlands commentaar';
-        $translation->body  = 'Nederlandse algemene tekst in commentaar';
+        $translation->body = 'Nederlandse algemene tekst in commentaar';
+        $translation->test_comment_id = $comment->id;
         $translation->save();
 
 
