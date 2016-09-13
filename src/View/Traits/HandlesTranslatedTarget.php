@@ -73,11 +73,18 @@ trait HandlesTranslatedTarget
         $locale    = $locale ?: app()->getLocale();
         $fallback  = $this->getFallbackLocale();
 
-        $query->where($localeKey, $locale);
-
         if ($allowFallback && $fallback && $fallback != $locale) {
-            $query->orWhere($localeKey, $fallback);
+
+            $query->where(function ($query) use ($localeKey, $locale, $fallback) {
+                $query
+                    ->where($localeKey, $locale)
+                    ->orWhere($localeKey, $fallback);
+            });
+
+            return;
         }
+
+        $query->where($localeKey, $locale);
     }
 
 
