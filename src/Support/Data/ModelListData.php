@@ -62,9 +62,9 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
         'order_strategy' => 'listify',
 
         // Whether the model may be activated/deactived through the listing; ie. whether it has a manipulable 'active' flag.
-        'activated' => false,
+        'activatable' => null,
         // The column that should be toggled when toggling 'active' status for the model.
-        'active_column' => 'active',
+        'active_column' => null,
 
         // Whether to disable the use and display of scopes.
         'disable_scopes' => false,
@@ -122,8 +122,8 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
             'page_size',
             'orderable',
             'order_strategy',
-            'activated',
-            'active_column',
+            'activatable',
+            'activate_column',
             'default_sort',
             'disable_filters',
             'disable_scopes',

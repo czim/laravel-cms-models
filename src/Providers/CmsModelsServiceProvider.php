@@ -4,6 +4,7 @@ namespace Czim\CmsModels\Providers;
 use Czim\CmsModels\Analyzer\DatabaseAnalyzer;
 use Czim\CmsModels\Console\Commands\ClearModelInformationCache;
 use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
+use Czim\CmsModels\Contracts\Repositories\ActivateStrategyResolverInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationCollectorInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationInterpreterInterface;
@@ -21,6 +22,7 @@ use Czim\CmsModels\Repositories\Collectors\ModelInformationEnricher;
 use Czim\CmsModels\Repositories\CurrentModelInformation;
 use Czim\CmsModels\Repositories\ModelInformationRepository;
 use Czim\CmsModels\Repositories\ModelRepository;
+use Czim\CmsModels\Repositories\ActivateStrategies\ActivateStrategyResolver;
 use Czim\CmsModels\Support\ModuleHelper;
 use Czim\CmsModels\Support\Routing\RouteHelper;
 use Czim\CmsModels\View\FilterStrategy;
@@ -120,6 +122,7 @@ class CmsModelsServiceProvider extends ServiceProvider
         $this->app->singleton(ListStrategyResolverInterface::class, ListStrategyResolver::class);
         $this->app->singleton(FilterStrategyInterface::class, FilterStrategy::class);
         $this->app->singleton(FilterStrategyResolverInterface::class, FilterStrategyResolver::class);
+        $this->app->singleton(ActivateStrategyResolverInterface::class, ActivateStrategyResolver::class);
 
 
         // Register facade names

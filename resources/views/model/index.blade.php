@@ -51,7 +51,7 @@
 
                     <thead>
                         <tr>
-                            @if ($model->activatable)
+                            @if ($model->list->activatable)
                                 <th class="column column-activate"></th>
                             @endif
 
@@ -90,10 +90,11 @@
                         @foreach ($records as $record)
 
                             <tr>
-                                @if ($model->activatable)
-                                    <td>
-                                        <input id="model-activate-{{ $record->getKey() }}" name="activate_{{ $record->getKey() }}" type="checkbox">
-                                    </td>
+                                @if ($model->list->activatable)
+                                    @include('cms-models::model.partials.list.column_activate', [
+                                        'model'  => $model,
+                                        'record' => $record,
+                                    ])
                                 @endif
 
                                 @foreach ($model->list->columns as $column)
@@ -208,5 +209,62 @@
             );
             $('.delete-modal-title').text('Delete {{ $model->verbose_name }} #' + $(this).attr('data-id'));
         });
+
+        @if ($model->list->activatable)
+            $('.activate-toggle').click(function() {
+                var id     = $(this).attr('data-id'),
+                    state  = parseInt($(this).attr('data-active'), 10) ? true : false,
+                    url    = '{{ cms_route("{$routePrefix}.activate", [ 'IDHERE' ]) }}',
+                    parent = $(this);
+
+                var data  = {
+                    'activate' : ! state
+                };
+
+                url = url.replace('IDHERE', $(this).attr('data-id'));
+
+                // switch to loading icon
+                parent.find('.loading').removeClass('hidden');
+                parent.find('.active, .inactive').addClass('hidden');
+
+                $.ajax(url, {
+                    'headers': {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    'method'      : 'PUT',
+                    'data'        : JSON.stringify(data),
+                    'contentType' : 'application/json'
+                })
+                    .success(function (data) {
+
+                        var active = data.active;
+
+                        if ( ! data.success) {
+                            console.log('Failed to updated active status...');
+                            active = state;
+                        }
+
+                        parent.attr('data-active', active ? 1 : 0);
+
+                        if (active) {
+                            parent.find('.active').removeClass('hidden');
+                        } else {
+                            parent.find('.inactive').removeClass('hidden');
+                        }
+                        parent.find('.loading').addClass('hidden');
+
+                    })
+                    .error(function (xhr, status, error) {
+                        console.log('activate error: ' + error);
+
+                        if (state) {
+                            parent.find('.active').removeClass('hidden');
+                        } else {
+                            parent.find('.inactive').removeClass('hidden');
+                        }
+                        parent.find('.loading').addClass('hidden');
+                    });
+            });
+        @endif
     </script>
 @endpush

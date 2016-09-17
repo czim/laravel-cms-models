@@ -164,6 +164,15 @@ class ModelAnalyzer
             $attribute['strategy'] = $this->attributeStrategyResolver->determineStrategy($attribute);
         }
 
+        // Activatable column detection
+        $activeColumn = $this->getActivateColumnName();
+        foreach ($attributes as $name => $attribute) {
+            if ($name == $activeColumn && $this->isAttributeBoolean($attribute)) {
+                $this->info->list['activatable']   = true;
+                $this->info->list['active_column'] = $name;
+                break;
+            }
+        }
 
         // Stapler / attachment attributes
         $attachments = $this->detectStaplerAttachments();
@@ -199,6 +208,29 @@ class ModelAnalyzer
         $this->info['attributes'] = $attributes;
 
         return $this;
+    }
+
+    /**
+     * Returns whether an attribute should be taken for a boolean.
+     *
+     * @param ModelAttributeData $attribute
+     * @return bool
+     */
+    protected function isAttributeBoolean(ModelAttributeData $attribute)
+    {
+        if ($attribute->cast == AttributeCast::BOOLEAN) {
+            return true;
+        }
+
+        return $attribute->type === 'tinyint' && $attribute->length === 1;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getActivateColumnName()
+    {
+        return 'active';
     }
 
     /**

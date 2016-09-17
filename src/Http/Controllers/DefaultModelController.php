@@ -1,17 +1,21 @@
 <?php
 namespace Czim\CmsModels\Http\Controllers;
 
+use Czim\CmsModels\Http\Controllers\Traits\SetsModelActivateState;
 use Czim\CmsModels\Http\Controllers\Traits\DefaultModelFiltering;
 use Czim\CmsModels\Http\Controllers\Traits\DefaultModelPagination;
 use Czim\CmsModels\Http\Controllers\Traits\DefaultModelScoping;
 use Czim\CmsModels\Http\Controllers\Traits\DefaultModelSorting;
+use Czim\CmsModels\Http\Requests\ActivateRequest;
 
 class DefaultModelController extends BaseModelController
 {
     use DefaultModelFiltering,
         DefaultModelPagination,
         DefaultModelScoping,
-        DefaultModelSorting;
+        DefaultModelSorting,
+        SetsModelActivateState;
+
 
     public function index()
     {
@@ -103,6 +107,36 @@ class DefaultModelController extends BaseModelController
 
         return redirect()->to($previousUrl);
     }
+
+    /**
+     * Activates/enables a model.
+     *
+     * @param ActivateRequest $request
+     * @param int             $id
+     * @return bool|\Illuminate\Http\RedirectResponse
+     */
+    public function activate(ActivateRequest $request, $id)
+    {
+        $record = $this->modelRepository->findOrFail($id);
+        $success = false;
+        $result  = null;
+
+        if ($this->getModelInformation()->list->activatable) {
+            $success = true;
+            $result  = $this->changeModelActiveState($record, $request->get('activate'));
+        }
+
+        if (request()->ajax()) {
+            return response()->json([ 'success' => $success, 'active' => $result ]);
+        }
+
+        if ($success) {
+            // todo flash
+        }
+
+        return redirect()->back();
+    }
+
 
     /**
      * Removes the page query parameter from a full URL.
