@@ -201,6 +201,7 @@
 
 @push('javascript-end')
     <script>
+
         $('.delete-record-action').click(function () {
             var form = $('.delete-modal-form');
             form.attr(
@@ -266,5 +267,14 @@
                     });
             });
         @endif
+
+        $(function () {
+            $('.column-activate [data-toggle="tooltip"]').tooltip({
+                delay: {
+                    'show': 250,
+                    'hide': 50
+                }
+            })
+        })
     </script>
 @endpush

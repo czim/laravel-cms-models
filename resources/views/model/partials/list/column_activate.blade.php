@@ -11,7 +11,8 @@
 
         <div class="icon-wrapper">
             <i class="glyphicon glyphicon-ban-circle text-danger inactive {{ $active ? 'hidden' : null }}"
-               title="{{ cms_trans('models.activatable.activate') }}"></i>
+               title="{{ ucfirst(cms_trans('models.activatable.deactivated')) }}"
+               data-toggle="tooltip" data-placement="right"></i>
             <i class="glyphicon glyphicon-ok-sign text-success active {{ ! $active ? 'hidden' : null }}"
                title="{{ cms_trans('models.activatable.deactivate') }}"></i>
             <i class="glyphicon glyphicon-refresh text-muted loading gly-spin hidden"
