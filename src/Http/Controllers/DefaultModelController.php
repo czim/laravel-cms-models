@@ -30,7 +30,7 @@ class DefaultModelController extends BaseModelController
         $this->applySort()
              ->applyScope($this->modelRepository);
 
-        $query = $this->modelRepository->query();
+        $query = $this->getModelRepository()->query();
 
         $this->applyFilter($query);
 
