@@ -56,6 +56,12 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
             // Default controller action to link to for the basic model's menu presence ('index', 'create', for instance)
             'default_controller_method' => null,
 
+            // The strategy to apply to the base repository query for listings & accessibility of models.
+            'repository_strategy' => null,
+
+            // Whether to disable all global scopes (boolean true) or a string with comma-separated global scopes to disable
+            'disable_global_scopes' => null,
+
             // List of FQNs for form requests, keyed by the relevant POST controller method name ('update', 'create')
             'form_requests' => [],
 
