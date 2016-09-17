@@ -161,6 +161,11 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
             return false;
         }
 
+        // Hide active column if the model if activatable
+        if ($info->list->activatable && $info->list->active_column == $attribute->name) {
+            return false;
+        }
+
         // Hide stapler fields other than the main field
         if (preg_match('#^(?<field>[^_]+)_(file_name|file_size|content_type|updated_at)$#', $attribute->name, $matches)) {
             if (array_has($info->attributes, $matches['field'])) {
