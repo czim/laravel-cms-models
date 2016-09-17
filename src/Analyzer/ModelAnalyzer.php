@@ -100,6 +100,7 @@ class ModelAnalyzer
 
         $this->makeModelInstance()
              ->fillBasicInformation()
+             ->analyzeGlobalScopes()
              ->analyzeAttributes()
              ->analyzeTraits()
              ->analyzeScopes()
@@ -127,6 +128,22 @@ class ModelAnalyzer
         $this->info['timestamps']        = $this->model->usesTimestamps();
         $this->info['timestamp_created'] = $this->model->getCreatedAtColumn();
         $this->info['timestamp_updated'] = $this->model->getUpdatedAtColumn();
+
+        return $this;
+    }
+
+    /**
+     * Analyzes any global scopes set on the model.
+     *
+     * @return $this
+     */
+    protected function analyzeGlobalScopes()
+    {
+        // If the model has global scopes, the default CMS settings is to disable all of them.
+
+        if (count($this->model->getGlobalScopes())) {
+            $this->info->meta->disable_global_scopes = true;
+        }
 
         return $this;
     }
@@ -168,8 +185,8 @@ class ModelAnalyzer
         $activeColumn = $this->getActivateColumnName();
         foreach ($attributes as $name => $attribute) {
             if ($name == $activeColumn && $this->isAttributeBoolean($attribute)) {
-                $this->info->list['activatable']   = true;
-                $this->info->list['active_column'] = $name;
+                $this->info->list->activatable   = true;
+                $this->info->list->active_column = $name;
                 break;
             }
         }

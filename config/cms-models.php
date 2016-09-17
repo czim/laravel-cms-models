@@ -142,6 +142,18 @@ return [
 
     'strategies' => [
 
+
+        'repository' => [
+
+            // The default namespace to prefix for relative strategy class names
+            'default-namespace' => 'Czim\\CmsModels\\Repositories\\ContextStrategies\\',
+            'default-strategy'  => null,
+
+            // Aliases for repository context strategy classes
+            'aliases' => [
+            ],
+        ],
+
         'list' => [
 
             // The default page size and selectable page size options
