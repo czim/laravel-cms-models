@@ -39,9 +39,6 @@ class ModelListColumnData extends AbstractDataObject implements ModelListColumnD
         'label' => null,
         'label_translated' => null,
 
-        // Whether to allow sorting (any non-null value) and if so, what strategy to apply.
-        'sort' => null,
-
         // Display style 'key' (css class, or whatever the front-end expects) that sets the rendering of the column value.
         // Suggestion: 'small', 'price, 'center', etc
         'style' => null,
