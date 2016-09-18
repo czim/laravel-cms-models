@@ -2,12 +2,37 @@
 namespace Czim\CmsModels\Analyzer;
 
 use Czim\CmsModels\Support\Data\ModelRelationData;
-use Czim\CmsModels\Support\Enums\AttributeFormStrategy;
 use Czim\CmsModels\Support\Enums\RelationFormStrategy;
 use Czim\CmsModels\Support\Enums\RelationType;
 
 class RelationStrategyResolver
 {
+
+    /**
+     * Determines a list display strategy string for given relation data.
+     *
+     * @param ModelRelationData $data
+     * @return string|null
+     */
+    public function determineListStrategy(ModelRelationData $data)
+    {
+        switch ($data->type) {
+
+            case RelationType::BELONGS_TO:
+            case RelationType::HAS_ONE:
+            case RelationType::MORPH_ONE:
+            case RelationType::BELONGS_TO_THROUGH:
+                return 'reference';
+
+            case RelationType::HAS_MANY:
+            case RelationType::MORPH_MANY:
+            case RelationType::BELONGS_TO_MANY:
+                return 'count';
+
+        }
+
+        return null;
+    }
 
     /**
      * Determines a form field strategy string for given relation data.

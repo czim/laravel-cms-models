@@ -170,6 +170,7 @@ return [
             // Aliases for list display strategy classes
             'aliases' => [
                 'check' => Czim\CmsModels\View\ListStrategies\Checkbox::class,
+                'count' => Czim\CmsModels\View\ListStrategies\RelationCount::class,
             ],
 
             // Aliases for sort strategy classes

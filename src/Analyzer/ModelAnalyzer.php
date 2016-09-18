@@ -445,6 +445,7 @@ class ModelAnalyzer
         }
 
         foreach ($relations as $relation) {
+            $relation['strategy_list'] = $this->relationStrategyResolver->determineListStrategy($relation);
             $relation['strategy_form'] = $this->relationStrategyResolver->determineFormStrategy($relation);
         }
 
