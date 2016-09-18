@@ -2,15 +2,12 @@
 namespace Czim\CmsModels\Repositories\Collectors;
 
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\Repositories\Collectors\EnricherStepInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
-use Czim\CmsModels\Support\Data\ModelAttributeData;
+use Czim\CmsModels\Repositories\Collectors\Enricher\EnrichBasicListData;
+use Czim\CmsModels\Repositories\Collectors\Enricher\EnrichListColumnData;
+use Czim\CmsModels\Repositories\Collectors\Enricher\EnrichListFilterData;
 use Czim\CmsModels\Support\Data\ModelInformation;
-use Czim\CmsModels\Support\Data\ModelListColumnData;
-use Czim\CmsModels\Support\Data\ModelListFilterData;
-use Czim\CmsModels\Support\Enums\AttributeCast;
-use Czim\CmsModels\Support\Enums\AttributeFormStrategy;
-use Illuminate\Database\Eloquent\Model;
-use UnexpectedValueException;
 
 class ModelInformationEnricher implements ModelInformationEnricherInterface
 {
@@ -21,6 +18,17 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
     protected $info;
 
     /**
+     * Enrichment step FQNs.
+     *
+     * @var string[]
+     */
+    protected $steps = [
+        EnrichBasicListData::class,
+        EnrichListColumnData::class,
+        EnrichListFilterData::class,
+    ];
+
+    /**
      * @param ModelInformationInterface|ModelInformation $information
      * @return ModelInformationInterface|ModelInformation
      */
@@ -28,244 +36,14 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
     {
         $this->info = $information;
 
-        $this->enrichListInformation();
+        foreach ($this->steps as $step) {
+            /** @var EnricherStepInterface $instance */
+            $instance = app($step);
+
+            $this->info = $instance->enrich($this->info);
+        }
 
         return $information;
     }
 
-    /**
-     * @return $this
-     */
-    protected function enrichListInformation()
-    {
-        /** @var Model $model */
-        $class = $this->info->modelClass();
-        $model = new $class;
-
-        if ( ! count($this->info->list->columns)) {
-            // Fill list references if they are empty
-            $columns = [];
-
-            foreach ($this->info->attributes as $attribute) {
-
-                if ($attribute->hidden || ! $this->shouldAttributeBeDisplayedByDefault($attribute, $this->info)) {
-                    continue;
-                }
-
-                $columns[ $attribute->name ] = $this->makeModelListColumnDataForAttributeData($attribute, $this->info);
-            }
-
-            $this->info->list->columns = $columns;
-
-        } else {
-            // Check filled columns and enrich them as required
-            $columns = [];
-
-            foreach ($this->info->list->columns as $key => $column) {
-
-                if ( ! isset($this->info->attributes[ $key ])) {
-                    throw new UnexpectedValueException(
-                        "Unenriched list column set with non-attribute key; make sure full column data is provided"
-                    );
-                }
-
-                $attributeColumnInfo = $this->makeModelListColumnDataForAttributeData($this->info->attributes[ $key ], $this->info);
-
-                $attributeColumnInfo->merge($column);
-
-                $columns[ $key ] = $attributeColumnInfo;
-            }
-
-            $this->info->list->columns = $columns;
-        }
-
-
-
-        // Default sorting order
-        if ($this->info->timestamps) {
-            $this->info->list->default_sort = $this->info->timestamp_created;
-        } elseif ($this->info->incrementing) {
-            $this->info->list->default_sort = $model->getKeyName();
-        }
-
-
-        if ( ! count($this->info->list->filters)) {
-            // Set default filters if they are empty
-            $filters = [];
-
-            foreach ($this->info->attributes as $attribute) {
-                if ($attribute->hidden) {
-                    continue;
-                }
-
-                $filterData = $this->makeModelListFilterDataForAttributeData($attribute, $this->info);
-
-                if ( ! $filterData) {
-                    continue;
-                }
-
-                $filters[$attribute->name] = $filterData;
-            }
-
-            $this->info->list->filters = $filters;
-        } else {
-            // Check set filters and enrich them as required
-            $filters = [];
-
-            foreach ($this->info->list->filters as $key => $filter) {
-
-                // If the filter information is fully provided, do not try to enrich
-                if ($filter->strategy && $filter->target) {
-                    $filters[ $key ] = $filter;
-                    continue;
-                }
-
-                if ( ! isset($this->info->attributes[ $key ])) {
-                    throw new UnexpectedValueException(
-                        "Unenriched list filter set with non-attribute key; make sure full filter data is provided ({$key})"
-                    );
-                }
-
-                $attributeFilterInfo = $this->makeModelListFilterDataForAttributeData($this->info->attributes[ $key ], $this->info);
-
-                if (false === $attributeFilterInfo) {
-                    throw new UnexpectedValueException(
-                        "Unenriched list filter set for uninterpretable attribute for filter data; make sure full filter data is provided ({$key})"
-                    );
-                }
-
-                $attributeFilterInfo->merge($filter);
-
-                $filters[ $key ] = $attributeFilterInfo;
-            }
-
-            $this->info->list->filters = $filters;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Returns whether an attribute should be displayed if no user-defined list columns are configured.
-     *
-     * @param ModelAttributeData                         $attribute
-     * @param ModelInformationInterface|ModelInformation $info
-     * @return bool
-     */
-    protected function shouldAttributeBeDisplayedByDefault(ModelAttributeData $attribute, ModelInformationInterface $info)
-    {
-        if (in_array($attribute->type, [
-            'text', 'longtext', 'mediumtext',
-            'blob', 'longblob', 'mediumblob',
-        ])) {
-            return false;
-        }
-
-        // Hide active column if the model if activatable
-        if ($info->list->activatable && $info->list->active_column == $attribute->name) {
-            return false;
-        }
-
-        // Hide stapler fields other than the main field
-        if (preg_match('#^(?<field>[^_]+)_(file_name|file_size|content_type|updated_at)$#', $attribute->name, $matches)) {
-            if (array_has($info->attributes, $matches['field'])) {
-                $strategy = $info->attributes[ $matches['field'] ]->strategy_list ?: $info->attributes[ $matches['field'] ]->strategy;
-                return ! in_array($strategy, $this->getStaplerStrategies());
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @param ModelAttributeData                         $attribute
-     * @param ModelInformationInterface|ModelInformation $info
-     * @return ModelListColumnData
-     */
-    protected function makeModelListColumnDataForAttributeData(ModelAttributeData $attribute, ModelInformationInterface $info)
-    {
-        $primaryIncrementing = $attribute->name === 'id' && $info->incrementing;
-
-        $sortable = (
-                $attribute->isNumeric()
-            ||  in_array($attribute->cast, [
-                    AttributeCast::BOOLEAN,
-                    AttributeCast::DATE,
-                    AttributeCast::STRING,
-                ])
-            &&  ! in_array($attribute->type, [
-                    'text', 'longtext', 'mediumtext',
-                    'blob', 'longblob', 'mediumblob',
-                ])
-        );
-
-        $sortDirection = 'asc';
-        if (    $primaryIncrementing
-            ||  in_array($attribute->cast, [ AttributeCast::BOOLEAN, AttributeCast::DATE ])
-        ) {
-            $sortDirection = 'desc';
-        }
-
-        return new ModelListColumnData([
-            'source'         => $attribute->name,
-            'strategy'       => $attribute->strategy_list ?: $attribute->strategy,
-            'label'          => str_replace('_', ' ', snake_case($attribute->name)),
-            'style'          => $primaryIncrementing ? 'primary-id' : null,
-            'editable'       => $attribute->fillable,
-            'sortable'       => $sortable,
-            'sort_strategy'  => $attribute->translated ? 'translated' : null,
-            'sort_direction' => $sortDirection,
-        ]);
-    }
-
-    /**
-     * @param ModelAttributeData                         $attribute
-     * @param ModelInformationInterface|ModelInformation $info
-     * @return ModelListFilterData|false
-     */
-    protected function makeModelListFilterDataForAttributeData(ModelAttributeData $attribute, ModelInformationInterface $info)
-    {
-        $strategy = false;
-        $options  = [];
-
-        if ($attribute->cast === AttributeCast::BOOLEAN) {
-
-            $strategy = 'boolean';
-
-        } elseif ($attribute->type === 'enum') {
-
-            $strategy = 'enum';
-            $options  = $attribute->values;
-
-        } elseif ($attribute->cast === AttributeCast::STRING) {
-
-            $strategy = 'string';
-        }
-
-        if ( ! $strategy) {
-            return false;
-        }
-
-        return new ModelListFilterData([
-            'source'   => $attribute->name,
-            'label'    => str_replace('_', ' ', snake_case($attribute->name)),
-            'target'   => $attribute->name,
-            'strategy' => $strategy,
-            'values'   => $options,
-        ]);
-    }
-
-
-    /**
-     * Returns (list) strategies that are associated with stapler fields.
-     *
-     * @return string[]
-     */
-    protected function getStaplerStrategies()
-    {
-        return [
-            AttributeFormStrategy::ATTACHMENT_STAPLER_IMAGE,
-            AttributeFormStrategy::ATTACHMENT_STAPLER_FILE,
-        ];
-    }
 }
