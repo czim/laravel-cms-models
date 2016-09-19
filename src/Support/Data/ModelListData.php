@@ -19,6 +19,7 @@ use Czim\CmsModels\Contracts\Data\ModelListDataInterface;
  * @property string|array $default_sort
  * @property bool $orderable
  * @property string $order_strategy
+ * @property string $order_column
  * @property bool $activatable
  * @property string $active_column
  */
@@ -57,9 +58,11 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
         'page_size' => null,
 
         // Whether the list may be manually ordered (f.i. by dragging and dropping records)
-        'orderable' => false,
+        'orderable' => null,
         // The strategy by which the model can be ordered. For now, this should always be 'listify'.
         'order_strategy' => 'listify',
+        // The column used for the order strategy ('position' for listify)
+        'order_column' => null,
 
         // Whether the model may be activated/deactived through the listing; ie. whether it has a manipulable 'active' flag.
         'activatable' => null,
@@ -67,7 +70,7 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
         'active_column' => null,
 
         // Whether to disable the use and display of scopes.
-        'disable_scopes' => false,
+        'disable_scopes' => null,
         // Scopes or scoping strategies, keyed by the scope name.
         'scopes' => [],
 
@@ -122,6 +125,7 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
             'page_size',
             'orderable',
             'order_strategy',
+            'order_column',
             'activatable',
             'activate_column',
             'default_sort',

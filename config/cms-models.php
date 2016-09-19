@@ -98,6 +98,7 @@ return [
 
             // Scopes (without the scope prefix) to always ignore
             'ignore' => [
+                // translatable
                 'translatedIn',
                 'notTranslatedIn',
                 'translated',
@@ -105,6 +106,10 @@ return [
                 'withTranslation',
                 'whereTranslation',
                 'whereTranslationLike',
+                // listify
+                'name',
+                'listifyScope',
+                'inList',
             ],
         ],
 

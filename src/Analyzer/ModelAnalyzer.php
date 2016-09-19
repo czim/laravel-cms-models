@@ -351,8 +351,16 @@ class ModelAnalyzer
         $traitNames = $this->reflection->getTraitNames();
 
         if (in_array('Dimsav\\Translatable\\Translatable', $traitNames)) {
-            $this->info['translated']           = true;
-            $this->info['translation_strategy'] = 'translatable';
+            $this->info->translated           = true;
+            $this->info->translation_strategy = 'translatable';
+        }
+
+        if (    in_array('Czim\\Listify\\Listify', $traitNames)
+            ||  in_array('Lookitsatravis\\Listify\\Listify', $traitNames)
+        ) {
+            $this->info->list->orderable      = true;
+            $this->info->list->order_strategy = 'listify';
+            $this->info->list->order_column   = $this->model->positionColumn();
         }
 
         return $this;
