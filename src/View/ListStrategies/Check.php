@@ -4,7 +4,7 @@ namespace Czim\CmsModels\View\ListStrategies;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-class Checkbox extends AbstractListDisplayStrategy
+class Check extends AbstractListDisplayStrategy
 {
 
     /**
