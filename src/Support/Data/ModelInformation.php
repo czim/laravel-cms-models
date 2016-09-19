@@ -17,7 +17,7 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
  * @property bool $single
  * @property bool $allow_delete
  * @property mixed $delete_condition
- * @property string $reference
+ * @property array|ModelReferenceData $reference
  * @property bool $incrementing
  * @property bool $timestamps
  * @property string $timestamp_created
@@ -36,10 +36,13 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
 {
 
     protected $objects = [
-        'meta'     => ModelMetaData::class,
-        'includes' => ModelIncludesData::class,
-        'list'     => ModelListData::class,
-        'form'     => ModelFormData::class,
+        'meta'       => ModelMetaData::class,
+        'includes'   => ModelIncludesData::class,
+        'reference'  => ModelReferenceData::class,
+        'list'       => ModelListData::class,
+        'form'       => ModelFormData::class,
+        'attributes' => ModelAttributeData::class . '[]',
+        'relations'  => ModelRelationData::class . '[]',
     ];
 
     protected $attributes = [
@@ -89,8 +92,12 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
         // Use <FQN>@<method> format to indicate a strategy
         'delete_condition' => null,
 
-        // Column or strategy that defines a display value when referencing records from other forms/lists
-        'reference' => null,
+        // Information for external references of this model, ModelReferenceData
+        'reference' => [
+            'strategy' => null,
+            'source'   => null,
+            'search'   => null,
+        ],
 
         // Whether the key is auto incrementing
         'incrementing' => true,
@@ -245,8 +252,9 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
         $this->mergeAttribute('meta', $with->meta);
         $this->mergeAttribute('verbose_name', $with->verbose_name);
         $this->mergeAttribute('verbose_name_plural', $with->verbose_name_plural);
-        
+
         $this->mergeAttribute('list', $with->list);
+        $this->mergeAttribute('reference', $with->reference);
 
     }
 
