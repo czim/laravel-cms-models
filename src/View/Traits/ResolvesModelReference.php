@@ -93,7 +93,11 @@ trait ResolvesModelReference
         // Get model information for the model
         $information = $this->getInformationRepository()->getByModel($model);
 
-        $source = $information && $information->reference->source ?: $model->getKey();
+        if ($information && $information->reference->source) {
+            $source = $information->reference->source;
+        } else {
+            $source = $model->getKeyName();
+        }
 
         return $this->resolveModelSource($model, $source);
     }

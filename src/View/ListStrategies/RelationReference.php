@@ -7,6 +7,9 @@ use Czim\CmsModels\View\Traits\GetsNestedRelations;
 use Czim\CmsModels\View\Traits\ModifiesQueryForContext;
 use Czim\CmsModels\View\Traits\ResolvesModelReference;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Collection;
 
 class RelationReference extends AbstractListDisplayStrategy
@@ -37,7 +40,11 @@ class RelationReference extends AbstractListDisplayStrategy
             return $this->getEmptyReference();
         }
 
-        $query = $this->modifyRelationQueryForContext($relation->getRelated(), $relation);
+        // Note that there is no way we can reliably apply repository context for
+        // a morph relation; we cannot know or sensibly generalize for the related models.
+        if ( ! $this->isMorphRelation($relation)) {
+            $query = $this->modifyRelationQueryForContext($relation->getRelated(), $relation);
+        }
 
         /** @var Collection|Model[] $models */
         $models = $query->get();
@@ -100,6 +107,20 @@ class RelationReference extends AbstractListDisplayStrategy
     protected function wrapReference($reference)
     {
         return '<span class="relation-reference">' . $reference . '</span>';
+    }
+
+    /**
+     * Returns whether a given relation is (in a relevant way) polymorph.
+     *
+     * This will only return true for the relations that have undetermined related models.
+     *
+     * @param Relation $relation
+     * @return bool
+     */
+    protected function isMorphRelation($relation)
+    {
+        return (    $relation instanceof MorphMany
+                ||  $relation instanceof MorphOne);
     }
 
 }
