@@ -165,14 +165,6 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
             'disable_scopes' => false,
             // Scopes or scoping strategies to present for getting selected sets of the model's records
             'scopes' => [],
-
-            // Includes for listing (overrides normal includes, if set)
-            'includes' => [
-                // List of default includes to use for loading models in the listing
-                'default' => [],
-                // List of available includes to allow (either relation name string, or relation name key string => callable strategy)
-                'available' => [],
-            ],
         ],
 
         // Settings for rendering the form by which the model is edited
@@ -255,7 +247,7 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
 
         $this->mergeAttribute('list', $with->list);
         $this->mergeAttribute('reference', $with->reference);
-
+        $this->mergeAttribute('includes', $with->includes);
     }
 
 }

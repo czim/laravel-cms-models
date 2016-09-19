@@ -353,6 +353,8 @@ class ModelAnalyzer
         if (in_array('Dimsav\\Translatable\\Translatable', $traitNames)) {
             $this->info->translated           = true;
             $this->info->translation_strategy = 'translatable';
+
+            $this->addIncludesDefault('translations');
         }
 
         if (    in_array('Czim\\Listify\\Listify', $traitNames)
@@ -699,6 +701,28 @@ class ModelAnalyzer
         return config('cms-models.analyzer.relations.ignore', []);
     }
 
+
+    /**
+     * Adds an entry to the default includes.
+     *
+     * @param string     $relation
+     * @param null|mixed $value
+     * @return $this
+     */
+    protected function addIncludesDefault($relation, $value = null)
+    {
+        $includes = array_get($this->info->includes, 'default', []);
+
+        if (null !== $value) {
+            $includes[ $relation ] = $value;
+        } elseif ( ! array_key_exists($relation, $includes) && ! in_array($relation, $includes)) {
+            $includes[] = $relation;
+        }
+
+        $this->info->includes['default'] = $includes;
+
+        return $this;
+    }
 
     /**
      * Insert an item into an associative array at the position before a given key.

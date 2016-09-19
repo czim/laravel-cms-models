@@ -73,17 +73,6 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
         'disable_scopes' => null,
         // Scopes or scoping strategies, keyed by the scope name.
         'scopes' => [],
-
-        // Includes for listing (overrides normal includes, if set), MetaIncludesData instance
-        'includes' => [
-
-            // List of default includes to use for loading models in the listing
-            'default' => [],
-            // List of available includes to allow (either relation name string, or relation name key string => callable strategy)
-            'available' => [],
-
-        ],
-
     ];
 
     /**
