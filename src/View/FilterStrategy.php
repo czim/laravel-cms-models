@@ -7,13 +7,13 @@ use Czim\CmsModels\Contracts\View\FilterDisplayInterface;
 use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
 use Czim\CmsModels\Contracts\View\FilterStrategyResolverInterface;
 use Czim\CmsModels\Support\Data\ModelListFilterData;
-use Czim\CmsModels\View\Traits\ResolvesStrategies;
+use Czim\CmsModels\View\Traits\ResolvesSourceStrategies;
 use Illuminate\Database\Eloquent\Builder;
 use RuntimeException;
 
 class FilterStrategy implements FilterStrategyInterface
 {
-    use ResolvesStrategies;
+    use ResolvesSourceStrategies;
 
     /**
      * @var FilterStrategyResolverInterface

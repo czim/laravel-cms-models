@@ -5,7 +5,7 @@ use Czim\CmsModels\Support\Data\Strategies\InstantiableClassStrategy;
 use Illuminate\Database\Eloquent\Model;
 use RuntimeException;
 
-trait ResolvesStrategies
+trait ResolvesSourceStrategies
 {
 
     /**
@@ -44,7 +44,7 @@ trait ResolvesStrategies
      * @param object $class     the object the method would be called on
      * @return false|string
      */
-    public function parseAsModelMethodStrategyString($strategy, $class)
+    protected function parseAsModelMethodStrategyString($strategy, $class)
     {
         if ( ! starts_with($strategy, '@') || strlen($strategy) < 2) {
             return false;
@@ -65,7 +65,7 @@ trait ResolvesStrategies
      * @param string $strategy
      * @return InstantiableClassStrategy|false
      */
-    public function parseAsInstantiableClassMethodStrategyString($strategy)
+    protected function parseAsInstantiableClassMethodStrategyString($strategy)
     {
         if ( ! preg_match('#^(?<class>.*)@(?<method>.*)$#', $strategy, $matches)) {
             return false;

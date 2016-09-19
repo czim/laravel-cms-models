@@ -4,12 +4,12 @@ namespace Czim\CmsModels\View;
 use Czim\CmsModels\Contracts\View\ListDisplayInterface;
 use Czim\CmsModels\Contracts\View\ListStrategyInterface;
 use Czim\CmsModels\Contracts\View\ListStrategyResolverInterface;
-use Czim\CmsModels\View\Traits\ResolvesStrategies;
+use Czim\CmsModels\View\Traits\ResolvesSourceStrategies;
 use Illuminate\Database\Eloquent\Model;
 
 class ListStrategy implements ListStrategyInterface
 {
-    use ResolvesStrategies;
+    use ResolvesSourceStrategies;
 
     /**
      * @var ListStrategyResolverInterface

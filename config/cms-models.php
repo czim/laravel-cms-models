@@ -142,7 +142,7 @@ return [
 
     'strategies' => [
 
-
+        // Strategies for default context/criteria on the repository
         'repository' => [
 
             // The default namespace to prefix for relative strategy class names
@@ -150,6 +150,18 @@ return [
             'default-strategy'  => null,
 
             // Aliases for repository context strategy classes
+            'aliases' => [
+            ],
+        ],
+
+        // Strategies for making model reference strings
+        'reference' => [
+
+            // The default namespace to prefix for relative strategy class names
+            'default-namespace' => 'Czim\\CmsModels\\View\\ReferenceStrategies\\',
+            'default-strategy'  => null,
+
+            // Aliases for reference display strategy classes
             'aliases' => [
             ],
         ],
