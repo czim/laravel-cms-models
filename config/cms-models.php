@@ -181,8 +181,9 @@ return [
 
             // Aliases for list display strategy classes
             'aliases' => [
-                'count' => Czim\CmsModels\View\ListStrategies\RelationCount::class,
                 'check'     => Czim\CmsModels\View\ListStrategies\Check::class,
+                'count'     => Czim\CmsModels\View\ListStrategies\RelationCount::class,
+                'reference' => Czim\CmsModels\View\ListStrategies\RelationReference::class,
             ],
 
             // Aliases for sort strategy classes

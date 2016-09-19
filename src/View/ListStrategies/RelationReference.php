@@ -1,0 +1,105 @@
+<?php
+namespace Czim\CmsModels\View\ListStrategies;
+
+use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\View\Traits\GetsNestedRelations;
+use Czim\CmsModels\View\Traits\ModifiesQueryForContext;
+use Czim\CmsModels\View\Traits\ResolvesModelReference;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+
+class RelationReference extends AbstractListDisplayStrategy
+{
+    use GetsNestedRelations,
+        ResolvesModelReference,
+        ModifiesQueryForContext;
+
+    /**
+     * @var ModelInformationInterface|ModelInformation|null
+     */
+    protected $referenceModelInformation;
+
+    /**
+     * Renders a display value to print to the list view.
+     *
+     * @param Model $model
+     * @param mixed $source     source column, method name or value
+     * @return string
+     */
+    public function render(Model $model, $source)
+    {
+        // Get all related records, if possible
+
+        $relation = $this->getRelation($model, $source);
+
+        if ( ! $relation) {
+            return $this->getEmptyReference();
+        }
+
+        $query = $this->modifyRelationQueryForContext($relation->getRelated(), $relation);
+
+        /** @var Collection|Model[] $models */
+        $models = $query->get();
+
+        if ( ! count($models)) {
+            return $this->getEmptyReference();
+        }
+
+        $references = [];
+
+        // Convert records into reference strings
+        foreach ($models as $model) {
+
+            $references[] = $this->getReference($model);
+        }
+
+        return $this->implodeReferences($references);
+    }
+
+    /**
+     * Returns a reference representation for a single model.
+     *
+     * @param Model $model
+     * @return string
+     */
+    protected function getReference(Model $model)
+    {
+        $reference = $this->getReferenceValue($model);
+
+        return $this->wrapReference($reference);
+    }
+
+    /**
+     * Returns string with imploded references.
+     *
+     * @param string[] $references
+     * @return string
+     */
+    protected function implodeReferences(array $references)
+    {
+        return implode('; ', $references);
+    }
+
+    /**
+     * Returns an empty reference representation.
+     *
+     * @return string
+     */
+    protected function getEmptyReference()
+    {
+        return '<span class="relation-reference reference-empty">&nbsp;</span>';
+    }
+
+    /**
+     * Wraps a reference string in a simple container.
+     *
+     * @param string $reference
+     * @return string
+     */
+    protected function wrapReference($reference)
+    {
+        return '<span class="relation-reference">' . $reference . '</span>';
+    }
+
+}
