@@ -5,9 +5,45 @@ Strategies keep the CMS flexible. The provided strategies will usually be adequa
 Aliases in configuration files are added for convenience, so that a simple string resolves to a strategy class.
 
 
+## Repository Context Strategies
+
+Any model accessed in the CMS will have its records retrieved through a repository. 
+The default criteria for the repository may be configured per model, as well as whether and which global scopes should be ignored by the CMS.
+
+By default, all global scopes will be removed before results are retrieved.
+
+No context strategies are provided with the CMS; roll your own if you need one.
+
+## Model Reference Strategies
+
+A model may be referred to, for instance when a model reference is shown in a list, or as an option in a select for linking it to other models. Each model 
+
+Reference strategies take the referenced model and its (mixed) source, and render it as a string value.
+
+Included:
+
+TODO: none yet
+
+### Fall-back values
+
+If a model is not part of the CMS, its reference can (obviously) not be determined through defined model information.
+In that case, it will fall back to using the model's primary key value.
+
+If a `getReference()` or `getReferenceAttribute()` method is available on the model, this will be used instead.
+
+
 ## List Display Strategies
 
 List strategies determine how data is rendered in list columns on a model's index page.
+ 
+Included:
+
+- **Check**: a graphic checkmark that reflects the source as a boolean state. 
+- **RelationCount**: a number reflecting the amount of related records.
+- **RelationReference**: a formatted string with one or more model references (see reference strategies above).
+ 
+
+By default, if no strategy is defined, the source will be displayed as a plain string value.
  
 ### Source 
 
