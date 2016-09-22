@@ -25,6 +25,8 @@ With default settings, this would be: `app/Cms/Models/Library/Book.php`.
 
 return [
 
+    'reference' => 'title',
+
     'list' => [
 
         'columns' => [
@@ -59,6 +61,28 @@ return [
 ```
 
 This configuration would define some columns to be present in the listing, some filters to allow quick searches. No tabs would be displayed for model scopes, and users could select some specific page sizes.
+
+## General & Meta Data
+
+### Model Reference
+
+You can define how models will be referred to within the CMS, by setting the `reference` value (top level).
+
+```
+'reference' => [
+    'source'   => 'title',
+    'strategy' => \Czim\CmsModels\View\ReferenceStrategies\IdAndAttribute::class,
+],
+```
+
+Keys that may be set:
+
+- **source**: which column(s) or source values to show or use in the reference strategy.
+- **strategy**: the reference strategy to apply.
+- **search**: the targets (columns, attributes) that will be used for standard means to find matches for the model (in, f.i., a searchable ajax select dropdown).
+
+See [Model Reference Strategies](STRATEGIES.md#model-reference-strategies) for more information on the strategies that render the references.
+
 
 ## List Overrides
 
@@ -99,6 +123,26 @@ Entries may be:
 
 Note that if the `columns` section is omitted from the configuration, this can easily result in (too) many columns being rendered for hefty models.
 
+See [List Display Strategies](STRATEGIES.md#list-display-strategies) for information about strategies that can be used (or how to create new ones).
+
 
 ### Filter
+
+In `list.filters` the fields may be defined by which a listing can be filtered. If any field is defined here, any default fields not included will be omitted.
+
+This section works very much like the `list.columns`.
+
+If the only filter needed is a text input for any textual column, loosely matching split terms, use this:
+
+```
+'filters' => [
+    'any' => [
+        'label'    => 'Anything',
+        'target'   => '*',
+        'strategy' => 'string-split',
+    ]   
+]
+```
+
+This will take a an input like 'blue shoes' and search for it as `like '%blue%' OR like '%shoes%'`, in any char or text based field, included in translations for the model.
 
