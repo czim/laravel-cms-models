@@ -86,6 +86,8 @@ See [Model Reference Strategies](STRATEGIES.md#model-reference-strategies) for m
 
 ## List Overrides
 
+The `list` section stores overriding information related to index page listings for models.
+
 ### Column Display
 
 The `list.columns` entries determine what columns will be displayed in the model's listing table, as well as how they are ordered.
@@ -128,7 +130,7 @@ See [List Display Strategies](STRATEGIES.md#list-display-strategies) for informa
 
 ### Filter
 
-In `list.filters` the fields may be defined by which a listing can be filtered. If any field is defined here, any default fields not included will be omitted.
+In `list.filters`, the fields may be defined by which a listing can be filtered. If any field is defined here, any default fields not included will be omitted.
 
 This section works very much like the `list.columns`.
 
@@ -146,3 +148,11 @@ If the only filter needed is a text input for any textual column, loosely matchi
 
 This will take a an input like 'blue shoes' and search for it as `like '%blue%' OR like '%shoes%'`, in any char or text based field, included in translations for the model.
 
+- A **string** with an attribute name of the model (ex.:`title`).
+- A **string** with a dot-notation attribute name on a related model (ex.: `author.name`).
+- A **string** key, **string** value pair, where the *key* is either of the above types and the *value* is a strategy or strategy alias (ex.: `'title' => 'string-split'`).      
+- A **string** key, **array** value pair, where the *key* is either of the first two types and the *value* is an associative array with list data key-value pairs.
+
+    The values set in the array will override defaults. For all filters values not specified, the default analysis-determined defaults are used.
+    
+See [Filter Strategies](STRATEGIES.md#filter-strategies) for information about strategies that can be used (or how to create new ones), and the key-value pairs in the filter data.
