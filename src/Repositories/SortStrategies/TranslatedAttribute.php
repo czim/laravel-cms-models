@@ -44,40 +44,56 @@ class TranslatedAttribute implements SortStrategyInterface
         $translationTable   = $translationRelation->getRelated()->getTable();
         $translationForeign = $translationRelation->getForeignKey();
 
+        $locale    = app()->getLocale();
         $localeKey = $this->getLocaleKey();
 
+
+        // build translation subquery to join on, best match first
+        $subQueryAlias = uniqid('trans');
+        $keyAlias      = uniqid('fk');
+
+        $subQuery = DB::table($translationTable)
+            ->select([
+                "{$translationForeign} as {$keyAlias}",
+                "{$translationTable}.{$column}",
+            ])
+            ->where(function ($query) use ($locale, $localeKey) {
+
+                // Check if we need to work with a fallback locale
+                $fallback = $this->getFallbackLocale();
+
+                $query->where($localeKey, '=', $locale);
+
+                if ($fallback && $fallback != $locale) {
+                    $query->orWhere($localeKey, '=', $fallback);
+                }
+            })
+            ->orderByRaw("IF(`{$localeKey}` = ?,0,1)", [ $locale ])
+            ->take(1);
+
+
+        // build the main query, and join the sub
         $query = $query
             ->select("{$modelTable}.*")
             ->leftJoin(
-                $translationTable,
+                DB::raw("(" . $subQuery->toSql() . ") as `{$subQueryAlias}`"),
                 function ($join) use (
-                    $translationForeign,
-                    $translationTable,
+                    $subQueryAlias,
+                    $keyAlias,
                     $modelTable,
-                    $modelKey,
-                    $localeKey
+                    $modelKey
                 ) {
-                    $join->on("{$translationForeign}", '=', "{$modelTable}.{$modelKey}");
-
-                    // Check if we need to work with a fallback locale
-                    $locale   = app()->getLocale();
-                    $fallback = $this->getFallbackLocale();
-
-                    $join->where("{$translationTable}.{$localeKey}", '=', $locale);
-
-                    if ($fallback && $fallback != $locale) {
-                        $join->orWhere("{$translationTable}.{$localeKey}", '=', $fallback);
-                    }
+                    $join->on("{$subQueryAlias}.{$keyAlias}", '=', "{$modelTable}.{$modelKey}");
                 }
-
             )
-            ->groupBy("{$modelTable}.{$modelKey}");
+            ->addBinding($subQuery->getBindings(), 'join');
+
 
         if ($this->nullLast) {
-            $query->orderBy(DB::raw("IF(`{$translationTable}`.`{$column}` IS NULL,1,0)"));
+            $query->orderBy(DB::raw("IF(`{$subQueryAlias}`.`{$column}` IS NULL,1,0)"));
+        } else {
+            $query->orderBy("{$translationTable}.{$column}", $direction);
         }
-
-        $query->orderBy("{$translationTable}.{$column}", $direction);
 
         return $query;
     }
