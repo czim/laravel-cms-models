@@ -1,11 +1,10 @@
 <?php
 namespace Czim\CmsModels\Repositories\SortStrategies;
 
-use Czim\CmsModels\Contracts\Repositories\SortStrategyInterface;
 use DB;
 use Illuminate\Database\Eloquent\Builder;
 
-class NullLast implements SortStrategyInterface
+class NullLast extends AbstractSortStrategy
 {
 
     /**
@@ -20,8 +19,13 @@ class NullLast implements SortStrategyInterface
     {
         $direction = $direction === 'desc' ? 'desc' : 'asc';
 
-        return $query->orderBy(DB::raw("IF(`{$column}` IS NULL,1,0)"))
-                     ->orderBy($column, $direction);
+        $supportsIf = $this->databaseSupportsIf($query);
+
+        if ($supportsIf) {
+            $query = $query->orderBy(DB::raw("IF(`{$column}` IS NULL,1,0)"));
+        }
+
+        return $query->orderBy($column, $direction);
     }
 
 }

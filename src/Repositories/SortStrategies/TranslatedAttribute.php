@@ -1,7 +1,6 @@
 <?php
 namespace Czim\CmsModels\Repositories\SortStrategies;
 
-use Czim\CmsModels\Contracts\Repositories\SortStrategyInterface;
 use DB;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Builder;
@@ -13,7 +12,7 @@ use RuntimeException;
  *
  * Assumes 'translatable' translation strategy.
  */
-class TranslatedAttribute implements SortStrategyInterface
+class TranslatedAttribute extends AbstractSortStrategy
 {
 
     /**
@@ -47,6 +46,7 @@ class TranslatedAttribute implements SortStrategyInterface
         $locale    = app()->getLocale();
         $localeKey = $this->getLocaleKey();
 
+        $supportsIf = $this->databaseSupportsIf($query);
 
         // build translation subquery to join on, best match first
         $subQueryAlias = uniqid('trans');
@@ -67,9 +67,12 @@ class TranslatedAttribute implements SortStrategyInterface
                 if ($fallback && $fallback != $locale) {
                     $query->orWhere($localeKey, '=', $fallback);
                 }
-            })
-            ->orderByRaw("IF(`{$localeKey}` = ?,0,1)", [ $locale ])
-            ->take(1);
+            });
+
+        if ($supportsIf) {
+            $subQuery->orderByRaw("IF(`{$localeKey}` = ?,0,1)", [ $locale ]);
+        }
+
 
 
         // build the main query, and join the sub
@@ -88,12 +91,12 @@ class TranslatedAttribute implements SortStrategyInterface
             )
             ->addBinding($subQuery->getBindings(), 'join');
 
-
-        if ($this->nullLast) {
+        /** @var Builder $query */
+        if ($this->nullLast && $supportsIf) {
             $query->orderBy(DB::raw("IF(`{$subQueryAlias}`.`{$column}` IS NULL,1,0)"));
-        } else {
-            $query->orderBy("{$translationTable}.{$column}", $direction);
         }
+
+        $query->orderBy("{$subQueryAlias}.{$column}", $direction);
 
         return $query;
     }
