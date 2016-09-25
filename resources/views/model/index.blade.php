@@ -256,7 +256,7 @@
                     'activate' : ! state
                 };
 
-                url = url.replace('IDHERE', $(this).attr('data-id'));
+                url = url.replace('IDHERE', id);
 
                 // switch to loading icon
                 parent.find('.loading').removeClass('hidden');
@@ -315,7 +315,80 @@
             });
         @endif
 
-        {{-- Orderable --}}
+        {{-- Orderable: --}}
+        @if ($model->list->orderable)
+
+            var setOrderablePosition = function(parent, position) {
+
+                var url  = '{{ cms_route("{$routePrefix}.position", [ 'IDHERE' ]) }}',
+                    id   = parent.attr('data-id'),
+                    data = { 'position' : position };
+
+                url = url.replace('IDHERE', id);
+
+                // loading state
+                parent.find('.orderable-drag-drop .move').addClass('hidden');
+                parent.find('.orderable-drag-drop .loading').removeClass('hidden');
+
+                $.ajax(url, {
+                    'headers': {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    'method'      : 'PUT',
+                    'data'        : JSON.stringify(data),
+                    'contentType' : 'application/json'
+                })
+                    .success(function (data) {
+                        var position = data.position;
+
+                        if ( ! data.success) {
+                            console.log('Failed to update orderable position...');
+                            position = null;
+                        }
+
+                        location.reload();
+                    })
+                    .error(function (xhr, status, error) {
+                        console.log('orderable position error: ' + error);
+                        parent.find('.orderable-drag-drop .loading').addClass('hidden');
+                        parent.find('.orderable-drag-drop .move').removeClass('hidden');
+                    });
+            };
+
+            $('.orderable-action-up').click(function (event) {
+                event.preventDefault();
+                setOrderablePosition($(this).closest('.column-orderable'), 'up');
+            });
+
+            $('.orderable-action-down').click(function (event) {
+                event.preventDefault();
+                setOrderablePosition($(this).closest('.column-orderable'), 'down');
+            });
+
+            $('.orderable-action-top').click(function (event) {
+                event.preventDefault();
+                setOrderablePosition($(this).closest('.column-orderable'), 'top');
+            });
+
+            $('.orderable-action-bottom').click(function (event) {
+                event.preventDefault();
+                setOrderablePosition($(this).closest('.column-orderable'), 'bottom');
+            });
+
+            $('.orderable-action-remove').click(function (event) {
+                event.preventDefault();
+                setOrderablePosition($(this).closest('.column-orderable'), 'remove');
+            });
+
+            $('.orderable-action-position').click(function (event) {
+                event.preventDefault();
+                // modal to set position # first
+                // then fire ajax
+            });
+
+        @endif
+
+        {{-- Orderable: drag and drop --}}
         @if ($model->list->orderable && $model->list->getOrderableColumn() === $sortColumn)
             $(function () {
                 $('.records-table').sortable({
@@ -329,13 +402,40 @@
                     onDrop            : function($item, container, _super) {
                         _super($item, container);
 
-                        // determine the new position to set
-                        // initiate ajax call
-                        // set loading animation
-                        // if failed: reload the page (or move the row back, if we can)
+                        var oldPosition = parseInt( $($item).find('.column-orderable').attr('data-position'), 10),
+                            newPosition,
+                            newInList,
+                            relative;
 
-                        var newIndex = $item.index();
-                        console.log( $($item).attr('data-prop') );
+                        // determine the new position to set by the surrounding items: base position is the top of the
+                        // two positions between which the item should end up
+                        if ($item.index() > 0) {
+                            relative = $($item).prev().find('.column-orderable');
+                            newPosition = parseInt( relative.attr('data-position'), 10);
+                        } else {
+                            relative = $($item).next().find('.column-orderable');
+                            newPosition = parseInt( relative.attr('data-position'), 10) - 1;
+                        }
+                        newInList = parseInt( relative.attr('data-in-list'), 10) > 0;
+
+
+                        if ( ! newInList) {
+                            // if we're dragging the item out of the list, move it to the bottom for now
+                            newPosition = 'bottom';
+                        } else {
+                            // return if the position is unchanged
+                            if (oldPosition == newPosition || oldPosition == newPosition + 1) {
+                                return;
+                            }
+
+                            // adjust if we're dragging an item up
+                            if (oldPosition > newPosition) {
+                                newPosition += 1;
+                            }
+                        }
+
+                        // initiate ajax call
+                        setOrderablePosition($($item).find('.column-orderable'), newPosition);
                     }
                 });
             });
