@@ -6,7 +6,9 @@ use Czim\CmsModels\Http\Controllers\Traits\DefaultModelFiltering;
 use Czim\CmsModels\Http\Controllers\Traits\DefaultModelPagination;
 use Czim\CmsModels\Http\Controllers\Traits\DefaultModelScoping;
 use Czim\CmsModels\Http\Controllers\Traits\DefaultModelSorting;
+use Czim\CmsModels\Http\Controllers\Traits\SetsModelOrderablePosition;
 use Czim\CmsModels\Http\Requests\ActivateRequest;
+use Czim\CmsModels\Http\Requests\OrderUpdateRequest;
 
 class DefaultModelController extends BaseModelController
 {
@@ -14,7 +16,8 @@ class DefaultModelController extends BaseModelController
         DefaultModelPagination,
         DefaultModelScoping,
         DefaultModelSorting,
-        SetsModelActivateState;
+        SetsModelActivateState,
+        SetsModelOrderablePosition;
 
 
     public function index()
@@ -109,11 +112,11 @@ class DefaultModelController extends BaseModelController
     }
 
     /**
-     * Activates/enables a model.
+     * Activates/enables a record.
      *
      * @param ActivateRequest $request
      * @param int             $id
-     * @return bool|\Illuminate\Http\RedirectResponse
+     * @return mixed
      */
     public function activate(ActivateRequest $request, $id)
     {
@@ -128,6 +131,35 @@ class DefaultModelController extends BaseModelController
 
         if (request()->ajax()) {
             return response()->json([ 'success' => $success, 'active' => $result ]);
+        }
+
+        if ($success) {
+            // todo flash
+        }
+
+        return redirect()->back();
+    }
+
+    /**
+     * Changes orderable position for a record.
+     *
+     * @param OrderUpdateRequest $request
+     * @param int                $id
+     * @return mixed
+     */
+    public function position(OrderUpdateRequest $request, $id)
+    {
+        $record = $this->modelRepository->findOrFail($id);
+        $success = false;
+        $result  = null;
+
+        if ($this->getModelInformation()->list->orderable) {
+            $success = true;
+            $result  = $this->changeModelOrderablePosition($record, $request->get('position'));
+        }
+
+        if (request()->ajax()) {
+            return response()->json([ 'success' => $success, 'position' => $result ]);
         }
 
         if ($success) {

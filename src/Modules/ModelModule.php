@@ -189,6 +189,12 @@ class ModelModule implements ModuleInterface
                     'uses'       => $controller . '@activate',
                 ]);
 
+                $router->put('{key}/position', [
+                    'as'         => 'position',
+                    'middleware' => [cms_mw_permission("{$permissionPrefix}edit")],
+                    'uses'       => $controller . '@position',
+                ]);
+
                 $router->put('{key}', [
                     'as'         => 'update',
                     'middleware' => [cms_mw_permission("{$permissionPrefix}edit")],

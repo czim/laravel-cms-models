@@ -11,6 +11,7 @@ use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationInterpreter
 use Czim\CmsModels\Contracts\Repositories\CurrentModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
+use Czim\CmsModels\Contracts\Repositories\OrderableStrategyResolverInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
@@ -23,6 +24,7 @@ use Czim\CmsModels\Repositories\CurrentModelInformation;
 use Czim\CmsModels\Repositories\ModelInformationRepository;
 use Czim\CmsModels\Repositories\ModelRepository;
 use Czim\CmsModels\Repositories\ActivateStrategies\ActivateStrategyResolver;
+use Czim\CmsModels\Repositories\OrderableStrategies\OrderableStrategyResolver;
 use Czim\CmsModels\Support\ModuleHelper;
 use Czim\CmsModels\Support\Routing\RouteHelper;
 use Czim\CmsModels\View\FilterStrategy;
@@ -123,6 +125,7 @@ class CmsModelsServiceProvider extends ServiceProvider
         $this->app->singleton(FilterStrategyInterface::class, FilterStrategy::class);
         $this->app->singleton(FilterStrategyResolverInterface::class, FilterStrategyResolver::class);
         $this->app->singleton(ActivateStrategyResolverInterface::class, ActivateStrategyResolver::class);
+        $this->app->singleton(OrderableStrategyResolverInterface::class, OrderableStrategyResolver::class);
 
 
         // Register facade names
