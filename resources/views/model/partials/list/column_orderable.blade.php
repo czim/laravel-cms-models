@@ -62,7 +62,8 @@
                 </li>
                 <li role="separator" class="divider"></li>
                 <li>
-                    <a href="#" class="orderable-action-position">
+                    <a href="#" class="orderable-action-position"
+                       data-toggle="modal" data-target="#orderable-position-modal">
                         {{ $position ? cms_trans('models.orderable.move-to-position') : cms_trans('models.orderable.insert-at-position') }}
                     </a>
                 </li>
