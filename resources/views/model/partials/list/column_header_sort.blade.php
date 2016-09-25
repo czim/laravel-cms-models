@@ -1,8 +1,10 @@
 
-<a class="sort {{ $active ? 'active' : null }}" href="?sort={{ $key }}&sortdir={{ $active ? ($direction === 'desc' ? 'asc' : 'desc') : null }}">
-    {{ ucfirst($column->label) }}
+<a class="sort {{ $active ? 'active' : null }}"
+   href="?sort={{ $sortKey }}&sortdir={{ $active ? ($direction === 'desc' ? 'asc' : 'desc') : null }}">
 
-    &nbsp;&nbsp;
+    {{ $label }}
+
+    &nbsp;
 
     @if ($active)
         <i class="fa fa-sort-{{ $direction }}"></i>

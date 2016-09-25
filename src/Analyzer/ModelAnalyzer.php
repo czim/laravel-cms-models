@@ -363,6 +363,7 @@ class ModelAnalyzer
             $this->info->list->orderable      = true;
             $this->info->list->order_strategy = 'listify';
             $this->info->list->order_column   = $this->model->positionColumn();
+            $this->info->list->default_sort   = $this->info->list->order_column;
         }
 
         return $this;

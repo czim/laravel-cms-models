@@ -5,7 +5,7 @@
 
 <td class="column column-activate">
     <div id="model-activate-{{ $record->getKey() }}"
-         class="activate-toggle"
+         class="activate-toggle {{ $active ? 'tr-show-on-hover' : null }}"
          data-id="{{ $record->getKey() }}"
          data-active="{{ $active ? 1 : 0 }}">
 

@@ -5,6 +5,7 @@ use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
 use Czim\CmsModels\Repositories\Criteria\ModelOrderStrategy;
+use Czim\CmsModels\Repositories\SortStrategies\NullLast;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\Repository\Contracts\ExtendedRepositoryInterface;
 use Czim\Repository\Enums\CriteriaKey;
@@ -161,15 +162,41 @@ trait DefaultModelSorting
     protected function getModelSortCriteria()
     {
         $sort = $this->getActualSort();
+        $info = $this->getModelInformation();
 
-        if ( ! isset($this->getModelInformation()->list->columns[$sort])) {
+        // Sort by orderable strategy if we should and can
+        if (    $info->list->orderable
+            &&  $sort == $info->list->getOrderableColumn()
+            &&  ($orderableStrategy = $this->getOrderableSortStrategy())
+        ) {
+            return $orderableStrategy;
+        }
+
+        // Otherwise, attempt to sort by any other list column
+        if ( ! isset($info->list->columns[$sort])) {
             return false;
         }
 
-        $strategy = $this->getModelInformation()->list->columns[$sort]->sort_strategy;
-        $source   = $this->getModelInformation()->list->columns[$sort]->source ?: $sort;
+        $strategy = $info->list->columns[$sort]->sort_strategy;
+        $source   = $info->list->columns[$sort]->source ?: $sort;
 
         return new ModelOrderStrategy($strategy, $source, $this->getActualSortDirection());
+    }
+
+    /**
+     * Returns the order strategy to use
+     *
+     * @todo: the sort strategy should be configurable / orderable strategy determined
+     *
+     * @return false|ModelOrderStrategy
+     */
+    protected function getOrderableSortStrategy()
+    {
+        return new ModelOrderStrategy(
+            NullLast::class,
+            $this->getModelInformation()->list->getOrderableColumn(),
+            $this->getActualSortDirection()
+        );
     }
 
     /**

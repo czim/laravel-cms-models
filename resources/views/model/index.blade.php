@@ -47,12 +47,23 @@
 
             @if (count($records))
 
-                <table class="table table-striped table-hover">
+                <table class="table table-striped table-hover records-table">
 
                     <thead>
                         <tr>
                             @if ($model->list->activatable)
                                 <th class="column column-activate"></th>
+                            @endif
+
+                            @if ($model->list->orderable)
+                                <th class="column column-orderable">
+                                    @include('cms-models::model.partials.list.column_header_sort', [
+                                        'sortKey'   => $model->list->order_column ?: 'position',
+                                        'label'     => ucfirst(cms_trans('models.orderable.position')),
+                                        'active'    => $model->list->getOrderableColumn() === $sortColumn,
+                                        'direction' => $sortDirection,
+                                    ])
+                                </th>
                             @endif
 
                             @foreach ($model->list->columns as $key => $column)
@@ -62,10 +73,11 @@
                                     @if ($column->sortable)
 
                                         @include('cms-models::model.partials.list.column_header_sort', [
+                                            'sortKey'   => $key,
+                                            'label'     => ucfirst($column->label),
                                             'active'    => $key === $sortColumn,
                                             'direction' => $sortDirection,
                                         ])
-
                                     @else
                                         {{ ucfirst($column->label) }}
                                     @endif
@@ -97,6 +109,15 @@
                                     ])
                                 @endif
 
+                                @if ($model->list->orderable)
+                                    @include('cms-models::model.partials.list.column_orderable', [
+                                        'model'         => $model,
+                                        'record'        => $record,
+                                        'isOrdered'     => $model->list->getOrderableColumn() === $sortColumn,
+                                        'sortDirection' => $sortDirection
+                                    ])
+                                @endif
+
                                 @foreach ($model->list->columns as $column)
                                     @continue($column->hide)
 
@@ -109,10 +130,11 @@
 
                                 @if (cms_auth()->can(["{$permissionPrefix}edit", "{$permissionPrefix}delete"]))
                                     <td>
-                                        <div class="btn-group btn-group-xs pull-right" role="group" style="display: flex">
+                                        <div class="btn-group btn-group-xs record-actions pull-right tr-show-on-hover" role="group">
 
                                             @if (cms_auth()->can("{$permissionPrefix}edit"))
                                                 <a class="btn btn-default edit-record-action" href="{{ route($route, [ $record->getKey() ]) }}" role="button"
+                                                   title="{{ ucfirst(cms_trans('common.action.edit')) }}"
                                                 ><i class="fa fa-edit"></i></a>
                                             @endif
 
@@ -120,6 +142,7 @@
                                                 <a class="btn btn-danger delete-record-action" href="#" role="button"
                                                    data-id="{{ $record->getKey() }}"
                                                    data-toggle="modal" data-target="#delete-record-modal"
+                                                   title="{{ ucfirst(cms_trans('common.action.delete')) }}"
                                                 ><i class="fa fa-trash-o"></i></a>
                                             @endif
                                         </div>
@@ -177,19 +200,27 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title delete-modal-title">Delete {{ $model->verbose_name }}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="{{ ucfirst(cms_trans('common.action.close')) }}">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title delete-modal-title">
+                        {{ ucfirst(cms_trans('common.action.delete')) }} {{ $model->verbose_name }}
+                    </h4>
                 </div>
                 <div class="modal-body">
-                    <p class="text-danger">This action cannot be undone!</p>
+                    <p class="text-danger">{{ cms_trans('common.cannot-undo') }}</p>
                 </div>
                 <div class="modal-footer">
                     <form class="delete-modal-form" method="post" data-url="{{ cms_route("{$routePrefix}.destroy", [ 'IDHERE' ]) }}" action="">
                         {{ method_field('delete') }}
                         {{ csrf_field() }}
 
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-danger delete-modal-button">Delete</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ ucfirst(cms_trans('common.action.close')) }}
+                        </button>
+                        <button type="submit" class="btn btn-danger delete-modal-button">
+                            {{ ucfirst(cms_trans('common.action.delete')) }}
+                        </button>
                     </form>
                 </div>
             </div>
@@ -208,9 +239,12 @@
                 'action',
                 form.attr('data-url').replace('IDHERE', $(this).attr('data-id'))
             );
-            $('.delete-modal-title').text('Delete {{ $model->verbose_name }} #' + $(this).attr('data-id'));
+            $('.delete-modal-title').text(
+                    '{{ ucfirst(cms_trans('common.action.delete')) }} {{ $model->verbose_name }} #' + $(this).attr('data-id')
+            );
         });
 
+        {{-- Activatable --}}
         @if ($model->list->activatable)
             $('.activate-toggle').click(function() {
                 var id     = $(this).attr('data-id'),
@@ -249,8 +283,10 @@
 
                         if (active) {
                             parent.find('.active').removeClass('hidden');
+                            parent.closest('.activate-toggle').addClass('tr-show-on-hover');
                         } else {
                             parent.find('.inactive').removeClass('hidden');
+                            parent.closest('.activate-toggle').removeClass('tr-show-on-hover');
                         }
                         parent.find('.loading').addClass('hidden');
 
@@ -260,21 +296,60 @@
 
                         if (state) {
                             parent.find('.active').removeClass('hidden');
+                            parent.closest('.activate-toggle').addClass('tr-show-on-hover');
                         } else {
                             parent.find('.inactive').removeClass('hidden');
+                            parent.closest('.activate-toggle').removeClass('tr-show-on-hover');
                         }
                         parent.find('.loading').addClass('hidden');
                     });
             });
+
+            $(function () {
+                $('.column-activate [data-toggle="tooltip"]').tooltip({
+                    delay: {
+                        'show': 250,
+                        'hide': 50
+                    }
+                })
+            });
         @endif
 
-        $(function () {
-            $('.column-activate [data-toggle="tooltip"]').tooltip({
-                delay: {
-                    'show': 250,
-                    'hide': 50
-                }
-            })
-        })
+        {{-- Orderable --}}
+        @if ($model->list->orderable && $model->list->getOrderableColumn() === $sortColumn)
+            $(function () {
+                $('.records-table').sortable({
+                    handle            : '.orderable-drag-drop',
+                    containerSelector : 'table',
+                    itemPath          : '> tbody',
+                    itemSelector      : 'tr',
+                    placeholder       : '<tr class="orderable-placeholder"/>',
+                    bodyClass         : 'orderable-dragging',
+                    draggedClass      : 'orderable-dragged',
+                    onDrop            : function($item, container, _super) {
+                        _super($item, container);
+
+                        // determine the new position to set
+                        // initiate ajax call
+                        // set loading animation
+                        // if failed: reload the page (or move the row back, if we can)
+
+                        var newIndex = $item.index();
+                        console.log( $($item).attr('data-prop') );
+                    }
+                });
+            });
+
+            $(function () {
+                $('.column-orderable [data-toggle="tooltip"]').tooltip({
+                    delay: {
+                        'show': 500,
+                        'hide': 50
+                    }
+                })
+            });
+        @endif
+
     </script>
 @endpush
+

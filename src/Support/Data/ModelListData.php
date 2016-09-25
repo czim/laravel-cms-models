@@ -76,6 +76,16 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
     ];
 
     /**
+     * Returns the orderable (listify) column that should be used.
+     *
+     * @return string
+     */
+    public function getOrderableColumn()
+    {
+        return $this->order_column ?: 'position';
+    }
+
+    /**
      * @param ModelListDataInterface|ModelListData $with
      * @return $this
      */
