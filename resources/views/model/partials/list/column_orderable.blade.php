@@ -1,6 +1,6 @@
 <?php
-    $orderable   = $record->{$model->list->orderable};
-    $position    = $record->{$model->list->getOrderableColumn()};
+    $orderable = $record->{$model->list->orderable};
+    $position  = $record->{$model->list->getOrderableColumn()};
 ?>
 
 <td class="column column-orderable" nowrap="nowrap"
@@ -10,7 +10,7 @@
 
     <div class="btn-group btn-group-xs" role="group">
 
-        @if ($isOrdered)
+        @if ($isDraggable)
             <div id="model-orderable-{{ $record->getKey() }}-drag"
                     class="btn btn-default orderable-drag-drop"
                     data-id="{{ $record->getKey() }}">
