@@ -11,6 +11,7 @@ use Czim\CmsModels\Contracts\Data\ModelScopeDataInterface;
  *
  * @property string $method
  * @property string $label
+ * @property string $label_translated
  * @property string $strategy
  */
 class ModelScopeData extends AbstractDataObject implements ModelScopeDataInterface
@@ -19,13 +20,14 @@ class ModelScopeData extends AbstractDataObject implements ModelScopeDataInterfa
     protected $attributes = [
 
         // Scope method name
-        'method' => '',
+        'method' => null,
 
-        // Display label (or translation key)
-        'label' => '',
+        // Display label (or translated label)
+        'label'            => null,
+        'label_translated' => null,
 
         // General strategy for handling scope
-        'strategy' => '',
+        'strategy' => null,
 
     ];
 
@@ -37,6 +39,10 @@ class ModelScopeData extends AbstractDataObject implements ModelScopeDataInterfa
      */
     public function display()
     {
+        if ($this->label_translated) {
+            return cms_trans($this->label_translated);
+        }
+
         if ($this->label) {
             return $this->label;
         }

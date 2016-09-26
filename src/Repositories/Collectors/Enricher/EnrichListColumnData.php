@@ -139,7 +139,6 @@ class EnrichListColumnData extends AbstractEnricherStep
         return new ModelListColumnData([
             'source'         => $attribute->name,
             'strategy'       => $attribute->strategy_list ?: $attribute->strategy,
-            'label'          => str_replace('_', ' ', snake_case($attribute->name)),
             'style'          => $primaryIncrementing ? 'primary-id' : null,
             'editable'       => $attribute->fillable,
             'sortable'       => $sortable,
@@ -160,7 +159,7 @@ class EnrichListColumnData extends AbstractEnricherStep
         return new ModelListColumnData([
             'source'         => $relation->method,
             'strategy'       => $relation->strategy_list ?: $relation->strategy,
-            'label'          => str_replace('_', ' ', snake_case($relation->method)),
+            'label'          => ucfirst(str_replace('_', ' ', snake_case($relation->method))),
             'sortable'       => false,
         ]);
     }

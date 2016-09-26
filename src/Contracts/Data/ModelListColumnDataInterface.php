@@ -8,6 +8,13 @@ interface ModelListColumnDataInterface extends ArrayAccess, Arrayable
 {
 
     /**
+     * Returns display header label for the column.
+     *
+     * @return string
+     */
+    public function header();
+
+    /**
      * @param ModelListColumnDataInterface $with
      */
     public function merge(ModelListColumnDataInterface $with);

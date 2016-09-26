@@ -57,6 +57,24 @@ class ModelListColumnData extends AbstractDataObject implements ModelListColumnD
     ];
 
     /**
+     * Returns display header label for the column.
+     *
+     * @return string
+     */
+    public function header()
+    {
+        if ($this->label_translated) {
+            return cms_trans($this->label_translated);
+        }
+
+        if ($this->label) {
+            return $this->label;
+        }
+
+        return ucfirst(snake_case($this->source, ' '));
+    }
+
+    /**
      * @param ModelListColumnDataInterface|ModelListColumnData $with
      */
     public function merge(ModelListColumnDataInterface $with)
