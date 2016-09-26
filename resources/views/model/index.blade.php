@@ -65,11 +65,12 @@
 
                             @if ($model->list->orderable)
                                 <th class="column column-orderable">
-                                    @include('cms-models::model.partials.list.column_header_sort', [
-                                        'sortKey'   => $model->list->order_column ?: 'position',
-                                        'label'     => ucfirst(cms_trans('models.orderable.position')),
-                                        'active'    => $model->list->getOrderableColumn() === $sortColumn,
-                                        'direction' => $sortDirection,
+                                    @include('cms-models::model.partials.list.column_header', [
+                                        'sortKey'       => $model->list->order_column ?: 'position',
+                                        'label'         => ucfirst(cms_trans('models.orderable.position')),
+                                        'sortable'      => true,
+                                        'active'        => $model->list->getOrderableColumn() === $sortColumn,
+                                        'sortDirection' => $sortDirection,
                                     ])
                                 </th>
                             @endif
@@ -78,18 +79,13 @@
                                 @continue($column->hide)
 
                                 <th class="column {{ $column->style }}">
-                                    @if ($column->sortable)
-
-                                        @include('cms-models::model.partials.list.column_header_sort', [
-                                            'sortKey'   => $key,
-                                            'label'     => $column->header(),
-                                            'active'    => $key === $sortColumn,
-                                            'direction' => $sortDirection,
-                                        ])
-                                    @else
-                                        {{ $column->header() }}
-                                    @endif
-
+                                    @include('cms-models::model.partials.list.column_header', [
+                                        'label'         => $column->header(),
+                                        'sortKey'       => $key,
+                                        'sortable'      => $column->sortable,
+                                        'active'        => $key === $sortColumn,
+                                        'sortDirection' => $sortDirection,
+                                    ])
                                 </th>
 
                             @endforeach
