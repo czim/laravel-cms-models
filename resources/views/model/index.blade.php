@@ -51,10 +51,7 @@
                 ])
             @endif
 
-            @include('cms-models::model.partials.list.filters', [
-                'model'   => $model,
-                'filters' => $filters,
-            ])
+            @include('cms-models::model.partials.list.filters', compact('model', 'filters'))
 
             @if (count($records))
 
@@ -85,12 +82,12 @@
 
                                         @include('cms-models::model.partials.list.column_header_sort', [
                                             'sortKey'   => $key,
-                                            'label'     => ucfirst($column->label),
+                                            'label'     => $column->header(),
                                             'active'    => $key === $sortColumn,
                                             'direction' => $sortDirection,
                                         ])
                                     @else
-                                        {{ ucfirst($column->label) }}
+                                        {{ $column->header() }}
                                     @endif
 
                                 </th>
@@ -114,10 +111,7 @@
 
                             <tr class="records-row">
                                 @if ($model->list->activatable)
-                                    @include('cms-models::model.partials.list.column_activate', [
-                                        'model'  => $model,
-                                        'record' => $record,
-                                    ])
+                                    @include('cms-models::model.partials.list.column_activate', compact('model', 'record'))
                                 @endif
 
                                 @if ($model->list->orderable)
@@ -132,33 +126,14 @@
                                 @foreach ($model->list->columns as $column)
                                     @continue($column->hide)
 
-                                    @include('cms-models::model.partials.list.column_strategy', [
-                                        'record' => $record,
-                                        'model'  => $model,
-                                    ])
-
+                                    @include('cms-models::model.partials.list.column_strategy', compact('model', 'record'))
                                 @endforeach
 
-                                @if (cms_auth()->can(["{$permissionPrefix}edit", "{$permissionPrefix}delete"]))
-                                    <td>
-                                        <div class="btn-group btn-group-xs record-actions pull-right tr-show-on-hover" role="group">
-
-                                            @if (cms_auth()->can("{$permissionPrefix}edit"))
-                                                <a class="btn btn-default edit-record-action" href="{{ route($route, [ $record->getKey() ]) }}" role="button"
-                                                   title="{{ ucfirst(cms_trans('common.action.edit')) }}"
-                                                ><i class="fa fa-edit"></i></a>
-                                            @endif
-
-                                            @if (cms_auth()->can("{$permissionPrefix}delete"))
-                                                <a class="btn btn-danger delete-record-action" href="#" role="button"
-                                                   data-id="{{ $record->getKey() }}"
-                                                   data-toggle="modal" data-target="#delete-record-modal"
-                                                   title="{{ ucfirst(cms_trans('common.action.delete')) }}"
-                                                ><i class="fa fa-trash-o"></i></a>
-                                            @endif
-                                        </div>
-                                    </td>
-                                @endif
+                                @include('cms-models::model.partials.list.column_actions', compact(
+                                    'record',
+                                    'permissionPrefix',
+                                    'route'
+                                ))
                             </tr>
 
                         @endforeach
@@ -169,11 +144,11 @@
                 <div class="listing-footer clearfix">
 
                     @if (method_exists($records, 'links'))
-                        @include('cms-models::model.partials.list.pagination', [
-                            'records'         => $records,
-                            'pageSize'        => $pageSize,
-                            'pageSizeOptions' => $pageSizeOptions,
-                        ])
+                        @include('cms-models::model.partials.list.pagination', compact(
+                            'records',
+                            'pageSize',
+                            'pageSizeOptions'
+                        ))
                     @endif
 
                     @if ($totalCount)
@@ -203,84 +178,18 @@
     </div>
 
 
-    <div id="delete-record-modal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="{{ ucfirst(cms_trans('common.action.close')) }}">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h4 class="modal-title delete-modal-title">
-                        {{ ucfirst(cms_trans('common.action.delete')) }} {{ $model->verbose_name }}
-                    </h4>
-                </div>
-                <div class="modal-body">
-                    <p class="text-danger">{{ cms_trans('common.cannot-undo') }}</p>
-                </div>
-                <div class="modal-footer">
-                    <form class="delete-modal-form" method="post" data-url="{{ cms_route("{$routePrefix}.destroy", [ 'IDHERE' ]) }}" action="">
-                        {{ method_field('delete') }}
-                        {{ csrf_field() }}
-
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
-                            {{ ucfirst(cms_trans('common.action.close')) }}
-                        </button>
-                        <button type="submit" class="btn btn-danger delete-modal-button">
-                            {{ ucfirst(cms_trans('common.action.delete')) }}
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('cms-models::model.partials.list.model_delete', compact('model', 'routePrefix'))
 
     @if ($model->list->orderable)
-        <div id="orderable-position-modal" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-sm" role="document">
-                <div class="modal-content">
-                    <form class="orderable-position-modal-form" method="post"
-                          data-url="{{ cms_route("{$routePrefix}.position", [ 'IDHERE' ]) }}" action="">
-                        {{ method_field('put') }}
-                        {{ csrf_field() }}
-
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="{{ ucfirst(cms_trans('common.action.close')) }}">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <h4 class="modal-title">
-                                {{ ucfirst(cms_trans('models.orderable.move-to-position')) }}
-                            </h4>
-                        </div>
-
-                        <div class="modal-body">
-
-                            <div class="form-group">
-                                <label for="orderable-position-input">{{ cms_trans('models.orderable.position') }}</label>
-                                <input type="number" class="form-control text-right" id="orderable-position-input" value="1">
-                            </div>
-
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">
-                                {{ ucfirst(cms_trans('common.action.close')) }}
-                            </button>
-                            <button id="orderable-position-modal-button" class="btn btn-danger">
-                                {{ ucfirst(cms_trans('common.action.save')) }}
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+        @include('cms-models::model.partials.list.modal_orderable', compact('model', 'routePrefix'))
     @endif
 
 @endsection
 
 
 @push('javascript-end')
-    <script>
 
+    <script>
         $('.delete-record-action').click(function () {
             var form = $('.delete-modal-form');
             form.attr(
@@ -288,243 +197,23 @@
                 form.attr('data-url').replace('IDHERE', $(this).attr('data-id'))
             );
             $('.delete-modal-title').text(
-                    '{{ ucfirst(cms_trans('common.action.delete')) }} {{ $model->verbose_name }} #' + $(this).attr('data-id')
+                '{{ ucfirst(cms_trans('common.action.delete')) }} {{ $model->verbose_name }} #' + $(this).attr('data-id')
             );
         });
-
-        {{-- Activatable --}}
-        @if ($model->list->activatable)
-            $('.activate-toggle').click(function() {
-                var id     = $(this).attr('data-id'),
-                    state  = parseInt($(this).attr('data-active'), 10) ? true : false,
-                    url    = '{{ cms_route("{$routePrefix}.activate", [ 'IDHERE' ]) }}',
-                    parent = $(this);
-
-                var data  = {
-                    'activate' : ! state
-                };
-
-                url = url.replace('IDHERE', id);
-
-                // switch to loading icon
-                parent.find('.loading').removeClass('hidden');
-                parent.find('.active, .inactive').addClass('hidden');
-
-                $.ajax(url, {
-                    'headers': {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    'method'      : 'PUT',
-                    'data'        : JSON.stringify(data),
-                    'contentType' : 'application/json'
-                })
-                    .success(function (data) {
-
-                        var active = data.active;
-
-                        if ( ! data.success) {
-                            console.log('Failed to updated active status...');
-                            active = state;
-                        }
-
-                        parent.attr('data-active', active ? 1 : 0);
-
-                        if (active) {
-                            parent.find('.active').removeClass('hidden');
-                            parent.closest('.activate-toggle').addClass('tr-show-on-hover');
-                        } else {
-                            parent.find('.inactive').removeClass('hidden');
-                            parent.closest('.activate-toggle').removeClass('tr-show-on-hover');
-                        }
-                        parent.find('.loading').addClass('hidden');
-
-                    })
-                    .error(function (xhr, status, error) {
-                        console.log('activate error: ' + error);
-
-                        if (state) {
-                            parent.find('.active').removeClass('hidden');
-                            parent.closest('.activate-toggle').addClass('tr-show-on-hover');
-                        } else {
-                            parent.find('.inactive').removeClass('hidden');
-                            parent.closest('.activate-toggle').removeClass('tr-show-on-hover');
-                        }
-                        parent.find('.loading').addClass('hidden');
-                    });
-            });
-
-            $(function () {
-                $('.column-activate [data-toggle="tooltip"]').tooltip({
-                    delay: {
-                        'show': 250,
-                        'hide': 50
-                    }
-                })
-            });
-        @endif
-
-        {{-- Orderable: --}}
-        @if ($model->list->orderable)
-
-            var openOrderableModal = function (parent) {
-                var form = $('form.orderable-position-modal-form');
-                form.attr(
-                    'action',
-                    form.attr('data-url').replace('IDHERE', parent.attr('data-id'))
-                );
-
-                var input = $('#orderable-position-input');
-
-                // set the current value on the input field
-                input.val( parent.attr('data-position') );
-
-                setTimeout(function() { input.focus().select(); }, 500);
-
-                // store the index of the table row on the modal
-                $('#orderable-position-modal').data('data-tr-index', parent.closest('tr').index());
-            };
-
-            var setOrderablePosition = function(parent, position) {
-
-                var url  = '{{ cms_route("{$routePrefix}.position", [ 'IDHERE' ]) }}',
-                    id   = parent.attr('data-id'),
-                    data = { 'position' : position };
-
-                url = url.replace('IDHERE', id);
-
-                // loading state
-                parent.find('.orderable-drag-drop .move').addClass('hidden');
-                parent.find('.orderable-drag-drop .loading').removeClass('hidden');
-
-                $.ajax(url, {
-                    'headers': {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    'method'      : 'PUT',
-                    'data'        : JSON.stringify(data),
-                    'contentType' : 'application/json'
-                })
-                    .success(function (data) {
-                        var position = data.position;
-
-                        if ( ! data.success) {
-                            console.log('Failed to update orderable position...');
-                            position = null;
-                        }
-
-                        location.reload();
-                    })
-                    .error(function (xhr, status, error) {
-                        console.log('orderable position error: ' + error);
-                        parent.find('.orderable-drag-drop .loading').addClass('hidden');
-                        parent.find('.orderable-drag-drop .move').removeClass('hidden');
-                    });
-            };
-
-            $('.orderable-action-up').click(function (event) {
-                event.preventDefault();
-                setOrderablePosition($(this).closest('.column-orderable'), 'up');
-            });
-
-            $('.orderable-action-down').click(function (event) {
-                event.preventDefault();
-                setOrderablePosition($(this).closest('.column-orderable'), 'down');
-            });
-
-            $('.orderable-action-top').click(function (event) {
-                event.preventDefault();
-                setOrderablePosition($(this).closest('.column-orderable'), 'top');
-            });
-
-            $('.orderable-action-bottom').click(function (event) {
-                event.preventDefault();
-                setOrderablePosition($(this).closest('.column-orderable'), 'bottom');
-            });
-
-            $('.orderable-action-remove').click(function (event) {
-                event.preventDefault();
-                setOrderablePosition($(this).closest('.column-orderable'), 'remove');
-            });
-
-            $('.orderable-action-position').click(function (event) {
-                event.preventDefault();
-                openOrderableModal($(this).closest('.column-orderable'));
-            });
-
-            $('#orderable-position-modal-button').click(function (event) {
-                event.preventDefault();
-
-                // get column-orderable parent for row index
-                var index  = $('#orderable-position-modal').data('data-tr-index');
-                var parent = $('tr.records-row').eq(index).find('.column-orderable');
-
-                setOrderablePosition(parent, $('#orderable-position-input').val());
-            });
-
-        @endif
-
-        {{-- Orderable: drag and drop --}}
-        @if ($model->list->orderable && $model->list->getOrderableColumn() === $sortColumn)
-            $(function () {
-                $('.records-table').sortable({
-                    handle            : '.orderable-drag-drop',
-                    containerSelector : 'table',
-                    itemPath          : '> tbody',
-                    itemSelector      : 'tr',
-                    placeholder       : '<tr class="orderable-placeholder"/>',
-                    bodyClass         : 'orderable-dragging',
-                    draggedClass      : 'orderable-dragged',
-                    onDrop            : function($item, container, _super) {
-                        _super($item, container);
-
-                        var oldPosition = parseInt( $($item).find('.column-orderable').attr('data-position'), 10),
-                            newPosition,
-                            newInList,
-                            relative;
-
-                        // determine the new position to set by the surrounding items: base position is the top of the
-                        // two positions between which the item should end up
-                        if ($item.index() > 0) {
-                            relative = $($item).prev().find('.column-orderable');
-                            newPosition = parseInt( relative.attr('data-position'), 10);
-                        } else {
-                            relative = $($item).next().find('.column-orderable');
-                            newPosition = parseInt( relative.attr('data-position'), 10) - 1;
-                        }
-                        newInList = parseInt( relative.attr('data-in-list'), 10) > 0;
-
-
-                        if ( ! newInList) {
-                            // if we're dragging the item out of the list, move it to the bottom for now
-                            newPosition = 'bottom';
-                        } else {
-                            // return if the position is unchanged
-                            if (oldPosition == newPosition || oldPosition == newPosition + 1) {
-                                return;
-                            }
-
-                            // adjust if we're dragging an item up
-                            if (oldPosition > newPosition) {
-                                newPosition += 1;
-                            }
-                        }
-
-                        // initiate ajax call
-                        setOrderablePosition($($item).find('.column-orderable'), newPosition);
-                    }
-                });
-            });
-
-            $(function () {
-                $('.column-orderable [data-toggle="tooltip"]').tooltip({
-                    delay: {
-                        'show': 500,
-                        'hide': 50
-                    }
-                })
-            });
-        @endif
-
     </script>
+
+
+    @include('cms-models::model.partials.list.scripts_activatable', compact(
+        'model',
+        'routePrefix'
+    ))
+
+    @include('cms-models::model.partials.list.scripts_orderable', compact(
+        'model',
+        'sortColumn',
+        'sortDirection',
+        'routePrefix',
+        'draggableForOrderable'
+    ))
 @endpush
 
