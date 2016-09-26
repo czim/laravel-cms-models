@@ -71,7 +71,7 @@ class ModelListColumnData extends AbstractDataObject implements ModelListColumnD
             return $this->label;
         }
 
-        return ucfirst(snake_case($this->source, ' '));
+        return ucfirst(str_replace('_', ' ', snake_case($this->source)));
     }
 
     /**
