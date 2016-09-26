@@ -1,9 +1,12 @@
 <?php
 namespace Czim\CmsModels\View;
 
+use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
+use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\View\ListDisplayInterface;
 use Czim\CmsModels\Contracts\View\ListStrategyInterface;
 use Czim\CmsModels\Contracts\View\ListStrategyResolverInterface;
+use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\View\Traits\ResolvesSourceStrategies;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,6 +18,13 @@ class ListStrategy implements ListStrategyInterface
      * @var ListStrategyResolverInterface
      */
     protected $resolver;
+
+    /**
+     * True if strategy resolution fell back to the default strategy.
+     *
+     * @var bool
+     */
+    protected $fellBackToDefault = false;
 
 
     /**
@@ -36,42 +46,10 @@ class ListStrategy implements ListStrategyInterface
      */
     public function render(Model $model, $strategy, $source)
     {
-        $source = $this->resolveModelSource($model, $source);
+        $strategyInstance = $this->displayStrategy($strategy);
+        $source           = $this->makeSource($model, $strategy, $source);
 
-        // Resolve strategy if possible
-        $resolved = $this->resolver->resolve($strategy);
-
-        if ($resolved) {
-            $strategy = $resolved;
-        }
-
-        // If the strategy indicates the FQN of display strategy,
-        // or a classname that can be found in the default strategy name path, use it.
-        if ($strategyClass = $this->resolveStrategyClass($strategy)) {
-
-            /** @var ListDisplayInterface $instance */
-            $instance = app($strategyClass);
-
-            return $instance->render($model, $source);
-        }
-
-        // If the strategy indicates a method to be called on the model itself, do so
-        if ($method = $this->parseAsModelMethodStrategyString($strategy, $model)) {
-
-            return $model->{$method}($model->{$source});
-        }
-
-        // If the strategy indicates an instantiable/callable 'class@method' combination
-        if ($data = $this->parseAsInstantiableClassMethodStrategyString($strategy)) {
-
-            $method   = $data['method'];
-            $instance = $data['instance'];
-
-            return $instance->{$method}($source);
-        }
-
-        // If nothing special is defined, simply return the source value
-        return $source;
+        return $strategyInstance->render($model, $source);
     }
 
     /**
@@ -80,28 +58,11 @@ class ListStrategy implements ListStrategyInterface
      * @param Model  $model
      * @param string $strategy
      * @param string $source    source column, method name or value (unresolved)
-     * @return null|string
+     * @return null|string  html element class string
      */
     public function style(Model $model, $strategy, $source)
     {
-        // Resolve strategy if possible
-        $resolved = $this->resolver->resolve($strategy);
-
-        if ($resolved) {
-            $strategy = $resolved;
-        }
-
-        // If the strategy indicates the FQN of display strategy,
-        // or a classname that can be found in the default strategy name path, use it.
-        if ($strategyClass = $this->resolveStrategyClass($strategy)) {
-
-            /** @var ListDisplayInterface $instance */
-            $instance = app($strategyClass);
-
-            return $instance->style($model, $source);
-        }
-
-        return null;
+        return $this->displayStrategy($strategy, $source, $model)->style($model, $source);
     }
 
     /**
@@ -114,26 +75,110 @@ class ListStrategy implements ListStrategyInterface
      */
     public function attributes(Model $model, $strategy, $source)
     {
-        // Resolve strategy if possible
+        return $this->displayStrategy($strategy, $source, $model)->attributes($model, $source);
+    }
+
+
+    /**
+     * Returns a display strategy instance for a given strategy string.
+     *
+     * @param string      $strategy
+     * @param null|string $source   the source (attribute key), optional
+     * @param null|Model  $model
+     * @return ListDisplayInterface
+     */
+    public function displayStrategy($strategy, $source = null, Model $model = null)
+    {
         $resolved = $this->resolver->resolve($strategy);
 
         if ($resolved) {
             $strategy = $resolved;
         }
 
+        $instance = $this->makeListDisplayStrategyInstance($strategy);
+
+        // Feed any extra information we can gather to the instance
+        if ($source && $model) {
+            $attributeData = $this->getAttributeData($model, $source);
+
+            if ($attributeData) {
+                $instance->setAttributeInformation($attributeData);
+            }
+        }
+
+        return $instance;
+    }
+
+    /**
+     * Makes a list display strategy instance for a given strategy string.
+     *
+     * @param string $strategy
+     * @return ListDisplayInterface
+     */
+    protected function makeListDisplayStrategyInstance($strategy)
+    {
         // If the strategy indicates the FQN of display strategy,
         // or a classname that can be found in the default strategy name path, use it.
         if ($strategyClass = $this->resolveStrategyClass($strategy)) {
 
-            /** @var ListDisplayInterface $instance */
-            $instance = app($strategyClass);
+            $this->fellBackToDefault = false;
 
-            return $instance->attributes($model, $source);
+            return app($strategyClass);
         }
 
-        return [];
+        $this->fellBackToDefault = true;
+
+        return $this->getDefaultStrategy();
     }
 
+    /**
+     * Makes a fully resolved source value to handle using strategies.
+     *
+     * @param Model  $model
+     * @param string $strategy
+     * @param string $source
+     * @return mixed
+     */
+    protected function makeSource(Model $model, $strategy, $source)
+    {
+        $source = $this->resolveModelSource($model, $source);
+
+        // If the strategy indicates a method to be called on the model itself, do so
+        if ($method = $this->parseAsModelMethodStrategyString($strategy, $model)) {
+            $source = $model->{$method}($model->{$source});
+        }
+
+        // If the strategy indicates an instantiable/callable 'class@method' combination
+        if ($data = $this->parseAsInstantiableClassMethodStrategyString($strategy)) {
+
+            $method   = $data['method'];
+            $instance = $data['instance'];
+
+            return $instance->{$method}($source);
+        }
+
+        return $source;
+    }
+
+    /**
+     * Returns model attribute data, if possible.
+     *
+     * @param Model  $model
+     * @param string $source
+     * @return bool|ModelAttributeDataInterface|ModelAttributeData
+     */
+    protected function getAttributeData(Model $model, $source)
+    {
+        $information = $this->getInformationRepository()->getByModel($model);
+
+        if ( ! $information) return false;
+
+        if (isset($information->attributes[ $source ])) {
+            return $information->attributes[ $source ];
+        }
+
+        return false;
+    }
 
     /**
      * Resolves strategy assuming it is the class name or FQN of a list display interface
@@ -168,6 +213,22 @@ class ListStrategy implements ListStrategyInterface
     protected function prefixStrategyNamespace($class)
     {
         return rtrim(config('cms-models.strategies.list.default-namespace'), '\\') . '\\' . $class;
+    }
+
+    /**
+     * @return ListDisplayInterface
+     */
+    protected function getDefaultStrategy()
+    {
+        return app(config('cms-models.strategies.list.default-strategy'));
+    }
+
+    /**
+     * @return ModelInformationRepositoryInterface
+     */
+    protected function getInformationRepository()
+    {
+        return app(ModelInformationRepositoryInterface::class);
     }
 
 }

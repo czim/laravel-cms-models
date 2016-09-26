@@ -179,6 +179,7 @@ return [
 
             // The default namespace to prefix for relative strategy class names
             'default-namespace' => 'Czim\\CmsModels\\View\\ListStrategies\\',
+            'default-strategy'  => Czim\CmsModels\View\ListStrategies\DefaultStrategy::class,
 
             // The default strategy for sorting columns
             'default-sort-namespace' => 'Czim\\CmsModels\\Repositories\\SortStrategies\\',

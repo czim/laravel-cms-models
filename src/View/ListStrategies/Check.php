@@ -24,6 +24,18 @@ class Check extends AbstractListDisplayStrategy
     }
 
     /**
+     * Returns an optional style string for the list display value container.
+     *
+     * @param Model  $model
+     * @param string $source    source column, method name or value
+     * @return string|null
+     */
+    public function style(Model $model, $source)
+    {
+        return 'column-center';
+    }
+
+    /**
      * Parses a source value as a boolean value.
      *
      * @param mixed $value

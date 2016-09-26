@@ -1,6 +1,8 @@
 <?php
 namespace Czim\CmsModels\Contracts\View;
 
+use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
+use Czim\CmsModels\Contracts\Data\ModelListColumnDataInterface;
 use Illuminate\Database\Eloquent\Model;
 
 interface ListDisplayInterface
@@ -32,5 +34,21 @@ interface ListDisplayInterface
      * @return array            associative, key value pairs with html tag attributes
      */
     public function attributes(Model $model, $source);
+
+    /**
+     * Sets the list column data to use.
+     *
+     * @param ModelListColumnDataInterface $data
+     * @return $this
+     */
+    public function setListInformation(ModelListColumnDataInterface $data);
+
+    /**
+     * Sets the attribute column data to use.
+     *
+     * @param ModelAttributeDataInterface $data
+     * @return $this
+     */
+    public function setAttributeInformation(ModelAttributeDataInterface $data);
 
 }
