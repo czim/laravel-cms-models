@@ -225,6 +225,34 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
     }
 
     /**
+     * Returns whether the model may be deleted at all.
+     *
+     * @return bool
+     */
+    public function allowDelete()
+    {
+        if (null === $this->allow_delete) {
+            return true;
+        }
+
+        return (bool) $this->allow_delete;
+    }
+
+    /**
+     * Returns delete condition if set, or false if not.
+     *
+     * @return string|false
+     */
+    public function deleteCondition()
+    {
+        if (null === $this->delete_condition || false === $this->delete_condition) {
+            return false;
+        }
+
+        return $this->delete_condition;
+    }
+
+    /**
      * Merges information into this information set, with the new information being leading.
      *
      * @param ModelInformationInterface|ModelInformation $with

@@ -28,6 +28,20 @@ interface ModelInformationInterface extends DataObjectInterface
     public function labelPlural();
 
     /**
+     * Returns whether the model may be deleted at all.
+     *
+     * @return bool
+     */
+    public function allowDelete();
+
+    /**
+     * Returns delete condition if set, or false if not.
+     *
+     * @return string|false
+     */
+    public function deleteCondition();
+
+    /**
      * @param ModelInformationInterface $with
      */
     public function merge(ModelInformationInterface $with);
