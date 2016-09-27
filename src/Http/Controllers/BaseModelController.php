@@ -20,6 +20,19 @@ abstract class BaseModelController extends Controller
     protected $modelRepository;
 
     /**
+     * @var string
+     */
+    protected $routePrefix;
+
+    /**
+     * Prefix for auth module permissions, including the final period.
+     *
+     * @var string
+     */
+    protected $permissionPrefix;
+
+
+    /**
      * {@inheritdoc}
      */
     public function __construct(
@@ -90,6 +103,22 @@ abstract class BaseModelController extends Controller
     protected function getModelRepository()
     {
         return $this->modelRepository;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getRoutePrefix()
+    {
+        return $this->routePrefix;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPermissionPrefix()
+    {
+        return $this->permissionPrefix;
     }
 
 }

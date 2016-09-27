@@ -41,18 +41,6 @@ abstract class Controller extends BaseController
     protected $moduleKey;
 
     /**
-     * @var string
-     */
-    protected $routePrefix;
-
-    /**
-     * Prefix for auth module permissions, including the final period.
-     *
-     * @var string
-     */
-    protected $permissionPrefix;
-
-    /**
      * @var null|ModelInformationInterface|ModelInformation
      */
     protected $modelInformation;
