@@ -174,7 +174,9 @@
     </div>
 
 
-    @include('cms-models::model.partials.list.model_delete', compact('model', 'routePrefix'))
+    @if ($model->allowDelete())
+        @include('cms-models::model.partials.list.modal_delete', compact('model', 'routePrefix'))
+    @endif
 
     @if ($model->list->orderable)
         @include('cms-models::model.partials.list.modal_orderable', compact('model', 'routePrefix'))

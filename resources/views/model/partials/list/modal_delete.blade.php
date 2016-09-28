@@ -1,3 +1,4 @@
+
 <div id="delete-record-modal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
@@ -28,3 +29,4 @@
         </div>
     </div>
 </div>
+
