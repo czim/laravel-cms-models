@@ -1,6 +1,7 @@
 <?php
 namespace Czim\CmsModels\Http\Controllers;
 
+use Czim\CmsModels\Http\Controllers\Traits\ChecksModelDeletable;
 use Czim\CmsModels\Http\Controllers\Traits\SetsModelActivateState;
 use Czim\CmsModels\Http\Controllers\Traits\DefaultModelFiltering;
 use Czim\CmsModels\Http\Controllers\Traits\DefaultModelPagination;
@@ -12,7 +13,8 @@ use Czim\CmsModels\Http\Requests\OrderUpdateRequest;
 
 class DefaultModelController extends BaseModelController
 {
-    use DefaultModelFiltering,
+    use ChecksModelDeletable,
+        DefaultModelFiltering,
         DefaultModelPagination,
         DefaultModelScoping,
         DefaultModelSorting,
@@ -92,7 +94,29 @@ class DefaultModelController extends BaseModelController
 
     public function destroy($id)
     {
+        $record = $this->modelRepository->findOrFail($id);
 
+        if ( ! $this->isModelDeletable($record)) {
+            return $this->failureResponse(
+                $this->getLastUnmetDeleteConditionMessage()
+            );
+        }
+
+        if ( ! $record->delete()) {
+            return $this->failureResponse(
+                cms_trans('models.delete.failure.unknown')
+            );
+        }
+
+        if (request()->ajax()) {
+            return response()->json([
+                'success' => true,
+            ]);
+        }
+
+        // todo flash
+
+        return redirect()->back();
     }
 
     /**
@@ -195,4 +219,23 @@ class DefaultModelController extends BaseModelController
         return $this->modelRepository->count();
     }
 
+    /**
+     * Returns standard failure response.
+     *
+     * @param $error
+     * @return mixed
+     */
+    protected function failureResponse($error)
+    {
+        if (request()->ajax()) {
+            return response()->json([
+                'success' => false,
+                'error'   => $error,
+            ]);
+        }
+
+        return redirect()->back()->withErrors([
+            'general' => $error,
+        ]);
+    }
 }

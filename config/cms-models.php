@@ -214,6 +214,16 @@ return [
             ],
         ],
 
+        'delete' => [
+
+            // The default namespace to prefix for relative strategy class names
+            'default-namespace' => 'Czim\\CmsModels\\Repository\\DeleteConditionStrategies\\',
+
+            // Aliases for delete condition strategy classes
+            'aliases' => [
+            ],
+        ],
+
     ],
 
     /*
