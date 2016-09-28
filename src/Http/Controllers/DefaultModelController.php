@@ -22,6 +22,11 @@ class DefaultModelController extends BaseModelController
         SetsModelOrderablePosition;
 
 
+    /**
+     * Returns listing of filtered, sorted records.
+     *
+     * @return mixed
+     */
     public function index()
     {
         $this->checkActiveSort()
@@ -63,6 +68,12 @@ class DefaultModelController extends BaseModelController
         ]);
     }
 
+    /**
+     * Displays a single record.
+     *
+     * @param mixed $id
+     * @return mixed
+     */
     public function show($id)
     {
         $record = $this->modelRepository->findOrFail($id);
@@ -92,6 +103,12 @@ class DefaultModelController extends BaseModelController
 
     }
 
+    /**
+     * Deletes a model, if allowed.
+     *
+     * @param mixed $id
+     * @return mixed
+     */
     public function destroy($id)
     {
         $record = $this->modelRepository->findOrFail($id);
