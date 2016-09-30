@@ -54,7 +54,7 @@ trait ChecksModelDeletable
             /** @var DeleteConditionStrategyInterface $instance */
             $instance = app($strategy);
 
-            if ( ! $instance->check($model)) {
+            if ( ! $instance->check($model, $parameters)) {
                 $this->lastUnmetDeleteConditionMessage = $instance->message();
                 return false;
             }
@@ -112,6 +112,7 @@ trait ChecksModelDeletable
         // Split strategy & parameters
         if (false !== strpos($condition, ':')) {
             list($strategy, $parameters) = explode(':', $condition, 2);
+            $parameters = explode(',', $parameters);
         } else {
             $strategy   = $condition;
             $parameters = [];
