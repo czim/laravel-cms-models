@@ -9,7 +9,7 @@
                 ><i class="fa fa-edit"></i></a>
             @endif
 
-            @if (cms_auth()->can("{$permissionPrefix}delete"))
+            @if ($model->allowDelete() && cms_auth()->can("{$permissionPrefix}delete"))
                 <a class="btn btn-danger delete-record-action" href="#" role="button"
                    data-id="{{ $record->getKey() }}"
                    data-toggle="modal" data-target="#delete-record-modal"
