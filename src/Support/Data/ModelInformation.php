@@ -87,9 +87,11 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
         'single' => false,
 
         // Whether to allow deletion at all (even with permissions set)
-        'allow_delete' => true,
+        'allow_delete' => null,
         // The strategy for allowing deletion (such as not being linked to from other models, etc)
-        // Use <FQN>@<method> format to indicate a strategy
+        // Use <FQN> format to indicate a strategy class, or use an alias
+        // Parameters may be set per strategy. When using multiple strategies, separate them with pipes.
+        // Ex.: strategy1:param,param2|strategy2:param
         'delete_condition' => null,
 
         // Information for external references of this model, ModelReferenceData
@@ -267,11 +269,12 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
             $this->original_model = $with->original_model;
         }
 
-        // Meta information
-
         $this->mergeAttribute('meta', $with->meta);
         $this->mergeAttribute('verbose_name', $with->verbose_name);
         $this->mergeAttribute('verbose_name_plural', $with->verbose_name_plural);
+
+        $this->mergeAttribute('allow_delete', $with->allow_delete);
+        $this->mergeAttribute('delete_condition', $with->delete_condition);
 
         $this->mergeAttribute('list', $with->list);
         $this->mergeAttribute('reference', $with->reference);

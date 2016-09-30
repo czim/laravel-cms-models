@@ -21,7 +21,6 @@ class DefaultModelController extends BaseModelController
         SetsModelActivateState,
         SetsModelOrderablePosition;
 
-
     /**
      * Returns listing of filtered, sorted records.
      *
@@ -52,19 +51,20 @@ class DefaultModelController extends BaseModelController
         );
 
         return view(config('cms-models.views.index'), [
-            'moduleKey'        => $this->moduleKey,
-            'routePrefix'      => $this->routePrefix,
-            'permissionPrefix' => $this->permissionPrefix,
-            'model'            => $this->modelInformation,
-            'records'          => $records,
-            'totalCount'       => $totalCount,
-            'sortColumn'       => $this->getActualSort(),
-            'sortDirection'    => $this->getActualSortDirection(),
-            'pageSize'         => $this->getActualPageSize(),
-            'pageSizeOptions'  => $this->getPageSizeOptions(),
-            'filters'          => $this->getActiveFilters(),
-            'activeScope'      => $this->getActiveScope(),
-            'scopeCounts'      => $scopeCounts,
+            'moduleKey'           => $this->moduleKey,
+            'routePrefix'         => $this->routePrefix,
+            'permissionPrefix'    => $this->permissionPrefix,
+            'model'               => $this->modelInformation,
+            'records'             => $records,
+            'totalCount'          => $totalCount,
+            'sortColumn'          => $this->getActualSort(),
+            'sortDirection'       => $this->getActualSortDirection(),
+            'pageSize'            => $this->getActualPageSize(),
+            'pageSizeOptions'     => $this->getPageSizeOptions(),
+            'filters'             => $this->getActiveFilters(),
+            'activeScope'         => $this->getActiveScope(),
+            'scopeCounts'         => $scopeCounts,
+            'unconditionalDelete' => $this->isUnconditionallyDeletable(),
         ]);
     }
 

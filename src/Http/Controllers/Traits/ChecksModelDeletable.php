@@ -1,10 +1,10 @@
 <?php
 namespace Czim\CmsModels\Http\Controllers\Traits;
 
-use Czim\CmsCore\Contracts\Auth\UserInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\DeleteConditionStrategyInterface;
 use Illuminate\Database\Eloquent\Model;
+use UnexpectedValueException;
 
 trait ChecksModelDeletable
 {
@@ -66,14 +66,11 @@ trait ChecksModelDeletable
     /**
      * Returns whether (current) user is allowed to delete a model.
      *
-     * @param UserInterface|null $user      uses logged in user by default
      * @return bool
      */
-    protected function isAuthorizedToDelete(UserInterface $user = null)
+    protected function isAuthorizedToDelete()
     {
-        $user = $user ?: cms_auth()->user();
-
-        return $user->can($this->getPermissionPrefix() . 'delete');
+        return cms_auth()->can($this->getPermissionPrefix() . 'delete');
     }
 
     /**
@@ -94,6 +91,11 @@ trait ChecksModelDeletable
      */
     protected function interpretDeleteCondition($condition)
     {
+        // Allow pipe symbol to split strategies
+        if (false !== strpos($condition, '|')) {
+            $condition = explode('|', $condition);
+        }
+
         // Normalize arrays, handle each string condition separately
         if (is_array($condition)) {
 
@@ -101,7 +103,7 @@ trait ChecksModelDeletable
 
             foreach ($condition as $partialCondition) {
 
-                $normalized[] = $this->interpretDeleteCondition($partialCondition);
+                $normalized = array_merge($normalized, $this->interpretDeleteCondition($partialCondition));
             }
 
             return $normalized;
@@ -117,12 +119,6 @@ trait ChecksModelDeletable
 
         $strategy = $this->resolveDeleteConditionStrategyClass($strategy);
 
-        if (false === $strategy) {
-            throw new \UnexpectedValueException(
-                "Could not resolve strategy '{$strategy}' as a DeleteConditionStrategy"
-            );
-        }
-
         return [ $strategy => $parameters ];
     }
 
@@ -135,6 +131,8 @@ trait ChecksModelDeletable
      */
     protected function resolveDeleteConditionStrategyClass($strategy)
     {
+        $originalStrategy = $strategy;
+
         if ( ! str_contains($strategy, '.')) {
             $strategy = config('cms-models.strategies.delete.aliases.' . $strategy, $strategy);
         }
@@ -149,7 +147,9 @@ trait ChecksModelDeletable
             return $strategy;
         }
 
-        return false;
+        throw new UnexpectedValueException(
+            "Could not resolve strategy '{$originalStrategy}' as a DeleteConditionStrategy"
+        );
     }
 
     /**
@@ -166,7 +166,7 @@ trait ChecksModelDeletable
      */
     protected function getUnmetConditionMessageForAuthorizationFailure()
     {
-        return cms_trans('models.delete.unmet.not-authorized');
+        return cms_trans('models.delete.failure.not-authorized');
     }
 
     /**
@@ -174,7 +174,19 @@ trait ChecksModelDeletable
      */
     protected function getUnmetConditionMessageForDisallowedFailure()
     {
-        return cms_trans('models.delete.unmet.disallowed');
+        return cms_trans('models.delete.failure.disallowed');
+    }
+
+    /**
+     * Returns whether models may be deleted unconditionally.
+     *
+     * @return bool
+     */
+    protected function isUnconditionallyDeletable()
+    {
+        return (    $this->getModelInformation()->allowDelete()
+                &&  false === $this->getModelInformation()->deleteCondition()
+                );
     }
 
 
