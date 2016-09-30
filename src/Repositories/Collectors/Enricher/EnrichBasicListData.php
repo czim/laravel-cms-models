@@ -13,12 +13,19 @@ class EnrichBasicListData extends AbstractEnricherStep
     }
 
     /**
+     * Sets default sorting order, if empty.
+     *
      * @return $this
      */
     protected function setSortingOrder()
     {
-        // Default sorting order
-        if ($this->info->timestamps) {
+        if (null !== $this->info->list->default_sort) {
+            return $this;
+        }
+
+        if ($this->info->list->orderable && $this->info->list->getOrderableColumn()) {
+            $this->info->list->default_sort = $this->info->list->getOrderableColumn();
+        } elseif ($this->info->timestamps) {
             $this->info->list->default_sort = $this->info->timestamp_created;
         } elseif ($this->info->incrementing) {
             $this->info->list->default_sort = $this->model->getKeyName();
