@@ -5,8 +5,14 @@
 
 @section('breadcrumbs')
     <ol class="breadcrumb">
-        <li><a href="{{ cms_route(\Czim\CmsCore\Support\Enums\NamedRoute::HOME) }}">Home</a></li>
-        <li class="active">{{ $model->verbose_name_plural }}</li>
+        <li>
+            <a href="{{ cms_route(\Czim\CmsCore\Support\Enums\NamedRoute::HOME) }}">
+                {{ cms_trans('common.home') }}
+            </a>
+        </li>
+        <li class="active">
+            {{ $model->verbose_name_plural }}
+        </li>
     </ol>
 @endsection
 
