@@ -139,6 +139,25 @@ class DefaultModelController extends BaseModelController
     }
 
     /**
+     * Checks whether a model is deletable.
+     *
+     * @param mixed $id
+     * @return mixed
+     */
+    public function deletable($id)
+    {
+        $record = $this->modelRepository->findOrFail($id);
+
+        if ( ! $this->isModelDeletable($record)) {
+            return $this->failureResponse(
+                $this->getLastUnmetDeleteConditionMessage()
+            );
+        }
+
+        return $this->successResponse();
+    }
+
+    /**
      * Applies posted filters.
      *
      * @return mixed
@@ -241,10 +260,10 @@ class DefaultModelController extends BaseModelController
     /**
      * Returns standard failure response.
      *
-     * @param $error
+     * @param string|null $error
      * @return mixed
      */
-    protected function failureResponse($error)
+    protected function failureResponse($error = null)
     {
         if (request()->ajax()) {
             return response()->json([
@@ -257,4 +276,22 @@ class DefaultModelController extends BaseModelController
             'general' => $error,
         ]);
     }
+    /**
+     * Returns standard simple success response.
+     *
+     * Redirects back if not ajax.
+     *
+     * @return mixed
+     */
+    protected function successResponse()
+    {
+        if (request()->ajax()) {
+            return response()->json([
+                'success' => true,
+            ]);
+        }
+
+        return redirect()->back();
+    }
+
 }

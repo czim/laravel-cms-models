@@ -195,6 +195,12 @@ class ModelModule implements ModuleInterface
                     'uses'       => $controller . '@position',
                 ]);
 
+                $router->get('{key}/deletable', [
+                    'as'         => 'deletable',
+                    'middleware' => [cms_mw_permission("{$permissionPrefix}delete")],
+                    'uses'       => $controller . '@deletable',
+                ]);
+
                 $router->put('{key}', [
                     'as'         => 'update',
                     'middleware' => [cms_mw_permission("{$permissionPrefix}edit")],
