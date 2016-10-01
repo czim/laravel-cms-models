@@ -35,6 +35,13 @@ interface ModelInformationInterface extends DataObjectInterface
     public function allowDelete();
 
     /**
+     * Returns whether deletions should be confirmed by the user.
+     *
+     * @return bool
+     */
+    public function confirmDelete();
+
+    /**
      * Returns delete condition if set, or false if not.
      *
      * @return string|string[]|false

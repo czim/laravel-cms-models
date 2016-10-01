@@ -18,6 +18,7 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
  * @property bool $allow_delete
  * @property mixed $delete_condition
  * @property string $delete_strategy
+ * @property bool $confirm_delete
  * @property array|ModelReferenceData $reference
  * @property bool $incrementing
  * @property bool $timestamps
@@ -96,6 +97,8 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
         'delete_condition' => null,
         // The strategy for performing deletion.
         'delete_strategy' => null,
+        // Whether deletion should be confirmed by the user as safeguard.
+        'confirm_delete' => null,
 
         // Information for external references of this model, ModelReferenceData
         'reference' => [
@@ -269,6 +272,20 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
         }
 
         return $this->delete_strategy;
+    }
+
+    /**
+     * Returns whether deletions should be confirmed by the user.
+     *
+     * @return bool
+     */
+    public function confirmDelete()
+    {
+        if (null === $this->confirm_delete) {
+            return true;
+        }
+
+        return (bool) $this->confirm_delete;
     }
 
     /**
