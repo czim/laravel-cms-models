@@ -135,14 +135,14 @@ trait ChecksModelDeletable
         $originalStrategy = $strategy;
 
         if ( ! str_contains($strategy, '.')) {
-            $strategy = config('cms-models.strategies.delete.aliases.' . $strategy, $strategy);
+            $strategy = config('cms-models.strategies.delete.condition-aliases.' . $strategy, $strategy);
         }
 
         if (class_exists($strategy) && is_a($strategy, DeleteConditionStrategyInterface::class, true)) {
             return $strategy;
         }
 
-        $strategy = $this->prefixDeleteStrategyNamespace($strategy);
+        $strategy = $this->prefixDeleteConditionStrategyNamespace($strategy);
 
         if (class_exists($strategy) && is_a($strategy, DeleteConditionStrategyInterface::class, true)) {
             return $strategy;
@@ -157,9 +157,9 @@ trait ChecksModelDeletable
      * @param string $class
      * @return string
      */
-    protected function prefixDeleteStrategyNamespace($class)
+    protected function prefixDeleteConditionStrategyNamespace($class)
     {
-        return rtrim(config('cms-models.strategies.delete.default-namespace'), '\\') . '\\' . $class;
+        return rtrim(config('cms-models.strategies.delete.default-condition-namespace'), '\\') . '\\' . $class;
     }
 
     /**

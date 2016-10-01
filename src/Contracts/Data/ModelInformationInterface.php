@@ -37,9 +37,16 @@ interface ModelInformationInterface extends DataObjectInterface
     /**
      * Returns delete condition if set, or false if not.
      *
-     * @return string|false
+     * @return string|string[]|false
      */
     public function deleteCondition();
+
+    /**
+     * Returns delete strategy if set, or false if not.
+     *
+     * @return string|false
+     */
+    public function deleteStrategy();
 
     /**
      * @param ModelInformationInterface $with

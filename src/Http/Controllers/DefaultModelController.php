@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Http\Controllers;
 
 use Czim\CmsModels\Http\Controllers\Traits\ChecksModelDeletable;
+use Czim\CmsModels\Http\Controllers\Traits\DeletesModel;
 use Czim\CmsModels\Http\Controllers\Traits\SetsModelActivateState;
 use Czim\CmsModels\Http\Controllers\Traits\DefaultModelFiltering;
 use Czim\CmsModels\Http\Controllers\Traits\DefaultModelPagination;
@@ -18,6 +19,7 @@ class DefaultModelController extends BaseModelController
         DefaultModelPagination,
         DefaultModelScoping,
         DefaultModelSorting,
+        DeletesModel,
         SetsModelActivateState,
         SetsModelOrderablePosition;
 
@@ -119,7 +121,7 @@ class DefaultModelController extends BaseModelController
             );
         }
 
-        if ( ! $record->delete()) {
+        if ( ! $this->deleteModel($record)) {
             return $this->failureResponse(
                 cms_trans('models.delete.failure.unknown')
             );
@@ -161,7 +163,7 @@ class DefaultModelController extends BaseModelController
      */
     public function activate(ActivateRequest $request, $id)
     {
-        $record = $this->modelRepository->findOrFail($id);
+        $record  = $this->modelRepository->findOrFail($id);
         $success = false;
         $result  = null;
 
@@ -190,7 +192,7 @@ class DefaultModelController extends BaseModelController
      */
     public function position(OrderUpdateRequest $request, $id)
     {
-        $record = $this->modelRepository->findOrFail($id);
+        $record  = $this->modelRepository->findOrFail($id);
         $success = false;
         $result  = null;
 

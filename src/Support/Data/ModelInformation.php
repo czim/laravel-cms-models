@@ -17,6 +17,7 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
  * @property bool $single
  * @property bool $allow_delete
  * @property mixed $delete_condition
+ * @property string $delete_strategy
  * @property array|ModelReferenceData $reference
  * @property bool $incrementing
  * @property bool $timestamps
@@ -93,6 +94,8 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
         // Parameters may be set per strategy. When using multiple strategies, separate them with pipes.
         // Ex.: strategy1:param,param2|strategy2:param
         'delete_condition' => null,
+        // The strategy for performing deletion.
+        'delete_strategy' => null,
 
         // Information for external references of this model, ModelReferenceData
         'reference' => [
@@ -243,7 +246,7 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
     /**
      * Returns delete condition if set, or false if not.
      *
-     * @return string|false
+     * @return string|string[]|false
      */
     public function deleteCondition()
     {
@@ -252,6 +255,20 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
         }
 
         return $this->delete_condition;
+    }
+
+    /**
+     * Returns delete strategy if set, or false if not.
+     *
+     * @return string|false
+     */
+    public function deleteStrategy()
+    {
+        if (null === $this->delete_strategy || false === $this->delete_strategy) {
+            return false;
+        }
+
+        return $this->delete_strategy;
     }
 
     /**
@@ -275,6 +292,7 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
 
         $this->mergeAttribute('allow_delete', $with->allow_delete);
         $this->mergeAttribute('delete_condition', $with->delete_condition);
+        $this->mergeAttribute('delete_strategy', $with->delete_strategy);
 
         $this->mergeAttribute('list', $with->list);
         $this->mergeAttribute('reference', $with->reference);
