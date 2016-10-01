@@ -35,8 +35,9 @@
                 });
         };
 
-
+        // Button that opens modal
         $('.delete-record-action').click(function () {
+
             var form = $('.delete-modal-form');
             form.attr(
                 'action',
@@ -57,16 +58,29 @@
 
             var button            = modal.find('.delete-modal-button');
             var disallowedMessage = $('#delete-record-modal-disallowed-alert');
+            var warningMessage    = modal.find('.undo-warning-alert');
 
             // Set initial state
             button.removeAttr('disabled');
             disallowedMessage.hide();
             disallowedMessage.empty();
+            warningMessage.show();
+
+            // If deletions must be confirmed, handle the controls
+            @if ($model->confirmDelete())
+                var confirmForm     = modal.find('.confirmation-form');
+                var confirmCheckbox = $('#modal-record-delete-confirm');
+                confirmForm.show();
+                confirmForm.removeClass('has-error');
+                confirmCheckbox.removeAttr('checked');
+            @endif
 
             isDeletable(id, function(allowed, error) {
 
                 if ( ! allowed) {
                     button.attr('disabled', 'disabled');
+                    confirmForm.hide();
+                    warningMessage.hide();
                 }
 
                 if (error) {
@@ -75,6 +89,23 @@
                 }
             });
         });
+
+        // If deletions must be confirmed, check the confirm checkbox
+        @if ($model->confirmDelete())
+            $('#delete-record-modal-form').submit(function () {
+
+                if ( ! $('#modal-record-delete-confirm').prop('checked')) {
+                    $('#delete-record-modal').find('.confirmation-form')
+                        .addClass('has-error')
+                        .effect('shake', {
+                            'direction': 'up',
+                            'distance' : 2.5,
+                            'times'    : 2,
+                        });
+                    return false;
+                }
+            });
+        @endif
 
     </script>
 

@@ -2,6 +2,7 @@
 <div id="delete-record-modal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
+
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="{{ ucfirst(cms_trans('common.action.close')) }}">
                     <span aria-hidden="true">&times;</span>
@@ -10,13 +11,31 @@
                     {{ ucfirst(cms_trans('common.action.delete')) }} {{ $model->verbose_name }}
                 </h4>
             </div>
+
             <div class="modal-body">
-                <p class="text-danger">{{ cms_trans('common.cannot-undo') }}</p>
+
+                <div class="alert alert-danger undo-warning-alert" role="alert">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    &nbsp;
+                    {{ cms_trans('common.cannot-undo') }}
+                </div>
+
+                @if ($model->confirmDelete())
+                    <div class="form-group confirmation-form has-error">
+                        <div class="checkbox checkbox-danger">
+                            <label for="modal-record-delete-confirm" class="control-label">
+                                <input id="modal-record-delete-confirm" class="modal-delete-confirm" name="confirm_delete" type="checkbox" value="on">
+                                {{ ucfirst(cms_trans('common.action.confirm')) }}
+                            </label>
+                        </div>
+                    </div>
+                @endif
 
                 <div id="delete-record-modal-disallowed-alert" class="alert alert-danger" role="alert" style="display: none"></div>
             </div>
+
             <div class="modal-footer">
-                <form class="delete-modal-form" method="post" data-url="{{ cms_route("{$routePrefix}.destroy", [ 'IDHERE' ]) }}" action="">
+                <form id="delete-record-modal-form" class="delete-modal-form" method="post" data-url="{{ cms_route("{$routePrefix}.destroy", [ 'IDHERE' ]) }}" action="">
                     {{ method_field('delete') }}
                     {{ csrf_field() }}
 
