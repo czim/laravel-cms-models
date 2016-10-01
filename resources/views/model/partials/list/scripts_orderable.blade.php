@@ -2,13 +2,16 @@
     <script>
 
         /**
+         * Opens the modal to set a specific orderable position.
+         *
          * @param parent    the column-orderable data parent
          */
-        var openOrderableModal = function (parent) {
+        var openOrderableModal = function(parent) {
+
             var form = $('form.orderable-position-modal-form');
             form.attr(
-                    'action',
-                    form.attr('data-url').replace('IDHERE', parent.attr('data-id'))
+                'action',
+                form.attr('data-url').replace('IDHERE', parent.attr('data-id'))
             );
 
             var input = $('#orderable-position-input');
@@ -16,19 +19,21 @@
             // set the current value on the input field
             input.val(parent.attr('data-position'));
 
-            setTimeout(function () {
-                input.focus().select();
-            }, 500);
-
             // store the index of the table row on the modal
             $('#orderable-position-modal').data('data-tr-index', parent.closest('tr').index());
         };
 
+        $('#orderable-position-modal').on('shown.bs.modal', function () {
+            $('#orderable-position-input').focus().select();
+        });
+
         /**
+         * Performs AJAX request to set the orderable position for a model.
+         *
          * @param parent    the column-orderable data parent
          * @param position  position integer or enum string
          */
-        var setOrderablePosition = function (parent, position) {
+        var setOrderablePosition = function(parent, position) {
 
             var url  = '{{ cms_route("{$routePrefix}.position", [ 'IDHERE' ]) }}',
                 id   = parent.attr('data-id'),

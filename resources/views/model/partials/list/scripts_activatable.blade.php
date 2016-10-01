@@ -26,39 +26,39 @@
                 'data'        : JSON.stringify(data),
                 'contentType' : 'application/json'
             })
-                    .success(function (data) {
+                .success(function (data) {
 
-                        var active = data.active;
+                    var active = data.active;
 
-                        if ( ! data.success) {
-                            console.log('Failed to updated active status...');
-                            active = state;
-                        }
+                    if ( ! data.success) {
+                        console.log('Failed to update active status...');
+                        active = state;
+                    }
 
-                        parent.attr('data-active', active ? 1 : 0);
+                    parent.attr('data-active', active ? 1 : 0);
 
-                        if (active) {
-                            parent.find('.active').removeClass('hidden');
-                            parent.closest('.activate-toggle').addClass('tr-show-on-hover');
-                        } else {
-                            parent.find('.inactive').removeClass('hidden');
-                            parent.closest('.activate-toggle').removeClass('tr-show-on-hover');
-                        }
-                        parent.find('.loading').addClass('hidden');
+                    if (active) {
+                        parent.find('.active').removeClass('hidden');
+                        parent.closest('.activate-toggle').addClass('tr-show-on-hover');
+                    } else {
+                        parent.find('.inactive').removeClass('hidden');
+                        parent.closest('.activate-toggle').removeClass('tr-show-on-hover');
+                    }
+                    parent.find('.loading').addClass('hidden');
 
-                    })
-                    .error(function (xhr, status, error) {
-                        console.log('activate error: ' + error);
+                })
+                .error(function (xhr, status, error) {
+                    console.log('activate error: ' + error);
 
-                        if (state) {
-                            parent.find('.active').removeClass('hidden');
-                            parent.closest('.activate-toggle').addClass('tr-show-on-hover');
-                        } else {
-                            parent.find('.inactive').removeClass('hidden');
-                            parent.closest('.activate-toggle').removeClass('tr-show-on-hover');
-                        }
-                        parent.find('.loading').addClass('hidden');
-                    });
+                    if (state) {
+                        parent.find('.active').removeClass('hidden');
+                        parent.closest('.activate-toggle').addClass('tr-show-on-hover');
+                    } else {
+                        parent.find('.inactive').removeClass('hidden');
+                        parent.closest('.activate-toggle').removeClass('tr-show-on-hover');
+                    }
+                    parent.find('.loading').addClass('hidden');
+                });
         });
 
         $(function () {
