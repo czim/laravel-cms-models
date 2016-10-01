@@ -12,6 +12,8 @@
             </div>
             <div class="modal-body">
                 <p class="text-danger">{{ cms_trans('common.cannot-undo') }}</p>
+
+                <div id="delete-record-modal-disallowed-alert" class="alert alert-danger" role="alert" style="display: none"></div>
             </div>
             <div class="modal-footer">
                 <form class="delete-modal-form" method="post" data-url="{{ cms_route("{$routePrefix}.destroy", [ 'IDHERE' ]) }}" action="">
