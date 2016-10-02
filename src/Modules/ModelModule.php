@@ -56,6 +56,20 @@ class ModelModule implements ModuleInterface
      */
     protected $routeHelper;
 
+    /**
+     * The controller FQN for web requests.
+     *
+     * @var null|string
+     */
+    protected $webController;
+
+    /**
+     * The controller FQN for API requests.
+     *
+     * @var null|string
+     */
+    protected $apiController;
+
 
     /**
      * @param ModelInformationRepositoryInterface $repository
@@ -78,6 +92,31 @@ class ModelModule implements ModuleInterface
         $this->name         = $name;
     }
 
+    /**
+     * Sets the controller class to use for web requests.
+     *
+     * @param null|string $webController
+     * @return $this
+     */
+    public function setWebController($webController)
+    {
+        $this->webController = $webController;
+
+        return $this;
+    }
+
+    /**
+     * Sets the controller class to use for API requests.
+     *
+     * @param null|string $apiController
+     * @return $this
+     */
+    public function setApiController($apiController)
+    {
+        $this->apiController = $apiController;
+
+        return $this;
+    }
 
     /**
      * Returns unique identifying key for the module.
@@ -374,7 +413,7 @@ class ModelModule implements ModuleInterface
      */
     protected function getModelWebController()
     {
-        return config('cms-models.controllers.web');
+        return $this->webController ?: config('cms-models.controllers.web');
     }
 
     /**
@@ -384,7 +423,7 @@ class ModelModule implements ModuleInterface
      */
     protected function getModelApiController()
     {
-        return config('cms-models.controllers.web');
+        return $this->apiController ?: config('cms-models.controllers.api');
     }
 
     /**

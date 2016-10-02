@@ -7,6 +7,7 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
+use Czim\CmsModels\Support\Data\ModelInformation;
 use Illuminate\Support\Collection;
 
 class ModelModuleGenerator implements ModuleGeneratorInterface
@@ -56,7 +57,7 @@ class ModelModuleGenerator implements ModuleGeneratorInterface
     /**
      * Makes a model module instance for model information.
      *
-     * @param ModelInformationInterface $information
+     * @param ModelInformationInterface|ModelInformation $information
      * @return ModelModule
      */
     protected function makeModuleInstance(ModelInformationInterface $information)
@@ -72,6 +73,14 @@ class ModelModuleGenerator implements ModuleGeneratorInterface
         );
 
         $module->setAssociatedClass($modelClass);
+
+        if ($information->meta->controller) {
+            $module->setWebController($information->meta->controller);
+        }
+
+        if ($information->meta->controller_api) {
+            $module->setWebController($information->meta->controller);
+        }
 
         return $module;
     }

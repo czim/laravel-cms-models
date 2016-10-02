@@ -56,10 +56,14 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
 
         // Instance of ModelMetaData
         'meta' => [
-            // FQN for the controller class to handle the model's web & API presence
+
+            // FQN for the controller class to handle the model's web presence
             'controller' => null,
             // Default controller action to link to for the basic model's menu presence ('index', 'create', for instance)
             'default_controller_method' => null,
+
+            // FQN for the controller class to handle the model's API presence
+            'controller_api' => null,
 
             // The strategy to apply to the base repository query for listings & accessibility of models.
             'repository_strategy' => null,

@@ -11,6 +11,7 @@ use Czim\CmsModels\Contracts\Data\ModelMetaDataInterface;
  *
  * @property string      $controller
  * @property string      $default_controller_method
+ * @property string      $controller_api
  * @property string      $repository_strategy
  * @property string|bool $disable_global_scopes
  * @property string[]    $form_requests
@@ -26,6 +27,9 @@ class ModelMetaData extends AbstractDataObject implements ModelMetaDataInterface
         'controller' => null,
         // Default controller action to link to for the basic model's menu presence ('index', 'create', for instance)
         'default_controller_method' => 'index',
+
+        // FQN for the controller class to handle the model's API presence
+        'controller_api' => null,
 
         // The strategy to apply to the base repository query for listings & accessibility of models.
         'repository_strategy' => null,
