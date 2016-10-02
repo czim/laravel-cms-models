@@ -14,6 +14,7 @@ By default, all global scopes will be removed before results are retrieved.
 
 No context strategies are provided with the CMS; roll your own if you need one.
 
+
 ## Model Reference Strategies
 
 A model may be referred to, for instance when a model reference is shown in a list, or as an option in a select for linking it to other models. Each model 

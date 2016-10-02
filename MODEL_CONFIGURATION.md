@@ -27,6 +27,10 @@ With default settings, this would be: `app/Cms/Models/Library/Book.php`.
 
 return [
 
+    'meta' => [
+        'controller' => '\App\Custom\Controller',
+    ],
+
     'reference' => 'title',
 
     'list' => [
@@ -65,6 +69,19 @@ return [
 This configuration would define some columns to be present in the listing, some filters to allow quick searches. No tabs would be displayed for model scopes, and users could select some specific page sizes.
 
 ## General & Meta Data
+
+
+### Meta section
+
+The `meta` section stores overriding information for general handling of model-related requests.
+
+To set a different controller for either web or API routes, set the FQN for the controller class in `meta.controller` and/or `meta.controller_api` respectively.
+
+By default, global scopes are disabled when accessing models for the CMS. To prevent this, set `meta.disable_global_scopes` to `false`.
+
+The repository can be set up by defining a strategy class reference (or alias) in `meta.repository_strategy`.
+See [Repository Context Strategies](STRATEGIES.md#repository-context-strategies) for more information on the strategies that set the repository's context.
+
 
 ### Model Reference
 
