@@ -4,6 +4,7 @@ namespace Czim\CmsModels\Repositories\Collectors;
 use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationInterpreterInterface;
+use Czim\CmsModels\Support\Data\ModelFormData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelListColumnData;
 use Czim\CmsModels\Support\Data\ModelListFilterData;
@@ -27,7 +28,8 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
     {
         $this->raw = $information;
 
-        $this->interpretListData();
+        $this->interpretListData()
+             ->interpretFormData();
 
         return $this->createInformationInstance();
     }
@@ -76,6 +78,25 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
             } else {
                 $this->raw['list']['scopes'] = $this->normalizeScopeArray($scopes);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function interpretFormData()
+    {
+        if (array_has($this->raw, 'form') && is_array($this->raw['form'])) {
+
+            $this->raw['form']['fields'] = $this->normalizeStandardArrayProperty(
+                array_get($this->raw['form'], 'fields', []),
+                'display_strategy',
+                ModelFormData::class
+            );
+
+            $this->raw['form']['layout'] = array_get($this->raw['form'], 'layout', []);
         }
 
         return $this;

@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Support\Data;
 
 use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelFormDataInterface;
+use Czim\CmsModels\Contracts\Data\ModelFormTabDataInterface;
 use Czim\DataObject\Contracts\DataObjectInterface;
 use UnexpectedValueException;
 
@@ -34,14 +35,90 @@ class ModelFormData extends AbstractDataObject implements ModelFormDataInterface
         'fields' => [],
     ];
 
+
     /**
-     * @param ModelFormDataInterface $with
+     * Returns whether a layout with tabs is set.
+     *
+     * @return bool
+     */
+    public function hasTabs()
+    {
+        if ( ! $this->layout || ! count($this->layout)) {
+            return false;
+        }
+
+        foreach ($this->layout as $key => $value) {
+
+            if ($value instanceof ModelFormTabDataInterface) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns only the tabs from the layout set.
+     *
+     * @return array|ModelFormTabData[]
+     */
+    public function tabs()
+    {
+        if ( ! $this->layout || ! count($this->layout)) {
+            return [];
+        }
+
+        $tabs = [];
+
+        foreach ($this->layout as $key => $value) {
+
+            if ($value instanceof ModelFormTabDataInterface) {
+                $tabs[ $key ] = $value;
+            }
+        }
+
+        return $tabs;
+    }
+
+    /**
+     * Returns the layout that should be used for displaying the edit form.
+     *
+     * @return array|mixed[]
+     */
+    public function layout()
+    {
+        if ($this->layout && count($this->layout)) {
+            return $this->layout;
+        }
+
+        return array_keys($this->fields);
+    }
+
+    /**
+     * @param ModelFormDataInterface|ModelFormData $with
      */
     public function merge(ModelFormDataInterface $with)
     {
-        // todo: finish this
+        // Overwrite fields intelligently: keep only the fields for keys that were set
+        // and merge those for which data is set.
+        if ($with->fields && count($with->fields)) {
+
+            $mergedFields = [];
+
+            foreach ($with->fields as $key => $data) {
+
+                if (array_has($this->fields, $key)) {
+                    $data = $this->fields[ $key ]->merge($data);
+                }
+
+                $mergedFields[ $key ] = $data;
+            }
+
+            $this->fields = $mergedFields;
+        }
 
         $standardMergeKeys = [
+            'layout',
         ];
 
         foreach ($standardMergeKeys as $key) {

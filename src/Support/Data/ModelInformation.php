@@ -322,6 +322,7 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
         $this->mergeAttribute('delete_strategy', $with->delete_strategy);
 
         $this->mergeAttribute('list', $with->list);
+        $this->mergeAttribute('form', $with->form);
         $this->mergeAttribute('reference', $with->reference);
         $this->mergeAttribute('includes', $with->includes);
     }
