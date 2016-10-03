@@ -66,7 +66,7 @@ class EnrichListColumnData extends AbstractEnricherStep
             // Check if we can enrich, if we must.
             if ( ! isset($this->info->attributes[ $key ]) && ! isset($this->info->relations[ $key ])) {
 
-                // if the column data is fully set, no need ot enrich
+                // if the column data is fully set, no need to enrich
                 if ($this->isListColumnDataComplete($column)) {
                     $columns[ $key ] = $column;
                     continue;
@@ -114,7 +114,7 @@ class EnrichListColumnData extends AbstractEnricherStep
      */
     protected function makeModelListColumnDataForAttributeData(ModelAttributeData $attribute, ModelInformationInterface $info)
     {
-        $primaryIncrementing = $attribute->name === 'id' && $info->incrementing;
+        $primaryIncrementing = $attribute->name === $this->model->getKeyName() && $info->incrementing;
 
         $sortable = (
             $attribute->isNumeric()
