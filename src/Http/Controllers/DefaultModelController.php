@@ -87,7 +87,16 @@ class DefaultModelController extends BaseModelController
 
     public function create()
     {
+        $class = $this->getModelInformation()->modelClass();
 
+        return view(config('cms-models.views.edit'), [
+            'moduleKey'        => $this->moduleKey,
+            'routePrefix'      => $this->routePrefix,
+            'permissionPrefix' => $this->permissionPrefix,
+            'model'            => $this->modelInformation,
+            'record'           => new $class,
+            'creating'         => true,
+        ]);
     }
 
     public function store()
@@ -97,12 +106,24 @@ class DefaultModelController extends BaseModelController
 
     public function edit($id)
     {
+        $record = $this->modelRepository->findOrFail($id);
 
+        return view(config('cms-models.views.edit'), [
+            'moduleKey'        => $this->moduleKey,
+            'routePrefix'      => $this->routePrefix,
+            'permissionPrefix' => $this->permissionPrefix,
+            'model'            => $this->modelInformation,
+            'record'           => $record,
+            'creating'         => false,
+        ]);
     }
 
     public function update($id)
     {
+        $record = $this->modelRepository->findOrFail($id);
 
+        // todo: redirect back to list or to edit page?
+        return redirect()->back();
     }
 
     /**
