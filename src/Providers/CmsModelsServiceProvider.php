@@ -75,7 +75,7 @@ class CmsModelsServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register Authorization CMS commands
+     * Register Model related CMS commands
      *
      * @return $this
      */
