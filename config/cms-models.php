@@ -244,7 +244,7 @@ return [
 
     'views' => [
         'index'  => 'cms-models::model.index',
-        'create' => 'cms-models::model.create',
+        'create' => 'cms-models::model.edit',
         'edit'   => 'cms-models::model.edit',
     ],
 
