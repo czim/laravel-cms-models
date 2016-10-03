@@ -2,49 +2,43 @@
 namespace Czim\CmsModels\Support\Data;
 
 use Czim\CmsCore\Support\Data\AbstractDataObject;
+use Czim\CmsModels\Contracts\Data\ModelFormLayoutNodeInterface;
 
 /**
- * Class ModelFormFieldData
+ * Class ModelFormFieldGroupData
  *
- * Data container that describes an (in-row) group of editable fields on a model's edit form.
+ * Data container for layout of an (in-row) group of editable fields on a model's edit form.
  *
- * @property bool $in_row
- * @property bool $create
- * @property bool $update
- * @property string $label
  * @property string $type
- * @property string $presenter
- * @property array|ModelFormFieldData[]
+ * @property string $label
+ * @property string $label_translated
+ * @property array|string[] $children
  */
-class ModelFormFieldGroupData extends AbstractDataObject
+class ModelFormFieldGroupData extends AbstractDataObject implements ModelFormLayoutNodeInterface
 {
     protected $objects = [
-        'fields' => ModelFormFieldData::class . '[]',
     ];
 
     protected $attributes = [
 
-        // Whether this is a group for fields within the same form row.
-        // If false, forms a normal multi-row form group
-        'in_row' => true,
-
-        // Whether the field should be present on a create form
-        'create' => true,
-        // Whether the field should be present on an update form
-        'update' => true,
+        'type' => 'group',
 
         // Field label (or translation key) to show
-        'label' => null,
+        'label'            => null,
+        'label_translated' => null,
 
-        // Editing strategy for the form field. Default is direct record on the model
-        'type' => null,
-
-        // Strategy for presenting the group
-        'presenter' => null,
-
-        // Arrays (instances of ModelFormFieldData) that define the editable fields for the model's form
-        // in the order in which they should appear.
-        'fields' => [],
+        // Nested layout (field keys only at this level)
+        'children' => [],
     ];
+
+    /**
+     * Returns the type of layout node.
+     *
+     * @return string
+     */
+    public function type()
+    {
+        return $this->type;
+    }
 
 }

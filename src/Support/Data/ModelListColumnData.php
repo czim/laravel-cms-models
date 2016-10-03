@@ -28,14 +28,13 @@ class ModelListColumnData extends AbstractDataObject implements ModelListColumnD
         // Whether to hide the list column.
         'hide' => false,
 
-        // The source column or strategy to use. This may be a column on the model, or on models related to it,
-        // or a present() method on the model, if it has a presenter.
+        // The source column or strategy to use. This may be a column on the model, or on models related to it.
         'source' => null,
 
-        // Strategy <FQN>@<method> for decorating the source in the list with
+        // Display strategy <FQN> or alias for displaying the source in the list.
         'strategy' => null,
 
-        // Column header or label (or translation key) to show
+        // Column header or label (or translation key) to show.
         'label' => null,
         'label_translated' => null,
 

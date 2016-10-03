@@ -182,8 +182,14 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
         // Settings for rendering the form by which the model is edited
         'form' => [
 
+            // The layout of the form fields
+            // Tabs, Fieldsets and keys for fields (in the order they should appear).
+            // Tabs and Fieldsets should be keyed by references to use for them.
+            // If not set, simply shows fields in the order they are defined.
+            'layout' => null,
+
             // Arrays (instances of ModelFormFieldData or ModelFormFieldGroupData) that define the editable fields for
-            // the model's form in the order in which they should appear.
+            // the model's form in the order in which they should appear by default.
             'fields' => [],
         ],
 
