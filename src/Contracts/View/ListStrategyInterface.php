@@ -7,7 +7,7 @@ interface ListStrategyInterface
 {
 
     /**
-     * Applies a strategy to renders a list value from its source.
+     * Applies a strategy to render a list value from its source.
      *
      * @param Model             $model
      * @param string|array      $strategy
