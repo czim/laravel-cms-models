@@ -1,27 +1,19 @@
 <?php
 namespace Czim\CmsModels\Http\Controllers;
 
-use Czim\CmsModels\Http\Controllers\Traits\ChecksModelDeletable;
-use Czim\CmsModels\Http\Controllers\Traits\DeletesModel;
-use Czim\CmsModels\Http\Controllers\Traits\SetsModelActivateState;
-use Czim\CmsModels\Http\Controllers\Traits\DefaultModelFiltering;
-use Czim\CmsModels\Http\Controllers\Traits\DefaultModelPagination;
-use Czim\CmsModels\Http\Controllers\Traits\DefaultModelScoping;
-use Czim\CmsModels\Http\Controllers\Traits\DefaultModelSorting;
-use Czim\CmsModels\Http\Controllers\Traits\SetsModelOrderablePosition;
 use Czim\CmsModels\Http\Requests\ActivateRequest;
 use Czim\CmsModels\Http\Requests\OrderUpdateRequest;
 
 class DefaultModelController extends BaseModelController
 {
-    use ChecksModelDeletable,
-        DefaultModelFiltering,
-        DefaultModelPagination,
-        DefaultModelScoping,
-        DefaultModelSorting,
-        DeletesModel,
-        SetsModelActivateState,
-        SetsModelOrderablePosition;
+    use Traits\ChecksModelDeletable,
+        Traits\DefaultModelFiltering,
+        Traits\DefaultModelPagination,
+        Traits\DefaultModelScoping,
+        Traits\DefaultModelSorting,
+        Traits\DeletesModel,
+        Traits\SetsModelActivateState,
+        Traits\SetsModelOrderablePosition;
 
     /**
      * Returns listing of filtered, sorted records.
