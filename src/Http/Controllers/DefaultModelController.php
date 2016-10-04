@@ -12,6 +12,7 @@ class DefaultModelController extends BaseModelController
         Traits\DefaultModelScoping,
         Traits\DefaultModelSorting,
         Traits\DeletesModel,
+        Traits\HandlesFormLayout,
         Traits\SetsModelActivateState,
         Traits\SetsModelOrderablePosition;
 
@@ -80,6 +81,8 @@ class DefaultModelController extends BaseModelController
     public function create()
     {
         $class = $this->getModelInformation()->modelClass();
+
+        $fieldKeys = $this->getRelevantFormFieldKeys();
 
         return view(config('cms-models.views.edit'), [
             'moduleKey'        => $this->moduleKey,
