@@ -41,4 +41,14 @@ class ModelFormFieldGroupData extends AbstractDataObject implements ModelFormLay
         return $this->type;
     }
 
+    /**
+     * Returns nested nodes or field keys.
+     *
+     * @return string[]|ModelFormLayoutNodeInterface[]
+     */
+    public function children()
+    {
+        return $this->children;
+    }
+
 }

@@ -15,6 +15,7 @@ use UnexpectedValueException;
  * @property string $type
  * @property string $label
  * @property string $label_translated
+ * @property array $children
  */
 class ModelFormFieldsetData extends AbstractDataObject implements
     ModelFormLayoutNodeInterface,
@@ -118,6 +119,16 @@ class ModelFormFieldsetData extends AbstractDataObject implements
         }
 
         unset ($value);
+    }
+
+    /**
+     * Returns nested nodes or field keys.
+     *
+     * @return string[]|ModelFormLayoutNodeInterface[]
+     */
+    public function children()
+    {
+        return $this->children;
     }
 
 }

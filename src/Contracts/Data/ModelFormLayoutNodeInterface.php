@@ -13,4 +13,11 @@ interface ModelFormLayoutNodeInterface extends DataObjectInterface
      */
     public function type();
 
+    /**
+     * Returns nested nodes or field keys.
+     *
+     * @return string[]|ModelFormLayoutNodeInterface[]
+     */
+    public function children();
+
 }
