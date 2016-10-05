@@ -214,6 +214,26 @@ return [
             ],
         ],
 
+        'form' => [
+
+            // The default namespace to prefix for relative form field display strategy class names
+            'default-namespace' => 'Czim\\CmsModels\\View\\FormFieldStrategies\\',
+            'default-strategy'  => Czim\CmsModels\View\FormFieldStrategies\DefaultStrategy::class,
+
+            // The default strategy for storing/retrieving values from models
+            'default-store-namespace' => 'Czim\\CmsModels\\Http\\Controllers\\FormFieldStrategies\\',
+            'default-store-strategy'  => Czim\CmsModels\Http\Controllers\FormFieldStrategies\DefaultStrategy::class,
+
+            // Aliases for field display strategy classes
+            'aliases' => [
+            ],
+
+            // Aliases for store strategy classes
+            'store-aliases' => [
+            ],
+
+        ],
+
         'delete' => [
 
             // The default namespace to prefix for relative strategy class names

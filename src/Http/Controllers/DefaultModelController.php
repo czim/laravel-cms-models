@@ -12,7 +12,7 @@ class DefaultModelController extends BaseModelController
         Traits\DefaultModelScoping,
         Traits\DefaultModelSorting,
         Traits\DeletesModel,
-        Traits\HandlesFormLayout,
+        Traits\HandlesFormFields,
         Traits\SetsModelActivateState,
         Traits\SetsModelOrderablePosition;
 
@@ -103,6 +103,13 @@ class DefaultModelController extends BaseModelController
     {
         $record = $this->modelRepository->findOrFail($id);
 
+        $fields = array_only(
+            $this->modelInformation->form->fields,
+            $this->getRelevantFormFieldKeys()
+        );
+
+        $values = $this->getFormFieldValuesFromModel($record, array_keys($fields));
+
         return view(config('cms-models.views.edit'), [
             'moduleKey'        => $this->moduleKey,
             'routePrefix'      => $this->routePrefix,
@@ -110,6 +117,8 @@ class DefaultModelController extends BaseModelController
             'model'            => $this->modelInformation,
             'record'           => $record,
             'creating'         => false,
+            'fields'           => $fields,
+            'values'           => $values,
         ]);
     }
 

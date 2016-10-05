@@ -15,8 +15,10 @@ use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
  * @property string $label
  * @property string $label_translated
  * @property string $source
+ * @property string $display_strategy
+ * @property string $store_strategy
  * @property string $type
- * @property string $presenter
+ * @property bool $translated
  * @property string $style
  */
 class ModelFormFieldData extends AbstractDataObject implements ModelFormFieldDataInterface
