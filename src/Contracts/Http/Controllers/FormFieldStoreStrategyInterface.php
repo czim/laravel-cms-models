@@ -21,7 +21,6 @@ interface FormFieldStoreStrategyInterface
      * @param Model $model
      * @param mixed $source
      * @param mixed $value
-     * @return mixed
      */
     public function store(Model $model, $source, $value);
 

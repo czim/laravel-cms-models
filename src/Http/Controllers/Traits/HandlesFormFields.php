@@ -12,6 +12,9 @@ trait HandlesFormFields
 {
 
     /**
+     * Returns a list of form field keys relevant for the current context,
+     * depending on whether the model is being created or updated.
+     *
      * @param bool $creating
      * @return string[]
      */
@@ -49,9 +52,9 @@ trait HandlesFormFields
 
             if ($creating) {
                 return $this->getModelInformation()->form->fields[$key]->create();
-            } else {
-                return $this->getModelInformation()->form->fields[$key]->update();
             }
+
+            return $this->getModelInformation()->form->fields[$key]->update();
         });
 
         return $fieldKeys;
