@@ -115,14 +115,53 @@ class CmsModelsServiceProvider extends ServiceProvider
      */
     protected function registerInterfaceBindings()
     {
-        $this->app->singleton(ModelInformationRepositoryInterface::class, ModelInformationRepository::class);
-        $this->app->singleton(CurrentModelInformationInterface::class, CurrentModelInformation::class);
         $this->app->singleton(ModelRepositoryInterface::class, ModelRepository::class);
-        $this->app->singleton(ModelInformationEnricherInterface::class, ModelInformationEnricher::class);
-        $this->app->singleton(ModelInformationInterpreterInterface::class, CmsModelInformationInterpreter::class);
+
+        $this->registerHelperInterfaceBindings()
+             ->registerModelInformationInterfaceBindings()
+             ->registerStrategyInterfaceBindings()
+             ->registerFacadeBindings();
+
+        return $this;
+    }
+
+    /**
+     * Registers interface bindings for helpers classes.
+     *
+     * @return $this
+     */
+    protected function registerHelperInterfaceBindings()
+    {
         $this->app->singleton(RouteHelperInterface::class, RouteHelper::class);
         $this->app->singleton(ModuleHelperInterface::class, ModuleHelper::class);
+
+        return $this;
+    }
+
+    /**
+     * Registers interface bindings for model information handling.
+     *
+     * @return $this
+     */
+    protected function registerModelInformationInterfaceBindings()
+    {
+        $this->app->singleton(ModelInformationRepositoryInterface::class, ModelInformationRepository::class);
+        $this->app->singleton(ModelInformationEnricherInterface::class, ModelInformationEnricher::class);
+        $this->app->singleton(ModelInformationInterpreterInterface::class, CmsModelInformationInterpreter::class);
         $this->app->singleton(DatabaseAnalyzerInterface::class, DatabaseAnalyzer::class);
+
+        $this->app->singleton(CurrentModelInformationInterface::class, CurrentModelInformation::class);
+
+        return $this;
+    }
+
+    /**
+     * Registers interface bindings for various strategies.
+     *
+     * @return $this
+     */
+    protected function registerStrategyInterfaceBindings()
+    {
         $this->app->singleton(ListStrategyInterface::class, ListStrategy::class);
         $this->app->singleton(ListStrategyResolverInterface::class, ListStrategyResolver::class);
         $this->app->singleton(FilterStrategyInterface::class, FilterStrategy::class);
@@ -130,8 +169,16 @@ class CmsModelsServiceProvider extends ServiceProvider
         $this->app->singleton(ActivateStrategyResolverInterface::class, ActivateStrategyResolver::class);
         $this->app->singleton(OrderableStrategyResolverInterface::class, OrderableStrategyResolver::class);
 
+        return $this;
+    }
 
-        // Register facade names
+    /**
+     * Registers bindings for facade service names.
+     *
+     * @return $this
+     */
+    protected function registerFacadeBindings()
+    {
         $this->app->bind('cms-models-modelinfo', CurrentModelInformationInterface::class);
 
         return $this;
