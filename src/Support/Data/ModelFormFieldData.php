@@ -117,6 +117,20 @@ class ModelFormFieldData extends AbstractDataObject implements ModelFormFieldDat
     }
 
     /**
+     * Returns the source pattern for the form field.
+     *
+     * @return string
+     */
+    public function source()
+    {
+        if ($this->source) {
+            return $this->source;
+        }
+
+        return $this->key;
+    }
+
+    /**
      * @param ModelFormFieldDataInterface $with
      */
     public function merge(ModelFormFieldDataInterface $with)

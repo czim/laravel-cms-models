@@ -36,6 +36,13 @@ interface ModelFormFieldDataInterface extends ArrayAccess, Arrayable
     public function label();
 
     /**
+     * Returns the source pattern for the form field.
+     *
+     * @return string
+     */
+    public function source();
+
+    /**
      * @param ModelFormFieldDataInterface $with
      */
     public function merge(ModelFormFieldDataInterface $with);
