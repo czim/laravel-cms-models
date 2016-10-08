@@ -2,7 +2,11 @@
 namespace Czim\CmsModels\Http\Controllers;
 
 use Czim\CmsModels\Http\Requests\ActivateRequest;
+use Czim\CmsModels\Http\Requests\ModelCreateRequest;
+use Czim\CmsModels\Http\Requests\ModelUpdateRequest;
 use Czim\CmsModels\Http\Requests\OrderUpdateRequest;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Http\FormRequest;
 
 class DefaultModelController extends BaseModelController
 {
@@ -15,6 +19,21 @@ class DefaultModelController extends BaseModelController
         Traits\HandlesFormFields,
         Traits\SetsModelActivateState,
         Traits\SetsModelOrderablePosition;
+
+    /**
+     * The key under which all general (not-field specific) errors are stored.
+     *
+     * @var string
+     */
+    const GENERAL_ERRORS_KEY = '__general__';
+
+    /**
+     * The form data key for differentiating between saving and saving & closing.
+     *
+     * @var string
+     */
+    const SAVE_AND_CLOSE_KEY = '__save_and_close__';
+
 
     /**
      * Returns listing of filtered, sorted records.
@@ -78,6 +97,11 @@ class DefaultModelController extends BaseModelController
         ]);
     }
 
+    /**
+     * Displays form to create a new record.
+     *
+     * @return mixed
+     */
     public function create()
     {
         $class = $this->getModelInformation()->modelClass();
@@ -94,11 +118,41 @@ class DefaultModelController extends BaseModelController
         ]);
     }
 
+    /**
+     * Processes submitted form to create a new record.
+     *
+     * @return mixed
+     */
     public function store()
     {
+        /** @var FormRequest $request */
+        $request = app($this->getCreateRequestClass());
 
+        $record = $this->getNewModelInstance();
+
+        $data = $request->only($this->getRelevantFormFieldKeys(true));
+
+        if ( ! $this->storeFormFieldValuesForModel($record, $data)) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors([
+                    static::GENERAL_ERRORS_KEY => [ $this->getGeneralStoreFailureError() ],
+                ]);
+        }
+
+        if ($request->input(static::SAVE_AND_CLOSE_KEY)) {
+            return redirect()->route("{$this->routePrefix}.index");
+        }
+
+        return redirect()->route("{$this->routePrefix}.edit", [ $record->getKey() ]);
     }
 
+    /**
+     * Displays form to edit an existing record.
+     *
+     * @param mixed $id
+     * @return mixed
+     */
     public function edit($id)
     {
         $record = $this->modelRepository->findOrFail($id);
@@ -122,16 +176,38 @@ class DefaultModelController extends BaseModelController
         ]);
     }
 
+    /**
+     * Processes a submitted for to edit an existing record.
+     *
+     * @param mixed $id
+     * @return mixed
+     */
     public function update($id)
     {
-        $record = $this->modelRepository->findOrFail($id);
+        /** @var FormRequest $request */
+        $request = app($this->getUpdateRequestClass());
+        $record  = $this->modelRepository->findOrFail($id);
 
-        // todo: redirect back to list or to edit page?
-        return redirect()->back();
+        $data = $request->only($this->getRelevantFormFieldKeys());
+
+        if ( ! $this->storeFormFieldValuesForModel($record, $data)) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors([
+                    static::GENERAL_ERRORS_KEY => [ $this->getGeneralStoreFailureError() ],
+                ]);
+        }
+
+        if ($request->input(static::SAVE_AND_CLOSE_KEY)) {
+            return redirect()->route("{$this->routePrefix}.index");
+        }
+
+        return redirect()->route("{$this->routePrefix}.edit", [ $record->getKey() ]);
+
     }
 
     /**
-     * Deletes a model, if allowed.
+     * Deletes a record, if allowed.
      *
      * @param mixed $id
      * @return mixed
@@ -280,6 +356,46 @@ class DefaultModelController extends BaseModelController
     protected function getTotalCount()
     {
         return $this->modelRepository->count();
+    }
+
+    /**
+     * Returns new, unpersisted model instance.
+     *
+     * @return Model
+     */
+    protected function getNewModelInstance()
+    {
+        $modelClass = $this->modelInformation->modelClass();
+
+        return new $modelClass;
+    }
+
+    /**
+     * Returns the form request FQN for model updating.
+     *
+     * @return mixed
+     */
+    protected function getUpdateRequestClass()
+    {
+        return array_get($this->modelInformation->meta->form_requests, 'update', ModelUpdateRequest::class);
+    }
+
+    /**
+     * Returns the form request FQN for model creation.
+     *
+     * @return string
+     */
+    protected function getCreateRequestClass()
+    {
+        return array_get($this->modelInformation->meta->form_requests, 'create', ModelCreateRequest::class);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getGeneralStoreFailureError()
+    {
+        return cms_trans('models.store.general-error');
     }
 
     /**
