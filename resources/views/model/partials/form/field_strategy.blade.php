@@ -16,8 +16,8 @@
         {!! $strategy->render(
             $record,
             $field,
-            null, // value
-            [] // errors
+            old($key, array_get($values, $key)),
+            array_get($errors, $key, [])
         ) !!}
     </div>
 

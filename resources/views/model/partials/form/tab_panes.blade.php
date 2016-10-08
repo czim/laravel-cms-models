@@ -21,7 +21,9 @@
                         'node',
                         'nodeKey',
                         'record',
-                        'model'
+                        'model',
+                        'values',
+                        'errors'
                     ),
                     [
                         'parent' => $tab,

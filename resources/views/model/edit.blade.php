@@ -43,6 +43,9 @@
     @endif
             {{ csrf_field() }}
 
+            <input id="edit-form-save-and-close-input" type="hidden" name="__save_and_close__" value="0">
+
+
         @if ($model->form->hasTabs())
 
             <?php
@@ -62,6 +65,8 @@
                 @include('cms-models::model.partials.form.tab_panes', compact(
                     'record',
                     'model',
+                    'values',
+                    'errors',
                     'tabs',
                     'routePrefix',
                     'permissionPrefix'
@@ -78,7 +83,9 @@
                             'node',
                             'nodeKey',
                             'record',
-                            'model'
+                            'model',
+                            'values',
+                            'errors'
                         ),
                         [
                             'parent' => null,
@@ -91,5 +98,14 @@
         @include('cms-models::model.partials.form.buttons', compact('record', 'model'))
 
     </form>
+
+
+    <style>
+
+        .edit-button-row {
+            margin-top: 2em;
+        }
+
+    </style>
 
 @endsection
