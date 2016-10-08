@@ -3,6 +3,7 @@ namespace Czim\CmsModels\View\FormFieldStrategies;
 
 use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\View\FormFieldDisplayInterface;
+use Czim\CmsModels\Support\Data\ModelFormFieldData;
 use Illuminate\Database\Eloquent\Model;
 
 class DefaultStrategy implements FormFieldDisplayInterface
@@ -11,10 +12,10 @@ class DefaultStrategy implements FormFieldDisplayInterface
     /**
      * Renders a form field.
      *
-     * @param Model                       $model
-     * @param ModelFormFieldDataInterface $field
-     * @param mixed                       $value
-     * @param array                       $errors
+     * @param Model                                          $model
+     * @param ModelFormFieldDataInterface|ModelFormFieldData $field
+     * @param mixed                                          $value
+     * @param array                                          $errors
      * @return string
      */
     public function render(Model $model, ModelFormFieldDataInterface $field, $value, array $errors = [])

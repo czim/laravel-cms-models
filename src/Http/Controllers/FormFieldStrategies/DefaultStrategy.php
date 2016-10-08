@@ -39,4 +39,15 @@ class DefaultStrategy implements FormFieldStoreStrategyInterface
         $model->{$source} = $value;
     }
 
+    /**
+     * Stores a submitted value on a model, after it has been created (or saved).
+     *
+     * @param Model $model
+     * @param mixed $source
+     * @param mixed $value
+     */
+    public function storeAfter(Model $model, $source, $value)
+    {
+    }
+
 }
