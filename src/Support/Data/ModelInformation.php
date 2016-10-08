@@ -316,6 +316,7 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
         $this->mergeAttribute('meta', $with->meta);
         $this->mergeAttribute('verbose_name', $with->verbose_name);
         $this->mergeAttribute('verbose_name_plural', $with->verbose_name_plural);
+        $this->mergeAttribute('single', $with->single);
 
         $this->mergeAttribute('allow_delete', $with->allow_delete);
         $this->mergeAttribute('delete_condition', $with->delete_condition);
@@ -325,6 +326,8 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
         $this->mergeAttribute('form', $with->form);
         $this->mergeAttribute('reference', $with->reference);
         $this->mergeAttribute('includes', $with->includes);
+
+        // todo validation
     }
 
 }
