@@ -15,25 +15,11 @@ class ListStrategy implements ListStrategyInterface
     use ResolvesSourceStrategies;
 
     /**
-     * @var ListStrategyResolverInterface
-     */
-    protected $resolver;
-
-    /**
      * True if strategy resolution fell back to the default strategy.
      *
      * @var bool
      */
     protected $fellBackToDefault = false;
-
-
-    /**
-     * @param ListStrategyResolverInterface $resolver
-     */
-    public function __construct(ListStrategyResolverInterface $resolver)
-    {
-        $this->resolver = $resolver;
-    }
 
 
     /**
@@ -78,7 +64,6 @@ class ListStrategy implements ListStrategyInterface
         return $this->displayStrategy($strategy, $source, $model)->attributes($model, $source);
     }
 
-
     /**
      * Returns a display strategy instance for a given strategy string.
      *
@@ -89,12 +74,6 @@ class ListStrategy implements ListStrategyInterface
      */
     public function displayStrategy($strategy, $source = null, Model $model = null)
     {
-        $resolved = $this->resolver->resolve($strategy);
-
-        if ($resolved) {
-            $strategy = $resolved;
-        }
-
         $instance = $this->makeListDisplayStrategyInstance($strategy);
 
         // Feed any extra information we can gather to the instance

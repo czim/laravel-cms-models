@@ -18,6 +18,4 @@ interface FormFieldDisplayInterface
      */
     public function render(Model $model, ModelFormFieldDataInterface $field, $value, array $errors = []);
 
-
-
 }

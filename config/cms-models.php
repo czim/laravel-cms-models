@@ -187,6 +187,11 @@ return [
 
             // Aliases for list display strategy classes
             'aliases' => [
+                \Czim\CmsModels\Support\Enums\AttributeFormStrategy::BOOLEAN_CHECKBOX => 'Check',
+                \Czim\CmsModels\Support\Enums\AttributeFormStrategy::BOOLEAN_DROPDOWN => 'Check',
+                \Czim\CmsModels\Support\Enums\AttributeFormStrategy::ATTACHMENT_STAPLER_FILE => 'StaplerFile',
+                \Czim\CmsModels\Support\Enums\AttributeFormStrategy::ATTACHMENT_STAPLER_IMAGE => 'StaplerImage',
+
                 'check'     => Czim\CmsModels\View\ListStrategies\Check::class,
                 'count'     => Czim\CmsModels\View\ListStrategies\RelationCount::class,
                 'reference' => Czim\CmsModels\View\ListStrategies\RelationReference::class,
