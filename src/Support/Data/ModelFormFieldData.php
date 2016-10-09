@@ -15,9 +15,11 @@ use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
  * @property string $label
  * @property string $label_translated
  * @property string $source
+ * @property bool $required
  * @property string $display_strategy
  * @property string $store_strategy
  * @property string $type
+ * @property array $options
  * @property bool $translated
  * @property string $style
  */
@@ -42,6 +44,9 @@ class ModelFormFieldData extends AbstractDataObject implements ModelFormFieldDat
         // Editing source/target to use for the form field. Similar to ModelListColumnData's source.
         'source' => null,
 
+        // Whether the field must be filled in.
+        'required' => null,
+
         // The strategy for rendering the form field (and present data for it).
         'display_strategy' => null,
 
@@ -58,6 +63,8 @@ class ModelFormFieldData extends AbstractDataObject implements ModelFormFieldDat
         // Display style 'key' (css class, or whatever the front-end expects) that sets the rendering of the field
         'style' => null,
 
+        // Custom options relevant for the strategy
+        'options' => [],
     ];
 
     /**
@@ -131,13 +138,54 @@ class ModelFormFieldData extends AbstractDataObject implements ModelFormFieldDat
     }
 
     /**
+     * Returns whether the field must be filled in.
+     *
+     * @return bool
+     */
+    public function required()
+    {
+        if (null === $this->required) {
+            return false;
+        }
+
+        return $this->required;
+    }
+
+    /**
+     * Returns whether the field must be filled in.
+     *
+     * @return bool
+     */
+    public function translated()
+    {
+        if (null === $this->translated) {
+            return false;
+        }
+
+        return $this->translated;
+    }
+
+    /**
+     * Returns associative array with custom options for the strategy.
+     *
+     * @return array
+     */
+    public function options()
+    {
+        return $this->options ?: [];
+    }
+
+    /**
      * @param ModelFormFieldDataInterface $with
      */
     public function merge(ModelFormFieldDataInterface $with)
     {
-        foreach ($this->getKeys() as $key) {
+        $normalMerge = array_except($this->getKeys(), 'options');
+
+        foreach ($normalMerge as $key) {
             $this->mergeAttribute($key, $with->{$key});
         }
-    }
 
+        $this->options = array_merge($this->options(), $with->options());
+    }
 }

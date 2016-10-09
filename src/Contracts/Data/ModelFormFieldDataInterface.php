@@ -43,6 +43,27 @@ interface ModelFormFieldDataInterface extends ArrayAccess, Arrayable
     public function source();
 
     /**
+     * Returns whether the field must be filled in.
+     *
+     * @return bool
+     */
+    public function required();
+
+    /**
+     * Returns whether the field is translated using the model's translation strategy.
+     *
+     * @return bool
+     */
+    public function translated();
+
+    /**
+     * Returns associative array with custom options for the strategy.
+     *
+     * @return array
+     */
+    public function options();
+
+    /**
      * @param ModelFormFieldDataInterface $with
      */
     public function merge(ModelFormFieldDataInterface $with);
