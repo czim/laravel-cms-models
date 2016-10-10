@@ -7,6 +7,7 @@ use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelFormFieldData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelRelationData;
+use Czim\CmsModels\Support\Enums\RelationType;
 use UnexpectedValueException;
 
 class EnrichFormFieldData extends AbstractEnricherStep
@@ -156,6 +157,7 @@ class EnrichFormFieldData extends AbstractEnricherStep
             'key'              => $attribute->name,
             'display_strategy' => $attribute->strategy_form ?: $attribute->strategy,
             'translated'       => $attribute->translated,
+            'required'         => ! $attribute->nullable,
         ]);
     }
 
@@ -168,9 +170,14 @@ class EnrichFormFieldData extends AbstractEnricherStep
      */
     protected function makeModelFormFieldDataForRelationData(ModelRelationData $relation, ModelInformationInterface $info)
     {
+        $required = (   (   $relation->type == RelationType::BELONGS_TO
+                        ||  $relation->type == RelationType::BELONGS_TO_THROUGH)
+                    &&  ! $relation->nullable_key);
+
         return new ModelFormFieldData([
             'key'              => $relation->method,
             'display_strategy' => $relation->strategy_form ?: $relation->strategy,
+            'required'         => $required,
         ]);
     }
 

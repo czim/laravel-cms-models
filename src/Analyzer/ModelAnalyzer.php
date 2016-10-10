@@ -12,8 +12,10 @@ use Czim\CmsModels\Support\Data\ModelRelationData;
 use Czim\CmsModels\Support\Data\ModelScopeData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 use Czim\CmsModels\Support\Enums\AttributeFormStrategy;
+use Czim\CmsModels\Support\Enums\RelationType;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use LimitIterator;
 use phpDocumentor\Reflection\DocBlockFactory;
@@ -445,12 +447,24 @@ class ModelAnalyzer
                 continue;
             }
 
+            $type = camel_case(class_basename($relation));
+
+            // Determine if the foreign key for this relation is nullable.
+            // For now, this only concerns belongsTo relations.
+            $nullableKey = false;
+
+            if ($type == RelationType::BELONGS_TO || $type == RelationType::BELONGS_TO_THROUGH) {
+                /** @var $relation BelongsTo */
+                $nullableKey = $this->info->attributes[ $relation->getForeignKey() ]->nullable;
+            }
+
             $relations[ $method->name ] = new ModelRelationData([
                 'name'          => snake_case($method->name),
                 'method'        => $method->name,
-                'type'          => camel_case(class_basename($relation)),
+                'type'          => $type,
                 'relationClass' => get_class($relation),
                 'relatedModel'  => get_class($relation->getRelated()),
+                'nullable_key'  => $nullableKey,
             ]);
         }
 

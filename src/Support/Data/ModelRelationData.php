@@ -16,6 +16,7 @@ use Czim\CmsCore\Support\Data\AbstractDataObject;
  * @property string $strategy
  * @property string $strategy_form
  * @property string $strategy_list
+ * @property bool $nullable_key
  */
 class ModelRelationData extends AbstractDataObject
 {
@@ -44,6 +45,8 @@ class ModelRelationData extends AbstractDataObject
         // Strategy for displaying attribute in list/index
         'strategy_list' => '',
 
+        // Whether the foreign key of this relation is nullable
+        'nullable_key' => null,
     ];
 
 }
