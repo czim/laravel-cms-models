@@ -7,6 +7,14 @@ interface FormFieldStoreStrategyInterface
 {
 
     /**
+     * Sets parameters to use for retrieving & storing.
+     *
+     * @param array $parameters
+     * @return $this
+     */
+    public function setParameters(array $parameters);
+
+    /**
      * Retrieves current values from a model
      *
      * @param Model $model

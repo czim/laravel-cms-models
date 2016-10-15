@@ -3,6 +3,8 @@ namespace Czim\CmsModels\Analyzer;
 
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Enums\FormDisplayStrategy;
+use Czim\CmsModels\Support\Enums\FormStoreStrategy;
+use Czim\CmsModels\Support\Enums\ListDisplayStrategy;
 
 class AttributeStrategyResolver
 {
@@ -22,9 +24,27 @@ class AttributeStrategyResolver
             case 'boolean':
             case 'bool':
                 if ($data->nullable) {
-                    $type = 'check-nullable';
+                    $type = ListDisplayStrategy::CHECK_NULLABLE;
                 } else {
-                    $type = 'check';
+                    $type = ListDisplayStrategy::CHECK;
+                }
+                break;
+
+            case 'date':
+                switch ($data->type) {
+
+                    case 'date':
+                        $type = ListDisplayStrategy::DATE;
+                        break;
+
+                    case 'time':
+                        $type = ListDisplayStrategy::TIME;
+                        break;
+
+                    case 'datetime':
+                    case 'timestamp':
+                        $type = ListDisplayStrategy::DATETIME;
+                        break;
                 }
                 break;
         }
@@ -131,11 +151,34 @@ class AttributeStrategyResolver
      */
     public function determineFormStoreStrategy(ModelAttributeData $data)
     {
-        if ($data->translated) {
-            return 'translated';
+        $type       = null;
+        $parameters = [];
+
+        // Determine strategy alias
+
+        switch ($data->cast) {
+
+            case 'boolean':
+            case 'bool':
+                $type = FormStoreStrategy::BOOLEAN;
+                break;
         }
 
-        return null;
+        // Determine parameters
+
+        if ($data->translated) {
+            $parameters[] = 'translated';
+        }
+
+        if ($data->nullable) {
+            $parameters[] = 'nullable';
+        }
+
+        if (count($parameters)) {
+            $type .= ':' . implode(',', $parameters);
+        }
+
+        return $type;
     }
 
 }

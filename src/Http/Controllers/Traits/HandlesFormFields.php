@@ -105,6 +105,10 @@ trait HandlesFormFields
             $field    = $this->getModelFormFieldDataForKey($key);
             $instance = $this->getFormFieldStoreStrategyInstanceForField($field);
 
+            $instance->setParameters(
+                $this->getFormFieldStoreStrategyParametersForField($field)
+            );
+
             $values[ $key ] = $instance->retrieve($model, $field->source ?: $field->key);
         }
 
@@ -131,8 +135,12 @@ trait HandlesFormFields
         foreach (array_keys($values) as $key) {
             $fields[ $key ]     = $this->getModelFormFieldDataForKey($key);
             $strategies[ $key ] = $this->getFormFieldStoreStrategyInstanceForField($fields[ $key ]);
-        }
 
+            $strategies[ $key ]->setParameters(
+                $this->getFormFieldStoreStrategyParametersForField($fields[ $key ])
+            );
+        }
+        
         // First store values (such as necessary belongsTo-related instances),
         // before storing the model
         foreach ($values as $key => $value) {
@@ -166,9 +174,34 @@ trait HandlesFormFields
      */
     protected function getFormFieldStoreStrategyInstanceForField(ModelFormFieldDataInterface $field)
     {
-        $strategy = $this->resolveFormFieldStoreStrategyClass($field->store_strategy);
+        $strategy = $field->store_strategy ?: '';
+
+        if (false !== strpos($strategy, ':')) {
+            $strategy = head(explode(':', $strategy));
+        }
+
+        $strategy = $this->resolveFormFieldStoreStrategyClass($strategy);
 
         return new $strategy;
+    }
+
+    /**
+     * Returns parameters that should be passed into the store strategy instance.
+     *
+     * @param ModelFormFieldDataInterface|ModelFormFieldData $field
+     * @return array
+     */
+    protected function getFormFieldStoreStrategyParametersForField(ModelFormFieldDataInterface $field)
+    {
+        $strategy = $field->store_strategy ?: '';
+
+        $pos = strpos($strategy, ':');
+
+        if (false === $pos) {
+            return [];
+        }
+
+        return array_map('trim', explode(',', substr($strategy, $pos + 1)));
     }
 
     /**
