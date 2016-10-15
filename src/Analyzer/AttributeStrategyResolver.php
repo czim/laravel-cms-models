@@ -2,18 +2,18 @@
 namespace Czim\CmsModels\Analyzer;
 
 use Czim\CmsModels\Support\Data\ModelAttributeData;
-use Czim\CmsModels\Support\Enums\AttributeFormStrategy;
+use Czim\CmsModels\Support\Enums\FormDisplayStrategy;
 
 class AttributeStrategyResolver
 {
 
     /**
-     * Determines a general field strategy string for given attribute data.
+     * Determines a list column display strategy string for given attribute data.
      *
      * @param ModelAttributeData $data
      * @return string|null
      */
-    public function determineStrategy(ModelAttributeData $data)
+    public function determineListDisplayStrategy(ModelAttributeData $data)
     {
         $type = null;
 
@@ -21,45 +21,77 @@ class AttributeStrategyResolver
 
             case 'boolean':
             case 'bool':
-                $type = AttributeFormStrategy::BOOLEAN_CHECKBOX;
+                if ($data->nullable) {
+                    $type = 'check-nullable';
+                } else {
+                    $type = 'check';
+                }
+                break;
+        }
+
+        return $type;
+    }
+
+    /**
+     * Determines a form field display strategy string for given attribute data.
+     *
+     * @param ModelAttributeData $data
+     * @return string|null
+     */
+    public function determineFormDisplayStrategy(ModelAttributeData $data)
+    {
+        $type = null;
+
+        switch ($data->cast) {
+
+            case 'boolean':
+            case 'bool':
+                if ($data->nullable) {
+                    $type = FormDisplayStrategy::BOOLEAN_DROPDOWN;
+                } else {
+                    $type = FormDisplayStrategy::BOOLEAN_CHECKBOX;
+                }
                 break;
 
             case 'integer':
             case 'int':
-                $type = AttributeFormStrategy::NUMERIC_INTEGER;
+                $type = FormDisplayStrategy::NUMERIC_INTEGER;
                 break;
 
             case 'float':
             case 'double':
-                $type = AttributeFormStrategy::NUMERIC_DECIMAL;
+                $type = FormDisplayStrategy::NUMERIC_DECIMAL;
                 break;
 
             case 'string':
                 switch ($data->type) {
 
                     case 'enum':
-                        $type = AttributeFormStrategy::SELECT_DROPDOWN;
+                        $type = FormDisplayStrategy::SELECT_DROPDOWN;
                         break;
 
                     case 'year':
-                        $type = AttributeFormStrategy::NUMERIC_YEAR;
+                        $type = FormDisplayStrategy::NUMERIC_YEAR;
                         break;
 
                     case 'varchar':
                     case 'char':
                     case 'tinytext':
-                        $type = AttributeFormStrategy::TEXT;
+                        $type = FormDisplayStrategy::TEXT;
                         break;
 
                     case 'text':
                     case 'mediumtext':
                     case 'longtext':
+                        $type = FormDisplayStrategy::WYSIWYG;
+                        break;
+
                     case 'blob';
                     case 'mediumblob';
                     case 'longblob';
                     case 'binary';
                     case 'varbinary';
-                        $type = AttributeFormStrategy::TEXTAREA;
+                        $type = FormDisplayStrategy::TEXTAREA;
                         break;
                 }
                 break;
@@ -68,27 +100,42 @@ class AttributeStrategyResolver
                 switch ($data->type) {
 
                     case 'date':
-                        $type = AttributeFormStrategy::DATEPICKER_DATE;
+                        $type = FormDisplayStrategy::DATEPICKER_DATE;
                         break;
 
                     case 'time':
-                        $type = AttributeFormStrategy::DATEPICKER_TIME;
+                        $type = FormDisplayStrategy::DATEPICKER_TIME;
                         break;
 
                     case 'datetime':
                     case 'timestamp':
-                        $type = AttributeFormStrategy::DATEPICKER_DATETIME;
+                        $type = FormDisplayStrategy::DATEPICKER_DATETIME;
                         break;
                 }
                 break;
 
             case 'array':
             case 'json':
-                $type = null;
+                $type = FormDisplayStrategy::TEXTAREA;
                 break;
         }
 
         return $type;
+    }
+
+    /**
+     * Determines a form store display strategy string for given attribute data.
+     *
+     * @param ModelAttributeData $data
+     * @return string|null
+     */
+    public function determineFormStoreStrategy(ModelAttributeData $data)
+    {
+        if ($data->translated) {
+            return 'translated';
+        }
+
+        return null;
     }
 
 }

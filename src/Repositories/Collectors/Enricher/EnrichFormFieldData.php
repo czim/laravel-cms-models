@@ -1,6 +1,8 @@
 <?php
 namespace Czim\CmsModels\Repositories\Collectors\Enricher;
 
+use Czim\CmsModels\Analyzer\AttributeStrategyResolver;
+use Czim\CmsModels\Analyzer\RelationStrategyResolver;
 use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
@@ -12,6 +14,28 @@ use UnexpectedValueException;
 
 class EnrichFormFieldData extends AbstractEnricherStep
 {
+
+    /**
+     * @var AttributeStrategyResolver
+     */
+    protected $attributeStrategyResolver;
+
+    /**
+     * @var RelationStrategyResolver
+     */
+    protected $relationStrategyResolver;
+
+    /**
+     * @param AttributeStrategyResolver $attributeStrategyResolver
+     * @param RelationStrategyResolver  $relationStrategyResolver
+     */
+    public function __construct(
+        AttributeStrategyResolver $attributeStrategyResolver,
+        RelationStrategyResolver $relationStrategyResolver
+    ) {
+        $this->attributeStrategyResolver = $attributeStrategyResolver;
+        $this->relationStrategyResolver  = $relationStrategyResolver;
+    }
 
     /**
      * Performs enrichment.
@@ -155,9 +179,13 @@ class EnrichFormFieldData extends AbstractEnricherStep
     {
         return new ModelFormFieldData([
             'key'              => $attribute->name,
-            'display_strategy' => $attribute->strategy_form ?: $attribute->strategy,
+            'display_strategy' => $this->determineFormDisplayStrategyForAttribute($attribute),
+            'store_strategy'   => $this->determineFormStoreStrategyForAttribute($attribute),
             'translated'       => $attribute->translated,
             'required'         => ! $attribute->nullable,
+            'options'          => [
+                'length' => $attribute->length,
+            ],
         ]);
     }
 
@@ -177,8 +205,36 @@ class EnrichFormFieldData extends AbstractEnricherStep
         return new ModelFormFieldData([
             'key'              => $relation->method,
             'display_strategy' => $relation->strategy_form ?: $relation->strategy,
+            'store_strategy'   => null,
             'required'         => $required,
         ]);
+    }
+
+    /**
+     * @param ModelAttributeData $attribute
+     * @return null|string
+     */
+    protected function determineFormDisplayStrategyForAttribute(ModelAttributeData $attribute)
+    {
+        return $this->attributeStrategyResolver->determineFormDisplayStrategy($attribute);
+    }
+
+    /**
+     * @param ModelAttributeData $attribute
+     * @return null|string
+     */
+    protected function determineFormStoreStrategyForAttribute(ModelAttributeData $attribute)
+    {
+        return $this->attributeStrategyResolver->determineFormStoreStrategy($attribute);
+    }
+
+    /**
+     * @param ModelRelationData $relation
+     * @return null|string
+     */
+    protected function determineFormDisplayStrategyForRelation(ModelRelationData $relation)
+    {
+        return $this->relationStrategyResolver->determineFormDisplayStrategy($relation);
     }
 
 }

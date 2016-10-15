@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Analyzer;
 
 use Czim\CmsModels\Support\Data\ModelRelationData;
+use Czim\CmsModels\Support\Enums\FormDisplayStrategy;
 use Czim\CmsModels\Support\Enums\RelationFormStrategy;
 use Czim\CmsModels\Support\Enums\RelationType;
 
@@ -35,36 +36,47 @@ class RelationStrategyResolver
     }
 
     /**
-     * Determines a form field strategy string for given relation data.
+     * Determines a form display strategy string for given relation data.
      *
      * @param ModelRelationData $data
      * @return string|null
      */
-    public function determineFormStrategy(ModelRelationData $data)
+    public function determineFormDisplayStrategy(ModelRelationData $data)
     {
         $type = null;
 
         switch ($data->type) {
 
             case RelationType::BELONGS_TO:
-                $type = RelationFormStrategy::BELONGS_TO_DROPDOWN;
+            case RelationType::BELONGS_TO_THROUGH:
+                $type = FormDisplayStrategy::SELECT_DROPDOWN_BELONGS_TO;
                 break;
 
             case RelationType::HAS_ONE:
-                $type = RelationFormStrategy::HAS_ONE_DROPDOWN;
+                $type = FormDisplayStrategy::SELECT_DROPDOWN_HAS_ONE;
                 break;
 
             case RelationType::HAS_MANY:
-                $type = RelationFormStrategy::HAS_MANY_DROPDOWN;
+                $type = FormDisplayStrategy::SELECT_MULTIPLE_HAS_MANY;
                 break;
-
-            case RelationType::BELONGS_TO_THROUGH:
-                $type = RelationFormStrategy::BELONGS_TO_THROUGH_DROPDOWN;
-                break;
-
         }
 
         return $type;
+    }
+
+    /**
+     * Determines a form store display strategy string for given attribute data.
+     *
+     * @param ModelRelationData $data
+     * @return string|null
+     */
+    public function determineFormStoreStrategy(ModelRelationData $data)
+    {
+        if ($data->translated) {
+            return 'translated';
+        }
+
+        return null;
     }
 
 }

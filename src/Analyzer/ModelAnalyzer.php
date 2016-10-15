@@ -38,16 +38,6 @@ class ModelAnalyzer
     protected $translationAnalyzer;
 
     /**
-     * @var AttributeStrategyResolver
-     */
-    protected $attributeStrategyResolver;
-
-    /**
-     * @var RelationStrategyResolver
-     */
-    protected $relationStrategyResolver;
-
-    /**
      * @var string
      */
     protected $class;
@@ -71,19 +61,13 @@ class ModelAnalyzer
     /**
      * @param DatabaseAnalyzerInterface $databaseAnalyzer
      * @param TranslationAnalyzer       $translationAnalyzer
-     * @param AttributeStrategyResolver $attributeStrategyResolver
-     * @param RelationStrategyResolver  $relationStrategyResolver
      */
     public function __construct(
         DatabaseAnalyzerInterface $databaseAnalyzer,
-        TranslationAnalyzer $translationAnalyzer,
-        AttributeStrategyResolver $attributeStrategyResolver,
-        RelationStrategyResolver $relationStrategyResolver
+        TranslationAnalyzer $translationAnalyzer
     ) {
-        $this->databaseAnalyzer          = $databaseAnalyzer;
-        $this->translationAnalyzer       = $translationAnalyzer;
-        $this->attributeStrategyResolver = $attributeStrategyResolver;
-        $this->relationStrategyResolver  = $relationStrategyResolver;
+        $this->databaseAnalyzer    = $databaseAnalyzer;
+        $this->translationAnalyzer = $translationAnalyzer;
 
         $this->translationAnalyzer->setModelAnalyzer(clone $this);
     }
@@ -177,10 +161,6 @@ class ModelAnalyzer
                 'length'   => $length,
                 'values'   => $field['values'],
             ]);
-        }
-
-        foreach ($attributes as $attribute) {
-            $attribute['strategy'] = $this->attributeStrategyResolver->determineStrategy($attribute);
         }
 
         // Activatable column detection
@@ -466,11 +446,6 @@ class ModelAnalyzer
                 'relatedModel'  => get_class($relation->getRelated()),
                 'nullable_key'  => $nullableKey,
             ]);
-        }
-
-        foreach ($relations as $relation) {
-            $relation['strategy_list'] = $this->relationStrategyResolver->determineListStrategy($relation);
-            $relation['strategy_form'] = $this->relationStrategyResolver->determineFormStrategy($relation);
         }
 
         $this->info['relations'] = $relations;

@@ -187,14 +187,12 @@ return [
 
             // Aliases for list display strategy classes
             'aliases' => [
-                \Czim\CmsModels\Support\Enums\AttributeFormStrategy::BOOLEAN_CHECKBOX => 'Check',
-                \Czim\CmsModels\Support\Enums\AttributeFormStrategy::BOOLEAN_DROPDOWN => 'Check',
-                \Czim\CmsModels\Support\Enums\AttributeFormStrategy::ATTACHMENT_STAPLER_FILE => 'StaplerFile',
-                \Czim\CmsModels\Support\Enums\AttributeFormStrategy::ATTACHMENT_STAPLER_IMAGE => 'StaplerImage',
-
-                'check'     => Czim\CmsModels\View\ListStrategies\Check::class,
-                'count'     => Czim\CmsModels\View\ListStrategies\RelationCount::class,
-                'reference' => Czim\CmsModels\View\ListStrategies\RelationReference::class,
+                Czim\CmsModels\Support\Enums\ListDisplayStrategy::CHECK              => 'Check',
+                Czim\CmsModels\Support\Enums\ListDisplayStrategy::CHECK_NULLABLE     => 'CheckNullable',
+                Czim\CmsModels\Support\Enums\ListDisplayStrategy::STAPLER_THUMBNAIL  => 'StaplerImage',
+                Czim\CmsModels\Support\Enums\ListDisplayStrategy::STAPLER_FILENAME   => 'StaplerFile',
+                Czim\CmsModels\Support\Enums\ListDisplayStrategy::RELATION_COUNT     => 'RelationCount',
+                Czim\CmsModels\Support\Enums\ListDisplayStrategy::RELATION_REFERENCE => 'RelationReference',
             ],
 
             // Aliases for sort strategy classes
@@ -231,6 +229,11 @@ return [
 
             // Aliases for field display strategy classes
             'aliases' => [
+                Czim\CmsModels\Support\Enums\FormDisplayStrategy::TEXT             => 'DefaultStrategy',
+                Czim\CmsModels\Support\Enums\FormDisplayStrategy::BOOLEAN_CHECKBOX => 'BooleanCheckboxStrategy',
+                Czim\CmsModels\Support\Enums\FormDisplayStrategy::BOOLEAN_DROPDOWN => 'BooleanDropdownStrategy',
+                Czim\CmsModels\Support\Enums\FormDisplayStrategy::TEXTAREA         => 'TextAreaStrategy',
+                Czim\CmsModels\Support\Enums\FormDisplayStrategy::WYSIWYG          => 'WysiwygStrategy',
             ],
 
             // Aliases for store strategy classes

@@ -1,6 +1,7 @@
 <?php
 namespace Czim\CmsModels\Repositories\Collectors\Enricher;
 
+use Czim\CmsModels\Analyzer\AttributeStrategyResolver;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Data\ModelListColumnDataInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
@@ -12,6 +13,18 @@ use UnexpectedValueException;
 
 class EnrichListColumnData extends AbstractEnricherStep
 {
+    /**
+     * @var AttributeStrategyResolver
+     */
+    protected $attributeStrategyResolver;
+
+    /**
+     * @param AttributeStrategyResolver $attributeStrategyResolver
+     */
+    public function __construct(AttributeStrategyResolver $attributeStrategyResolver)
+    {
+        $this->attributeStrategyResolver = $attributeStrategyResolver;
+    }
 
     /**
      * Performs enrichment.
@@ -85,7 +98,6 @@ class EnrichListColumnData extends AbstractEnricherStep
                 $attributeColumnInfo = $this->makeModelListColumnDataForRelationData($this->info->relations[ $key ], $this->info);
             }
 
-
             $attributeColumnInfo->merge($column);
 
             $columns[ $key ] = $attributeColumnInfo;
@@ -138,7 +150,7 @@ class EnrichListColumnData extends AbstractEnricherStep
 
         return new ModelListColumnData([
             'source'         => $attribute->name,
-            'strategy'       => $attribute->strategy_list ?: $attribute->strategy,
+            'strategy'       => $this->determineListDisplayStrategyForAttribute($attribute),
             'style'          => $primaryIncrementing ? 'primary-id' : null,
             'editable'       => $attribute->fillable,
             'sortable'       => $sortable,
@@ -162,6 +174,15 @@ class EnrichListColumnData extends AbstractEnricherStep
             'label'          => ucfirst(str_replace('_', ' ', snake_case($relation->method))),
             'sortable'       => false,
         ]);
+    }
+
+    /**
+     * @param ModelAttributeData $attribute
+     * @return null|string
+     */
+    protected function determineListDisplayStrategyForAttribute(ModelAttributeData $attribute)
+    {
+        return $this->attributeStrategyResolver->determineListDisplayStrategy($attribute);
     }
 
 }
