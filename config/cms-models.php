@@ -238,6 +238,7 @@ return [
 
             // Aliases for store strategy classes
             'store-aliases' => [
+                Czim\CmsModels\Support\Enums\FormStoreStrategy::BOOLEAN => 'BooleanStrategy',
             ],
 
         ],
