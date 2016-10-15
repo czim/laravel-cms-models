@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\View\FormFieldStrategies;
 
-class DefaultStrategy Extends AbstractDefaultStrategy
+class WysiwygStrategy Extends AbstractDefaultStrategy
 {
 
     /**
@@ -11,7 +11,7 @@ class DefaultStrategy Extends AbstractDefaultStrategy
      */
     protected function getView()
     {
-        return 'cms-models::model.partials.form.strategies.default';
+        return 'cms-models::model.partials.form.strategies.wysiwyg';
     }
 
 }

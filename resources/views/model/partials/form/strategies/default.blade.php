@@ -1,7 +1,9 @@
 
 <input id="field-{{ $key }}"
        type="{{ $type ?: 'text' }}"
-       name="{{ $key }}"
+       name="{{ $name ?: $key }}"
        value="{{ $value }}"
-       class="form-control">
+       class="form-control"
+       @if ($required) required="required" @endif
+>
 

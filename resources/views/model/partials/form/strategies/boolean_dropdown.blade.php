@@ -1,0 +1,29 @@
+
+<select id="field-{{ $key }}"
+        name="{{ $name ?: $key }}"
+        class="form-control"
+>
+    <option value=""
+            @if (null === $value)
+            selected="selected"
+            @endif
+    ></option>
+
+    <?php
+        $selectOptions = [
+            1 => cms_trans('common.boolean.true'),
+            0 => cms_trans('common.boolean.false'),
+        ];
+    ?>
+
+    @foreach ($selectOptions as $selectKey => $display)
+
+        <option value="{{ $selectKey }}"
+                @if (null !== $value && $value == $selectKey)
+                selected="selected"
+                @endif
+        >
+            {{ $display }}
+        </option>
+    @endforeach
+</select>
