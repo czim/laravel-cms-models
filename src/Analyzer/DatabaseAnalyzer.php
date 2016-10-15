@@ -29,7 +29,7 @@ class DatabaseAnalyzer implements DatabaseAnalyzerInterface
                 'length'   => $this->getColumnLengthFromType($column->Type),
                 'values'   => $this->getEnumValuesFromType($column->Type),
                 'unsigned' => $this->getColumnIsNullableFromType($column->Type),
-                'nullable' => ! preg_match('#^\s*no\s*$#', $column->Null),
+                'nullable' => ! preg_match('#^\s*no\s*$#i', $column->Null),
             ];
         }
 
