@@ -35,7 +35,7 @@ class ModelFormFieldsetData extends AbstractDataObject implements
     ];
 
     /**
-     * Returns display label for the tab lip.
+     * Returns display label for the legend.
      *
      * @return string|null
      */

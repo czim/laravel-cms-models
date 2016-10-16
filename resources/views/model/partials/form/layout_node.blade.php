@@ -3,7 +3,6 @@
 
     @if (array_key_exists($node, $model->form->fields))
 
-
         @include('cms-models::model.partials.form.field_strategy', array_merge(
             compact(
                 'record',

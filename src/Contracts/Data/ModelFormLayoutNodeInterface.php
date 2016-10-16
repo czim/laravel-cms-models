@@ -7,6 +7,13 @@ interface ModelFormLayoutNodeInterface extends DataObjectInterface
 {
 
     /**
+     * Returns display label.
+     *
+     * @return string|null
+     */
+    public function display();
+
+    /**
      * Returns the type of layout node.
      *
      * @return string

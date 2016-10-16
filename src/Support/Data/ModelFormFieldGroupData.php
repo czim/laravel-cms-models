@@ -32,6 +32,20 @@ class ModelFormFieldGroupData extends AbstractDataObject implements ModelFormLay
     ];
 
     /**
+     * Returns display label.
+     *
+     * @return string|null
+     */
+    public function display()
+    {
+        if ($this->label_translated) {
+            return cms_trans($this->label_translated);
+        }
+
+        return $this->label;
+    }
+
+    /**
      * Returns the type of layout node.
      *
      * @return string

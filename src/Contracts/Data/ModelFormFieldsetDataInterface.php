@@ -5,7 +5,7 @@ interface ModelFormFieldsetDataInterface extends ModelFormLayoutNodeInterface
 {
 
     /**
-     * Returns display label for the fieldset.
+     * Returns display label for the legend.
      *
      * @return string
      */
