@@ -280,4 +280,23 @@ return [
         'edit'   => 'cms-models::model.edit',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Notification & Flash Messages
+    |--------------------------------------------------------------------------
+    |
+    | Settings for handling notifications and flash messages for model updates.
+    |
+    */
+
+    'notifications' => [
+
+        // Whether to flash for specific types of updates
+        'flash' => [
+            'position' => true,
+            'activate' => true,
+        ],
+
+    ],
+
 ];

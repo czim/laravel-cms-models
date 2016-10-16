@@ -1,6 +1,7 @@
 <?php
 namespace Czim\CmsModels\Http\Controllers;
 
+use Czim\CmsCore\Support\Enums\FlashLevel;
 use Czim\CmsModels\Http\Requests\ActivateRequest;
 use Czim\CmsModels\Http\Requests\ModelCreateRequest;
 use Czim\CmsModels\Http\Requests\ModelUpdateRequest;
@@ -140,6 +141,14 @@ class DefaultModelController extends BaseModelController
                 ]);
         }
 
+        cms_flash(
+            cms_trans(
+                'models.store.success-message-create',
+                [ 'record' => $this->getSimpleRecordReference($record->getKey(), $record) ]
+            ),
+            FlashLevel::SUCCESS
+        );
+
         if ($request->input(static::SAVE_AND_CLOSE_KEY)) {
             return redirect()->route("{$this->routePrefix}.index");
         }
@@ -198,6 +207,14 @@ class DefaultModelController extends BaseModelController
                 ]);
         }
 
+        cms_flash(
+            cms_trans(
+                'models.store.success-message-edit',
+                [ 'record' => $this->getSimpleRecordReference($id, $record) ]
+            ),
+            FlashLevel::SUCCESS
+        );
+
         if ($request->input(static::SAVE_AND_CLOSE_KEY)) {
             return redirect()->route("{$this->routePrefix}.index");
         }
@@ -234,7 +251,13 @@ class DefaultModelController extends BaseModelController
             ]);
         }
 
-        // todo flash
+        cms_flash(
+            cms_trans(
+                'models.delete.success-message',
+                [ 'record' => $this->getSimpleRecordReference($id, $record) ]
+            ),
+            FlashLevel::SUCCESS
+        );
 
         return redirect()->back();
     }
@@ -296,8 +319,14 @@ class DefaultModelController extends BaseModelController
             return response()->json([ 'success' => $success, 'active' => $result ]);
         }
 
-        if ($success) {
-            // todo flash
+        if ($success && config('cms-models.notifications.flash.activate')) {
+            cms_flash(
+                cms_trans(
+                    'models.store.success-message-' . ($result ? 'activate' : 'deactivate'),
+                    [ 'record' => $this->getSimpleRecordReference($id, $record) ]
+                ),
+                FlashLevel::SUCCESS
+            );
         }
 
         return redirect()->back();
@@ -321,12 +350,18 @@ class DefaultModelController extends BaseModelController
             $result  = $this->changeModelOrderablePosition($record, $request->get('position'));
         }
 
-        if (request()->ajax()) {
-            return response()->json([ 'success' => $success, 'position' => $result ]);
+        if ($success && config('cms-models.notifications.flash.position')) {
+            cms_flash(
+                cms_trans(
+                    'models.store.success-message-position',
+                    [ 'record' => $this->getSimpleRecordReference($id, $record) ]
+                ),
+                FlashLevel::SUCCESS
+            );
         }
 
-        if ($success) {
-            // todo flash
+        if (request()->ajax()) {
+            return response()->json([ 'success' => $success, 'position' => $result ]);
         }
 
         return redirect()->back();
@@ -433,6 +468,19 @@ class DefaultModelController extends BaseModelController
         }
 
         return redirect()->back();
+    }
+
+    /**
+     * Returns a simple reference.
+     *
+     * @param mixed      $key
+     * @param Model|null $record
+     * @return string
+     */
+    protected function getSimpleRecordReference($key, Model $record = null)
+    {
+        return ucfirst($this->modelInformation->label())
+             . ' #' . $key;
     }
 
 }
