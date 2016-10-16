@@ -17,14 +17,15 @@ abstract class AbstractDefaultStrategy Extends AbstractFormFieldDisplayStrategy
         $type = $this->field->type ?: array_get($this->field->options(), 'type', 'text');
 
         return view($this->getView(), [
-            'record'   => $this->model,
-            'key'      => $this->field->key(),
-            'name'     => $this->getFormFieldName($locale),
-            'value'    => old($this->field->key(), $value),
-            'type'     => $type,
-            'errors'   => $errors,
-            'required' => $this->field->required(),
-            'options'  => $this->field->options(),
+            'record'     => $this->model,
+            'key'        => $this->field->key(),
+            'name'       => $this->getFormFieldName($locale),
+            'value'      => old($this->field->key(), $value),
+            'type'       => $type,
+            'errors'     => $errors,
+            'required'   => $this->field->required(),
+            'options'    => $this->field->options(),
+            'translated' => $this->field->translated(),
         ]);
     }
 
