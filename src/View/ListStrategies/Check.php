@@ -17,10 +17,10 @@ class Check extends AbstractListDisplayStrategy
     public function render(Model $model, $source)
     {
         if ($this->interpretAsBoolean($source)) {
-            return '<i class="fa fa-check text-success"></i>';
+            return '<i class="fa fa-check text-success" title="' . cms_trans('common.boolean.true') . '"></i>';
         }
 
-        return '<i class="fa fa-times text-danger"></i>';
+        return '<i class="fa fa-times text-danger" title="' . cms_trans('common.boolean.false') . '"></i>';
     }
 
     /**
