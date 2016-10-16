@@ -105,17 +105,24 @@ class DefaultModelController extends BaseModelController
      */
     public function create()
     {
-        $class = $this->getModelInformation()->modelClass();
+        $record = $this->getNewModelInstance();
 
-        $fieldKeys = $this->getRelevantFormFieldKeys();
+        $fields = array_only(
+            $this->modelInformation->form->fields,
+            $this->getRelevantFormFieldKeys()
+        );
+
+        $values = $this->getFormFieldValuesFromModel($record, array_keys($fields));
 
         return view(config('cms-models.views.edit'), [
             'moduleKey'        => $this->moduleKey,
             'routePrefix'      => $this->routePrefix,
             'permissionPrefix' => $this->permissionPrefix,
             'model'            => $this->modelInformation,
-            'record'           => new $class,
+            'record'           => $record,
             'creating'         => true,
+            'fields'           => $fields,
+            'values'           => $values,
         ]);
     }
 
