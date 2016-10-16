@@ -99,13 +99,25 @@
 
     </form>
 
-
-    <style>
-
-        .edit-button-row {
-            margin-top: 2em;
-        }
-
-    </style>
-
 @endsection
+
+@push('javascript-end')
+
+    <script>
+        $(function () {
+            $('.translated-form-field-locale-option > a').click(function () {
+
+                var locale = $(this).attr('data-locale');
+
+                var activeButtons = $('.translated-form-field-locale-select > button');
+                activeButtons.find('img').attr('src', $(this).attr('data-asset'));
+
+                $('.translated-form-field-locale-option').show();
+                $('.translated-form-field-locale-option[data-locale=' + locale + ']').hide();
+
+                $('.translated-form-field-wrapper').hide();
+                $('.translated-form-field-wrapper[data-locale=' + locale + ']').show();
+            });
+        });
+    </script>
+@endpush
