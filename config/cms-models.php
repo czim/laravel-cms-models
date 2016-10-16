@@ -189,6 +189,9 @@ return [
             'aliases' => [
                 Czim\CmsModels\Support\Enums\ListDisplayStrategy::CHECK              => 'Check',
                 Czim\CmsModels\Support\Enums\ListDisplayStrategy::CHECK_NULLABLE     => 'CheckNullable',
+                Czim\CmsModels\Support\Enums\ListDisplayStrategy::DATE               => 'Date',
+                Czim\CmsModels\Support\Enums\ListDisplayStrategy::TIME               => 'Time',
+                Czim\CmsModels\Support\Enums\ListDisplayStrategy::DATETIME           => 'DateTime',
                 Czim\CmsModels\Support\Enums\ListDisplayStrategy::STAPLER_THUMBNAIL  => 'StaplerImage',
                 Czim\CmsModels\Support\Enums\ListDisplayStrategy::STAPLER_FILENAME   => 'StaplerFile',
                 Czim\CmsModels\Support\Enums\ListDisplayStrategy::RELATION_COUNT     => 'RelationCount',

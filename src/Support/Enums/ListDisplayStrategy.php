@@ -8,6 +8,11 @@ class ListDisplayStrategy extends Enum
     const CHECK          = 'check';
     const CHECK_NULLABLE = 'check-nullable';
 
+    const DATE     = 'date';
+    const TIME     = 'time';
+    const DATETIME = 'datetime';
+
+
     const STAPLER_FILENAME  = 'stapler-filename';
     const STAPLER_THUMBNAIL = 'stapler-thumbnail';
 
