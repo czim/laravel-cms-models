@@ -47,6 +47,15 @@ class AttributeStrategyResolver
                         break;
                 }
                 break;
+
+            // Special case: stapler file attachment
+            case 'stapler-attachment':
+                if ($data->type === 'image') {
+                    $type = ListDisplayStrategy::STAPLER_THUMBNAIL;
+                } else {
+                    $type = ListDisplayStrategy::STAPLER_FILENAME;
+                }
+                break;
         }
 
         return $type;
@@ -137,6 +146,15 @@ class AttributeStrategyResolver
             case 'array':
             case 'json':
                 $type = FormDisplayStrategy::TEXTAREA;
+                break;
+
+            // Special case: stapler file attachment
+            case 'stapler-attachment':
+                if ($data->type === 'image') {
+                    $type = FormDisplayStrategy::ATTACHMENT_STAPLER_IMAGE;
+                } else {
+                    $type = FormDisplayStrategy::ATTACHMENT_STAPLER_FILE;
+                }
                 break;
         }
 

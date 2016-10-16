@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Analyzer;
 
 use Czim\CmsModels\Support\Data\ModelRelationData;
 use Czim\CmsModels\Support\Enums\FormDisplayStrategy;
+use Czim\CmsModels\Support\Enums\ListDisplayStrategy;
 use Czim\CmsModels\Support\Enums\RelationFormStrategy;
 use Czim\CmsModels\Support\Enums\RelationType;
 
@@ -15,7 +16,7 @@ class RelationStrategyResolver
      * @param ModelRelationData $data
      * @return string|null
      */
-    public function determineListStrategy(ModelRelationData $data)
+    public function determineListDisplayStrategy(ModelRelationData $data)
     {
         switch ($data->type) {
 
@@ -23,12 +24,12 @@ class RelationStrategyResolver
             case RelationType::HAS_ONE:
             case RelationType::MORPH_ONE:
             case RelationType::BELONGS_TO_THROUGH:
-                return 'reference';
+                return ListDisplayStrategy::RELATION_REFERENCE;
 
             case RelationType::HAS_MANY:
             case RelationType::MORPH_MANY:
             case RelationType::BELONGS_TO_MANY:
-                return 'count';
+                return ListDisplayStrategy::RELATION_COUNT;
 
         }
 
@@ -72,11 +73,28 @@ class RelationStrategyResolver
      */
     public function determineFormStoreStrategy(ModelRelationData $data)
     {
+        $type       = null;
+        $parameters = [];
+
+        // Determine strategy alias
+        // todo
+
+
+        // Determine parameters
+
         if ($data->translated) {
-            return 'translated';
+            $parameters[] = 'translated';
         }
 
-        return null;
+        if ($data->nullable) {
+            $parameters[] = 'nullable';
+        }
+
+        if (count($parameters)) {
+            $type .= ':' . implode(',', $parameters);
+        }
+
+        return $type;
     }
 
 }

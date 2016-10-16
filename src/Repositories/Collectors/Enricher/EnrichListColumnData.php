@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Repositories\Collectors\Enricher;
 
 use Czim\CmsModels\Analyzer\AttributeStrategyResolver;
+use Czim\CmsModels\Analyzer\RelationStrategyResolver;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Data\ModelListColumnDataInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
@@ -19,11 +20,20 @@ class EnrichListColumnData extends AbstractEnricherStep
     protected $attributeStrategyResolver;
 
     /**
-     * @param AttributeStrategyResolver $attributeStrategyResolver
+     * @var RelationStrategyResolver
      */
-    public function __construct(AttributeStrategyResolver $attributeStrategyResolver)
-    {
+    protected $relationStrategyResolver;
+
+    /**
+     * @param AttributeStrategyResolver $attributeStrategyResolver
+     * @param RelationStrategyResolver  $relationStrategyResolver
+     */
+    public function __construct(
+        AttributeStrategyResolver $attributeStrategyResolver,
+        RelationStrategyResolver $relationStrategyResolver
+    ) {
         $this->attributeStrategyResolver = $attributeStrategyResolver;
+        $this->relationStrategyResolver  = $relationStrategyResolver;
     }
 
     /**
@@ -170,7 +180,7 @@ class EnrichListColumnData extends AbstractEnricherStep
     {
         return new ModelListColumnData([
             'source'         => $relation->method,
-            'strategy'       => $relation->strategy_list ?: $relation->strategy,
+            'strategy'       => $this->determineListDisplayStrategyForRelation($relation),
             'label'          => ucfirst(str_replace('_', ' ', snake_case($relation->method))),
             'sortable'       => false,
         ]);
@@ -183,6 +193,15 @@ class EnrichListColumnData extends AbstractEnricherStep
     protected function determineListDisplayStrategyForAttribute(ModelAttributeData $attribute)
     {
         return $this->attributeStrategyResolver->determineListDisplayStrategy($attribute);
+    }
+
+    /**
+     * @param ModelRelationData $relation
+     * @return null|string
+     */
+    protected function determineListDisplayStrategyForRelation(ModelRelationData $relation)
+    {
+        return $this->relationStrategyResolver->determineListDisplayStrategy($relation);
     }
 
 }

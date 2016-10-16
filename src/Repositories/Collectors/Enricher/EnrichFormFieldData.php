@@ -9,6 +9,7 @@ use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelFormFieldData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelRelationData;
+use Czim\CmsModels\Support\Enums\AttributeCast;
 use Czim\CmsModels\Support\Enums\RelationType;
 use UnexpectedValueException;
 
@@ -160,8 +161,7 @@ class EnrichFormFieldData extends AbstractEnricherStep
         // Exclude stapler fields other than the main field
         if (preg_match('#^(?<field>[^_]+)_(file_name|file_size|content_type|updated_at)$#', $attribute->name, $matches)) {
             if (array_has($info->attributes, $matches['field'])) {
-                $strategy = $info->attributes[ $matches['field'] ]->strategy_form ?: $info->attributes[ $matches['field'] ]->strategy;
-                return ! in_array($strategy, $this->getStaplerStrategies());
+                return $info->attributes[ $matches['field'] ]->cast !== AttributeCast::STAPLER_ATTACHMENT;
             }
         }
 

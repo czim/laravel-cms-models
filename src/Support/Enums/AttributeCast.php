@@ -12,4 +12,7 @@ class AttributeCast extends Enum
     const DATE       = 'date';
     const ARRAY_CAST = 'array';
     const JSON       = 'json';
+
+    // Special casts
+    const STAPLER_ATTACHMENT = 'stapler-attachment';
 }

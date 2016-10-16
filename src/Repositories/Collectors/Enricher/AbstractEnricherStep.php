@@ -5,6 +5,7 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\EnricherStepInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\Support\Enums\AttributeCast;
 use Czim\CmsModels\Support\Enums\AttributeFormStrategy;
 use Illuminate\Database\Eloquent\Model;
 
@@ -67,25 +68,11 @@ abstract class AbstractEnricherStep implements EnricherStepInterface
         // Hide stapler fields other than the main field
         if (preg_match('#^(?<field>[^_]+)_(file_name|file_size|content_type|updated_at)$#', $attribute->name, $matches)) {
             if (array_has($info->attributes, $matches['field'])) {
-                $strategy = $info->attributes[ $matches['field'] ]->strategy_list ?: $info->attributes[ $matches['field'] ]->strategy;
-                return ! in_array($strategy, $this->getStaplerStrategies());
+                return $info->attributes[ $matches['field'] ]->cast !== AttributeCast::STAPLER_ATTACHMENT;
             }
         }
 
         return true;
-    }
-
-    /**
-     * Returns (list) strategies that are associated with stapler fields.
-     *
-     * @return string[]
-     */
-    protected function getStaplerStrategies()
-    {
-        return [
-            AttributeFormStrategy::ATTACHMENT_STAPLER_IMAGE,
-            AttributeFormStrategy::ATTACHMENT_STAPLER_FILE,
-        ];
     }
 
 }

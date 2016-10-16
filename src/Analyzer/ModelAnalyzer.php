@@ -11,7 +11,6 @@ use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelRelationData;
 use Czim\CmsModels\Support\Data\ModelScopeData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
-use Czim\CmsModels\Support\Enums\AttributeFormStrategy;
 use Czim\CmsModels\Support\Enums\RelationType;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -178,15 +177,10 @@ class ModelAnalyzer
 
         foreach ($attachments as $key => $attachment) {
 
-            $strategy = $attachment->image
-                ?   AttributeFormStrategy::ATTACHMENT_STAPLER_IMAGE
-                :   AttributeFormStrategy::ATTACHMENT_STAPLER_FILE;
-
             $attribute = new ModelAttributeData([
                 'name'     => $key,
-                'cast'     => null,
-                'type'     => null,
-                'strategy' => $strategy,
+                'cast'     => AttributeCast::STAPLER_ATTACHMENT,
+                'type'     => $attachment->image ? 'image' : 'file',
             ]);
 
             $attributes = $this->insertInArray($attributes, $key, $attribute, $key . '_file_name');
