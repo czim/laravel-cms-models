@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Repositories\SortStrategies;
 
 use DB;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class NullLast extends AbstractSortStrategy
 {
@@ -18,6 +19,10 @@ class NullLast extends AbstractSortStrategy
     public function apply($query, $column, $direction = 'asc')
     {
         $direction = $direction === 'desc' ? 'desc' : 'asc';
+
+        if ($query instanceof Model) {
+            $query = $query->query();
+        }
 
         $supportsIf = $this->databaseSupportsIf($query);
 
