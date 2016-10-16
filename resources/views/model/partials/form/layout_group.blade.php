@@ -1,22 +1,35 @@
 
 <div id="field-group-{{ $key }}">
 
-    @foreach ($group->children as $nodeKey => $node)
+    <label for="field-{{ $key }}" class="col-sm-2">
+        {{ $group->display() }}
+    </label>
 
-        @include('cms-models::model.partials.form.layout_node', array_merge(
-            compact(
-                'node',
-                'nodeKey',
-                'record',
-                'model',
-                'values',
-                'errors'
-            ),
-            [
-                'parent' => $group,
-            ]
-        ))
+    <div class="col-sm-10 field-group-container">
 
-    @endforeach
+        @foreach ($group->children as $nodeKey => $node)
+
+            <div class="field-group-child">
+
+                @include('cms-models::model.partials.form.layout_node', array_merge(
+                    compact(
+                        'node',
+                        'nodeKey',
+                        'record',
+                        'model',
+                        'values',
+                        'errors'
+                    ),
+                    [
+                        'parent' => $group,
+                    ]
+                ))
+
+            </div>
+
+        @endforeach
+
+    </div>
 
 </div>
+

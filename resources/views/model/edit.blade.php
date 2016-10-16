@@ -36,9 +36,9 @@
     </div>
 
     @if ($creating)
-        <form method="post" action="{{ cms_route("{$routePrefix}.store") }}">
+        <form class="model-form" method="post" action="{{ cms_route("{$routePrefix}.store") }}">
     @else
-        <form method="post" action="{{ cms_route("{$routePrefix}.update", [ $record->getKey() ]) }}">
+        <form class="model-form" method="post" action="{{ cms_route("{$routePrefix}.update", [ $record->getKey() ]) }}">
             {{ method_field('put') }}
     @endif
             {{ csrf_field() }}
