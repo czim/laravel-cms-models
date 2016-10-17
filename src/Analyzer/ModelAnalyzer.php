@@ -194,7 +194,7 @@ class ModelAnalyzer
 
         foreach ($this->model->getCasts() as $attribute => $cast) {
             if ( ! isset($attributes[ $attribute ])) continue;
-            $attributes[ $attribute ]['cast'] = $cast;
+            $attributes[ $attribute ]['cast'] = $this->normalizeCastString($cast);
         }
 
 
@@ -315,6 +315,29 @@ class ModelAnalyzer
             default:
                 return $type;
         }
+    }
+
+    /**
+     * Normalizes a cast string to enum value if possible
+     *
+     * @param string $cast
+     * @return string
+     */
+    protected function normalizeCastString($cast)
+    {
+        switch ($cast) {
+
+            case 'boolean':
+                $cast = AttributeCast::BOOLEAN;
+                break;
+
+            case 'decimal':
+            case 'double':
+                $cast = AttributeCast::FLOAT;
+                break;
+        }
+
+        return $cast;
     }
 
     /**
