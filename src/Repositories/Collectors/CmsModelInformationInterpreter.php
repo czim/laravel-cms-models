@@ -29,7 +29,8 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
         $this->raw = $information;
 
         $this->interpretListData()
-             ->interpretFormData();
+             ->interpretFormData()
+             ->interpretValidationData();
 
         return $this->createInformationInstance();
     }
@@ -97,6 +98,20 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
             );
 
             $this->raw['form']['layout'] = array_get($this->raw['form'], 'layout', []);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function interpretValidationData()
+    {
+        if (array_has($this->raw, 'valiation') && is_array($this->raw['valiation'])) {
+
+            $this->raw['validation']['create'] = array_get($this->raw['valiation'], 'create');
+            $this->raw['validation']['update'] = array_get($this->raw['valiation'], 'update');
         }
 
         return $this;

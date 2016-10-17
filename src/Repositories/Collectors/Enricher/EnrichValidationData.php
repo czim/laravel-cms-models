@@ -100,13 +100,20 @@ class EnrichValidationData extends AbstractEnricherStep
 
         foreach ($rules as $key => $ruleParts) {
 
-            if (    ! is_string($ruleParts) || ! is_numeric($key)
-                ||  ! array_key_exists($ruleParts, $formRules)
-            ) {
+            // Enrich keys without values if possible
+            if (is_string($ruleParts) && is_numeric($key)) {
+                if (array_key_exists($ruleParts, $formRules)) {
+                    $enrichedRules[ $ruleParts ] = $formRules[ $ruleParts ];
+                }
                 continue;
             }
 
-            $enrichedRules[ $ruleParts ] = $formRules[ $ruleParts ];
+            // Copy full definitions as is, normalized to array values
+            if ( ! is_array($ruleParts)) {
+                $ruleParts = explode('|', $ruleParts);
+            }
+
+            $enrichedRules[ $key ] = $ruleParts;
         }
 
         return $enrichedRules;

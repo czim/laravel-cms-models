@@ -313,6 +313,16 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
             $this->original_model = $with->original_model;
         }
 
+        $withCreate = array_get($with->validation, 'create', []);
+        if (count($withCreate)) {
+            $this->validation['create'] = $withCreate;
+        }
+
+        $withUpdate = array_get($with->validation, 'update');
+        if ($withUpdate) {
+            $this->validation['update'] = $withUpdate;
+        }
+
         $this->mergeAttribute('meta', $with->meta);
         $this->mergeAttribute('verbose_name', $with->verbose_name);
         $this->mergeAttribute('verbose_name_plural', $with->verbose_name_plural);
