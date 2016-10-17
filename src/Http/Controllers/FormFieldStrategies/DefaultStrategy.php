@@ -1,7 +1,14 @@
 <?php
 namespace Czim\CmsModels\Http\Controllers\FormFieldStrategies;
 
+use Czim\CmsModels\Analyzer\AttributeValidationResolver;
+use Czim\CmsModels\Analyzer\RelationValidationResolver;
+use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
+use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
+use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
+use Czim\CmsModels\Support\Data\ModelFormFieldData;
+use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\View\Traits\ResolvesSourceStrategies;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
@@ -125,6 +132,54 @@ class DefaultStrategy implements FormFieldStoreStrategyInterface
     {
     }
 
+    /**
+     * Returns validation rules to use for submitted form data for this strategy.
+     *
+     * If the return array is associative, rules are expected nested per key,
+     * otherwise the rules will be added to the top level key.
+     *
+     * @param ModelFormFieldDataInterface|ModelFormFieldData|null $field
+     * @param ModelInformationInterface|ModelInformation|null     $modelInformation
+     * @return array|false      false if no validation should be performed.
+     */
+    public function validationRules(
+        ModelFormFieldDataInterface $field = null,
+        ModelInformationInterface $modelInformation = null
+    ) {
+        if ( ! $field || ! $modelInformation) {
+            return false;
+        }
+
+        $rules = false;
+
+        $key = $field->key();
+
+        if (array_key_exists($key, $modelInformation->attributes)) {
+
+            $rules = $this->getAttributeValidationResolver()->determineValidationRules(
+                $modelInformation->attributes[ $key ],
+                $field
+            );
+
+        } elseif (array_key_exists($key, $modelInformation->relations)) {
+
+            $rules = $this->getRelationValidationResolver()->determineValidationRules(
+                $modelInformation->relations[ $key ],
+                $field
+            );
+        }
+
+        // Translations are handled with locale-keyed associative arrays
+        if ($rules && $field->translated()) {
+            $rules = [
+                $key        => 'array',
+                $key . '.*' => $rules
+            ];
+        }
+
+        return $rules;
+    }
+
 
     /**
      * Adjusts or normalizes a value before storing it.
@@ -153,4 +208,36 @@ class DefaultStrategy implements FormFieldStoreStrategyInterface
         return in_array('nullable', $this->parameters);
     }
 
+    /**
+     * @param Model $model
+     * @return ModelInformation|false
+     */
+    protected function getModelInformation(Model $model)
+    {
+        return $this->getModelInformationRepository()->getByModel($model);
+    }
+
+    /**
+     * @return ModelInformationRepositoryInterface
+     */
+    protected function getModelInformationRepository()
+    {
+        return app(ModelInformationRepositoryInterface::class);
+    }
+
+    /**
+     * @return AttributeValidationResolver
+     */
+    protected function getAttributeValidationResolver()
+    {
+        return app(AttributeValidationResolver::class);
+    }
+
+    /**
+     * @return RelationValidationResolver
+     */
+    protected function getRelationValidationResolver()
+    {
+        return app(RelationValidationResolver::class);
+    }
 }

@@ -1,6 +1,8 @@
 <?php
 namespace Czim\CmsModels\Contracts\Http\Controllers;
 
+use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
+use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Illuminate\Database\Eloquent\Model;
 
 interface FormFieldStoreStrategyInterface
@@ -40,5 +42,20 @@ interface FormFieldStoreStrategyInterface
      * @param mixed $value
      */
     public function storeAfter(Model $model, $source, $value);
+
+    /**
+     * Returns validation rules to use for submitted form data for this strategy.
+     *
+     * If the return array is associative, rules are expected nested per key,
+     * otherwise the rules will be added to the top level key.
+     *
+     * @param ModelFormFieldDataInterface|null $field
+     * @param ModelInformationInterface|null   $modelInformation
+     * @return array|false      false if no validation should be performed.
+     */
+    public function validationRules(
+        ModelFormFieldDataInterface $field = null,
+        ModelInformationInterface $modelInformation = null
+    );
 
 }
