@@ -20,7 +20,7 @@ abstract class AbstractDefaultStrategy Extends AbstractFormFieldDisplayStrategy
             'record'     => $this->model,
             'key'        => $this->field->key(),
             'name'       => $this->getFormFieldName($locale),
-            'value'      => old($this->field->key(), $value),
+            'value'      => $value,
             'type'       => $type,
             'errors'     => $errors,
             'required'   => $this->field->required(),
