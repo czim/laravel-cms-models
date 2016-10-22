@@ -7,6 +7,8 @@ use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
 use Czim\CmsModels\Support\Data\ModelFormFieldData;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesFormStoreStrategies;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\MessageBag;
+use Illuminate\Support\ViewErrorBag;
 use UnexpectedValueException;
 
 trait HandlesFormFields
@@ -166,6 +168,38 @@ trait HandlesFormFields
         }
 
         return $success;
+    }
+
+    /**
+     * Returns associative array with form validation errors, keyed by field keys.
+     *
+     * This normalizes the errors to a nested structure that may be handled for display
+     * by form field strategies.
+     *
+     * @return array
+     */
+    protected function getNormalizedFormFieldErrors()
+    {
+        $viewBags = session('errors');
+
+        if ( ! ($viewBags instanceof ViewErrorBag) || ! count($viewBags)) {
+            return [];
+        }
+
+        /** @var MessageBag $errorBag */
+        $errorBag = head($viewBags->getBags());
+
+        if ( ! $errorBag->any()) {
+            return [];
+        }
+
+        $normalized = [];
+
+        foreach ($errorBag->toArray() as $field => $errors) {
+            array_set($normalized, $field, $errors);
+        }
+
+        return $normalized;
     }
 
 }
