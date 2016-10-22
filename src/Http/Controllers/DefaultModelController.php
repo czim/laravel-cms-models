@@ -123,6 +123,7 @@ class DefaultModelController extends BaseModelController
             'creating'         => true,
             'fields'           => $fields,
             'values'           => $values,
+            'fieldErrors'      => $this->getNormalizedFormFieldErrors(),
         ]);
     }
 
@@ -189,6 +190,7 @@ class DefaultModelController extends BaseModelController
             'creating'         => false,
             'fields'           => $fields,
             'values'           => $values,
+            'fieldErrors'      => $this->getNormalizedFormFieldErrors(),
         ]);
     }
 

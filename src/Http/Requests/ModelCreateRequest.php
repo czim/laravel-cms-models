@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Http\Requests;
 
-class ModelCreateRequest extends AbstractModelRequest
+class ModelCreateRequest extends AbstractModelFormRequest
 {
 
     /**

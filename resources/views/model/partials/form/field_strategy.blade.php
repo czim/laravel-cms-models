@@ -1,8 +1,9 @@
 
-<div class="form-group row">
+
+<div class="form-group row @if (array_has($errors, $key)) has-error @endif ">
 
     @if ( ! ($parent instanceof \Czim\CmsModels\Support\Data\ModelFormFieldGroupData))
-        <label for="field-{{ $key }}" class="col-sm-2">
+        <label for="field-{{ $key }}" class="control-label col-sm-2">
             {{ $field->label() }}
         </label>
     @endif

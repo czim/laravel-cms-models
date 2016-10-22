@@ -29,6 +29,24 @@
 @endsection
 
 
+{{-- Only show general errors at form top; the field errors are displayed in the field partial itself --}}
+@section('errors')
+
+    @if (isset($errors) && $errors->has('__general__'))
+
+        <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+
+            @foreach ($errors->get('__general__') as $err)
+                <p>{{ $err }}</p>
+            @endforeach
+
+        </div>
+    @endif
+
+@stop
+
+
 @section('content')
 
     <div class="page-header">
@@ -62,14 +80,17 @@
                     'permissionPrefix'
                 ))
 
-                @include('cms-models::model.partials.form.tab_panes', compact(
-                    'record',
-                    'model',
-                    'values',
-                    'errors',
-                    'tabs',
-                    'routePrefix',
-                    'permissionPrefix'
+                @include('cms-models::model.partials.form.tab_panes', array_merge(
+                    compact(
+                        'record',
+                        'model',
+                        'values',
+                        'fieldErrors',
+                        'tabs',
+                        'routePrefix',
+                        'permissionPrefix'
+                    ),
+                    [ 'errors' => $fieldErrors ]
                 ))
 
             </div>
@@ -84,10 +105,10 @@
                             'nodeKey',
                             'record',
                             'model',
-                            'values',
-                            'errors'
+                            'values'
                         ),
                         [
+                            'errors' => $fieldErrors,
                             'parent' => null,
                         ]
                     ))

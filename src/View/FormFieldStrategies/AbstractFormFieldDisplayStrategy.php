@@ -79,7 +79,11 @@ abstract class AbstractFormFieldDisplayStrategy implements FormFieldDisplayInter
         foreach ($locales as $locale) {
 
             /** @var View $view */
-            $view = $this->renderField($this->getValueForLocale($locale, $value), $errors, $locale);
+            $view = $this->renderField(
+                $this->getValueForLocale($locale, $value),
+                $this->getErrorsForLocale($locale, $errors),
+                $locale
+            );
 
             $rendered[ $locale ] = $view->render();
         }
@@ -109,6 +113,18 @@ abstract class AbstractFormFieldDisplayStrategy implements FormFieldDisplayInter
         }
 
         return array_get($value, $locale);
+    }
+
+    /**
+     * Returns relevant errors array for single locale.
+     *
+     * @param string $locale
+     * @param array  $errors
+     * @return mixed
+     */
+    protected function getErrorsForLocale($locale, array $errors)
+    {
+        return array_get($errors, $locale, []);
     }
 
     /**

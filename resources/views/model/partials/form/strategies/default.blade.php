@@ -7,3 +7,6 @@
        @if ($required && ! $translated) required="required" @endif
 >
 
+@include('cms-models::model.partials.form.field_errors', compact('key', 'errors'))
+
+

@@ -7,3 +7,4 @@
     @if ($required && ! $translated) required="required" @endif
 >{{ $value }}</textarea>
 
+@include('cms-models::model.partials.form.field_errors', compact('key', 'errors'))

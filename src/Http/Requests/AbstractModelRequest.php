@@ -24,15 +24,19 @@ abstract class AbstractModelRequest extends Request
     
 
     /**
-     * Validate the class instance.
-     *
-     * @return void
+     * @param \Illuminate\Contracts\Validation\Factory $factory
+     * @return mixed
      */
-    public function validate()
+    public function validator($factory)
     {
         $this->initializeForModelRoute();
 
-        parent::validate();
+        return $factory->make(
+            $this->validationData(),
+            $this->container->call([$this, 'rules']),
+            $this->messages(),
+            $this->attributes()
+        );
     }
 
     /**
@@ -69,6 +73,14 @@ abstract class AbstractModelRequest extends Request
         return $this;
     }
 
+
+    /**
+     * @return ModelInformationInterface|ModelInformation
+     */
+    protected function getModelInformation()
+    {
+        return $this->modelInformation;
+    }
 
     /**
      * @return RouteHelperInterface
