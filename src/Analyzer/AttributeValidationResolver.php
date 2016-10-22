@@ -78,8 +78,6 @@ class AttributeValidationResolver
                         $rules[] = 'string';
                         break;
                 }
-
-
                 break;
 
             case AttributeCast::DATE:

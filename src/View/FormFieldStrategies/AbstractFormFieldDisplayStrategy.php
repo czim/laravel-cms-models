@@ -98,7 +98,7 @@ abstract class AbstractFormFieldDisplayStrategy implements FormFieldDisplayInter
     }
 
     /**
-     * Returns relevant value for single locale
+     * Returns relevant value for single locale.
      *
      * @param string $locale
      * @param array  $value
