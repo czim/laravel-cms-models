@@ -12,12 +12,13 @@
 
         <?php
             $strategy = app(\Czim\CmsModels\Contracts\View\FormFieldStrategyInterface::class);
+            $value = old() ? old($key) : array_get($values, $key);
         ?>
 
         {!! $strategy->render(
             $record,
             $field,
-            old($key, array_get($values, $key)),
+            $value,
             array_get($errors, $key, [])
         ) !!}
     </div>
