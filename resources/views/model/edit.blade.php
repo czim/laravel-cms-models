@@ -77,7 +77,8 @@
                     'model',
                     'tabs',
                     'routePrefix',
-                    'permissionPrefix'
+                    'permissionPrefix',
+                    'errorsPerTab'
                 ))
 
                 @include('cms-models::model.partials.form.tab_panes', array_merge(
@@ -88,7 +89,8 @@
                         'fieldErrors',
                         'tabs',
                         'routePrefix',
-                        'permissionPrefix'
+                        'permissionPrefix',
+                        'errorsPerTab'
                     ),
                     [ 'errors' => $fieldErrors ]
                 ))
