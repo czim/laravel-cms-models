@@ -58,12 +58,12 @@ class DefaultModelController extends BaseModelController
 
         $this->applyFilter($query);
 
-        $records = $query->paginate(
-            $this->getActualPageSize(),
-            ['*'],
-            'page',
-            $this->getActualPage()
-        );
+        $records = $query->paginate($this->getActualPageSize(), ['*'], 'page', $this->getActualPage());
+
+        // Check and whether page is out of bounds and adjust
+        if ($this->getActualPage() > $records->lastPage()) {
+            $records = $query->paginate($this->getActualPageSize(), ['*'], 'page', $records->lastPage());
+        }
 
         return view(config('cms-models.views.index'), [
             'moduleKey'           => $this->moduleKey,
