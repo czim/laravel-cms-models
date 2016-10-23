@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Http\Controllers\Traits;
 
 use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelFormLayoutNodeInterface;
+use Czim\CmsModels\Contracts\Data\ModelFormTabDataInterface;
 use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
 use Czim\CmsModels\Support\Data\ModelFormFieldData;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesFormStoreStrategies;
@@ -200,6 +201,58 @@ trait HandlesFormFields
         }
 
         return $normalized;
+    }
+
+    /**
+     * Returns the error count keyed by tab pane keys.
+     *
+     * @return array
+     */
+    protected function getErrorCountsPerTabPane()
+    {
+        $normalizedErrorKeys = array_keys($this->getNormalizedFormFieldErrors());
+
+        if ( ! count($normalizedErrorKeys)) {
+            return [];
+        }
+
+        $errorCount = [];
+
+        foreach ($this->getModelInformation()->form->layout() as $key => $node) {
+
+            if ( ! ($node instanceof ModelFormTabDataInterface)) {
+                continue;
+            }
+
+            $fieldKeys = $this->getFieldKeysForTab($key);
+
+            $errorCount[ $key ] = count(array_intersect($normalizedErrorKeys, $fieldKeys));
+        }
+
+        return $errorCount;
+    }
+
+    /**
+     * Returns the form field keys that are descendants of a given tab pane.
+     *
+     * @param string $tab   key for a tab pane
+     * @return string[]
+     */
+    protected function getFieldKeysForTab($tab)
+    {
+        $layout = $this->getModelInformation()->form->layout();
+
+        if ( ! array_key_exists($tab, $layout)) {
+            return [];
+        }
+
+        $tabData = $layout[ $tab ];
+
+        if ( ! ($tabData instanceof ModelFormTabDataInterface)) {
+            return [];
+        }
+
+        return $tabData->descendantFieldKeys();
     }
 
 }

@@ -124,6 +124,7 @@ class DefaultModelController extends BaseModelController
             'fields'           => $fields,
             'values'           => $values,
             'fieldErrors'      => $this->getNormalizedFormFieldErrors(),
+            'errorsPerTab'     => $this->getErrorCountsPerTabPane(),
         ]);
     }
 
@@ -191,6 +192,7 @@ class DefaultModelController extends BaseModelController
             'fields'           => $fields,
             'values'           => $values,
             'fieldErrors'      => $this->getNormalizedFormFieldErrors(),
+            'errorsPerTab'     => $this->getErrorCountsPerTabPane(),
         ]);
     }
 
