@@ -1,10 +1,7 @@
 <?php
 namespace Czim\CmsModels\Contracts\Data;
 
-use ArrayAccess;
-use Illuminate\Contracts\Support\Arrayable;
-
-interface ModelFormTabDataInterface extends ArrayAccess, Arrayable
+interface ModelFormTabDataInterface extends ModelFormLayoutNodeInterface
 {
 
     /**

@@ -27,4 +27,11 @@ interface ModelFormLayoutNodeInterface extends DataObjectInterface
      */
     public function children();
 
+    /**
+     * Returns list of keys of form fields that are descendants of this tab.
+     *
+     * @return string[]
+     */
+    public function descendantFieldKeys();
+
 }

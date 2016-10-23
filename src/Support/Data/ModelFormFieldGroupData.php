@@ -1,9 +1,6 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\CmsCore\Support\Data\AbstractDataObject;
-use Czim\CmsModels\Contracts\Data\ModelFormLayoutNodeInterface;
-
 /**
  * Class ModelFormFieldGroupData
  *
@@ -14,10 +11,8 @@ use Czim\CmsModels\Contracts\Data\ModelFormLayoutNodeInterface;
  * @property string $label_translated
  * @property array|string[] $children
  */
-class ModelFormFieldGroupData extends AbstractDataObject implements ModelFormLayoutNodeInterface
+class ModelFormFieldGroupData extends AbstractModelFormLayoutNodeData
 {
-    protected $objects = [
-    ];
 
     protected $attributes = [
 
@@ -30,39 +25,5 @@ class ModelFormFieldGroupData extends AbstractDataObject implements ModelFormLay
         // Nested layout (field keys only at this level)
         'children' => [],
     ];
-
-    /**
-     * Returns display label.
-     *
-     * @return string|null
-     */
-    public function display()
-    {
-        if ($this->label_translated) {
-            return cms_trans($this->label_translated);
-        }
-
-        return $this->label;
-    }
-
-    /**
-     * Returns the type of layout node.
-     *
-     * @return string
-     */
-    public function type()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Returns nested nodes or field keys.
-     *
-     * @return string[]|ModelFormLayoutNodeInterface[]
-     */
-    public function children()
-    {
-        return $this->children;
-    }
 
 }
