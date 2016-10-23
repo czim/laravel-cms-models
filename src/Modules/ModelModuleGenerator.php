@@ -44,6 +44,12 @@ class ModelModuleGenerator implements ModuleGeneratorInterface
     {
         $modules = new Collection;
 
+        // Make meta module
+        $modules->push(
+            $this->makeMetaModuleInstance()
+        );
+
+        // Make model modules
         foreach ($this->repository->getAll() as $modelInformation) {
             $modules->push(
                 $this->makeModuleInstance($modelInformation)
@@ -53,6 +59,16 @@ class ModelModuleGenerator implements ModuleGeneratorInterface
         return $modules;
     }
 
+
+    /**
+     * Makes the model meta module.
+     *
+     * @return ModelMetaModule
+     */
+    protected function makeMetaModuleInstance()
+    {
+        return new ModelMetaModule;
+    }
 
     /**
      * Makes a model module instance for model information.

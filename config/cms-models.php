@@ -28,6 +28,11 @@ return [
         'prefix'      => 'model',
         'name-prefix' => 'models.',
 
+        'meta' => [
+            'prefix'      => 'models-meta',
+            'name-prefix' => 'models-meta.',
+        ],
+
         // Meta-information endpoint(s) for modelinformation
         'api' => [
             'meta' => [
@@ -132,8 +137,14 @@ return [
     */
 
     'controllers' => [
-        'web' => Czim\CmsModels\Http\Controllers\DefaultModelController::class,
-        'api' => Czim\CmsModels\Http\Controllers\Api\DefaultModelController::class,
+        'models' => [
+            'web' => Czim\CmsModels\Http\Controllers\DefaultModelController::class,
+            'api' => Czim\CmsModels\Http\Controllers\Api\DefaultModelController::class,
+        ],
+        'meta' => [
+            'web' => Czim\CmsModels\Http\Controllers\ModelMetaController::class,
+            'api' => Czim\CmsModels\Http\Controllers\Api\ModelMetaController::class,
+        ],
     ],
 
     /*

@@ -11,6 +11,7 @@ use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Illuminate\Routing\Router;
+use UnexpectedValueException;
 
 /**
  * Class ModelModule
@@ -395,7 +396,7 @@ class ModelModule implements ModuleInterface
     protected function getInformation()
     {
         if ( ! ($information = $this->repository->getByModelClass($this->class))) {
-            throw new \UnexpectedValueException("No model information found for {$this->class}");
+            throw new UnexpectedValueException("No model information found for {$this->class}");
         }
 
         return $information;
@@ -413,7 +414,7 @@ class ModelModule implements ModuleInterface
      */
     protected function getModelWebController()
     {
-        return $this->webController ?: config('cms-models.controllers.web');
+        return $this->webController ?: config('cms-models.controllers.models.web');
     }
 
     /**
@@ -423,7 +424,7 @@ class ModelModule implements ModuleInterface
      */
     protected function getModelApiController()
     {
-        return $this->apiController ?: config('cms-models.controllers.api');
+        return $this->apiController ?: config('cms-models.controllers.models.api');
     }
 
     /**
