@@ -9,8 +9,8 @@ interface ReferenceStrategyInterface
     /**
      * Returns model reference string
      *
-     * @param Model $model
-     * @param mixed $source
+     * @param Model  $model
+     * @param string $source
      * @return string
      */
     public function render(Model $model, $source);
