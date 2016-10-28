@@ -16,6 +16,8 @@ class Check extends AbstractListDisplayStrategy
      */
     public function render(Model $model, $source)
     {
+        $source = $this->resolveModelSource($model, $source);
+
         if ($this->interpretAsBoolean($source)) {
             return '<i class="fa fa-check text-success" title="' . cms_trans('common.boolean.true') . '"></i>';
         }

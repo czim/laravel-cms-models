@@ -17,6 +17,8 @@ class StaplerFile extends AbstractListDisplayStrategy
      */
     public function render(Model $model, $source)
     {
+        $source = $this->resolveModelSource($model, $source);
+
         if ( ! ($source instanceof Attachment)) {
             throw new UnexpectedValueException("Stapler strategy expects Attachment as source");
         }

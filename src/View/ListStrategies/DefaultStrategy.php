@@ -2,7 +2,6 @@
 namespace Czim\CmsModels\View\ListStrategies;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 
 /**
  * Class DefaultStrategy
@@ -22,7 +21,7 @@ class DefaultStrategy extends AbstractListDisplayStrategy
      */
     public function render(Model $model, $source)
     {
-        return $source;
+        return $this->resolveModelSource($model, $source);
     }
 
 

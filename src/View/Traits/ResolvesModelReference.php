@@ -7,23 +7,30 @@ use Illuminate\Database\Eloquent\Model;
 
 trait ResolvesModelReference
 {
-    use ResolvesSourceStrategies;
 
     /**
      * Returns the model reference as a string.
      *
-     * @param Model $model
+     * @param Model       $model
+     * @param string|null $strategy optional reference strategy that overrides default
+     * @param string|null $source   optional reference source that overrides default
      * @return string
      */
-    protected function getReferenceValue(Model $model)
+    protected function getReferenceValue(Model $model, $strategy = null, $source = null)
     {
-        $strategy = $this->makeReferenceStrategy($model);
+        if (null !== $strategy) {
+            $strategy = $this->makeReferenceStrategyInstance($strategy);
+        }
+
+        if ( ! $strategy) {
+            $strategy = $this->makeReferenceStrategy($model);
+        }
 
         if ( ! $strategy) {
             return $this->getReferenceFallback($model);
         }
 
-        $source = $this->getReferenceSource($model);
+        $source = $this->getReferenceSource($model, $source);
 
         return $strategy->render($model, $source);
     }
@@ -68,45 +75,61 @@ trait ResolvesModelReference
             $strategy = config('cms-models.strategies.reference.default-strategy');
         }
 
-        if ( ! $strategy) return null;
+        return $this->makeReferenceStrategyInstance($strategy);
+    }
 
+    /**
+     * @param string|null $strategy
+     * @return ReferenceStrategyInterface|null
+     */
+    protected function makeReferenceStrategyInstance($strategy)
+    {
+        if (null === $strategy) {
+            return  null;
+        }
 
         // If the strategy indicates the FQN of display strategy,
         // or a classname that can be found in the default strategy name path, use it.
-        if ($strategyClass = $this->resolveReferenceStrategyClass($strategy)) {
+        $strategyClass = $this->resolveReferenceStrategyClass($strategy);
 
-            /** @var ReferenceStrategyInterface $instance */
-            return app($strategyClass);
+        if ( ! $strategyClass) {
+            return null;
         }
 
-        return null;
+        /** @var  $instance */
+        return app($strategyClass);
     }
 
     /**
      * Returns the source to feed to the reference strategy.
      *
-     * @param Model $model
+     * @param Model       $model
+     * @param string|null $source
      * @return mixed
      */
-    protected function getReferenceSource(Model $model)
+    protected function getReferenceSource(Model $model, $source = null)
     {
-        // Get model information for the model
-        $information = $this->getInformationRepository()->getByModel($model);
+        if (null === $source) {
+            // Get model information for the model
+            $information = $this->getInformationRepository()->getByModel($model);
 
-        if ($information && $information->reference->source) {
-            $source = $information->reference->source;
-        } else {
+            if ($information && $information->reference->source) {
+                $source = $information->reference->source;
+            }
+        }
+
+        if ( ! $source) {
             $source = $model->getKeyName();
         }
 
-        return $this->resolveModelSource($model, $source);
+        return $source;
     }
 
     /**
      * Resolves strategy assuming it is the class name or FQN of a sort interface implementation,
      * or a configured alias.
      *
-     * @param $strategy
+     * @param string $strategy
      * @return string|false     returns full class namespace if it was resolved succesfully
      */
     protected function resolveReferenceStrategyClass($strategy)

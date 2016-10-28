@@ -3,7 +3,12 @@ namespace Czim\CmsModels\View\ReferenceStrategies;
 
 use Illuminate\Database\Eloquent\Model;
 
-class IdAndAttribute extends AbstractReferenceStrategy
+/**
+ * Class DefaultReference
+ *
+ * Very basic direct source display default.
+ */
+class DefaultReference extends AbstractReferenceStrategy
 {
 
     /**
@@ -15,9 +20,7 @@ class IdAndAttribute extends AbstractReferenceStrategy
      */
     public function render(Model $model, $source)
     {
-        $source = $this->resolveModelSource($model, $source);
-
-        return '#' . $model->getKey() . ': ' . $source;
+        return $this->resolveModelSource($model, $source);
     }
 
 }

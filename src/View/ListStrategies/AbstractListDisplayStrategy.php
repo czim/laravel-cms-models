@@ -7,10 +7,12 @@ use Czim\CmsModels\Contracts\View\ListDisplayInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelListColumnData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
+use Czim\CmsModels\View\Traits\ResolvesSourceStrategies;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class AbstractListDisplayStrategy implements ListDisplayInterface
 {
+    use ResolvesSourceStrategies;
 
     /**
      * @var ModelListColumnDataInterface|ModelListColumnData

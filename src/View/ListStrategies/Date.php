@@ -24,6 +24,8 @@ class Date extends AbstractListDisplayStrategy
      */
     public function render(Model $model, $source)
     {
+        $source = $this->resolveModelSource($model, $source);
+
         $date = $this->interpretAsDate($source);
 
         if ( ! $date) {

@@ -5,7 +5,6 @@ use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\View\ListDisplayInterface;
 use Czim\CmsModels\Contracts\View\ListStrategyInterface;
-use Czim\CmsModels\Contracts\View\ListStrategyResolverInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\View\Traits\ResolvesSourceStrategies;
 use Illuminate\Database\Eloquent\Model;
@@ -33,7 +32,6 @@ class ListStrategy implements ListStrategyInterface
     public function render(Model $model, $strategy, $source)
     {
         $strategyInstance = $this->displayStrategy($strategy);
-        $source           = $this->makeSource($model, $strategy, $source);
 
         return $strategyInstance->render($model, $source);
     }
@@ -108,35 +106,6 @@ class ListStrategy implements ListStrategyInterface
         $this->fellBackToDefault = true;
 
         return $this->getDefaultStrategy();
-    }
-
-    /**
-     * Makes a fully resolved source value to handle using strategies.
-     *
-     * @param Model  $model
-     * @param string $strategy
-     * @param string $source
-     * @return mixed
-     */
-    protected function makeSource(Model $model, $strategy, $source)
-    {
-        $source = $this->resolveModelSource($model, $source);
-
-        // If the strategy indicates a method to be called on the model itself, do so
-        if ($method = $this->parseAsModelMethodStrategyString($strategy, $model)) {
-            $source = $model->{$method}($model->{$source});
-        }
-
-        // If the strategy indicates an instantiable/callable 'class@method' combination
-        if ($data = $this->parseAsInstantiableClassMethodStrategyString($strategy)) {
-
-            $method   = $data['method'];
-            $instance = $data['instance'];
-
-            return $instance->{$method}($source);
-        }
-
-        return $source;
     }
 
     /**
