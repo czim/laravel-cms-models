@@ -27,10 +27,22 @@ trait ResolvesModelReference
         }
 
         if ( ! $strategy) {
-            return $this->getReferenceFallback($model);
+            $strategy = $this->getDefaultReferenceStrategyInstance();
         }
 
-        $source = $this->getReferenceSource($model, $source);
+        // If we have no strategy at all to fall back on, use a hard-coded reference
+        if ( ! $strategy) {
+            $this->getReferenceFallback($model);
+        }
+
+        if ( ! $source) {
+            $source = $this->getReferenceSource($model, $source);
+        }
+
+        // If we have no source to fall back on at all, use the model key
+        if ( ! $source) {
+            $source = $model->getKeyName();
+        }
 
         return $strategy->render($model, $source);
     }
@@ -85,7 +97,7 @@ trait ResolvesModelReference
     protected function makeReferenceStrategyInstance($strategy)
     {
         if (null === $strategy) {
-            return  null;
+            return null;
         }
 
         // If the strategy indicates the FQN of display strategy,
@@ -105,7 +117,7 @@ trait ResolvesModelReference
      *
      * @param Model       $model
      * @param string|null $source
-     * @return mixed
+     * @return string|null
      */
     protected function getReferenceSource(Model $model, $source = null)
     {
@@ -118,9 +130,7 @@ trait ResolvesModelReference
             }
         }
 
-        if ( ! $source) {
-            $source = $model->getKeyName();
-        }
+        if ( ! $source) return null;
 
         return $source;
     }
@@ -158,6 +168,18 @@ trait ResolvesModelReference
     protected function prefixReferenceStrategyNamespace($class)
     {
         return rtrim(config('cms-models.strategies.reference.default-namespace'), '\\') . '\\' . $class;
+    }
+
+    /**
+     * @return ReferenceStrategyInterface|null
+     */
+    protected function getDefaultReferenceStrategyInstance()
+    {
+        $class = config('cms-models.strategies.reference.default-strategy');
+
+        if ( ! $class) return null;
+
+        return new $class;
     }
 
     /**

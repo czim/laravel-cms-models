@@ -8,10 +8,9 @@ class ModelMetaReferenceRequest extends Request
     {
         return [
             'model'     => 'required|string',
+            'type'      => 'required|string',
+            'key'       => 'required|string',
             'search'    => 'string',
-            'target'    => 'string',
-            'reference' => 'string',
-            'strategy'  => 'string',
         ];
     }
 
