@@ -108,10 +108,13 @@ configure its `options` section for the following keys:
 - `source`: the source attribute(s) to pass on to the reference strategy,
 - `target`: the target attributes to use for searching, if a search term for autocomplete strategies is given.
     If no target is defined, the `source` attribute(s) are searched instead, if possible.
+- `context_strategy`: an extra optional context strategy FQN, classname or alias to modify the query for the references.
 
 For an example of a form field display strategy that makes use of this, see `Czim\CmsModels\View\FormFieldStrategies\ModelRelationSingleStrategy`.
 
+For more information on setting a `context_strategy`, see [Repository Context Strategies](STRATEGIES.md#repository-context-strategies).
      
+
 This is a fairly simple and inflexible setup that is intended mainly for simple autocomplete input fields.
 It uses the `Czim\CmsModels\Http\Controllers\ModelMetaController`'s `reference` action.
 
