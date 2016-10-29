@@ -12,13 +12,17 @@ trait GetsNestedRelations
 {
 
     /**
-     * Returns a (nested) relation to get counts for.
+     * Returns relation nested to any level for a dot notation source.
      *
-     * @param Model $model
-     * @param mixed $source
-     * @return mixed
+     * Note that actual relation resolution can only be done for singular nested relations
+     * (all the way down).
+     *
+     * @param Model  $model
+     * @param string $source
+     * @param bool   $actual    whether the relation should be returned for an actual model
+     * @return Relation|null
      */
-    protected function getRelation(Model $model, $source)
+    protected function getNestedRelation(Model $model, $source, $actual = false)
     {
         if ($source instanceof Relation) {
             return $source;
@@ -52,17 +56,34 @@ trait GetsNestedRelations
         // We can do nesting for translations, if we assume the current locale's translation
         // todo
 
-        if ( ! $this->isRelationSingle($relation)) {
+        if ($actual && ! $this->isRelationSingle($relation)) {
             throw new UnexpectedValueException(
-                'Model ' . get_class($model) . ".{$relationName} does not allow deeper nesting (not a to-one)"
+                'Model ' . get_class($model) . ".{$relationName} does not allow deeper nesting (not to-one)"
             );
         }
 
-        $model = $relation->first();
+        // Retrieve nested relation for actual or abstract context
+        if ($actual) {
+            $model = $relation->first();
+        } else {
+            $model = $relation->getRelated();
+        }
 
         if ( ! $model) return null;
 
-        return $this->getRelation($model, implode('.', $relationNames));
+        return $this->getNestedRelation($model, implode('.', $relationNames));
+    }
+
+    /**
+     * Returns a (nested) relation instance.
+     *
+     * @param Model $model
+     * @param mixed $source
+     * @return Relation|null
+     */
+    protected function getActualNestedRelation(Model $model, $source)
+    {
+        return $this->getNestedRelation($model, $source, true);
     }
 
     /**
