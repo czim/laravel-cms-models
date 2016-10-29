@@ -15,26 +15,40 @@ trait AppliesRepositoryContext
     /**
      * Applies criteria-based repository context strategies.
      *
+     * If repository or information are not given, they are read from standard
+     * methods: getModelRepository() and getModelInformation respectively.
+     *
+     * @param ModelRepositoryInterface|null                   $repository
+     * @param ModelInformationInterface|ModelInformation|null $information
      * @return $this
      */
-    protected function applyRepositoryContext()
-    {
-        $this->prepareRepositoryContextStrategy()
-             ->disableGlobalScopes()
-             ->applyIncludesToRepository();
+    protected function applyRepositoryContext(
+        ModelRepositoryInterface $repository = null,
+        ModelInformationInterface $information = null
+    ) {
+        $repository  = $repository  ?: call_user_func([ $this, 'getModelRepository' ]);
+        $information = $information ?: call_user_func([ $this, 'getModelInformation' ]);
+
+        $this->prepareRepositoryContextStrategy($repository, $information)
+             ->disableGlobalScopes($repository, $information)
+             ->applyIncludesToRepository($repository, $information);
 
         return $this;
     }
 
     /**
+     * @param ModelRepositoryInterface                   $repository
+     * @param ModelInformationInterface|ModelInformation $information
      * @return $this
      */
-    protected function prepareRepositoryContextStrategy()
-    {
-        if ($strategy = $this->getModelInformation()->meta->repository_strategy) {
+    protected function prepareRepositoryContextStrategy(
+        ModelRepositoryInterface $repository,
+        ModelInformationInterface $information
+    ) {
+        if ($strategy = $information->meta->repository_strategy) {
 
-            $this->getModelRepository()->pushCriteria(
-                new ContextStrategy($strategy, $this->getModelInformation())
+            $repository->pushCriteria(
+                new ContextStrategy($strategy, $information->meta->repository_strategy_parameters ?: [])
             );
         }
 
@@ -42,13 +56,17 @@ trait AppliesRepositoryContext
     }
 
     /**
+     * @param ModelRepositoryInterface                   $repository
+     * @param ModelInformationInterface|ModelInformation $information
      * @return $this
      */
-    protected function disableGlobalScopes()
-    {
-        if ($disableScopes = $this->getModelInformation()->meta->disable_global_scopes) {
+    protected function disableGlobalScopes(
+        ModelRepositoryInterface $repository,
+        ModelInformationInterface $information
+    ) {
+        if ($disableScopes = $information->meta->disable_global_scopes) {
 
-            $this->getModelRepository()->pushCriteria(
+            $repository->pushCriteria(
                 new DisableGlobalScopes($disableScopes)
             );
         }
@@ -57,17 +75,19 @@ trait AppliesRepositoryContext
     }
 
     /**
+     * @param ModelRepositoryInterface                   $repository
+     * @param ModelInformationInterface|ModelInformation $information
      * @return $this
      */
-    protected function applyIncludesToRepository()
-    {
-        $information = $this->getModelInformation();
-
+    protected function applyIncludesToRepository(
+        ModelRepositoryInterface $repository,
+        ModelInformationInterface $information
+    ) {
         $includes = array_get($information->includes, 'default', []);
 
         if (count($includes)) {
 
-            $this->getModelRepository()->pushCriteria(
+            $repository->pushCriteria(
                 new WithRelations(
                     $this->normalizeIncludesArray($includes)
                 ),
@@ -90,16 +110,5 @@ trait AppliesRepositoryContext
     {
         return $includes;
     }
-
-
-    /**
-     * @return ModelInformationInterface|ModelInformation
-     */
-    abstract protected function getModelInformation();
-
-    /**
-     * @return ModelRepositoryInterface
-     */
-    abstract protected function getModelRepository();
 
 }

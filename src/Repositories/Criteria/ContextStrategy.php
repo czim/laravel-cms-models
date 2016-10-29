@@ -1,8 +1,6 @@
 <?php
 namespace Czim\CmsModels\Repositories\Criteria;
 
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
-use Czim\CmsModels\Contracts\Repositories\ContextStrategyInterface;
 use Czim\CmsModels\View\Traits\ResolvesRepositoryContextStrategy;
 use Czim\Repository\Contracts\BaseRepositoryInterface;
 use Czim\Repository\Contracts\CriteriaInterface;
@@ -21,19 +19,21 @@ class ContextStrategy implements CriteriaInterface
     protected $strategy;
 
     /**
-     * @var ModelInformationInterface
+     * The parameters for the context strategy
+     *
+     * @var array
      */
-    protected $information;
+    protected $parameters;
 
 
     /**
-     * @param string                    $strategy context strategy
-     * @param ModelInformationInterface $information
+     * @param string $strategy      context strategy
+     * @param array  $parameters
      */
-    public function __construct($strategy, ModelInformationInterface $information)
+    public function __construct($strategy, array $parameters = [])
     {
-        $this->strategy    = $strategy;
-        $this->information = $information;
+        $this->strategy   = $strategy;
+        $this->parameters = $parameters;
     }
 
 
@@ -50,7 +50,7 @@ class ContextStrategy implements CriteriaInterface
             return $model;
         }
 
-        return $strategy->apply($model, $this->information);
+        return $strategy->apply($model, $this->parameters);
     }
 
 }

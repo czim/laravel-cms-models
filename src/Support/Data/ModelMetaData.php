@@ -13,6 +13,7 @@ use Czim\CmsModels\Contracts\Data\ModelMetaDataInterface;
  * @property string      $default_controller_method
  * @property string      $controller_api
  * @property string      $repository_strategy
+ * @property array       $repository_strategy_parameters
  * @property string|bool $disable_global_scopes
  * @property string[]    $form_requests
  * @property string[]    $views
@@ -33,6 +34,9 @@ class ModelMetaData extends AbstractDataObject implements ModelMetaDataInterface
 
         // The strategy to apply to the base repository query for listings & accessibility of models.
         'repository_strategy' => null,
+
+        // Optional parameters to pass along to the repository strategy instance.
+        'repository_strategy_parameters' => [],
 
         // Whether to disable all global scopes (boolean true) or a string with comma-separated global scopes to disable
         'disable_global_scopes' => null,
@@ -58,6 +62,10 @@ class ModelMetaData extends AbstractDataObject implements ModelMetaDataInterface
         $this->mergeAttribute('transformer', $with->transformer);
         $this->mergeAttribute('repository_strategy', $with->repository_strategy);
         $this->mergeAttribute('disable_global_scopes', $with->disable_global_scopes);
+
+        if ( ! empty($with->repository_strategy_parameters)) {
+            $this->repository_strategy_parameters = $with->repository_strategy_parameters;
+        }
 
         if ( ! empty($with->form_requests)) {
             $this->form_requests = array_merge($this->form_requests, $with->form_requests);
