@@ -34,7 +34,7 @@ class RelationReference extends AbstractListDisplayStrategy
     {
         // Get all related records, if possible
 
-        $relation = $this->getRelation($model, $source);
+        $relation = $this->getActualNestedRelation($model, $source);
 
         if ( ! $relation) {
             return $this->getEmptyReference();

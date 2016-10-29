@@ -22,7 +22,7 @@ class RelationCount extends AbstractListDisplayStrategy
     public function render(Model $model, $source)
     {
         $count = $this->getCount(
-            $this->getRelation($model, $source)
+            $this->getActualNestedRelation($model, $source)
         );
 
         if ( ! $count) {
