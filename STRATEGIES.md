@@ -71,7 +71,8 @@ Each strategy takes a `target` parameter, which determines what datase columns a
 The target may be:
 
 - a *string* with a model's attribute. This may be a direct attribute or a translated attribute.
-- a dot-notation *string* that represents an attribute on a related model. This may be nested to any depth. (ex.: `author.name`, `post.comments.author.name`).
+- a dot-notation *string* that represents an attribute on a related model. 
+This may be nested to any depth. (ex.: `author.name`, `post.comments.author.name`).
 - a *string* value of `'*'`, which translates to all relevant attributes of the model.
 - a *string* with any combination of the above, comma-separated. (ex.: `title,author.name`)
 - an *array* with any of the above.
@@ -84,6 +85,42 @@ When combining muliple targets, by default the **or** boolean combination operat
 ## Form strategies
 
 Form strategies determine how form fields are rendered on the edit page, and also how the form fields are stored for the model.
+
+### Form display strategies
+
+### Form store strategies
+
+### Using references to other models
+
+For some form display strategies, mainly those for managing relations, it may be necessary to allow the user to search for
+and choose from intelligible references to other models.
+
+When referencing models that are part of the CMS (ie. that have been configured to have their own model module), the target model's configuration is used. 
+Its configured reference setup will be used to format the references returned to be rendered in the view (in a select dropdown or autocomplete field, for instance).
+
+For models that are not part of the CMS, only the model keys will be shown as references. 
+Use `strategy` and `source` values in the form field's `options` to configure references as required, as explained below.
+
+In the `form.fields` section for the field for which a reference should configured, 
+configure its `options` section for the following keys:
+  
+- `strategy`: the reference strategy FQN, classname or alias to use,
+- `source`: the source attribute(s) to pass on to the reference strategy,
+- `target`: the target attributes to use for searching, if a search term for autocomplete strategies is given.
+    If no target is defined, the `source` attribute(s) are searched instead, if possible.
+
+For an example of a form field display strategy that makes use of this, see `Czim\CmsModels\View\FormFieldStrategies\ModelRelationSingleStrategy`.
+
+     
+This is a fairly simple and inflexible setup that is intended mainly for simple autocomplete input fields.
+It uses the `Czim\CmsModels\Http\Controllers\ModelMetaController`'s `reference` action.
+
+To prevent security issues, this expects as parameters the form field's parent model classname and an indication of where to
+find the necessary reference setup in that model's configuration data (usually a field's key in the `form.fields` array).
+This way, users can only access references configured explicitly in the CMS, and according to the permissions related to the
+CMS model for which the references need to be accessed. 
+It's advisable to keep this in mind when rolling your own reference setup.
+
 
 ### Target
 
