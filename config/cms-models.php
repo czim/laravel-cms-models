@@ -175,10 +175,11 @@ return [
 
             // The default namespace to prefix for relative strategy class names
             'default-namespace' => 'Czim\\CmsModels\\View\\ReferenceStrategies\\',
-            'default-strategy'  => null,
+            'default-strategy'  => Czim\CmsModels\View\ReferenceStrategies\DefaultReference::class,
 
             // Aliases for reference display strategy classes
             'aliases' => [
+                'default' => Czim\CmsModels\View\ReferenceStrategies\DefaultReference::class,
             ],
         ],
 
