@@ -11,6 +11,7 @@ use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInt
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationInterpreterInterface;
 use Czim\CmsModels\Contracts\Repositories\CurrentModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
+use Czim\CmsModels\Contracts\Repositories\ModelReferenceRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\OrderableStrategyResolverInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
@@ -24,6 +25,7 @@ use Czim\CmsModels\Repositories\Collectors\CmsModelInformationInterpreter;
 use Czim\CmsModels\Repositories\Collectors\ModelInformationEnricher;
 use Czim\CmsModels\Repositories\CurrentModelInformation;
 use Czim\CmsModels\Repositories\ModelInformationRepository;
+use Czim\CmsModels\Repositories\ModelReferenceRepository;
 use Czim\CmsModels\Repositories\ModelRepository;
 use Czim\CmsModels\Repositories\ActivateStrategies\ActivateStrategyResolver;
 use Czim\CmsModels\Repositories\OrderableStrategies\OrderableStrategyResolver;
@@ -118,6 +120,7 @@ class CmsModelsServiceProvider extends ServiceProvider
     protected function registerInterfaceBindings()
     {
         $this->app->singleton(ModelRepositoryInterface::class, ModelRepository::class);
+        $this->app->singleton(ModelReferenceRepositoryInterface::class, ModelReferenceRepository::class);
 
         $this->registerHelperInterfaceBindings()
              ->registerModelInformationInterfaceBindings()
