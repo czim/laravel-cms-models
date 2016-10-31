@@ -1,20 +1,19 @@
 <?php
 namespace Czim\CmsModels\Http\Controllers;
 
+use Czim\CmsCore\Contracts\Auth\AuthenticatorInterface;
+use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
-use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
-use Czim\CmsModels\Http\Controllers\Traits\AppliesRepositoryContext;
+use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
+use Czim\CmsModels\Contracts\Repositories\ModelReferenceRepositoryInterface;
+use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
 use Czim\CmsModels\Http\Requests\ModelMetaReferenceRequest;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\Strategies\ModelMetaReference;
 use Czim\CmsModels\View\Traits\GetsNestedRelations;
-use Czim\CmsModels\View\Traits\ModifiesQueryForContext;
-use Czim\CmsModels\View\Traits\ResolvesModelReference;
 use Czim\CmsModels\View\Traits\ResolvesSourceStrategies;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use InvalidArgumentException;
 use UnexpectedValueException;
 
 /**
@@ -24,11 +23,34 @@ use UnexpectedValueException;
  */
 class ModelMetaController extends Controller
 {
-    use AppliesRepositoryContext,
-        GetsNestedRelations,
-        ModifiesQueryForContext,
-        ResolvesModelReference,
-        ResolvesSourceStrategies;
+    use ResolvesSourceStrategies,
+        GetsNestedRelations;
+
+
+    /**
+     * @var ModelReferenceRepositoryInterface
+     */
+    protected $referenceRepository;
+
+
+    /**
+     * @param CoreInterface                       $core
+     * @param AuthenticatorInterface              $auth
+     * @param RouteHelperInterface                $routeHelper
+     * @param ModelInformationRepositoryInterface $infoRepository
+     * @param ModelReferenceRepositoryInterface   $referenceRepository
+     */
+    public function __construct(
+        CoreInterface $core,
+        AuthenticatorInterface $auth,
+        RouteHelperInterface $routeHelper,
+        ModelInformationRepositoryInterface $infoRepository,
+        ModelReferenceRepositoryInterface $referenceRepository
+    ) {
+        parent::__construct($core, $auth, $routeHelper, $infoRepository);
+
+        $this->referenceRepository = $referenceRepository;
+    }
 
 
     /**
@@ -54,49 +76,12 @@ class ModelMetaController extends Controller
             abort(404, "Could not determine reference for {$modelClass} (type: {$type}, key: {$key})");
         }
 
-        // If the targeted model is a CMS model, we can default back to its reference data
-        // if not specifics are given, otherwise, a custom fallback reference must be used.
-        if ($info = $this->getCmsModelInformation($referenceData->model)) {
+        $references = $this->referenceRepository->getReferencesForModelMetaReference(
+            $referenceData,
+            $request->input('search')
+        );
 
-            // Get model records, filtered as necessary
-            $repository = $this->getModelRepositoryForInformation($info);
-
-            /** @var Model[] $models */
-            $query = $repository->query();
-
-            // todo: apply search term
-
-        } else {
-            // The model is not part of the CMS
-
-            $query = $this->getQueryBuilderForModelClass($referenceData->model);
-
-            // todo: apply search term
-        }
-
-        // If set, apply an (extra) contextual modification to the query builder
-        if ($referenceData->context_strategy) {
-            $this->applyContextStrategyToQueryBuilder(
-                $query,
-                $referenceData->context_strategy,
-                $referenceData->parameters
-            );
-        }
-
-
-        $models = $query->get();
-
-        // Get references for query results, keyed by primary key
-        $references = [];
-
-        foreach ($models as $model) {
-
-            $references[ $model->getKey() ] = $this->getReferenceValue(
-                $model,
-                $referenceData->strategy,
-                $referenceData->source
-            );
-        }
+        $references = $this->formatReferenceOutput($references);
 
         if ($request->ajax()) {
             return response()->json($references);
@@ -107,38 +92,22 @@ class ModelMetaController extends Controller
     }
 
     /**
-     * Returns a query builder instance for a given model class.
+     * Formats the references key-value pairs for output.
      *
-     * @param string $modelClass
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param array $references
+     * @return array    not associative, with key, reference pair arrays for each model
      */
-    protected function getQueryBuilderForModelClass($modelClass)
+    protected function formatReferenceOutput(array $references)
     {
-        if ( ! is_a($modelClass, Model::class, true)) {
-            throw new UnexpectedValueException("{$modelClass} is not an Eloquent model");
-        }
-
-        /** @var Model $model */
-        $model = new $modelClass;
-
-        return $model->query();
+        return array_map(
+            function($key, $reference) {
+                return compact('key', 'reference');
+            },
+            array_keys($references),
+            $references
+        );
     }
 
-    /**
-     * Applies a context strategy to a model query builder.
-     *
-     * @param Builder     $query
-     * @param string|null $strategy
-     * @param array       $parameters
-     */
-    protected function applyContextStrategyToQueryBuilder($query, $strategy, array $parameters = [])
-    {
-        $strategy = $this->resolveContextStrategy($strategy);
-
-        if ( ! $strategy) return;
-
-        $strategy->apply($query, $parameters);
-    }
 
     /**
      * @param $modelClass
@@ -196,6 +165,7 @@ class ModelMetaController extends Controller
             'target'           => array_get($data->options(), 'target'),
             'context_strategy' => array_get($data->options(), 'context_strategy'),
             'parameters'       => array_get($data->options(), 'parameters', []),
+            'sort_direction'   => array_get($data->options(), 'sort_direction'),
         ]);
     }
 
@@ -232,41 +202,11 @@ class ModelMetaController extends Controller
      * Returns model information for model class, if available.
      *
      * @param string $class
-     * @return ModelInformation|false
+     * @return ModelInformationInterface|ModelInformation|false
      */
     protected function getCmsModelInformation($class)
     {
         return $this->infoRepository->getByModelClass($class);
-    }
-
-    /**
-     * Returns an Eloquent model instance for a model class.
-     *
-     * @param string $class
-     * @return Model
-     */
-    protected function getModelInstance($class)
-    {
-        if ( ! class_exists($class) || ! is_a($class, Model::class, true)) {
-            throw new InvalidArgumentException("{$class} is not an Eloquent model");
-        }
-
-        return new $class;
-    }
-
-    /**
-     * Returns instance of a model repository for given model information.
-     *
-     * @param ModelInformationInterface $information
-     * @return ModelRepositoryInterface
-     */
-    protected function getModelRepositoryForInformation(ModelInformationInterface $information)
-    {
-        $modelRepository = app(ModelRepositoryInterface::class, [ $information->modelClass() ]);
-
-        $this->applyRepositoryContext($modelRepository, $information);
-
-        return $modelRepository;
     }
 
 }
