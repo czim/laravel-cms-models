@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Http\Controllers\FormFieldStrategies;
 
-class BooleanStrategy extends DefaultStrategy
+class BooleanStrategy extends AbstractFormFieldStoreStrategy
 {
 
     /**
