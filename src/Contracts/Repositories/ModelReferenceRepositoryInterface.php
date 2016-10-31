@@ -18,6 +18,24 @@ interface ModelReferenceRepositoryInterface
     public function getReferenceForModel(Model $model, $strategy, $source);
 
     /**
+     * Returns a reference for a model class, by meta reference data.
+     *
+     * @param ModelMetaReferenceInterface $referenceData
+     * @param                             $key
+     * @return string|false     false if the model could not be found
+     */
+    public function getReferenceForModelMetaReferenceByKey(ModelMetaReferenceInterface $referenceData, $key);
+
+    /**
+     * Returns a reference for a model instance, by meta reference data.
+     *
+     * @param ModelMetaReferenceInterface $referenceData
+     * @param Model                       $model
+     * @return string|false     false if the model could not be found
+     */
+    public function getReferenceForModelMetaReferenceByModel(ModelMetaReferenceInterface $referenceData, Model $model);
+
+    /**
      * Returns references for models by meta reference data, keyed by the model keys.
      *
      * @param ModelMetaReferenceInterface $referenceData

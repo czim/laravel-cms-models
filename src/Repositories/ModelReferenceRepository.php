@@ -53,7 +53,7 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
     }
 
     /**
-     * Returns a reference for a model, by meta reference data.
+     * Returns a reference for a model class, by meta reference data.
      *
      * @param ModelMetaReferenceInterface $referenceData
      * @param                             $key
@@ -68,6 +68,18 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
 
         if ( ! $model) return false;
 
+        return $this->getReferenceForModelMetaReferenceByModel($referenceData, $model);
+    }
+
+    /**
+     * Returns a reference for a model instance, by meta reference data.
+     *
+     * @param ModelMetaReferenceInterface $referenceData
+     * @param Model                       $model
+     * @return string|false     false if the model could not be found
+     */
+    public function getReferenceForModelMetaReferenceByModel(ModelMetaReferenceInterface $referenceData, Model $model)
+    {
         return $this->getReferenceForModel($model, $referenceData->strategy(), $referenceData->source());
     }
 
