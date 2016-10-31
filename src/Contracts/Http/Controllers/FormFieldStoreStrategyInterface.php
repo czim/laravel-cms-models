@@ -9,6 +9,14 @@ interface FormFieldStoreStrategyInterface
 {
 
     /**
+     * Sets the relevant form field data to provide a context.
+     *
+     * @param ModelFormFieldDataInterface $data
+     * @return $this
+     */
+    public function setFormFieldData(ModelFormFieldDataInterface $data);
+
+    /**
      * Sets parameters to use for retrieving & storing.
      *
      * @param array $parameters

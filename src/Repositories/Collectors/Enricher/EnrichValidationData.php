@@ -138,6 +138,7 @@ class EnrichValidationData extends AbstractEnricherStep
 
             $instance = $this->getFormFieldStoreStrategyInstanceForField($field);
 
+            $instance->setFormFieldData($field);
             $instance->setParameters(
                 $this->getFormFieldStoreStrategyParametersForField($field)
             );

@@ -20,10 +20,28 @@ class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyInterface
 
 
     /**
+     * @var ModelFormFieldDataInterface
+     */
+    protected $formFieldData;
+
+    /**
      * @var array
      */
     protected $parameters = [];
 
+
+    /**
+     * Sets the relevant form field data to provide a context.
+     *
+     * @param ModelFormFieldDataInterface $data
+     * @return $this
+     */
+    public function setFormFieldData(ModelFormFieldDataInterface $data)
+    {
+        $this->formFieldData = $data;
+
+        return $this;
+    }
 
     /**
      * Sets parameters to use for retrieving & storing.

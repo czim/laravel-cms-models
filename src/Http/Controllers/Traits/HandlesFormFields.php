@@ -108,6 +108,7 @@ trait HandlesFormFields
             $field    = $this->getModelFormFieldDataForKey($key);
             $instance = $this->getFormFieldStoreStrategyInstanceForField($field);
 
+            $instance->setFormFieldData($field);
             $instance->setParameters(
                 $this->getFormFieldStoreStrategyParametersForField($field)
             );
@@ -139,6 +140,7 @@ trait HandlesFormFields
             $fields[ $key ]     = $this->getModelFormFieldDataForKey($key);
             $strategies[ $key ] = $this->getFormFieldStoreStrategyInstanceForField($fields[ $key ]);
 
+            $strategies[ $key ]->setFormFieldData($fields[ $key ]);
             $strategies[ $key ]->setParameters(
                 $this->getFormFieldStoreStrategyParametersForField($fields[ $key ])
             );
