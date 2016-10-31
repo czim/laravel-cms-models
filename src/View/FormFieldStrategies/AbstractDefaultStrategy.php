@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\View\FormFieldStrategies;
 
-abstract class AbstractDefaultStrategy Extends AbstractFormFieldDisplayStrategy
+abstract class AbstractDefaultStrategy extends AbstractFormFieldDisplayStrategy
 {
 
     /**
@@ -16,7 +16,7 @@ abstract class AbstractDefaultStrategy Extends AbstractFormFieldDisplayStrategy
     {
         $type = $this->field->type ?: array_get($this->field->options(), 'type', 'text');
 
-        return view($this->getView(), [
+        $data = [
             'record'     => $this->model,
             'key'        => $this->field->key(),
             'name'       => $this->getFormFieldName($locale),
@@ -26,7 +26,20 @@ abstract class AbstractDefaultStrategy Extends AbstractFormFieldDisplayStrategy
             'required'   => $this->field->required(),
             'options'    => $this->field->options(),
             'translated' => $this->field->translated(),
-        ]);
+        ];
+
+        return view($this->getView(), $this->decorateFieldData($data));
+    }
+
+    /**
+     * Enriches field data before passing it on to the view.
+     *
+     * @param array $data
+     * @return array
+     */
+    protected function decorateFieldData(array $data)
+    {
+        return $data;
     }
 
     /**
