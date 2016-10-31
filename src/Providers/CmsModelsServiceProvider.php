@@ -15,6 +15,7 @@ use Czim\CmsModels\Contracts\Repositories\ModelReferenceRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\OrderableStrategyResolverInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
+use Czim\CmsModels\Contracts\Support\MetaReferenceDataProviderInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
 use Czim\CmsModels\Contracts\View\FormFieldStrategyInterface;
@@ -29,6 +30,7 @@ use Czim\CmsModels\Repositories\ActivateStrategies\ActivateStrategyResolver;
 use Czim\CmsModels\Repositories\OrderableStrategies\OrderableStrategyResolver;
 use Czim\CmsModels\Support\ModuleHelper;
 use Czim\CmsModels\Support\Routing\RouteHelper;
+use Czim\CmsModels\Support\Strategies\MetaReferenceDataProvider;
 use Czim\CmsModels\View\FilterStrategy;
 use Czim\CmsModels\View\FormFieldStrategy;
 use Czim\CmsModels\View\ListStrategy;
@@ -135,6 +137,7 @@ class CmsModelsServiceProvider extends ServiceProvider
     {
         $this->app->singleton(RouteHelperInterface::class, RouteHelper::class);
         $this->app->singleton(ModuleHelperInterface::class, ModuleHelper::class);
+        $this->app->singleton(MetaReferenceDataProviderInterface::class, MetaReferenceDataProvider::class);
 
         return $this;
     }
