@@ -7,14 +7,12 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelReferenceRepositoryInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
+use Czim\CmsModels\Contracts\Support\MetaReferenceDataProviderInterface;
 use Czim\CmsModels\Http\Requests\ModelMetaReferenceRequest;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\Strategies\ModelMetaReference;
 use Czim\CmsModels\View\Traits\GetsNestedRelations;
 use Czim\CmsModels\View\Traits\ResolvesSourceStrategies;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Relation;
-use UnexpectedValueException;
 
 /**
  * Class ModelMetaController
@@ -32,6 +30,11 @@ class ModelMetaController extends Controller
      */
     protected $referenceRepository;
 
+    /**
+     * @var MetaReferenceDataProviderInterface
+     */
+    protected $referenceDataProvider;
+
 
     /**
      * @param CoreInterface                       $core
@@ -39,17 +42,20 @@ class ModelMetaController extends Controller
      * @param RouteHelperInterface                $routeHelper
      * @param ModelInformationRepositoryInterface $infoRepository
      * @param ModelReferenceRepositoryInterface   $referenceRepository
+     * @param MetaReferenceDataProviderInterface  $referenceDataProvider
      */
     public function __construct(
         CoreInterface $core,
         AuthenticatorInterface $auth,
         RouteHelperInterface $routeHelper,
         ModelInformationRepositoryInterface $infoRepository,
-        ModelReferenceRepositoryInterface $referenceRepository
+        ModelReferenceRepositoryInterface $referenceRepository,
+        MetaReferenceDataProviderInterface $referenceDataProvider
     ) {
         parent::__construct($core, $auth, $routeHelper, $infoRepository);
 
-        $this->referenceRepository = $referenceRepository;
+        $this->referenceRepository   = $referenceRepository;
+        $this->referenceDataProvider = $referenceDataProvider;
     }
 
 
@@ -126,76 +132,13 @@ class ModelMetaController extends Controller
             abort(404, "{$modelClass} is not a CMS model");
         }
 
-        // Find the reference information for type and key specified
-        switch ($type) {
+        $data = $this->referenceDataProvider->getForInformationByType($info, $type, $key);
 
-            case 'form.field':
-                return $this->getInformationReferenceDataForFormField($info, $key);
-
-            // Default omitted on purpose
+        if ( ! $data) {
+            abort(404, "Unknown reference type {$type}");
         }
 
-        return abort(404, "Unknown reference type {$type}");
-    }
-
-    /**
-     * @param ModelInformationInterface|ModelInformation $info
-     * @param string                                     $key
-     * @return ModelMetaReference|false
-     */
-    protected function getInformationReferenceDataForFormField(ModelInformationInterface $info, $key)
-    {
-        if ( ! array_key_exists($key, $info->form->fields)) {
-            return false;
-        }
-
-        $data = $info->form->fields[ $key ];
-
-        // Determine the target class, if not set in options
-        if ( ! ($targetModelClass = array_get($data->options(), 'model'))) {
-            $targetModelClass = get_class(
-                $this->determineTargetModelFromSource($info->modelClass(), $data->source())
-            );
-        }
-
-        return new ModelMetaReference([
-            'model'            => $targetModelClass,
-            'strategy'         => array_get($data->options(), 'strategy'),
-            'source'           => array_get($data->options(), 'source'),
-            'target'           => array_get($data->options(), 'target'),
-            'context_strategy' => array_get($data->options(), 'context_strategy'),
-            'parameters'       => array_get($data->options(), 'parameters', []),
-            'sort_direction'   => array_get($data->options(), 'sort_direction'),
-        ]);
-    }
-
-    /**
-     * Resolves and returns model instance for a given source on a (CMS) model.
-     *
-     * @param string $modelClass
-     * @param string $source
-     * @return Model
-     */
-    protected function determineTargetModelFromSource($modelClass, $source)
-    {
-        if ( ! is_a($modelClass, Model::class, true)) {
-            throw new UnexpectedValueException("{$modelClass} is not an Eloquent model");
-        }
-
-        $model = new $modelClass;
-
-        if ( ! ($relation = $this->getNestedRelation($model, $source))) {
-            $relation = $this->resolveModelSource($model, $source);
-        }
-
-        if ( ! ($relation instanceof Relation)) {
-            throw new UnexpectedValueException(
-                "Source {$source} on {$modelClass} does not resolve to an Eloquent relation instance"
-            );
-        }
-
-        /** @var Relation $relation */
-        return $relation->getRelated();
+        return $data;
     }
 
     /**
