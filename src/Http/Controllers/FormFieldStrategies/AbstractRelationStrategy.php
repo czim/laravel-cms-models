@@ -11,6 +11,14 @@ abstract class AbstractRelationStrategy extends AbstractFormFieldStoreStrategy
 {
 
     /**
+     * The parent model of the form field strategy.
+     *
+     * @var Model
+     */
+    protected $model;
+
+
+    /**
      * Retrieves current values from a model
      *
      * @param Model  $model
@@ -19,6 +27,8 @@ abstract class AbstractRelationStrategy extends AbstractFormFieldStoreStrategy
      */
     public function retrieve(Model $model, $source)
     {
+        $this->model = $model;
+
         if ($this->isTranslated()) {
 
             $keys      = [];
