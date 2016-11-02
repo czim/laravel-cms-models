@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\View\FormFieldStrategies;
 
-class BooleanDropdownStrategy Extends AbstractDefaultStrategy
+class BooleanDropdownStrategy extends AbstractDefaultStrategy
 {
 
     /**

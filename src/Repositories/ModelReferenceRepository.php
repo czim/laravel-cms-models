@@ -203,9 +203,9 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
         // Make sure we have a target to work with
         $target = $target ?: $query->getModel()->getKeyName();
 
-        // todo: interpret/resolve target, build query for target somehow
+        // todo: interpret/resolve target, build query for target
+        // It would make sense to make an abstract whereHas resolver for dot-notation targets...
 
-        // todo: replace this debug code
         $query->where($target, 'like', '%' . $search . '%');
 
         return $this;
@@ -221,7 +221,10 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
      */
     protected function applySortingToQueryBuilder($query, $source, $direction = 'asc')
     {
-        // todo: replace this debug code
+        // In the future, it might be interesting to make a join creator
+        // for dot notation targets, but for now, that would definitely overcomplicate matters.
+        // todo: interpret/resolve target, build query for target
+
         $query->orderBy($source, strtolower($direction) === 'desc' ? 'desc' : 'asc');
 
         return $this;

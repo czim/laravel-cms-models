@@ -167,9 +167,7 @@ class CmsModelsServiceProvider extends ServiceProvider
     protected function registerStrategyInterfaceBindings()
     {
         $this->app->singleton(ListStrategyInterface::class, ListStrategy::class);
-        $this->app->singleton(ListStrategyResolverInterface::class, ListStrategyResolver::class);
         $this->app->singleton(FilterStrategyInterface::class, FilterStrategy::class);
-        $this->app->singleton(FilterStrategyResolverInterface::class, FilterStrategyResolver::class);
         $this->app->singleton(ActivateStrategyResolverInterface::class, ActivateStrategyResolver::class);
         $this->app->singleton(OrderableStrategyResolverInterface::class, OrderableStrategyResolver::class);
         $this->app->singleton(FormFieldStrategyInterface::class, FormFieldStrategy::class);

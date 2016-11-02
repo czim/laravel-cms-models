@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\View\FormFieldStrategies;
 
-class TextAreaStrategy Extends AbstractDefaultStrategy
+class TextAreaStrategy extends AbstractDefaultStrategy
 {
 
     /**

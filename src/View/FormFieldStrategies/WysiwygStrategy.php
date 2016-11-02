@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\View\FormFieldStrategies;
 
-class WysiwygStrategy Extends AbstractDefaultStrategy
+class WysiwygStrategy extends AbstractDefaultStrategy
 {
 
     /**

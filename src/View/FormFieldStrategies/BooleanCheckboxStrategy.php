@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\View\FormFieldStrategies;
 
-class BooleanCheckboxStrategy Extends AbstractDefaultStrategy
+class BooleanCheckboxStrategy extends AbstractDefaultStrategy
 {
 
     /**

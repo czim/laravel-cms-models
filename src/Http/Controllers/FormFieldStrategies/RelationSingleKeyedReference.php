@@ -22,7 +22,7 @@ class RelationSingleKeyedReference extends RelationSingleKey
 
         $reference = null;
 
-        $referenceData = $this->getMetaReferenceProvider()->getFormModelClassByType(
+        $referenceData = $this->getMetaReferenceProvider()->getForModelClassByType(
             get_class($this->model),
             'form.field',
             $this->formFieldData->key()

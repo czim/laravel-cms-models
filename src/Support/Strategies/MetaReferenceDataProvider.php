@@ -27,7 +27,7 @@ class MetaReferenceDataProvider implements MetaReferenceDataProviderInterface
      * @param string $key
      * @return ModelMetaReferenceInterface|false
      */
-    public function getFormModelClassByType($modelClass, $type, $key)
+    public function getForModelClassByType($modelClass, $type, $key)
     {
         $info = $this->getModelInformation($modelClass);
 
