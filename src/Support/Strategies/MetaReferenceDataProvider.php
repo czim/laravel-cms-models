@@ -120,12 +120,16 @@ class MetaReferenceDataProvider implements MetaReferenceDataProviderInterface
     }
 
     /**
-     * @param $modelClass
+     * @param string|Model $model
      * @return ModelInformationInterface|ModelInformation|false
      */
-    protected function getModelInformation($modelClass)
+    protected function getModelInformation($model)
     {
-        return $this->getModelInformationRepository()->getByModelClass($modelClass);
+        if ($model instanceof Model) {
+            return $this->getModelInformationRepository()->getByModel($model);
+        }
+
+        return $this->getModelInformationRepository()->getByModelClass($model);
     }
 
     /**
