@@ -249,6 +249,10 @@ return [
                 Czim\CmsModels\Support\Enums\FormDisplayStrategy::BOOLEAN_DROPDOWN => 'BooleanDropdownStrategy',
                 Czim\CmsModels\Support\Enums\FormDisplayStrategy::TEXTAREA         => 'TextAreaStrategy',
                 Czim\CmsModels\Support\Enums\FormDisplayStrategy::WYSIWYG          => 'WysiwygStrategy',
+
+                Czim\CmsModels\Support\Enums\FormDisplayStrategy::RELATION_SINGLE_DROPDOWN => 'RelationSingleDropdownStrategy',
+                Czim\CmsModels\Support\Enums\FormDisplayStrategy::RELATION_SINGLE_AUTOCOMPLETE => 'RelationSingleAutocompleteStrategy',
+
             ],
 
             // Aliases for store strategy classes

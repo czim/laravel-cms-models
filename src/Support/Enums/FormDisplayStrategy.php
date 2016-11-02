@@ -29,8 +29,7 @@ class FormDisplayStrategy extends Enum
     const ATTACHMENT_STAPLER_IMAGE = 'attachment-stapler-image';
 
     // Relations
+    const RELATION_SINGLE_DROPDOWN     = 'relation-single-dropdown';
+    const RELATION_SINGLE_AUTOCOMPLETE = 'relation-single-autocomplete';
 
-    const SELECT_DROPDOWN_BELONGS_TO = 'select-dropdown-belongs-to';
-    const SELECT_DROPDOWN_HAS_ONE    = 'select-dropdown-has-one';
-    const SELECT_MULTIPLE_HAS_MANY   = 'select-multiple-has-many';
 }
