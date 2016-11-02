@@ -117,7 +117,8 @@ class CmsModelsServiceProvider extends ServiceProvider
      */
     protected function registerInterfaceBindings()
     {
-        $this->app->singleton(ModelRepositoryInterface::class, ModelRepository::class);
+        $this->app->bind(ModelRepositoryInterface::class, ModelRepository::class);
+
         $this->app->singleton(ModelReferenceRepositoryInterface::class, ModelReferenceRepository::class);
 
         $this->registerHelperInterfaceBindings()
