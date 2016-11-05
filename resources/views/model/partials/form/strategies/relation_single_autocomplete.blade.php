@@ -4,15 +4,11 @@
        class="form-control select2"
        @if ($required && ! $translated) required="required" @endif
 >
-    @if ($value)
 
-        @if (is_array($value))
-            {{-- value as a key/reference pair --}}
-            <option value="{{ array_get($value, 'key') }}" selected="selected">{{ array_get($value, 'reference') }}</option>
-        @else
-            {{-- value as only a key --}}
-            <option value="{{ $value }}" selected="selected">{{ $value }}</option>
-        @endif
+    @if ($value)
+        <option value="{{ $value }}" selected="selected">
+            {{ array_get($references, $value, $value) }}
+        </option>
     @endif
 
 </select>
@@ -22,58 +18,59 @@
 @push('javascript-end')
     <script>
         $(function() {
-        });
-                $('#field-{{ $key }}').select2({
-                    ajax: {
-                        headers    : {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        url      : '{{ cms_route('models-meta.references') }}',
-                        type     : 'POST',
-                        dataType : 'json',
-                        delay    : 250,
 
-                        data     : function (params) {
-                            return {
-                                model : '{{ str_replace('\\', '\\\\', get_class($record)) }}',
-                                type  : 'form.field',
-                                key   : '{{ $key }}',
-                                search: params.term
-                            };
-                        },
+            $('#field-{{ $key }}').select2({
+                ajax: {
+                    headers    : {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    url      : '{{ cms_route('models-meta.references') }}',
+                    type     : 'POST',
+                    dataType : 'json',
+                    delay    : 250,
 
-                        processResults: function (data, params) {
-
-                            // Convert the key/reference pairs from the model meta controller
-                            // to the id/text pairs expected by select2.
-
-                            var converted = [];
-
-                            $.each(data, function (key, value) {
-                                converted.push({
-                                    id   : value.key,
-                                    text : value.reference
-                                })
-                            });
-
-                            return {
-                                results: converted
-                            };
-                        },
-                        cache   : false
+                    data     : function (params) {
+                        return {
+                            model : '{{ str_replace('\\', '\\\\', get_class($record)) }}',
+                            type  : 'form.field',
+                            key   : '{{ $key }}',
+                            search: params.term
+                        };
                     },
 
-                    minimumInputLength: 1
+                    processResults: function (data, params) {
 
-                    // let our custom formatter work
+                        // Convert the key/reference pairs from the model meta controller
+                        // to the id/text pairs expected by select2.
+
+                        var converted = [];
+
+                        $.each(data, function (key, value) {
+                            converted.push({
+                                id   : value.key,
+                                text : value.reference
+                            })
+                        });
+
+                        return {
+                            results: converted
+                        };
+                    },
+                    cache   : false
+                },
+
+                minimumInputLength: 1
+
+                // let our custom formatter work
 //                escapeMarkup: function (markup) { return markup; }
 
-                    // omitted for brevity, see the source of this page
+                // omitted for brevity, see the source of this page
 //                templateResult     : formatRepo,
 
-                    // omitted for brevity, see the source of this page
+                // omitted for brevity, see the source of this page
 //                templateSelection  : formatRepoSelection
-                });
+            });
+        });
     </script>
 
 <?php /*

@@ -14,6 +14,8 @@ abstract class AbstractDefaultStrategy extends AbstractFormFieldDisplayStrategy
      */
     public function renderField($value, array $errors = [], $locale = null)
     {
+        $value = $this->normalizeValue($value);
+
         $type = $this->field->type ?: array_get($this->field->options(), 'type', 'text');
 
         $data = [
@@ -29,6 +31,17 @@ abstract class AbstractDefaultStrategy extends AbstractFormFieldDisplayStrategy
         ];
 
         return view($this->getView(), $this->decorateFieldData($data));
+    }
+
+    /**
+     * Normalizes a value to make sure it can be processed uniformly.
+     *
+     * @param mixed $value
+     * @return mixed
+     */
+    protected function normalizeValue($value)
+    {
+        return $value;
     }
 
     /**

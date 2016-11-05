@@ -1,9 +1,6 @@
 <?php
 namespace Czim\CmsModels\View\FormFieldStrategies;
 
-use Czim\CmsModels\Contracts\Repositories\ModelReferenceRepositoryInterface;
-use Czim\CmsModels\Contracts\Support\MetaReferenceDataProviderInterface;
-
 /**
  * Class RelationSingleDropdownStrategy
  *
@@ -48,22 +45,6 @@ class RelationSingleDropdownStrategy extends AbstractRelationStrategy
         $data['dropdownOptions'] = $references;
 
         return $data;
-    }
-
-    /**
-     * @return MetaReferenceDataProviderInterface
-     */
-    protected function getReferenceDataProvider()
-    {
-        return app(MetaReferenceDataProviderInterface::class);
-    }
-
-    /**
-     * @return ModelReferenceRepositoryInterface
-     */
-    protected function getReferenceRepository()
-    {
-        return app(ModelReferenceRepositoryInterface::class);
     }
 
 }

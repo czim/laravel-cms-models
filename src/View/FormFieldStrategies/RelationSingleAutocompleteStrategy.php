@@ -14,4 +14,20 @@ class RelationSingleAutocompleteStrategy extends AbstractRelationStrategy
         return 'cms-models::model.partials.form.strategies.relation_single_autocomplete';
     }
 
+    /**
+     * Enriches field data before passing it on to the view.
+     *
+     * @param array $data
+     * @return array
+     */
+    protected function decorateFieldData(array $data)
+    {
+        // Get the key-reference pairs to allow the form to display values for the
+        // currently selected keys for the model.
+
+        $data['references'] = $this->getReferencesForModelKeys([ $data['value'] ]);
+
+        return $data;
+    }
+
 }
