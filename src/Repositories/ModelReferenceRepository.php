@@ -203,6 +203,8 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
         // Make sure we have a target to work with
         $target = $target ?: $query->getModel()->getKeyName();
 
+        // todo: fix problems with targets on other models, use filter strategy for this instead?
+
         // todo: interpret/resolve target, build query for target
         // It would make sense to make an abstract whereHas resolver for dot-notation targets...
 
@@ -221,13 +223,66 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
      */
     protected function applySortingToQueryBuilder($query, $source, $direction = 'asc')
     {
+        $source = $source ?: $query->getModel()->getKeyName();
+
+        $sortables = $this->getSortableColumns($query->getModel(), $source);
+
         // In the future, it might be interesting to make a join creator
         // for dot notation targets, but for now, that would definitely overcomplicate matters.
         // todo: interpret/resolve target, build query for target
 
-        $query->orderBy($source, strtolower($direction) === 'desc' ? 'desc' : 'asc');
+        foreach ($sortables as $sortable) {
+
+            $query->orderBy($sortable, strtolower($direction) === 'desc' ? 'desc' : 'asc');
+        }
 
         return $this;
+    }
+
+    /**
+     * Returns a list of colums that safely may be sorted on, in order.
+     *
+     * @param Model  $model
+     * @param string $source
+     * @return \string[]
+     */
+    protected function getSortableColumns(Model $model, $source)
+    {
+        // Explode combined source keys
+        $sources = explode(',', $source);
+
+        $info = $this->getCmsModelInformation(get_class($model));
+
+        $safeSources = [];
+
+
+        foreach ($sources as $source) {
+
+            // Don't attempt to sort by sources on related models
+            if (false !== strpos($source, '.')) {
+                continue;
+            }
+
+            // Don't attempt to sort by a translated attribute
+            if ($info) {
+
+                if (    $info->translated
+                    &&  array_key_exists($source, $info->attributes)
+                    &&  $info->attributes[$source]->translated
+                ) {
+                    continue;
+                }
+
+            } else {
+                // Best approximation based on typical translation use
+                // todo
+            }
+
+            $safeSources[] = $source;
+        }
+
+
+        return [];
     }
 
     /**
