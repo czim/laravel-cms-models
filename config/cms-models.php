@@ -257,8 +257,10 @@ return [
                 Enums\FormDisplayStrategy::TEXTAREA         => 'TextAreaStrategy',
                 Enums\FormDisplayStrategy::WYSIWYG          => 'WysiwygStrategy',
 
-                Enums\FormDisplayStrategy::RELATION_SINGLE_DROPDOWN => 'RelationSingleDropdownStrategy',
+                Enums\FormDisplayStrategy::RELATION_SINGLE_DROPDOWN     => 'RelationSingleDropdownStrategy',
                 Enums\FormDisplayStrategy::RELATION_SINGLE_AUTOCOMPLETE => 'RelationSingleAutocompleteStrategy',
+                Enums\FormDisplayStrategy::RELATION_PLURAL_MULTISELECT  => 'RelationPluralMultiselectStrategy',
+                Enums\FormDisplayStrategy::RELATION_PLURAL_AUTOCOMPLETE => 'RelationPluralAutocompleteStrategy',
 
             ],
 

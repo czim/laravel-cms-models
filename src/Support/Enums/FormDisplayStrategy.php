@@ -31,5 +31,7 @@ class FormDisplayStrategy extends Enum
     // Relations
     const RELATION_SINGLE_DROPDOWN     = 'relation-single-dropdown';
     const RELATION_SINGLE_AUTOCOMPLETE = 'relation-single-autocomplete';
+    const RELATION_PLURAL_MULTISELECT  = 'relation-plural-multiselect';
+    const RELATION_PLURAL_AUTOCOMPLETE = 'relation-plural-autocomplete';
 
 }
