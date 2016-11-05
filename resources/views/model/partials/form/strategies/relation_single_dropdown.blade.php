@@ -6,11 +6,7 @@
 >
     @foreach ($dropdownOptions as $optionValue => $optionDisplay)
 
-        <?php
-            $selectedValue = is_array($value) ? array_get($value, 'key') : $value;
-        ?>
-
-        <option value="{{ $optionValue }}" @if ($optionValue == $selectedValue) selected="selected" @endif>
+        <option value="{{ $optionValue }}" @if ($optionValue == $value) selected="selected" @endif>
             {{ $optionDisplay }}
         </option>
 
