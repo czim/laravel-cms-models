@@ -15,6 +15,7 @@ use Czim\CmsModels\Support\Enums\RelationType;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use LimitIterator;
 use phpDocumentor\Reflection\DocBlockFactory;
@@ -449,9 +450,16 @@ class ModelAnalyzer
             // Determine if the foreign key for this relation is nullable.
             // For now, this only concerns belongsTo relations.
             $nullableKey = false;
+            $foreignKeys = [];
 
             if ($type == RelationType::BELONGS_TO || $type == RelationType::BELONGS_TO_THROUGH) {
                 /** @var $relation BelongsTo */
+                $foreignKeys = [ $relation->getForeignKey() ];
+                $nullableKey = $this->info->attributes[ $relation->getForeignKey() ]->nullable;
+
+            } elseif ($type == RelationType::MORPH_TO) {
+                /** @var MorphTo $relation */
+                $foreignKeys = [ $relation->getForeignKey(), $relation->getMorphType() ];
                 $nullableKey = $this->info->attributes[ $relation->getForeignKey() ]->nullable;
             }
 
@@ -461,6 +469,7 @@ class ModelAnalyzer
                 'type'          => $type,
                 'relationClass' => get_class($relation),
                 'relatedModel'  => get_class($relation->getRelated()),
+                'foreign_keys'  => $foreignKeys,
                 'nullable_key'  => $nullableKey,
             ]);
         }

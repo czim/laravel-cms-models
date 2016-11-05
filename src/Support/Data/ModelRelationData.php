@@ -16,6 +16,7 @@ use Czim\CmsCore\Support\Data\AbstractDataObject;
  * @property string $strategy
  * @property string $strategy_form
  * @property string $strategy_list
+ * @property string[] $foreign_keys
  * @property bool $nullable_key
  * @property bool $translated
  */
@@ -45,6 +46,10 @@ class ModelRelationData extends AbstractDataObject
         'strategy_form' => '',
         // Strategy for displaying attribute in list/index
         'strategy_list' => '',
+
+        // The foreign keys to the related model, if they are stored on this model
+        // (for morph relations, the id/type, otherwise just the one key)
+        'foreign_keys' => [],
 
         // Whether the foreign key of this relation is nullable
         'nullable_key' => null,

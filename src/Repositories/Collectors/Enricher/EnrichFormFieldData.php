@@ -168,8 +168,45 @@ class EnrichFormFieldData extends AbstractEnricherStep
             }
         }
 
-        return true;
+        // Any attribute that is a foreign key and should be handled with relation-based strategies
+        return ! $this->isAttributeForeignKey($attribute->name, $info);
     }
+
+    /**
+     * @param string                                     $attribute
+     * @param ModelInformationInterface|ModelInformation $info
+     * @return bool
+     */
+    protected function isAttributeForeignKey($attribute, ModelInformationInterface $info)
+    {
+        if ( ! count($info->relations)) {
+            return false;
+        }
+
+        foreach ($info->relations as $relation) {
+
+            if ( ! in_array($relation->type, [
+                RelationType::BELONGS_TO,
+                RelationType::BELONGS_TO_THROUGH,
+                RelationType::MORPH_TO,
+            ])) {
+                continue;
+            }
+
+            // the relation has a foreign key on this model, check their name(s)
+            // and check if the attribute matches
+            if ( ! $relation->foreign_keys || ! count($relation->foreign_keys)) {
+                continue;
+            }
+
+            if (in_array($attribute, $relation->foreign_keys)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     /**
      * Makes data set for form field given attribute data.
