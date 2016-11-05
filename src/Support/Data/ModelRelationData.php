@@ -17,6 +17,7 @@ use Czim\CmsCore\Support\Data\AbstractDataObject;
  * @property string $strategy_form
  * @property string $strategy_list
  * @property bool $nullable_key
+ * @property bool $translated
  */
 class ModelRelationData extends AbstractDataObject
 {
@@ -47,6 +48,9 @@ class ModelRelationData extends AbstractDataObject
 
         // Whether the foreign key of this relation is nullable
         'nullable_key' => null,
+
+        // Whether the relation is translated (ie. whether it is a relation on the translation model)
+        'translated' => null,
     ];
 
 }
