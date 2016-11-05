@@ -1,9 +1,10 @@
 <?php
 
 use Czim\CmsModels\Support\Enums;
-use Czim\CmsModels\Http\Controllers\FormFieldStrategies;
+use Czim\CmsModels\Http\Controllers\FormFieldStrategies as FormFieldStoreStrategies;
 use Czim\CmsModels\Repositories\SortStrategies;
 use Czim\CmsModels\View\FilterStrategies;
+use Czim\CmsModels\View\FormFieldStrategies;
 use Czim\CmsModels\View\ListStrategies;
 use Czim\CmsModels\View\ReferenceStrategies;
 
@@ -247,7 +248,7 @@ return [
 
             // The default strategy for storing/retrieving values from models
             'default-store-namespace' => 'Czim\\CmsModels\\Http\\Controllers\\FormFieldStrategies\\',
-            'default-store-strategy'  => FormFieldStrategies\DefaultStrategy::class,
+            'default-store-strategy'  => FormFieldStoreStrategies\DefaultStrategy::class,
 
             // Aliases for field display strategy classes
             'aliases' => [
