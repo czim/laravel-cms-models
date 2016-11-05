@@ -52,7 +52,7 @@ class ModelFilter extends Filter
             return;
         }
 
-        // We know about this filter, load up the relevant appication strategy and apply it
+        // We know about this filter, load up the relevant application strategy and apply it
         $information = $this->filterInformation[ $parameterName ];
 
         $this->getFilterStrategy()->apply(

@@ -3,7 +3,6 @@ namespace Czim\CmsModels\Contracts\View;
 
 use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
 use Czim\CmsModels\Support\Data\ModelListFilterData;
-use Czim\DataObject\Contracts\DataObjectInterface;
 use Illuminate\Database\Eloquent\Builder;
 
 interface FilterStrategyInterface
