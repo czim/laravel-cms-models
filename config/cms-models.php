@@ -1,5 +1,12 @@
 <?php
 
+use Czim\CmsModels\Support\Enums;
+use Czim\CmsModels\Http\Controllers\FormFieldStrategies;
+use Czim\CmsModels\Repositories\SortStrategies;
+use Czim\CmsModels\View\FilterStrategies;
+use Czim\CmsModels\View\ListStrategies;
+use Czim\CmsModels\View\ReferenceStrategies;
+
 return [
 
     /*
@@ -69,7 +76,7 @@ return [
     'collector' => [
 
         // The main collector that will be bound to the collector interface
-        'class' => \Czim\CmsModels\Repositories\Collectors\ModelInformationCollector::class,
+        'class' => Czim\CmsModels\Repositories\Collectors\ModelInformationCollector::class,
 
         'source' => [
 
@@ -175,11 +182,11 @@ return [
 
             // The default namespace to prefix for relative strategy class names
             'default-namespace' => 'Czim\\CmsModels\\View\\ReferenceStrategies\\',
-            'default-strategy'  => Czim\CmsModels\View\ReferenceStrategies\DefaultReference::class,
+            'default-strategy'  => ReferenceStrategies\DefaultReference::class,
 
             // Aliases for reference display strategy classes
             'aliases' => [
-                'default' => Czim\CmsModels\View\ReferenceStrategies\DefaultReference::class,
+                'default' => ReferenceStrategies\DefaultReference::class,
             ],
         ],
 
@@ -191,29 +198,29 @@ return [
 
             // The default namespace to prefix for relative strategy class names
             'default-namespace' => 'Czim\\CmsModels\\View\\ListStrategies\\',
-            'default-strategy'  => Czim\CmsModels\View\ListStrategies\DefaultStrategy::class,
+            'default-strategy'  => ListStrategies\DefaultStrategy::class,
 
             // The default strategy for sorting columns
             'default-sort-namespace' => 'Czim\\CmsModels\\Repositories\\SortStrategies\\',
-            'default-sort-strategy'  => Czim\CmsModels\Repositories\SortStrategies\NullLast::class,
+            'default-sort-strategy'  => SortStrategies\NullLast::class,
 
             // Aliases for list display strategy classes
             'aliases' => [
-                Czim\CmsModels\Support\Enums\ListDisplayStrategy::CHECK              => 'Check',
-                Czim\CmsModels\Support\Enums\ListDisplayStrategy::CHECK_NULLABLE     => 'CheckNullable',
-                Czim\CmsModels\Support\Enums\ListDisplayStrategy::DATE               => 'Date',
-                Czim\CmsModels\Support\Enums\ListDisplayStrategy::TIME               => 'Time',
-                Czim\CmsModels\Support\Enums\ListDisplayStrategy::DATETIME           => 'DateTime',
-                Czim\CmsModels\Support\Enums\ListDisplayStrategy::STAPLER_THUMBNAIL  => 'StaplerImage',
-                Czim\CmsModels\Support\Enums\ListDisplayStrategy::STAPLER_FILENAME   => 'StaplerFile',
-                Czim\CmsModels\Support\Enums\ListDisplayStrategy::RELATION_COUNT     => 'RelationCount',
-                Czim\CmsModels\Support\Enums\ListDisplayStrategy::RELATION_REFERENCE => 'RelationReference',
+                Enums\ListDisplayStrategy::CHECK              => 'Check',
+                Enums\ListDisplayStrategy::CHECK_NULLABLE     => 'CheckNullable',
+                Enums\ListDisplayStrategy::DATE               => 'Date',
+                Enums\ListDisplayStrategy::TIME               => 'Time',
+                Enums\ListDisplayStrategy::DATETIME           => 'DateTime',
+                Enums\ListDisplayStrategy::STAPLER_THUMBNAIL  => 'StaplerImage',
+                Enums\ListDisplayStrategy::STAPLER_FILENAME   => 'StaplerFile',
+                Enums\ListDisplayStrategy::RELATION_COUNT     => 'RelationCount',
+                Enums\ListDisplayStrategy::RELATION_REFERENCE => 'RelationReference',
             ],
 
             // Aliases for sort strategy classes
             'sort-aliases' => [
-                'null-last'  => Czim\CmsModels\Repositories\SortStrategies\NullLast::class,
-                'translated' => Czim\CmsModels\Repositories\SortStrategies\TranslatedAttribute::class,
+                'null-last'  => SortStrategies\NullLast::class,
+                'translated' => SortStrategies\TranslatedAttribute::class,
             ],
 
         ],
@@ -225,10 +232,10 @@ return [
 
             // Aliases for filter strategy classes
             'aliases' => [
-                'boolean'      => Czim\CmsModels\View\FilterStrategies\DropdownBoolean::class,
-                'enum'         => Czim\CmsModels\View\FilterStrategies\DropdownEnum::class,
-                'string'       => Czim\CmsModels\View\FilterStrategies\BasicString::class,
-                'string-split' => Czim\CmsModels\View\FilterStrategies\BasicSplitString::class,
+                'boolean'      => FilterStrategies\DropdownBoolean::class,
+                'enum'         => FilterStrategies\DropdownEnum::class,
+                'string'       => FilterStrategies\BasicString::class,
+                'string-split' => FilterStrategies\BasicSplitString::class,
             ],
         ],
 
@@ -236,28 +243,28 @@ return [
 
             // The default namespace to prefix for relative form field display strategy class names
             'default-namespace' => 'Czim\\CmsModels\\View\\FormFieldStrategies\\',
-            'default-strategy'  => Czim\CmsModels\View\FormFieldStrategies\DefaultStrategy::class,
+            'default-strategy'  => FormFieldStrategies\DefaultStrategy::class,
 
             // The default strategy for storing/retrieving values from models
             'default-store-namespace' => 'Czim\\CmsModels\\Http\\Controllers\\FormFieldStrategies\\',
-            'default-store-strategy'  => Czim\CmsModels\Http\Controllers\FormFieldStrategies\DefaultStrategy::class,
+            'default-store-strategy'  => FormFieldStrategies\DefaultStrategy::class,
 
             // Aliases for field display strategy classes
             'aliases' => [
-                Czim\CmsModels\Support\Enums\FormDisplayStrategy::TEXT             => 'DefaultStrategy',
-                Czim\CmsModels\Support\Enums\FormDisplayStrategy::BOOLEAN_CHECKBOX => 'BooleanCheckboxStrategy',
-                Czim\CmsModels\Support\Enums\FormDisplayStrategy::BOOLEAN_DROPDOWN => 'BooleanDropdownStrategy',
-                Czim\CmsModels\Support\Enums\FormDisplayStrategy::TEXTAREA         => 'TextAreaStrategy',
-                Czim\CmsModels\Support\Enums\FormDisplayStrategy::WYSIWYG          => 'WysiwygStrategy',
+                Enums\FormDisplayStrategy::TEXT             => 'DefaultStrategy',
+                Enums\FormDisplayStrategy::BOOLEAN_CHECKBOX => 'BooleanCheckboxStrategy',
+                Enums\FormDisplayStrategy::BOOLEAN_DROPDOWN => 'BooleanDropdownStrategy',
+                Enums\FormDisplayStrategy::TEXTAREA         => 'TextAreaStrategy',
+                Enums\FormDisplayStrategy::WYSIWYG          => 'WysiwygStrategy',
 
-                Czim\CmsModels\Support\Enums\FormDisplayStrategy::RELATION_SINGLE_DROPDOWN => 'RelationSingleDropdownStrategy',
-                Czim\CmsModels\Support\Enums\FormDisplayStrategy::RELATION_SINGLE_AUTOCOMPLETE => 'RelationSingleAutocompleteStrategy',
+                Enums\FormDisplayStrategy::RELATION_SINGLE_DROPDOWN => 'RelationSingleDropdownStrategy',
+                Enums\FormDisplayStrategy::RELATION_SINGLE_AUTOCOMPLETE => 'RelationSingleAutocompleteStrategy',
 
             ],
 
             // Aliases for store strategy classes
             'store-aliases' => [
-                Czim\CmsModels\Support\Enums\FormStoreStrategy::BOOLEAN => 'BooleanStrategy',
+                Enums\FormStoreStrategy::BOOLEAN => 'BooleanStrategy',
             ],
 
         ],
