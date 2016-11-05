@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Support\Strategies;
 
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\Data\ModelReferenceDataInterface;
 use Czim\CmsModels\Contracts\Data\Strategies\ModelMetaReferenceInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Support\MetaReferenceDataProviderInterface;
@@ -79,7 +80,7 @@ class MetaReferenceDataProvider implements MetaReferenceDataProviderInterface
             );
         }
 
-        return new ModelMetaReference([
+        $referenceData = new ModelMetaReference([
             'model'            => $targetModelClass,
             'strategy'         => array_get($data->options(), 'strategy'),
             'source'           => array_get($data->options(), 'source'),
@@ -88,6 +89,8 @@ class MetaReferenceDataProvider implements MetaReferenceDataProviderInterface
             'parameters'       => array_get($data->options(), 'parameters', []),
             'sort_direction'   => array_get($data->options(), 'sort_direction'),
         ]);
+
+        return $this->enrichReferenceData($referenceData);
     }
 
     /**
@@ -117,6 +120,33 @@ class MetaReferenceDataProvider implements MetaReferenceDataProviderInterface
 
         /** @var Relation $relation */
         return $relation->getRelated();
+    }
+
+    /**
+     * Enriches refernce data object as required.
+     *
+     * @param ModelMetaReferenceInterface|ModelMetaReference $data
+     * @return ModelMetaReferenceInterface
+     */
+    protected function enrichReferenceData(ModelMetaReferenceInterface $data)
+    {
+        // If the source/strategy are not set, check if we can use the model's reference data
+        if (null === $data->source() || null === $data->strategy()) {
+
+            // todo: take into account that this might be a morph relation...
+
+            if ($info = $this->getModelInformation($data->model())) {
+
+                if (null === $data->source()) {
+                    $data->source = $info->reference->source;
+                }
+                if (null === $data->strategy()) {
+                    $data->strategy = $info->reference->strategy;
+                }
+            }
+        }
+
+        return $data;
     }
 
     /**
