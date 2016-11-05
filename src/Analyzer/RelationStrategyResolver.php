@@ -3,8 +3,8 @@ namespace Czim\CmsModels\Analyzer;
 
 use Czim\CmsModels\Support\Data\ModelRelationData;
 use Czim\CmsModels\Support\Enums\FormDisplayStrategy;
+use Czim\CmsModels\Support\Enums\FormStoreStrategy;
 use Czim\CmsModels\Support\Enums\ListDisplayStrategy;
-use Czim\CmsModels\Support\Enums\RelationFormStrategy;
 use Czim\CmsModels\Support\Enums\RelationType;
 
 class RelationStrategyResolver
@@ -50,15 +50,18 @@ class RelationStrategyResolver
 
             case RelationType::BELONGS_TO:
             case RelationType::BELONGS_TO_THROUGH:
-                $type = FormDisplayStrategy::SELECT_DROPDOWN_BELONGS_TO;
-                break;
-
             case RelationType::HAS_ONE:
-                $type = FormDisplayStrategy::SELECT_DROPDOWN_HAS_ONE;
+                $type = FormDisplayStrategy::RELATION_SINGLE_AUTOCOMPLETE;
                 break;
 
             case RelationType::HAS_MANY:
-                $type = FormDisplayStrategy::SELECT_MULTIPLE_HAS_MANY;
+                $type = FormDisplayStrategy::RELATION_PLURAL_AUTOCOMPLETE;
+                break;
+
+            case RelationType::MORPH_ONE:
+            case RelationType::MORPH_TO:
+            case RelationType::MORPH_MANY:
+                // todo set special morph autocomplete strategies
                 break;
         }
 
@@ -66,7 +69,7 @@ class RelationStrategyResolver
     }
 
     /**
-     * Determines a form store display strategy string for given attribute data.
+     * Determines a form store strategy string for given relation data.
      *
      * @param ModelRelationData $data
      * @return string|null
@@ -77,7 +80,24 @@ class RelationStrategyResolver
         $parameters = [];
 
         // Determine strategy alias
-        // todo
+        switch ($data->type) {
+
+            case RelationType::BELONGS_TO:
+            case RelationType::BELONGS_TO_THROUGH:
+            case RelationType::HAS_ONE:
+                $type = FormStoreStrategy::RELATION_SINGLE_KEY;
+                break;
+
+            case RelationType::HAS_MANY:
+                $type = FormStoreStrategy::RELATION_PLURAL_KEYS;
+                break;
+
+            case RelationType::MORPH_ONE:
+            case RelationType::MORPH_TO:
+            case RelationType::MORPH_MANY:
+                // todo: set special morph strategies for key/type combinations
+                break;
+        }
 
 
         // Determine parameters
@@ -95,6 +115,30 @@ class RelationStrategyResolver
         }
 
         return $type;
+    }
+
+    /**
+     * Determines a form store's options for given relation data.
+     *
+     * @param ModelRelationData $data
+     * @return array
+     */
+    public function determineFormStoreOptions(ModelRelationData $data)
+    {
+        $options = [];
+
+        switch ($data->type) {
+
+            case RelationType::MORPH_ONE:
+            case RelationType::MORPH_MANY:
+                break;
+
+            case RelationType::MORPH_TO:
+                // todo: set special morph options to mark the targetable model classes
+                break;
+        }
+
+        return $options;
     }
 
 }

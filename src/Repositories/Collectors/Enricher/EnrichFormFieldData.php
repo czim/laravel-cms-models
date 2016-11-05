@@ -70,7 +70,10 @@ class EnrichFormFieldData extends AbstractEnricherStep
 
 
         // Add fields for relations
-        // todo: make this, consider which to include
+        foreach ($this->info->relations as $relation) {
+
+            $fields[ $relation->name ] = $this->makeModelFormFieldDataForRelationData($relation, $this->info);
+        }
 
 
         $this->info->form->fields = $fields;
@@ -198,15 +201,33 @@ class EnrichFormFieldData extends AbstractEnricherStep
      */
     protected function makeModelFormFieldDataForRelationData(ModelRelationData $relation, ModelInformationInterface $info)
     {
-        $required = (   (   $relation->type == RelationType::BELONGS_TO
-                        ||  $relation->type == RelationType::BELONGS_TO_THROUGH)
+        $required = (   in_array($relation->type, [
+                            RelationType::BELONGS_TO,
+                            RelationType::BELONGS_TO_THROUGH,
+                            RelationType::MORPH_TO,
+                        ])
                     &&  ! $relation->nullable_key);
+
+        // Only show the fields if they are not of a to-many type, to prevent automatically including
+        // relations with huge datasets, while still keeping the information enrichment going.
+        $show = in_array($relation->type, [
+            RelationType::BELONGS_TO,
+            RelationType::BELONGS_TO_THROUGH,
+            RelationType::HAS_ONE,
+            //RelationType::MORPH_ONE,
+            //RelationType::MORPH_TO,
+        ]);
 
         return new ModelFormFieldData([
             'key'              => $relation->method,
-            'display_strategy' => $relation->strategy_form ?: $relation->strategy,
-            'store_strategy'   => null,
+            'update'           => $show,
+            'create'           => $show,
+            'source'           => $relation->method,
             'required'         => $required,
+            'translated'       => $relation->translated,
+            'display_strategy' => $this->determineFormDisplayStrategyForRelation($relation),
+            'store_strategy'   => $this->determineFormStoreStrategyForRelation($relation),
+            'options'          => $this->determineFormStoreOptionsForRelation($relation),
         ]);
     }
 
@@ -235,6 +256,24 @@ class EnrichFormFieldData extends AbstractEnricherStep
     protected function determineFormDisplayStrategyForRelation(ModelRelationData $relation)
     {
         return $this->relationStrategyResolver->determineFormDisplayStrategy($relation);
+    }
+
+    /**
+     * @param ModelRelationData $relation
+     * @return null|string
+     */
+    protected function determineFormStoreStrategyForRelation(ModelRelationData $relation)
+    {
+        return $this->relationStrategyResolver->determineFormStoreStrategy($relation);
+    }
+
+    /**
+     * @param ModelRelationData $relation
+     * @return array
+     */
+    protected function determineFormStoreOptionsForRelation(ModelRelationData $relation)
+    {
+        return $this->relationStrategyResolver->determineFormStoreOptions($relation);
     }
 
 }

@@ -180,6 +180,11 @@ class AttributeStrategyResolver
             case 'bool':
                 $type = FormStoreStrategy::BOOLEAN;
                 break;
+
+            // Special case: stapler file attachment
+            case 'stapler-attachment':
+                $type = FormStoreStrategy::STAPLER;
+                break;
         }
 
         // Determine parameters
