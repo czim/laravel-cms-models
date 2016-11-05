@@ -135,7 +135,7 @@ class ModelMetaController extends Controller
         $data = $this->referenceDataProvider->getForInformationByType($info, $type, $key);
 
         if ( ! $data) {
-            abort(404, "Unknown reference type {$type}");
+            abort(404, "Could not retrieve reference data for {$type}, key: {$key}");
         }
 
         return $data;
