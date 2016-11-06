@@ -19,6 +19,7 @@
             $record,
             $field,
             $value,
+            array_get($values, $key),
             array_get($errors, $key, [])
         ) !!}
     </div>

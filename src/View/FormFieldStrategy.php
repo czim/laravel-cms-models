@@ -17,14 +17,20 @@ class FormFieldStrategy implements FormFieldStrategyInterface
      * @param Model                                          $model
      * @param ModelFormFieldDataInterface|ModelFormFieldData $field
      * @param mixed                                          $value
+     * @param mixed                                          $originalValue
      * @param array                                          $errors
      * @return string
      */
-    public function render(Model $model, ModelFormFieldDataInterface $field, $value, array $errors = [])
-    {
+    public function render(
+        Model $model,
+        ModelFormFieldDataInterface $field,
+        $value,
+        $originalValue,
+        array $errors = []
+    ) {
         $instance = $this->makeFormFieldDisplayStrategyInstance($field->display_strategy);
 
-        return $instance->render($model, $field, $value, $errors);
+        return $instance->render($model, $field, $value, $originalValue, $errors);
     }
 
     /**

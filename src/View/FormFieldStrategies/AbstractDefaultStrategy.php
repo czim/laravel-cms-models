@@ -8,13 +8,15 @@ abstract class AbstractDefaultStrategy extends AbstractFormFieldDisplayStrategy
      * Renders a form field.
      *
      * @param mixed       $value
+     * @param mixed       $originalValue
      * @param array       $errors
      * @param null|string $locale
      * @return string
      */
-    public function renderField($value, array $errors = [], $locale = null)
+    public function renderField($value, $originalValue, array $errors = [], $locale = null)
     {
-        $value = $this->normalizeValue($value);
+        $value         = $this->normalizeValue($value);
+        $originalValue = $this->normalizeValue($originalValue, true);
 
         $type = $this->field->type ?: array_get($this->field->options(), 'type', 'text');
 
@@ -23,6 +25,7 @@ abstract class AbstractDefaultStrategy extends AbstractFormFieldDisplayStrategy
             'key'        => $this->field->key(),
             'name'       => $this->getFormFieldName($locale),
             'value'      => $value,
+            'original'   => $originalValue,
             'type'       => $type,
             'errors'     => $errors,
             'required'   => $this->field->required(),
@@ -37,9 +40,10 @@ abstract class AbstractDefaultStrategy extends AbstractFormFieldDisplayStrategy
      * Normalizes a value to make sure it can be processed uniformly.
      *
      * @param mixed $value
+     * @param bool  $original   whether the value is the original value for the persisted model
      * @return mixed
      */
-    protected function normalizeValue($value)
+    protected function normalizeValue($value, $original = false)
     {
         return $value;
     }

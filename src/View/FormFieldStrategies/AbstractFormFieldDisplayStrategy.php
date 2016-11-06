@@ -37,30 +37,37 @@ abstract class AbstractFormFieldDisplayStrategy implements FormFieldDisplayInter
      * @param Model                                          $model
      * @param ModelFormFieldDataInterface|ModelFormFieldData $field
      * @param mixed                                          $value
+     * @param mixed                                          $originalValue
      * @param array                                          $errors
      * @return string
      */
-    public function render(Model $model, ModelFormFieldDataInterface $field, $value, array $errors = [])
-    {
+    public function render(
+        Model $model,
+        ModelFormFieldDataInterface $field,
+        $value,
+        $originalValue,
+        array $errors = []
+    ) {
         $this->model = $model;
         $this->field = $field;
 
         if ($field->translated) {
-            return $this->renderTranslatedFields($this->getRelevantLocales(), $value, $errors);
+            return $this->renderTranslatedFields($this->getRelevantLocales(), $value, $originalValue, $errors);
         }
 
-        return $this->renderField($value, $errors);
+        return $this->renderField($value, $originalValue, $errors);
     }
 
     /**
      * Returns a rendered form field.
      *
      * @param mixed       $value
+     * @param mixed       $originalValue
      * @param array       $errors
-     * @param null|string $locale   if for single translated locale, the locale
+     * @param null|string $locale if for single translated locale, the locale
      * @return string
      */
-    abstract protected function renderField($value, array $errors = [], $locale = null);
+    abstract protected function renderField($value, $originalValue, array $errors = [], $locale = null);
 
 
     /**
@@ -68,10 +75,11 @@ abstract class AbstractFormFieldDisplayStrategy implements FormFieldDisplayInter
      *
      * @param array $locales
      * @param mixed $value
+     * @param mixed $originalValue
      * @param array $errors
-     * @return string;
+     * @return string
      */
-    protected function renderTranslatedFields(array $locales, $value, array $errors)
+    protected function renderTranslatedFields(array $locales, $value, $originalValue, array $errors)
     {
         // Render the inputs for all relevant locales
         $rendered = [];
@@ -81,6 +89,7 @@ abstract class AbstractFormFieldDisplayStrategy implements FormFieldDisplayInter
             /** @var View $view */
             $view = $this->renderField(
                 $this->getValueForLocale($locale, $value),
+                $this->getValueForLocale($locale, $originalValue),
                 $this->getErrorsForLocale($locale, $errors),
                 $locale
             );

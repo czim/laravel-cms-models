@@ -12,10 +12,17 @@ interface FormFieldDisplayInterface
      *
      * @param Model                       $model
      * @param ModelFormFieldDataInterface $field
-     * @param mixed                       $value
+     * @param mixed                       $value            the current or old() value
+     * @param mixed                       $originalValue    the persisted model's current value
      * @param array                       $errors
      * @return string
      */
-    public function render(Model $model, ModelFormFieldDataInterface $field, $value, array $errors = []);
+    public function render(
+        Model $model,
+        ModelFormFieldDataInterface $field,
+        $value,
+        $originalValue,
+        array $errors = []
+    );
 
 }
