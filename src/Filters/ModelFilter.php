@@ -68,7 +68,7 @@ class ModelFilter extends Filter
      */
     protected function getFilterStrategy()
     {
-        return app(\Czim\CmsModels\Contracts\View\FilterStrategyInterface::class);
+        return app(FilterStrategyInterface::class);
     }
 
     /**
