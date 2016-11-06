@@ -25,9 +25,10 @@ class RelationPluralMultiselectStrategy extends AbstractRelationStrategy
      * Normalizes a value to make sure it can be processed uniformly.
      *
      * @param mixed $value
+     * @param bool  $original
      * @return mixed
      */
-    protected function normalizeValue($value)
+    protected function normalizeValue($value, $original = false)
     {
         if (is_array($value)) {
             return $value;
