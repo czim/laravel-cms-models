@@ -258,6 +258,10 @@ return [
                 Enums\FormDisplayStrategy::TEXTAREA         => 'TextAreaStrategy',
                 Enums\FormDisplayStrategy::WYSIWYG          => 'WysiwygStrategy',
 
+                Enums\FormDisplayStrategy::DATEPICKER_DATETIME => 'DateTimeStrategy',
+                Enums\FormDisplayStrategy::DATEPICKER_DATE     => 'DateStrategy',
+                Enums\FormDisplayStrategy::DATEPICKER_TIME     => 'TimeStrategy',
+
                 Enums\FormDisplayStrategy::ATTACHMENT_STAPLER_IMAGE => 'AttachmentStaplerImageStrategy',
                 Enums\FormDisplayStrategy::ATTACHMENT_STAPLER_FILE  => 'AttachmentStaplerFileStrategy',
 
