@@ -54,9 +54,17 @@
     </div>
 
     @if ($creating)
-        <form class="model-form" method="post" action="{{ cms_route("{$routePrefix}.store") }}">
+        <form class="model-form"
+              method="post"
+              action="{{ cms_route("{$routePrefix}.store") }}"
+              enctype="multipart/form-data"
+        >
     @else
-        <form class="model-form" method="post" action="{{ cms_route("{$routePrefix}.update", [ $record->getKey() ]) }}">
+        <form class="model-form"
+              method="post"
+              action="{{ cms_route("{$routePrefix}.update", [ $record->getKey() ]) }}"
+              enctype="multipart/form-data"
+        >
             {{ method_field('put') }}
     @endif
             {{ csrf_field() }}
