@@ -5,6 +5,8 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelReferenceRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
+use Czim\CmsModels\Contracts\Repositories\SortStrategyInterface;
+use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
 use Czim\CmsModels\Http\Controllers\Traits\AppliesRepositoryContext;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Contracts\Data\Strategies\ModelMetaReferenceInterface;
@@ -96,7 +98,12 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
 
         $query = $this->getQueryBuilderForModelClass($modelClass);
 
-        $this->applySortingToQueryBuilder($query, $referenceData->source(), $referenceData->sortDirection());
+        $this->applySortingToQueryBuilder(
+            $query,
+            $referenceData->source(),
+            $referenceData->sortDirection(),
+            $referenceData->sortStrategy()
+        );
 
         if (null !== $search) {
             $this->applySearchTermFilterToQueryBuilder($query, $referenceData->target(), $search);
@@ -171,7 +178,7 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
         /** @var Model $model */
         $model = new $modelClass;
 
-        return $model->query();
+        return $model::query();
     }
 
     /**
@@ -203,86 +210,67 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
         // Make sure we have a target to work with
         $target = $target ?: $query->getModel()->getKeyName();
 
-        // todo: fix problems with targets on other models, use filter strategy for this instead?
-
-        // todo: interpret/resolve target, build query for target
-        // It would make sense to make an abstract whereHas resolver for dot-notation targets...
-
-        $query->where($target, 'like', '%' . $search . '%');
+        $this->applyFilterStrategyToQuery($query, $target, $search);
 
         return $this;
+    }
+
+    /**
+     * Applies a filter strategy for 'searching' on the model query.
+     *
+     * @param Builder     $query
+     * @param string      $target
+     * @param string      $value
+     * @param string|null $strategy     the filter strategy to use, if not default
+     */
+    protected function applyFilterStrategyToQuery($query, $target, $value, $strategy = null)
+    {
+        if (null === $strategy) {
+            $strategy = config('cms-models.meta-references.filter-strategy');
+        }
+
+        $this->getFilterStrategy()->apply(
+            $query,
+            $strategy,
+            $target,
+            $value
+        );
     }
 
     /**
      * Applies sorting to a query builder, based on source string.
      *
-     * @param Builder $query
-     * @param string  $source
-     * @param string  $direction    sorting direction: 'asc' or 'desc'
+     * @param Builder     $query
+     * @param string      $source
+     * @param string      $direction    sorting direction: 'asc' or 'desc'
+     * @param string|null $strategy
      * @return $this
      */
-    protected function applySortingToQueryBuilder($query, $source, $direction = 'asc')
+    protected function applySortingToQueryBuilder($query, $source, $direction = 'asc', $strategy = null)
     {
         $source = $source ?: $query->getModel()->getKeyName();
 
-        $sortables = $this->getSortableColumns($query->getModel(), $source);
+        // Prepare the sorting strategy
+        if (null === $strategy) {
+            $strategy = config('cms-models.meta-references.sort-strategy');
+        }
 
-        // In the future, it might be interesting to make a join creator
-        // for dot notation targets, but for now, that would definitely overcomplicate matters.
-        // todo: interpret/resolve target, build query for target
+        if ( ! $strategy) return $this;
 
-        foreach ($sortables as $sortable) {
 
-            $query->orderBy($sortable, strtolower($direction) === 'desc' ? 'desc' : 'asc');
+        $strategyInstance = new $strategy;
+
+        if ( ! ($strategyInstance instanceof SortStrategyInterface)) {
+            throw new UnexpectedValueException("{$strategy} is not a sort strategy");
+        }
+
+        // Explode combined source keys and apply the strategy for each part
+        foreach (explode(',', $source) as $sourcePart) {
+
+            $query = $strategyInstance->apply($query, $sourcePart, $direction);
         }
 
         return $this;
-    }
-
-    /**
-     * Returns a list of colums that safely may be sorted on, in order.
-     *
-     * @param Model  $model
-     * @param string $source
-     * @return \string[]
-     */
-    protected function getSortableColumns(Model $model, $source)
-    {
-        // Explode combined source keys
-        $sources = explode(',', $source);
-
-        $info = $this->getCmsModelInformation(get_class($model));
-
-        $safeSources = [];
-
-
-        foreach ($sources as $source) {
-
-            // Don't attempt to sort by sources on related models
-            if (false !== strpos($source, '.')) {
-                continue;
-            }
-
-            // Don't attempt to sort by a translated attribute
-            if ($info) {
-
-                if (    $info->translated
-                    &&  array_key_exists($source, $info->attributes)
-                    &&  $info->attributes[$source]->translated
-                ) {
-                    continue;
-                }
-
-            } else {
-                // Best approximation based on typical translation use
-                // todo
-            }
-
-            $safeSources[] = $source;
-        }
-
-
-        return [];
     }
 
     /**
@@ -324,6 +312,14 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
         $this->applyRepositoryContext($modelRepository, $information);
 
         return $modelRepository;
+    }
+
+    /**
+     * @return FilterStrategyInterface
+     */
+    protected function getFilterStrategy()
+    {
+        return app(FilterStrategyInterface::class);
     }
 
 }

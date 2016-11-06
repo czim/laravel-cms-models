@@ -303,6 +303,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Model References
+    |--------------------------------------------------------------------------
+    |
+    | Model reference handling, mainly for relation dropdown filling and
+    | searching/sorting for autocomplete lookups.
+    |
+    */
+
+    'meta-references' => [
+
+        // The default filter strategy to use for model meta reference lookups
+        'filter-strategy' => FilterStrategies\BasicSplitString::class,
+
+        // The default sorting strategy to use for model meta references
+        'sort-strategy' => SortStrategies\ReferenceResolvingRelay::class,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Views
     |--------------------------------------------------------------------------
     |

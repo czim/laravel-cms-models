@@ -14,6 +14,7 @@ use Czim\CmsModels\Contracts\Data\Strategies\ModelMetaReferenceInterface;
  * @property string $target             the target(s) to use for any reference search
  * @property array  $parameters         optional parameters for the strategies
  * @property string $sort_direction     the sort direction to use when sorting references
+ * @property string $sort_strategy      the sorting strategy (if not using default)
  */
 class ModelMetaReference extends AbstractDataObject implements ModelMetaReferenceInterface
 {
@@ -26,6 +27,7 @@ class ModelMetaReference extends AbstractDataObject implements ModelMetaReferenc
         'target'           => null,
         'parameters'       => [],
         'sort_direction'   => null,
+        'sort_strategy'    => null,
     ];
 
     /**
@@ -96,6 +98,16 @@ class ModelMetaReference extends AbstractDataObject implements ModelMetaReferenc
     public function sortDirection()
     {
         return $this->sort_direction === 'desc' ? 'desc' : 'asc';
+    }
+
+    /**
+     * Returns the sorting strategy to use (if default is not to be used)
+     *
+     * @return null|string
+     */
+    public function sortStrategy()
+    {
+        return $this->sort_strategy;
     }
 
 }

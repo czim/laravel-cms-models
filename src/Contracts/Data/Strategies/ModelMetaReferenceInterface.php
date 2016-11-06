@@ -53,4 +53,11 @@ interface ModelMetaReferenceInterface
      */
     public function sortDirection();
 
+    /**
+     * Returns the sorting strategy to use (if default is not to be used)
+     *
+     * @return null|string
+     */
+    public function sortStrategy();
+
 }
