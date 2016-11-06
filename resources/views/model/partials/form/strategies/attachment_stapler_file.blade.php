@@ -64,6 +64,7 @@
 
 
 @push('javascript-end')
+<!-- form field display strategy: stapler file -->
 <script>
     $(function () {
 

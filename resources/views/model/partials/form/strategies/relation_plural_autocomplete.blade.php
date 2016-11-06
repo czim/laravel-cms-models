@@ -21,6 +21,7 @@
 
 
 @push('javascript-end')
+    <!-- form field display strategy: relation plural autocomplete -->
     <script>
         $(function() {
             $('#field-{{ $key }}').select2({

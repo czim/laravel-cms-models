@@ -16,6 +16,7 @@
 @include('cms-models::model.partials.form.field_errors', compact('key', 'errors'))
 
 @push('javascript-end')
+    <!-- form field display strategy: relation single autocomplete -->
     <script>
         $(function() {
 

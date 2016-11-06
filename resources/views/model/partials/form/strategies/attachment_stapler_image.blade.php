@@ -67,6 +67,7 @@
 
 
 @push('javascript-end')
+<!-- form field display strategy: stapler image -->
 <script>
     $(function () {
 
