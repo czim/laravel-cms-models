@@ -348,18 +348,16 @@ class ModelAnalyzer
      */
     protected function analyzeTraits()
     {
-        $traitNames = $this->reflection->getTraitNames();
+        $traitNames = $this->classUsesDeep($this->model);
 
-        if (in_array('Dimsav\\Translatable\\Translatable', $traitNames)) {
+        if (count(array_intersect($this->getTranslatableTraits(), $traitNames))) {
             $this->info->translated           = true;
             $this->info->translation_strategy = 'translatable';
 
             $this->addIncludesDefault('translations');
         }
 
-        if (    in_array('Czim\\Listify\\Listify', $traitNames)
-            ||  in_array('Lookitsatravis\\Listify\\Listify', $traitNames)
-        ) {
+        if (count(array_intersect($this->getListifyTraits(), $traitNames))) {
             $this->info->list->orderable      = true;
             $this->info->list->order_strategy = 'listify';
             $this->info->list->order_column   = $this->model->positionColumn();
@@ -709,13 +707,28 @@ class ModelAnalyzer
     /**
      * Returns list of relation names to ignore.
      *
-     * @return mixed
+     * @return string[]
      */
     protected function getIgnoredRelationNames()
     {
         return config('cms-models.analyzer.relations.ignore', []);
     }
 
+    /**
+     * @return string[]
+     */
+    protected function getTranslatableTraits()
+    {
+        return config('cms-models.analyzer.traits.translatable', []);
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getListifyTraits()
+    {
+        return config('cms-models.analyzer.traits.listify', []);
+    }
 
     /**
      * Adds an entry to the default includes.
@@ -767,4 +780,35 @@ class ModelAnalyzer
              + [ $key => $value ]
              + array_slice($array, $position, count($array) - $position, true);
     }
+
+    /**
+     * Returns all traits used by a class (at any level).
+     *
+     * @param mixed $class
+     * @return string[]
+     */
+    protected function classUsesDeep($class)
+    {
+        $traits = [];
+
+        // Get traits of all parent classes
+        do {
+            $traits = array_merge(class_uses($class), $traits);
+        } while ($class = get_parent_class($class));
+
+        // Get traits of all parent traits
+        $traitsToSearch = $traits;
+        while ( ! empty($traitsToSearch)) {
+            $newTraits      = class_uses(array_pop($traitsToSearch));
+            $traits         = array_merge($newTraits, $traits);
+            $traitsToSearch = array_merge($newTraits, $traitsToSearch);
+        };
+
+        foreach ($traits as $trait => $same) {
+            $traits = array_merge(class_uses($trait), $traits);
+        }
+
+        return array_unique($traits);
+    }
+
 }
