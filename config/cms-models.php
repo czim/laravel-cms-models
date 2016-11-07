@@ -133,6 +133,19 @@ return [
                 'translations',
             ],
         ],
+
+        'traits' => [
+            // Trait FQNs for translated models
+            'translatable' => [
+                'Dimsav\Translatable\Translatable',
+            ],
+
+            // Trait FQNs for translated models
+            'listify' => [
+                'Czim\Listify\Listify',
+                'Lookitsatravis\Listify\Listify',
+            ],
+        ],
     ],
 
     /*
