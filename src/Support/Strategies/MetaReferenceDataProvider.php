@@ -2,7 +2,6 @@
 namespace Czim\CmsModels\Support\Strategies;
 
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
-use Czim\CmsModels\Contracts\Data\ModelReferenceDataInterface;
 use Czim\CmsModels\Contracts\Data\Strategies\ModelMetaReferenceInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Support\MetaReferenceDataProviderInterface;
