@@ -73,46 +73,4 @@
             });
         });
     </script>
-
-<?php /*
-    <script>
-        $('#field-{{ $key }}').selectize({
-            valueField      : 'key',
-            labelField      : 'value',
-            searchField     : 'value',
-            maxItems        : 1,
-            allowEmptyOption: true,
-            persist         : false,
-            loadThrottle    : 600,
-            create          : false,
-            createOnBlur    : true,
-            sortField       : 'text',
-            options         : [],
-
-            load: function (query, callback) {
-                if ( ! query.length) return callback();
-                $.ajax({
-                    headers    : {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    url        : '{{ cms_route('models-meta.references') }}',
-                    type       : 'POST',
-                    dataType   : 'json',
-                    data       : {
-                        model  : '{{ str_replace('\\', '\\\\', get_class($record)) }}',
-                        type   : 'form.field',
-                        key    : '{{ $key }}',
-                        search : query
-                    },
-                    error: function () {
-                        callback();
-                    },
-                    success: function (res) {
-                        callback(res);
-                    }
-                });
-            }
-        });
-    </script>
- */ ?>
 @endpush
