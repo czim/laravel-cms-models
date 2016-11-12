@@ -8,7 +8,7 @@ Aliases in configuration files are added for convenience, so that a simple strin
 ## Repository Context Strategies
 
 Any model accessed in the CMS will have its records retrieved through a repository. 
-The default criteria for the repository may be configured per model, as well as whether and which global scopes should be ignored by the CMS.
+The default query manipulations for the repository may be configured per model, as well as whether and which global scopes should be ignored by the CMS.
 
 By default, all global scopes will be removed before results are retrieved.
 
