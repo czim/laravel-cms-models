@@ -288,9 +288,10 @@ return [
             // Aliases for store strategy classes
             'store-aliases' => [
                 Enums\FormStoreStrategy::BOOLEAN              => 'BooleanStrategy',
+                Enums\FormStoreStrategy::DATE                 => 'DateStrategy',
                 Enums\FormStoreStrategy::STAPLER              => 'StaplerStrategy',
                 Enums\FormStoreStrategy::RELATION_SINGLE_KEY  => 'RelationSingleKey',
-                Enums\FormStoreStrategy::RELATION_PLURAL_KEYS => 'RelationSingleKeys',
+                Enums\FormStoreStrategy::RELATION_PLURAL_KEYS => 'RelationPluralKeys',
             ],
 
         ],

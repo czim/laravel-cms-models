@@ -181,6 +181,10 @@ class AttributeStrategyResolver
                 $type = FormStoreStrategy::BOOLEAN;
                 break;
 
+            case 'date':
+                $type = FormStoreStrategy::DATE;
+                break;
+
             // Special case: stapler file attachment
             case 'stapler-attachment':
                 $type = FormStoreStrategy::STAPLER;
