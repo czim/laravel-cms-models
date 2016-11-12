@@ -4,6 +4,9 @@
        class="form-control select2"
        @if ($required && ! $translated) required="required" @endif
 >
+    @if ( ! $required)
+        <option></option>
+    @endif
 
     @if ($value)
         <option value="{{ $value }}" selected="selected">

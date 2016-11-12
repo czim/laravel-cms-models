@@ -7,6 +7,10 @@
 >
     @foreach ($dropdownOptions as $optionValue => $optionDisplay)
 
+        @if ( ! $required)
+            <option></option>
+        @endif
+
         <option value="{{ $optionValue }}" @if (in_array($optionValue, $value)) selected="selected" @endif>
             {{ $optionDisplay }}
         </option>

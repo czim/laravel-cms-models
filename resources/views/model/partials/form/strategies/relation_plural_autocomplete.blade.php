@@ -5,6 +5,10 @@
        multiple="multiple"
        @if ($required && ! $translated) required="required" @endif
 >
+    @if ( ! $required)
+        <option></option>
+    @endif
+
     @if ($value)
         @foreach ($value as $singleValue)
             @continue (null === $singleValue)
