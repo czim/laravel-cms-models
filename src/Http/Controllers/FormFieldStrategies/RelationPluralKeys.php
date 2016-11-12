@@ -78,7 +78,9 @@ class RelationPluralKeys extends AbstractRelationStrategy
             throw new UnexpectedValueException("{$source} is a single relation, expecting plural");
         }
 
-        if (null === $value) return;
+        if (null === $value) {
+            $value = [];
+        }
 
         // Should not be used, since this is for singular relations..
         if ($relation instanceof BelongsToMany) {
@@ -86,11 +88,27 @@ class RelationPluralKeys extends AbstractRelationStrategy
             return;
         }
 
+        // For *One and *Many relations, we need to handle detachment for currently related models.
+        if (    $relation instanceof HasOne
+            ||  $relation instanceof HasMany
+            ||  $relation instanceof MorphOne
+            ||  $relation instanceof MorphMany
+        ) {
+            // Detach only the models that shouldn't stay attached (ie. aren't in the new value array)
+
+            /** @var Collection|Model[] $currentlyRelated */
+            $currentlyRelated = $relation->get();
+            $currentlyRelated = $currentlyRelated->filter(function (Model $model) use ($value) {
+                return ! in_array($model->getKey(), $value);
+            });
+
+            $this->detachRelatedModelsForOneOrMany($currentlyRelated, $relation);
+        }
+
         // For HasMany, the related models must be found,
         // and then they should be saved on the relation.
         $relatedModels = $this->getModelsByKey($relation->getRelated(), $value);
 
-        // todo: this does not sync (detach) models .. should we?
         if ( ! count($relatedModels)) return;
 
         if (    $relation instanceof HasOne

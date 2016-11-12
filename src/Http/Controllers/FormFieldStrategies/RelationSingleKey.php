@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Http\Controllers\FormFieldStrategies;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -63,6 +64,25 @@ class RelationSingleKey extends AbstractRelationStrategy
         if ($relation instanceof BelongsToMany) {
             $relation->sync([ $value ]);
             return;
+        }
+
+        // For *One and *Many relations, we need to handle detachment for currently related models.
+        if (    $relation instanceof HasOne
+            ||  $relation instanceof HasMany
+            ||  $relation instanceof MorphOne
+            ||  $relation instanceof MorphMany
+        ) {
+            // Detach only the models that shouldn't stay attached (ie. don't match the new value)
+
+            /** @var Collection|Model[] $currentlyRelated */
+            $currentlyRelated = $relation->get();
+            if ($value) {
+                $currentlyRelated = $currentlyRelated->filter(function (Model $model) use ($value) {
+                    return ! $model->getKey() == $value;
+                });
+            }
+
+            $this->detachRelatedModelsForOneOrMany($currentlyRelated, $relation);
         }
 
         if ( ! $value) return;
