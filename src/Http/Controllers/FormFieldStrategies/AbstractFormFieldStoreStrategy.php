@@ -20,7 +20,7 @@ class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyInterface
 
 
     /**
-     * @var ModelFormFieldDataInterface
+     * @var ModelFormFieldDataInterface|ModelFormFieldData
      */
     protected $formFieldData;
 

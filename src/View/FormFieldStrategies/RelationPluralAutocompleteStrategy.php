@@ -25,8 +25,12 @@ class RelationPluralAutocompleteStrategy extends AbstractRelationStrategy
      */
     protected function normalizeValue($value, $original = false)
     {
-        if ($value instanceof Arrayable || is_array($value)) {
+        if (is_array($value)) {
             return $value;
+        }
+
+        if ($value instanceof Arrayable) {
+            return $value->toArray();
         }
 
         return [ $value ];

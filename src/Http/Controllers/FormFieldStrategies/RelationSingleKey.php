@@ -76,7 +76,9 @@ class RelationSingleKey extends AbstractRelationStrategy
             return;
         }
 
-        throw new UnexpectedValueException('Unexpected relation class ' . get_class($relation));
+        throw new UnexpectedValueException(
+            'Unexpected relation class ' . get_class($relation) . " for {$source}"
+        );
     }
 
     /**

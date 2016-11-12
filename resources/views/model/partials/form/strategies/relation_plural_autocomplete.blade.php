@@ -5,9 +5,10 @@
        multiple="multiple"
        @if ($required && ! $translated) required="required" @endif
 >
-
     @if ($value)
         @foreach ($value as $singleValue)
+            @continue (null === $singleValue)
+
             <option value="{{ $singleValue }}" selected="selected">
                 {{ array_get($references, $singleValue, $singleValue) }}
             </option>
