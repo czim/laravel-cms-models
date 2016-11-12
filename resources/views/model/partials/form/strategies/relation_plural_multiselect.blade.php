@@ -1,6 +1,6 @@
 
 <select id="field-{{ $key }}"
-       name="{{ $name ?: $key }}"
+       name="{{ $name ?: $key }}[]"
        class="form-control select2"
        multiple="multiple"
        @if ($required && ! $translated) required="required" @endif
