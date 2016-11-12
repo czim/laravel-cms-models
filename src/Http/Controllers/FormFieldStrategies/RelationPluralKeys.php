@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Collection;
@@ -34,11 +35,14 @@ class RelationPluralKeys extends AbstractRelationStrategy
             throw new UnexpectedValueException("Query must be Relation instance for " . get_class($this));
         }
 
-        $keyName = $query->getRelated()->getKeyName();
+        $relatedModel = $query->getRelated();
+
+        $keyName = $relatedModel->getKeyName();
+        $table   = $relatedModel->getTable();
 
         $query = $this->prepareRelationQuery($query);
 
-        return $query->pluck($keyName);
+        return $query->pluck($table . '.' . $keyName);
     }
 
     /**
@@ -78,7 +82,7 @@ class RelationPluralKeys extends AbstractRelationStrategy
 
         // Should not be used, since this is for singular relations..
         if ($relation instanceof BelongsToMany) {
-            $relation->sync([ $value ]);
+            $relation->sync($value);
             return;
         }
 
@@ -89,7 +93,11 @@ class RelationPluralKeys extends AbstractRelationStrategy
         // todo: this does not sync (detach) models .. should we?
         if ( ! count($relatedModels)) return;
 
-        if ($relation instanceof HasOne || $relation instanceof HasMany) {
+        if (    $relation instanceof HasOne
+            ||  $relation instanceof HasMany
+            ||  $relation instanceof MorphOne
+            ||  $relation instanceof MorphMany
+        ) {
             foreach ($relatedModels as $relatedModel) {
                 $relation->save($relatedModel);
             }

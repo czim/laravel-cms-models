@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use UnexpectedValueException;
 
@@ -71,7 +73,11 @@ class RelationSingleKey extends AbstractRelationStrategy
 
         if ( ! $relatedModel) return;
 
-        if ($relation instanceof HasOne || $relation instanceof HasMany) {
+        if (    $relation instanceof HasOne
+            ||  $relation instanceof HasMany
+            ||  $relation instanceof MorphOne
+            ||  $relation instanceof MorphMany
+        ) {
             $relation->save($relatedModel);
             return;
         }

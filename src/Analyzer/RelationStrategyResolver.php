@@ -50,17 +50,19 @@ class RelationStrategyResolver
 
             case RelationType::BELONGS_TO:
             case RelationType::BELONGS_TO_THROUGH:
+            case RelationType::MORPH_ONE:
             case RelationType::HAS_ONE:
                 $type = FormDisplayStrategy::RELATION_SINGLE_AUTOCOMPLETE;
                 break;
 
+            case RelationType::BELONGS_TO_MANY:
             case RelationType::HAS_MANY:
+            case RelationType::MORPH_MANY:
                 $type = FormDisplayStrategy::RELATION_PLURAL_AUTOCOMPLETE;
                 break;
 
-            case RelationType::MORPH_ONE:
+
             case RelationType::MORPH_TO:
-            case RelationType::MORPH_MANY:
                 // todo set special morph autocomplete strategies
                 break;
         }
@@ -84,17 +86,18 @@ class RelationStrategyResolver
 
             case RelationType::BELONGS_TO:
             case RelationType::BELONGS_TO_THROUGH:
+            case RelationType::MORPH_ONE:
             case RelationType::HAS_ONE:
                 $type = FormStoreStrategy::RELATION_SINGLE_KEY;
                 break;
 
+            case RelationType::BELONGS_TO_MANY:
             case RelationType::HAS_MANY:
+            case RelationType::MORPH_MANY:
                 $type = FormStoreStrategy::RELATION_PLURAL_KEYS;
                 break;
 
-            case RelationType::MORPH_ONE:
             case RelationType::MORPH_TO:
-            case RelationType::MORPH_MANY:
                 // todo: set special morph strategies for key/type combinations
                 break;
         }
