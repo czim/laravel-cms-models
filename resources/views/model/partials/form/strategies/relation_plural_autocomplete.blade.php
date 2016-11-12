@@ -34,12 +34,13 @@
                     headers    : {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
-                    url      : '{{ cms_route('models-meta.references') }}',
-                    type     : 'POST',
-                    dataType : 'json',
-                    delay    : 250,
+                    url       : '{{ cms_route('models-meta.references') }}',
+                    type      : 'POST',
+                    dataType  : 'json',
+                    delay     : 250,
+                    allowClear: {{ $required ? 'false' : 'true' }},
 
-                    data     : function (params) {
+                    data: function (params) {
                         return {
                             model : '{{ str_replace('\\', '\\\\', get_class($record)) }}',
                             type  : 'form.field',
