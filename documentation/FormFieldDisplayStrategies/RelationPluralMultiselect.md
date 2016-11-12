@@ -5,7 +5,7 @@ This strategy renders a select field with all the available models that may be r
 
 Note that this is only usable for sets of models that are guaranteed to be small.
 
-It submits an array with model keys that may be stored with the [RelationPluralKey store strategy](../FormFieldStoreStrategies/RelationPluralKey.md).
+It submits an array with model keys that may be stored with the [RelationPluralKeys store strategy](../FormFieldStoreStrategies/RelationPluralKeys.md).
 
 ## Options
 

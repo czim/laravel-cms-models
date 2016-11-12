@@ -4,7 +4,7 @@
 This strategy renders a select field with autocomplete functionality, 
 that allows multiple models to be selected.
 
-It submits an array with model keys that may be stored with the [RelationPluralKey store strategy](../FormFieldStoreStrategies/RelationPluralKey.md).
+It submits an array with model keys that may be stored with the [RelationPluralKeys store strategy](../FormFieldStoreStrategies/RelationPluralKeys.md).
 
 ## Options
 

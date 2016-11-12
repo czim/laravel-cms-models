@@ -1,5 +1,5 @@
 
-# Form Field Store Strategy: RelationPluralKey
+# Form Field Store Strategy: RelationPluralKeys
 
 This strategy renders a select field with autocomplete functionality, 
 that allows multiple models to be selected. 
