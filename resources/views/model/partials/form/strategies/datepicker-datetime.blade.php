@@ -26,7 +26,7 @@
     <script>
         $(function () {
             $('#__datetimepicker__{{ $key }}').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm'
+                format: '{{ array_get($options, 'moment_format', 'YYYY-MM-DD HH:mm') }}'
             });
         });
     </script>

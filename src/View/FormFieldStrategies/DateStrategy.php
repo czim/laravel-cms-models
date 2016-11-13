@@ -1,17 +1,25 @@
 <?php
 namespace Czim\CmsModels\View\FormFieldStrategies;
 
-class DateStrategy extends AbstractDefaultStrategy
+class DateStrategy extends DateTimeStrategy
 {
 
     /**
-     * Returns the view partial that should be used.
+     * Returns default PHP date format.
      *
      * @return string
      */
-    protected function getView()
+    protected function defaultDateFormat()
     {
-        return 'cms-models::model.partials.form.strategies.datepicker-date';
+        return 'Y-m-d';
+    }
+
+    /**
+     * @return string
+     */
+    protected function defaultMomentDateFormat()
+    {
+        return 'YYYY-MM-DD';
     }
 
 }
