@@ -282,16 +282,18 @@ return [
                 Enums\FormDisplayStrategy::RELATION_SINGLE_AUTOCOMPLETE => 'RelationSingleAutocompleteStrategy',
                 Enums\FormDisplayStrategy::RELATION_PLURAL_MULTISELECT  => 'RelationPluralMultiselectStrategy',
                 Enums\FormDisplayStrategy::RELATION_PLURAL_AUTOCOMPLETE => 'RelationPluralAutocompleteStrategy',
+                Enums\FormDisplayStrategy::RELATION_PIVOT_ORDERABLE     => 'RelationPivotOrderableStrategy',
 
             ],
 
             // Aliases for store strategy classes
             'store-aliases' => [
-                Enums\FormStoreStrategy::BOOLEAN              => 'BooleanStrategy',
-                Enums\FormStoreStrategy::DATE                 => 'DateStrategy',
-                Enums\FormStoreStrategy::STAPLER              => 'StaplerStrategy',
-                Enums\FormStoreStrategy::RELATION_SINGLE_KEY  => 'RelationSingleKey',
-                Enums\FormStoreStrategy::RELATION_PLURAL_KEYS => 'RelationPluralKeys',
+                Enums\FormStoreStrategy::BOOLEAN                => 'BooleanStrategy',
+                Enums\FormStoreStrategy::DATE                   => 'DateStrategy',
+                Enums\FormStoreStrategy::STAPLER                => 'StaplerStrategy',
+                Enums\FormStoreStrategy::RELATION_SINGLE_KEY    => 'RelationSingleKey',
+                Enums\FormStoreStrategy::RELATION_PLURAL_KEYS   => 'RelationPluralKeys',
+                Enums\FormStoreStrategy::RELATION_PIVOT_ORDERED => 'RelationPivotOrdered',
             ],
 
         ],

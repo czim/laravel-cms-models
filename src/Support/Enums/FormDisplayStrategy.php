@@ -33,5 +33,6 @@ class FormDisplayStrategy extends Enum
     const RELATION_SINGLE_AUTOCOMPLETE = 'relation-single-autocomplete';
     const RELATION_PLURAL_MULTISELECT  = 'relation-plural-multiselect';
     const RELATION_PLURAL_AUTOCOMPLETE = 'relation-plural-autocomplete';
+    const RELATION_PIVOT_ORDERABLE     = 'relation-pivot-orderable';
 
 }
