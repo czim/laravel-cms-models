@@ -1,16 +1,19 @@
 
-# Form Field Display Strategy: RelationPluralAutocomplete
+# Form Field Display Strategy: RelationPivotOrderable
 
-This strategy renders a select field with autocomplete functionality, 
-that allows multiple models to be selected.
+This strategy renders a list of connected records through a `BelongsToMany` relation, sorted by a position column.
+The connected records may be removed or dragged and dropped to reorder them.
+An autocomplete select field and add button combo allow the user to add new connections.
 
-It submits an array with model keys that may be stored with the [RelationPluralKeys store strategy](../FormFieldStoreStrategies/RelationPluralKeys.md).
+It submits an array with model keys that may be stored with the [RelationPivotOrdered store strategy](../FormFieldStoreStrategies/RelationPivotOrdered.md).
+
+This only allows models to be connected once, without duplicate keys. 
 
 ## Options
 
 It is generally not necessary to set options for this strategy if the related model is part of the CMS.
 In any case these options may still be overridden to specificy specific reference behavior.
- 
+
 - `source` (string)
     If not set, the model's default reference source is used (if it is part of the CMS). 
     Otherwise, the model's key will be used.
@@ -34,6 +37,7 @@ In any case these options may still be overridden to specificy specific referenc
 - `sort_direction` (string: `asc` or `desc`)
     This determines the direction the displayed model references will be sorted in. This will only work for table columns directly belonging to the model, or columns on related translation models.
     Other sources are currently not supported, and will not be used for sorting references.
+    Note that this only affects the dropdown results, not the list of connected references (which are sorted by position).
     
 - `parameters` (array, associative)
     Optional parameters that may be required by the `strategy`.

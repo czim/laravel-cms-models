@@ -1,8 +1,8 @@
 
 # Form Field Store Strategy: RelationPluralKeys
 
-This strategy renders a select field with autocomplete functionality, 
-that allows multiple models to be selected. 
+This strategy stores plural relation keys for `HasMany`, `MorphMany`, `BelongsToMany` relations.
+Though not intended to be used for them, it will still work with `HasOne`, `MorphOne` and `BelongsTo` relations.
 
 This may be used in combination with the
 [RelationPluralMultiselect](../FormFieldDisplayStrategies/RelationPluralMultiselect.md) 
