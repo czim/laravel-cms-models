@@ -6,13 +6,12 @@
 
             @if ($value)
                 @foreach ($value as $valueKey => $valuePosition)
-                    @continue (null === $valuePosition)
 
                     @include('cms-models::model.partials.form.strategies.pivot_orderable.pivot_orderable_row', [
                         'rowId'           => "field-{$key}__current-row__{$valueKey}",
                         'hiddenInputName' => ($name ?: $key) . '[' . $valueKey . ']',
                         'key'             => $valueKey,
-                        'position'        => $valuePosition,
+                        'position'        => $valuePosition ?: 0,
                         'reference'       => array_get($references, $valueKey, $valueKey),
                     ])
                 @endforeach
