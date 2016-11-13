@@ -3,18 +3,23 @@
 
     @if (array_key_exists($node, $model->form->fields))
 
-        @include('cms-models::model.partials.form.field_strategy', array_merge(
-            compact(
-                'record',
-                'model',
-                'values',
-                'errors'
-            ),
-            [
-                'key'   => $node,
-                'field' => $model->form->fields[ $node ],
-            ]
-        ))
+        {{-- If the field should not be displayed on the form, ignore it --}}
+        @if (array_key_exists($node, $fields))
+
+            @include('cms-models::model.partials.form.field_strategy', array_merge(
+                compact(
+                    'record',
+                    'model',
+                    'values',
+                    'errors'
+                ),
+                [
+                    'key'   => $node,
+                    'field' => $model->form->fields[ $node ],
+                ]
+            ))
+
+        @endif
 
     @else
 
@@ -31,6 +36,7 @@
             'record',
             'model',
             'values',
+            'fields',
             'errors'
         ),
         [
@@ -46,6 +52,7 @@
             'record',
             'model',
             'values',
+            'fields',
             'errors'
         ),
         [

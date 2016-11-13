@@ -93,6 +93,7 @@
                     compact(
                         'record',
                         'model',
+                        'fields',
                         'values',
                         'fieldErrors',
                         'tabs',
@@ -115,6 +116,7 @@
                             'nodeKey',
                             'record',
                             'model',
+                            'fields',
                             'values'
                         ),
                         [

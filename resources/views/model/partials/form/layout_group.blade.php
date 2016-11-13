@@ -18,6 +18,7 @@
                         'record',
                         'model',
                         'values',
+                        'fields',
                         'errors'
                     ),
                     [
