@@ -1,6 +1,5 @@
 <?php
 namespace Czim\CmsModels\View\FormFieldStrategies;
-use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 
 /**
  * Class RelationSingleMorphDropdownStrategy
