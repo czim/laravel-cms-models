@@ -285,6 +285,7 @@ return [
                 Enums\FormDisplayStrategy::RELATION_PIVOT_ORDERABLE     => 'RelationPivotOrderableStrategy',
 
                 Enums\FormDisplayStrategy::RELATION_SINGLE_MORPH_DROPDOWN     => 'RelationSingleMorphDropdownStrategy',
+                Enums\FormDisplayStrategy::RELATION_SINGLE_MORPH_AUTOCOMPLETE => 'RelationSingleMorphAutocompleteStrategy',
             ],
 
             // Aliases for store strategy classes

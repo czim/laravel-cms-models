@@ -36,4 +36,5 @@ class FormDisplayStrategy extends Enum
     const RELATION_PIVOT_ORDERABLE     = 'relation-pivot-orderable';
 
     const RELATION_SINGLE_MORPH_DROPDOWN     = 'relation-single-morph-dropdown';
+    const RELATION_SINGLE_MORPH_AUTOCOMPLETE = 'relation-single-morph-autocomplete';
 }

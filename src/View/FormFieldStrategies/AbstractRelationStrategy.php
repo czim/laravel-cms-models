@@ -11,10 +11,11 @@ abstract class AbstractRelationStrategy extends AbstractDefaultStrategy
     /**
      * Returns references for model keys as an array keyed per model key.
      *
-     * @param mixed[] $keys
-     * @return string[]     associative
+     * @param mixed[]     $keys
+     * @param string|null $targetModel  the nested model class, if multiple model definitions set
+     * @return string[] associative
      */
-    protected function getReferencesForModelKeys(array $keys)
+    protected function getReferencesForModelKeys(array $keys, $targetModel = null)
     {
         $keys = array_filter($keys);
 
@@ -25,7 +26,8 @@ abstract class AbstractRelationStrategy extends AbstractDefaultStrategy
         $referenceData = $this->getReferenceDataProvider()->getForModelClassByType(
             $this->model,
             'form.field',
-            $this->field->key()
+            $this->field->key(),
+            $targetModel
         );
 
         if ( ! $referenceData) {
