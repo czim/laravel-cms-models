@@ -22,18 +22,19 @@ class MetaReferenceDataProvider implements MetaReferenceDataProviderInterface
     /**
      * Returns reference data for a model class, type and key.
      *
-     * @param string $modelClass
-     * @param string $type
-     * @param string $key
+     * @param string      $modelClass
+     * @param string      $type
+     * @param string      $key
+     * @param string|null $targetModel  for multiple/nested models, the target to use
      * @return ModelMetaReferenceInterface|false
      */
-    public function getForModelClassByType($modelClass, $type, $key)
+    public function getForModelClassByType($modelClass, $type, $key, $targetModel = null)
     {
         $info = $this->getModelInformation($modelClass);
 
         if ( ! $info) return false;
 
-        return $this->getForInformationByType($info, $type, $key);
+        return $this->getForInformationByType($info, $type, $key, $targetModel);
     }
 
     /**
@@ -42,15 +43,16 @@ class MetaReferenceDataProvider implements MetaReferenceDataProviderInterface
      * @param ModelInformationInterface $info
      * @param string                    $type
      * @param string                    $key
+     * @param string|null               $targetModel    for multiple/nested models, the target to use
      * @return ModelMetaReferenceInterface|false
      */
-    public function getForInformationByType(ModelInformationInterface $info, $type, $key)
+    public function getForInformationByType(ModelInformationInterface $info, $type, $key, $targetModel = null)
     {
         // Find the reference information for type and key specified
         switch ($type) {
 
             case 'form.field':
-                return $this->getInformationReferenceDataForFormField($info, $key);
+                return $this->getInformationReferenceDataForFormField($info, $key, $targetModel);
 
             // Default omitted on purpose
         }
@@ -61,35 +63,75 @@ class MetaReferenceDataProvider implements MetaReferenceDataProviderInterface
 
     /**
      * @param ModelInformationInterface|ModelInformation $info
-     * @param string                                     $key
+     * @param string   $key
+     * @param string   $targetModel     the nested model class, if multiple model definitions set
      * @return ModelMetaReference|false
      */
-    protected function getInformationReferenceDataForFormField(ModelInformationInterface $info, $key)
-    {
+    protected function getInformationReferenceDataForFormField(
+        ModelInformationInterface $info,
+        $key,
+        $targetModel = null
+    ) {
         if ( ! array_key_exists($key, $info->form->fields)) {
             return false;
         }
 
-        $data = $info->form->fields[ $key ];
+        $formFieldData = $info->form->fields[ $key ];
 
         // Determine the target class, if not set in options
-        if ( ! ($targetModelClass = array_get($data->options(), 'model'))) {
-            $targetModelClass = get_class(
-                $this->determineTargetModelFromSource($info->modelClass(), $data->source())
-            );
+
+        $dataIsNested = null !== $targetModel;
+
+        if ($dataIsNested) {
+            // Find the nested data for this specific model
+
+            $dataParent = $this->getNestedReferenceFieldOptionData($formFieldData->options(),$targetModel);
+
+        } else {
+            // Find the data in the top level form field data, and determine the model
+
+            if ( ! ($targetModel = array_get($formFieldData->options(), 'model'))) {
+                $targetModel = get_class(
+                    $this->determineTargetModelFromSource($info->modelClass(), $formFieldData->source())
+                );
+            }
+
+            $dataParent = $formFieldData->options();
         }
 
         $referenceData = new ModelMetaReference([
-            'model'            => $targetModelClass,
-            'strategy'         => array_get($data->options(), 'strategy'),
-            'source'           => array_get($data->options(), 'source'),
-            'target'           => array_get($data->options(), 'target'),
-            'context_strategy' => array_get($data->options(), 'context_strategy'),
-            'parameters'       => array_get($data->options(), 'parameters', []),
-            'sort_direction'   => array_get($data->options(), 'sort_direction'),
+            'model'            => $targetModel,
+            'strategy'         => array_get($dataParent, 'strategy'),
+            'source'           => array_get($dataParent, 'source'),
+            'target'           => array_get($dataParent, 'target'),
+            'context_strategy' => array_get($dataParent, 'context_strategy'),
+            'parameters'       => array_get($dataParent, 'parameters', []),
+            'sort_direction'   => array_get($dataParent, 'sort_direction'),
         ]);
 
         return $this->enrichReferenceData($referenceData);
+    }
+
+    /**
+     * Returns nested reference data for a given model class, if possible.
+     *
+     * @param array  $options
+     * @param string $modelClass
+     * @return array
+     */
+    protected function getNestedReferenceFieldOptionData(array $options, $modelClass)
+    {
+        $data = array_get($options, 'models.' . $modelClass, false);
+
+        if (false === $data || ! is_array($data)) {
+            // If we could not retrieve the model data by key,
+            // it was either omitted are set as a string value (non-assiative).
+            // In either case, there is no specified reference data.
+
+            return [];
+        }
+
+        return $data;
     }
 
     /**
