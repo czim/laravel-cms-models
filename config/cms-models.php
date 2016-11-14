@@ -284,6 +284,7 @@ return [
                 Enums\FormDisplayStrategy::RELATION_PLURAL_AUTOCOMPLETE => 'RelationPluralAutocompleteStrategy',
                 Enums\FormDisplayStrategy::RELATION_PIVOT_ORDERABLE     => 'RelationPivotOrderableStrategy',
 
+                Enums\FormDisplayStrategy::RELATION_SINGLE_MORPH_DROPDOWN     => 'RelationSingleMorphDropdownStrategy',
             ],
 
             // Aliases for store strategy classes
@@ -294,6 +295,7 @@ return [
                 Enums\FormStoreStrategy::RELATION_SINGLE_KEY    => 'RelationSingleKey',
                 Enums\FormStoreStrategy::RELATION_PLURAL_KEYS   => 'RelationPluralKeys',
                 Enums\FormStoreStrategy::RELATION_PIVOT_ORDERED => 'RelationPivotOrdered',
+                Enums\FormStoreStrategy::RELATION_SINGLE_MORPH  => 'RelationSingleMorph',
             ],
 
         ],

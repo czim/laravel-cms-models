@@ -1,6 +1,7 @@
 <?php
 namespace Czim\CmsModels\View\FormFieldStrategies;
 
+use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelReferenceRepositoryInterface;
 use Czim\CmsModels\Contracts\Support\MetaReferenceDataProviderInterface;
 
@@ -41,6 +42,42 @@ abstract class AbstractRelationStrategy extends AbstractDefaultStrategy
         return $references;
     }
 
+
+    /**
+     * Get displayable text for a given model class.
+     *
+     * @param string $modelClass
+     * @return string
+     */
+    protected function getModelDisplayLabel($modelClass)
+    {
+        $info = $this->getModelInformation($modelClass);
+
+        if ($info) {
+            return ucfirst($info->labelPlural());
+        }
+
+        return $this->makeModelDisplayValueFromModelClass($modelClass);
+    }
+
+    /**
+     * Returns displayable text for a given model class, based only on the class name.
+     *
+     * @param string $modelClass
+     * @return string
+     */
+    protected function makeModelDisplayValueFromModelClass($modelClass)
+    {
+        $stripPrefix = config('cms-models.collector.models-namespace');
+
+        if ($stripPrefix && starts_with($modelClass, $stripPrefix)) {
+            $modelClass = trim(substr($modelClass, 0, strlen($stripPrefix)), '\\');
+        }
+
+        return ucfirst(str_replace('\\', ' ', $modelClass));
+    }
+
+
     /**
      * @return MetaReferenceDataProviderInterface
      */
@@ -55,6 +92,23 @@ abstract class AbstractRelationStrategy extends AbstractDefaultStrategy
     protected function getReferenceRepository()
     {
         return app(ModelReferenceRepositoryInterface::class);
+    }
+
+    /**
+     * @param $modelClass
+     * @return \Czim\CmsModels\Support\Data\ModelInformation|false
+     */
+    protected function getModelInformation($modelClass)
+    {
+        return $this->getModelInformationRepository()->getByModelClass($modelClass);
+    }
+
+    /**
+     * @return ModelInformationRepositoryInterface
+     */
+    protected function getModelInformationRepository()
+    {
+        return app(ModelInformationRepositoryInterface::class);
     }
 
 }
