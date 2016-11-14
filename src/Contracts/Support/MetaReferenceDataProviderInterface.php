@@ -29,4 +29,16 @@ interface MetaReferenceDataProviderInterface
      */
     public function getForInformationByType(ModelInformationInterface $info, $type, $key, $targetModel = null);
 
+    /**
+     * Returns nested model classes for model information, type and key.
+     *
+     * This can be used to check whether a reference data is for multiple models, and if so, which.
+     *
+     * @param ModelInformationInterface $info
+     * @param string                    $type
+     * @param string                    $key
+     * @return false|string[]   Returns false if the relation does not have nested model data.
+     */
+    public function getNestedModelClassesByType(ModelInformationInterface $info, $type, $key);
+
 }

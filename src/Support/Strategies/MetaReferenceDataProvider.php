@@ -60,6 +60,30 @@ class MetaReferenceDataProvider implements MetaReferenceDataProviderInterface
         return false;
     }
 
+    /**
+     * Returns nested model classes for model information, type and key.
+     *
+     * This can be used to check whether a reference data is for multiple models, and if so, which.
+     *
+     * @param ModelInformationInterface $info
+     * @param string                    $type
+     * @param string                    $key
+     * @return false|string[]   Returns false if the relation does not have nested model data.
+     */
+    public function getNestedModelClassesByType(ModelInformationInterface $info, $type, $key)
+    {
+        // Find the reference information for type and key specified
+        switch ($type) {
+
+            case 'form.field':
+                return $this->getInformationReferenceModelClassesForFormField($info, $key);
+
+            // Default omitted on purpose
+        }
+
+        return false;
+    }
+
 
     /**
      * @param ModelInformationInterface|ModelInformation $info
@@ -110,6 +134,28 @@ class MetaReferenceDataProvider implements MetaReferenceDataProviderInterface
         ]);
 
         return $this->enrichReferenceData($referenceData);
+    }
+
+    /**
+     * @param ModelInformationInterface|ModelInformation $info
+     * @param string                                     $key
+     * @return false|string[]
+     */
+    protected function getInformationReferenceModelClassesForFormField(ModelInformationInterface $info, $key)
+    {
+        if ( ! array_key_exists($key, $info->form->fields)) {
+            return false;
+        }
+
+        $formFieldData = $info->form->fields[ $key ];
+
+        $nestedModels = array_get($formFieldData->options(), 'models', false);
+
+        if ( ! $nestedModels || ! is_array($nestedModels)) {
+            return false;
+        }
+
+        return array_keys($nestedModels);
     }
 
     /**
