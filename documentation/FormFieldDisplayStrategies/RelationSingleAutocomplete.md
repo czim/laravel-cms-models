@@ -1,10 +1,9 @@
-# Form Field Display Strategy: RelationPluralMultiselect
+# Form Field Display Strategy: RelationSingleAutocomplete
 
-This strategy renders a select field with all the available models that may be related as options.
+This strategy renders a select field with autocomplete functionality, 
+that allows a single model to be selected.
 
-Note that this is only usable for sets of models that are guaranteed to be small.
-
-It submits an array with model keys that may be stored with the [RelationPluralKeys store strategy](../FormFieldStoreStrategies/RelationPluralKeys.md).
+It submits a model key that may be stored with the [RelationSingleKey store strategy](../FormFieldStoreStrategies/RelationSingleKey.md).
 
 ## Options
 
@@ -14,6 +13,10 @@ In any case these options may still be overridden to specificy specific referenc
 - `source` (string)
     If not set, the model's default reference source is used (if it is part of the CMS). 
     Otherwise, the model's key will be used.
+     
+- `target` (string)
+    If not set, `source` value is used.
+    Indicates the column(s) used for searching/matching references using autocomplete input.
     
 - `strategy` (string)
     Strategy identifier for a [model reference strategy](../Strategies.md#model-reference-strategies). The `source` value is used for this strategy.
@@ -42,6 +45,9 @@ In any case these options may still be overridden to specificy specific referenc
          // The source column(s) to use for the reference strategy 
          'source' => 'title',
          
+         // The target column(s) to search when using autocomplete search strings
+         'target' => 'title,name,id',
+         
          // The reference strategy to use.
          'strategy' => SomeReferenceStrategyClass::class,
          
@@ -52,3 +58,4 @@ In any case these options may still be overridden to specificy specific referenc
          `sort_direction` => 'desc',
      ]
  ```
+

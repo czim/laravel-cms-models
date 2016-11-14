@@ -1,4 +1,3 @@
-
 # Form Field Display Strategy: RelationPluralAutocomplete
 
 This strategy renders a select field with autocomplete functionality, 
