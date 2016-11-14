@@ -52,7 +52,7 @@ class RelationPluralMultiselectStrategy extends AbstractRelationStrategy
         // Get the key-reference pairs required to fill the drop-down
 
         $referenceData = $this->getReferenceDataProvider()->getForModelClassByType(
-            $this->model,
+            get_class($this->model),
             'form.field',
             $this->field->key()
         );
