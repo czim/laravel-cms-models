@@ -23,6 +23,24 @@
     <script>
         $(function() {
 
+            /**
+             * Returns the display label for a given model class.
+             *
+             * @param string modelClass
+             * @return string
+             */
+            var getReferenceForModelClass = function(modelClass) {
+                console.log(modelClass);
+                switch (modelClass) {
+    @foreach ($modelLabels as $modelClass => $label)
+                case "{{ str_replace('\\', '\\\\', $modelClass) }}":
+                    return "{{ str_replace('"', '\\"', $label) }}";
+    @endforeach
+
+                    default: return modelClass;
+                }
+            };
+
             $('#field-{{ $key }}').select2({
                 ajax: {
                     headers    : {
@@ -55,10 +73,24 @@
                         var converted = [];
 
                         $.each(data, function (key, value) {
-                            converted.push({
-                                id   : value.key,
-                                text : value.reference
-                            })
+
+                            var label   = getReferenceForModelClass(key),
+                                options = [];
+
+                            console.log(label);
+                            $.each(value, function (key, value) {
+                                options.push({
+                                    id  : value.key,
+                                    text: value.reference
+                                })
+                            });
+
+                            if (options.length) {
+                                converted.push({
+                                    text    : label,
+                                    children: options
+                                });
+                            }
                         });
 
                         return {
@@ -69,15 +101,6 @@
                 },
 
                 minimumInputLength: 1
-
-                // let our custom formatter work
-//                escapeMarkup: function (markup) { return markup; }
-
-                // omitted for brevity, see the source of this page
-//                templateResult     : formatRepo,
-
-                // omitted for brevity, see the source of this page
-//                templateSelection  : formatRepoSelection
             });
         });
     </script>
