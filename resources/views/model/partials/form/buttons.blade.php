@@ -1,7 +1,7 @@
 
 <div class="form-group edit-button-row">
 
-    <div class="col-sm-6">
+    <div class="col-sm-4">
 
         @if ( ! $model->single)
             <a href="{{ route("{$routePrefix}.index") }}" class="btn btn-default edit-button-cancel">
@@ -12,7 +12,7 @@
 
     </div>
 
-    <div class="col-sm-6">
+    <div class="col-sm-8">
 
         <div class="btn-group pull-right" role="group" aria-label="save">
 
