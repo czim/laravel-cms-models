@@ -34,7 +34,7 @@
                 switch (modelClass) {
     @foreach ($modelLabels as $modelClass => $label)
                 case "{{ str_replace('\\', '\\\\', $modelClass) }}":
-                    return "{{ str_replace('"', '\\"', $label) }}";
+                        return "{{ str_replace('"', '\\"', $label) }}";
     @endforeach
 
                     default: return modelClass;
@@ -63,26 +63,22 @@
                     },
 
                     processResults: function (data, params) {
-
                         // Convert the key/reference pairs from the model meta controller
                         // to the id/text pairs expected by select2.
-
-                        // todo: translate into optgroups
-                        console.log(data);
 
                         var converted = [];
 
                         $.each(data, function (key, value) {
 
-                            var label   = getReferenceForModelClass(key),
-                                options = [];
+                            var modelClass = key;
+                                label      = getReferenceForModelClass(modelClass),
+                                options    = [];
 
-                            console.log(label);
                             $.each(value, function (key, value) {
                                 options.push({
-                                    id  : value.key,
+                                    id  : modelClass + ':' + value.key,
                                     text: value.reference
-                                })
+                                });
                             });
 
                             if (options.length) {
@@ -97,7 +93,7 @@
                             results: converted
                         };
                     },
-                    cache   : false
+                    cache: false
                 },
 
                 minimumInputLength: 1
