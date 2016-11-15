@@ -31,7 +31,7 @@ In any case these options may still be overridden to specificy specific referenc
     Otherwise, the model's key will be displayed.
     This determines how the related models are referenced as displayed options.
  
- - `context_strategy` (string)
+- `context_strategy` (string)
     Strategy identifier for a [repository context strategy](../Strategies.md#repository-context-strategies).
      If not set, the model's default `context_strategy` is used (if it is part of the CMS). 
      Otherwise, only `withoutGlobalScopes()` will be applied to the query.
