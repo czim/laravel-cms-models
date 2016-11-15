@@ -5,7 +5,7 @@ namespace Czim\CmsModels\View\FormFieldStrategies;
  * Class RelationSingleMorphDropdownStrategy
  *
  * Normal select dropdown for polymorphic (MorphTo) relation references.
- * Not advisable to to use with large resultsets.
+ * Not advisable to use with large resultsets.
  */
 class RelationSingleMorphDropdownStrategy extends AbstractRelationStrategy
 {
