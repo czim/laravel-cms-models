@@ -68,11 +68,7 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
     {
         $this->allInfo = $information;
 
-        foreach ($information as $singleInfo) {
-            $this->enrich($singleInfo);
-        }
-
-        return $information;
+        return $information->transform([ $this, 'enrich' ]);
     }
 
     /**
