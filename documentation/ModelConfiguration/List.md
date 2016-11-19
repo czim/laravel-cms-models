@@ -41,7 +41,7 @@ Entries may be:
 
 Note that if the `columns` section is omitted from the configuration, this can easily result in (too) many columns being rendered for hefty models.
 
-See [List Display Strategies](Strategies.md#list-display-strategies) for information about strategies that can be used (or how to create new ones).
+See [List Display Strategies](../Strategies.md#list-display-strategies) for information about strategies that can be used (or how to create new ones).
 
 
 ## Default Sorting
@@ -80,7 +80,7 @@ Accepted values:
 
     The values set in the array will override defaults. For all filters values not specified, the analysis-determined defaults are used.
     
-See [Filter Strategies](Strategies.md#filter-strategies) for information about strategies that can be used (or how to create new ones), and the key-value pairs in the filter data.
+See [Filter Strategies](../Strategies.md#filter-strategies) for information about strategies that can be used (or how to create new ones), and the key-value pairs in the filter data.
 
 To disable all filters entirely, set `list.disable_filters` to `true`.
 
@@ -137,7 +137,7 @@ Note that setting `label_translated` overrides the `label` value.
 When creating a custom scope, note that the `method` and `strategy` settings are mutually exclusive.
 A scope either has an Eloquent scope method name set, or a custom scope strategy class.
 
-See [Scope Strategies](Strategies.md#scope-strategies) for information about making strategy classes for custom scopes.
+See [Scope Strategies](../Strategies.md#scope-strategies) for information about making strategy classes for custom scopes.
 
 
 ## Page Size
