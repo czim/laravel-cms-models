@@ -136,11 +136,34 @@ class RelationStrategyResolver
         switch ($data->type) {
 
             case RelationType::MORPH_TO:
-                // todo: set special morph options to mark the targetable model classes
+                // Set special morph options to mark the targetable model classes
+                $models = $this->determineMorphModelsForRelationData($data);
+
+                if (count($models)) {
+                    $options['models'] = $models;
+                }
                 break;
         }
 
         return $options;
+    }
+
+    /**
+     * Determines models for MorphTo relation data.
+     *
+     * @param ModelRelationData $data
+     * @return string[]
+     */
+    protected function determineMorphModelsForRelationData(ModelRelationData $data)
+    {
+        // If models were set during analysis, trust them
+        if ($data->morphModels && count($data->morphModels)) {
+            return $data->morphModels;
+        }
+
+        // We do not have access to modelinformation here, so
+        // if it cannot be derived from data, the enrichment step must handle this using context info.
+        return [];
     }
 
 }

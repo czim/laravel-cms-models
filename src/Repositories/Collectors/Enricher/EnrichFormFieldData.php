@@ -112,16 +112,15 @@ class EnrichFormFieldData extends AbstractEnricherStep
             }
 
             if (isset($this->info->attributes[ $key ])) {
-                $attributeFieldInfo = $this->makeModelFormFieldDataForAttributeData($this->info->attributes[ $key ], $this->info);
+                $enrichFieldInfo = $this->makeModelFormFieldDataForAttributeData($this->info->attributes[ $key ], $this->info);
             } else {
                 // get from relation data
-                $attributeFieldInfo = $this->makeModelFormFieldDataForRelationData($this->info->relations[ $key ], $this->info);
+                $enrichFieldInfo = $this->makeModelFormFieldDataForRelationData($this->info->relations[ $key ], $this->info);
             }
 
+            $enrichFieldInfo->merge($field);
 
-            $attributeFieldInfo->merge($field);
-
-            $fields[ $key ] = $attributeFieldInfo;
+            $fields[ $key ] = $enrichFieldInfo;
         }
 
         $this->info->form->fields = $fields;
@@ -315,7 +314,53 @@ class EnrichFormFieldData extends AbstractEnricherStep
      */
     protected function determineFormStoreOptionsForRelation(ModelRelationData $relation)
     {
-        return $this->relationStrategyResolver->determineFormStoreOptions($relation);
+        $options = $this->relationStrategyResolver->determineFormStoreOptions($relation);
+
+        // Prepare MorphTo models, if they are not set.
+        if ($relation->type === RelationType::MORPH_TO) {
+            $options['models'] = $this->determineMorphModelsForRelationData($relation);
+        }
+
+        return $options;
+    }
+
+    /**
+     * Determines models for MorphTo relation data.
+     *
+     * @param ModelRelationData $data
+     * @return string[]
+     */
+    protected function determineMorphModelsForRelationData(ModelRelationData $data)
+    {
+        if ($data->morphModels && count($data->morphModels)) {
+            return $data->morphModels;
+        }
+
+        // Use information for other models in the CMS to find (some of) the related models
+        // If there is no context, ignore it.
+        if ( ! ($context = $this->enricher->getAllModelInformation())) {
+            return [];
+        }
+
+        $models = [];
+
+        foreach ($context as $information) {
+
+            // If a relation is related to this model by a reverse morph relation,
+            // it is an intended MorphTo targetable model.
+            foreach ($information->relations as $relation) {
+
+                if (    $this->info->modelClass() !== $relation->relatedModel
+                    ||  ! in_array($relation->type, [ RelationType::MORPH_ONE, RelationType::MORPH_MANY ])
+                ) {
+                    continue;
+                }
+
+                $models[ $information->modelClass() ] = [];
+            }
+        }
+
+        return $models;
     }
 
 }

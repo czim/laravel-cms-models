@@ -445,7 +445,8 @@ class ModelAnalyzer
                 continue;
             }
 
-            $type = camel_case(class_basename($relation));
+            $type        = camel_case(class_basename($relation));
+            $morphModels = [];
 
             // Determine if the foreign key for this relation is nullable.
             // For now, this only concerns belongsTo relations.
@@ -459,8 +460,23 @@ class ModelAnalyzer
 
             } elseif ($type == RelationType::MORPH_TO) {
                 /** @var MorphTo $relation */
-                $foreignKeys = [ $relation->getForeignKey(), $relation->getMorphType() ];
+                $foreignKeys = [$relation->getForeignKey(), $relation->getMorphType()];
                 $nullableKey = $this->info->attributes[ $relation->getForeignKey() ]->nullable;
+
+                $morphModels = $this->getMorphedModelsFromMorphToReflectionMethod($method);
+
+            } elseif ($type == RelationType::BELONGS_TO_MANY) {
+                /** @var BelongsToMany $relation */
+                $foreignKeys = [$relation->getForeignKey(), $relation->getOtherKey()];
+
+            } elseif ($type == RelationType::MORPH_TO_MANY) {
+                /** @var MorphToMany $relation */
+                $foreignKeys = [ $relation->getForeignKey(), $relation->getMorphType(), $relation->getOtherKey() ];
+
+                // The relation is inverse if the MorphClass is not this model
+                if (get_class($this->model) !== $relation->getMorphClass()) {
+                    $type = RelationType::MORPHED_BY_MANY;
+                }
             }
 
             $relations[ $method->name ] = new ModelRelationData([
@@ -471,6 +487,7 @@ class ModelAnalyzer
                 'relatedModel'  => get_class($relation->getRelated()),
                 'foreign_keys'  => $foreignKeys,
                 'nullable_key'  => $nullableKey,
+                'morphModels'   => $morphModels,
             ]);
         }
 
@@ -541,6 +558,22 @@ class ModelAnalyzer
     }
 
     /**
+     * Returns list of morph related models for a MorphTo (reflected) relation.
+     *
+     * This only attempts to retrieve a list from docblock tags.
+     * Relations themselves are only analyzed during enrichment, when all models are analyzed.
+     *
+     * @param ReflectionMethod $method
+     * @return string[]
+     */
+    protected function getMorphedModelsFromMorphToReflectionMethod(ReflectionMethod $method)
+    {
+        $cmsTags = $this->getCmsDocBlockTags($method);
+
+        return array_get($cmsTags, 'morph', []);
+    }
+
+    /**
      * Returns associative array representing the CMS docblock tag content.
      *
      * @param ReflectionMethod $method
@@ -564,20 +597,36 @@ class ModelAnalyzer
         $cmsTags = [];
 
         foreach ($tags as $tag) {
-            $description = strtolower(trim($tag->getDescription()));
 
-            if ($description == 'relation') {
+            list($firstWord, $parameters) = preg_split('#\s+#', trim($tag->getDescription()), 2);
+            $firstWord = strtolower($firstWord);
+
+            if ($firstWord == 'relation') {
                 $cmsTags['relation'] = true;
                 continue;
             }
 
-            if ($description == 'scope') {
+            if ($firstWord == 'scope') {
                 $cmsTags['scope'] = true;
                 continue;
             }
 
-            if ($description == 'ignore') {
+            if ($firstWord == 'ignore') {
                 $cmsTags['ignore'] = true;
+                continue;
+            }
+
+            if ($firstWord == 'morph') {
+                if ( ! $parameters) continue;
+
+                $models = array_map('trim', explode(',', $parameters));
+
+                if ( ! array_key_exists('morph', $cmsTags)) {
+                    $cmsTags['morph'] = [];
+                }
+
+                $cmsTags['morph'] = array_merge($cmsTags['morph'], $models);
+                $cmsTags['morph'] = array_unique($cmsTags['morph']);
                 continue;
             }
         }
