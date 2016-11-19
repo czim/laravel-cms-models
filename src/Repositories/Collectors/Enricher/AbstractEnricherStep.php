@@ -3,14 +3,22 @@ namespace Czim\CmsModels\Repositories\Collectors\Enricher;
 
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\EnricherStepInterface;
+use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Enums\AttributeCast;
-use Czim\CmsModels\Support\Enums\AttributeFormStrategy;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 abstract class AbstractEnricherStep implements EnricherStepInterface
 {
+
+    /**
+     * Parent enricher for this step.
+     *
+     * @var ModelInformationEnricherInterface
+     */
+    protected $enricher;
 
     /**
      * @var ModelInformationInterface|ModelInformation
@@ -18,21 +26,41 @@ abstract class AbstractEnricherStep implements EnricherStepInterface
     protected $info;
 
     /**
+     * All model information known (so far), before enrichment.
+     *
+     * @var Collection|ModelInformationInterface[]|ModelInformation[]|null
+     */
+    protected $allInfo;
+
+    /**
      * @var Model
      */
     protected $model;
 
     /**
+     * @param ModelInformationEnricherInterface $enricher
+     */
+    public function __construct(ModelInformationEnricherInterface $enricher)
+    {
+        $this->enricher = $enricher;
+    }
+
+    /**
      * Performs enrichment on model information.
      *
-     * @param ModelInformationInterface|ModelInformation $info
+     * Optionally takes all model information known as context.
+     *
+     * @param ModelInformationInterface|ModelInformation                     $info
+     * @param Collection|ModelInformationInterface[]|ModelInformation[]|null $allInformation
      * @return ModelInformationInterface|ModelInformation
      */
-    public function enrich(ModelInformationInterface $info)
+    public function enrich(ModelInformationInterface $info, $allInformation = null)
     {
         $this->info = $info;
         $class = $this->info->modelClass();
         $this->model = new $class;
+
+        $this->allInfo = $allInformation;
 
         $this->performEnrichment();
 

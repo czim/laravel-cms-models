@@ -168,10 +168,7 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
      */
     protected function enrichModelInformation()
     {
-        foreach ($this->information as $key => $info) {
-
-            $this->informationEnricher->enrich($info);
-        }
+        $this->information = $this->informationEnricher->enrichMany($this->information);
 
         return $this;
     }
