@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Contracts\Repositories\Collectors;
 
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Support\Data\ModelInformation;
+use Illuminate\Support\Collection;
 
 interface EnricherStepInterface
 {
@@ -10,9 +11,12 @@ interface EnricherStepInterface
     /**
      * Performs enrichment on model information.
      *
-     * @param ModelInformationInterface|ModelInformation $info
+     * Optionally takes all model information known as context.
+     *
+     * @param ModelInformationInterface|ModelInformation                     $info
+     * @param Collection|ModelInformationInterface[]|ModelInformation[]|null $allInformation
      * @return ModelInformationInterface|ModelInformation
      */
-    public function enrich(ModelInformationInterface $info);
+    public function enrich(ModelInformationInterface $info, $allInformation = null);
 
 }
