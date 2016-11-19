@@ -256,8 +256,8 @@ class EnrichFormFieldData extends AbstractEnricherStep
             RelationType::BELONGS_TO,
             RelationType::BELONGS_TO_THROUGH,
             RelationType::HAS_ONE,
-            //RelationType::MORPH_ONE,
-            //RelationType::MORPH_TO,
+            RelationType::MORPH_ONE,
+            RelationType::MORPH_TO,
         ]);
 
         return new ModelFormFieldData([

@@ -21,16 +21,16 @@ class RelationStrategyResolver
         switch ($data->type) {
 
             case RelationType::BELONGS_TO:
+            case RelationType::BELONGS_TO_THROUGH:
             case RelationType::HAS_ONE:
             case RelationType::MORPH_ONE:
-            case RelationType::BELONGS_TO_THROUGH:
+            case RelationType::MORPH_TO:
                 return ListDisplayStrategy::RELATION_REFERENCE;
 
+            case RelationType::BELONGS_TO_MANY:
             case RelationType::HAS_MANY:
             case RelationType::MORPH_MANY:
-            case RelationType::BELONGS_TO_MANY:
                 return ListDisplayStrategy::RELATION_COUNT;
-
         }
 
         return null;
@@ -58,12 +58,13 @@ class RelationStrategyResolver
             case RelationType::BELONGS_TO_MANY:
             case RelationType::HAS_MANY:
             case RelationType::MORPH_MANY:
+            case RelationType::MORPH_TO_MANY:
+            case RelationType::MORPHED_BY_MANY:
                 $type = FormDisplayStrategy::RELATION_PLURAL_AUTOCOMPLETE;
                 break;
 
-
             case RelationType::MORPH_TO:
-                // todo set special morph autocomplete strategies
+                $type = FormDisplayStrategy::RELATION_SINGLE_MORPH_AUTOCOMPLETE;
                 break;
         }
 
@@ -94,11 +95,13 @@ class RelationStrategyResolver
             case RelationType::BELONGS_TO_MANY:
             case RelationType::HAS_MANY:
             case RelationType::MORPH_MANY:
+            case RelationType::MORPH_TO_MANY:
+            case RelationType::MORPHED_BY_MANY:
                 $type = FormStoreStrategy::RELATION_PLURAL_KEYS;
                 break;
 
             case RelationType::MORPH_TO:
-                // todo: set special morph strategies for key/type combinations
+                $type = FormStoreStrategy::RELATION_SINGLE_MORPH;
                 break;
         }
 
@@ -131,10 +134,6 @@ class RelationStrategyResolver
         $options = [];
 
         switch ($data->type) {
-
-            case RelationType::MORPH_ONE:
-            case RelationType::MORPH_MANY:
-                break;
 
             case RelationType::MORPH_TO:
                 // todo: set special morph options to mark the targetable model classes

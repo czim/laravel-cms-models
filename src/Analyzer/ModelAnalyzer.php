@@ -662,6 +662,8 @@ class ModelAnalyzer
             "\$this->morphTo(",
             "\$this->morphOne(",
             "\$this->morphMany(",
+            "\$this->morphToMany(",
+            "\$this->morphedByMany(",
 
             "\$this->belongsToThrough(",
         ];
