@@ -118,6 +118,14 @@ class EnrichFormFieldData extends AbstractEnricherStep
                 $enrichFieldInfo = $this->makeModelFormFieldDataForRelationData($this->info->relations[ $key ], $this->info);
             }
 
+            // Detect whether update/create were not explicitly defined
+            // If they were not, assume that they should be shown,
+            // since they were explicitly included in the config.
+            if (null === $field->update && null === $field->create) {
+                $field->update = true;
+                $field->create = true;
+            }
+
             $enrichFieldInfo->merge($field);
 
             $fields[ $key ] = $enrichFieldInfo;
