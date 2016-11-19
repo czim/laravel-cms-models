@@ -180,7 +180,7 @@ class ModelFormFieldData extends AbstractDataObject implements ModelFormFieldDat
      */
     public function merge(ModelFormFieldDataInterface $with)
     {
-        $normalMerge = array_except($this->getKeys(), 'options');
+        $normalMerge = array_diff($this->getKeys(), ['options']);
 
         foreach ($normalMerge as $key) {
             $this->mergeAttribute($key, $with->{$key});
