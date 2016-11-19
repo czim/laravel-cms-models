@@ -5,6 +5,7 @@ use Czim\CmsModels\Analyzer\AttributeStrategyResolver;
 use Czim\CmsModels\Analyzer\RelationStrategyResolver;
 use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelFormFieldData;
 use Czim\CmsModels\Support\Data\ModelInformation;
@@ -27,13 +28,17 @@ class EnrichFormFieldData extends AbstractEnricherStep
     protected $relationStrategyResolver;
 
     /**
-     * @param AttributeStrategyResolver $attributeStrategyResolver
-     * @param RelationStrategyResolver  $relationStrategyResolver
+     * @param ModelInformationEnricherInterface $enricher
+     * @param AttributeStrategyResolver         $attributeStrategyResolver
+     * @param RelationStrategyResolver          $relationStrategyResolver
      */
     public function __construct(
+        ModelInformationEnricherInterface $enricher,
         AttributeStrategyResolver $attributeStrategyResolver,
         RelationStrategyResolver $relationStrategyResolver
     ) {
+        parent::__construct($enricher);
+
         $this->attributeStrategyResolver = $attributeStrategyResolver;
         $this->relationStrategyResolver  = $relationStrategyResolver;
     }
