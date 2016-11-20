@@ -26,7 +26,7 @@
             $('#field-{{ $key }}').select2({
                 ajax: {
                     headers    : {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     url        : '{{ cms_route('models-meta.references') }}',
                     type       : 'POST',
