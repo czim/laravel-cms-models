@@ -64,7 +64,7 @@ class AttributeValidationResolver
 
                     case 'char':
                         $rules[] = 'string';
-                        $rules[] = 'size:' . $attribute->length;
+                        $rules[] = 'max:' . $attribute->length;
                         break;
 
                     case 'text':
