@@ -10,9 +10,12 @@
 
         <?php
             $count++;
+
+            $oldTabKey = old(\Czim\CmsModels\Http\Controllers\DefaultModelController::ACTIVE_TAB_PANE_KEY);
+            $tabActive = $oldTabKey ? $oldTabKey === $key : $count == 1;
         ?>
 
-        <div id="tab-{{ $key }}" role="tabpanel" class="tab-pane {{ $count == 1 ? 'active' : null }}">
+        <div id="tab-{{ $key }}" role="tabpanel" class="tab-pane {{ $tabActive ? 'active' : null }}">
 
             @foreach ($tab->children as $nodeKey => $node)
 

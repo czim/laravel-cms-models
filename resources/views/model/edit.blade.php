@@ -70,6 +70,7 @@
             {{ csrf_field() }}
 
             <input id="edit-form-save-and-close-input" type="hidden" name="__save_and_close__" value="0">
+            <input id="edit-form-active-tab-input" type="hidden" name="__active_tab__" value="">
 
 
         @if ($model->form->hasTabs())
@@ -150,6 +151,13 @@
 
                 $('.translated-form-field-wrapper').hide();
                 $('.translated-form-field-wrapper[data-locale=' + locale + ']').show();
+            });
+
+            $('.edit-form-tab-lip').click(function () {
+                var input = $('#edit-form-active-tab-input');
+                if (input.length) {
+                    input.val( $(this).attr('data-key') );
+                }
             });
         });
     </script>

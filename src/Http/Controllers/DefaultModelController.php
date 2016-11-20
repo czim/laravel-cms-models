@@ -35,6 +35,13 @@ class DefaultModelController extends BaseModelController
      */
     const SAVE_AND_CLOSE_KEY = '__save_and_close__';
 
+    /**
+     * The form data key for the currently active tab on submit.
+     *
+     * @var string
+     */
+    const ACTIVE_TAB_PANE_KEY = '__active_tab__';
+
 
     /**
      * Returns listing of filtered, sorted records.
