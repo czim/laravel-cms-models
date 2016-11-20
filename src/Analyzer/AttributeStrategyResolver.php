@@ -208,4 +208,100 @@ class AttributeStrategyResolver
         return $type;
     }
 
+    /**
+     * Determines form strategy options for given attribute data.
+     *
+     * @param ModelAttributeData $data
+     * @return array
+     */
+    public function determineFormStoreOptions(ModelAttributeData $data)
+    {
+        $options = [];
+
+        switch ($data->cast) {
+
+            case 'bool':
+            case 'boolean':
+                $options['type'] = 'number';
+                $options['min'] = 0;
+                $options['max'] = 1;
+                $options['size'] = 1;
+                break;
+
+            case 'integer':
+            case 'int':
+                $options['type'] = 'number';
+
+                list($options['min'], $options['max']) = $this->getMinMaxForInteger(
+                    $data->type,
+                    $data->unsigned,
+                    $data->length
+                );
+
+                if ($options['max'] < 1) {
+                    array_forget($options, ['min','max']);
+                } else {
+                    $options['size'] = strlen((string) round($options['max']));
+                }
+                break;
+
+            case 'float':
+            case 'double':
+                $options['type'] = 'number';
+                $options['step'] = 0.01;
+                break;
+
+            case 'string':
+                $options['maxlength'] = $data->length;
+                break;
+
+            // default omitted on purpose
+        }
+
+        return $options;
+    }
+
+    /**
+     * Returns min & max value for a given integer attribute.
+     *
+     * @param string   $type
+     * @param bool     $unsigned
+     * @param int|null $length
+     * @return array    [ min, max ]
+     */
+    protected function getMinMaxForInteger($type, $unsigned, $length = null)
+    {
+        $unsigned = (bool) $unsigned;
+
+        switch ($type) {
+
+            case 'tinyint':
+                $bytes = 1;
+                break;
+
+            case 'mediumint':
+                $bytes = 2;
+                break;
+
+            case 'int':
+                $bytes = 4;
+                break;
+
+            case 'bigint':
+                $bytes = 8;
+                break;
+
+            default:
+                return [0, 0];
+        }
+
+        if ($unsigned) {
+            return [ 0, pow(256, $bytes) - 1 ];
+        }
+
+        return [
+            -1 * (pow(256, $bytes) / 2) - 1,
+            pow(256, $bytes) / 2 - 1
+        ];
+    }
 }

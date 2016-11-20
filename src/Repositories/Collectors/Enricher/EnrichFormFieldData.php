@@ -235,10 +235,17 @@ class EnrichFormFieldData extends AbstractEnricherStep
             'store_strategy'   => $this->determineFormStoreStrategyForAttribute($attribute),
             'translated'       => $attribute->translated,
             'required'         => ! $attribute->nullable,
-            'options'          => [
-                'length' => $attribute->length,
-            ],
+            'options'          => $this->determineFormFieldOptions($attribute),
         ]);
+    }
+
+    /**
+     * @param ModelAttributeData $attribute
+     * @return array
+     */
+    protected function determineFormFieldOptions(ModelAttributeData $attribute)
+    {
+        return $this->attributeStrategyResolver->determineFormStoreOptions($attribute);
     }
 
     /**
