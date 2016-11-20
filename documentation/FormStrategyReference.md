@@ -9,14 +9,13 @@ This list is not exhaustive; custom strategy classes and aliases may be created 
 
 ### Properties
 
-[**`Default`**](FormFieldDisplayStrategies/Default.md)
+- [**`Default`**](FormFieldDisplayStrategies/Default.md)
 
-The default fallback: simple text input field.
+    The default fallback: simple text input field.
 
+- [**`Datepicker`**](FormFieldDisplayStrategies/Datepicker.md)
 
-[**`Datepicker`**](FormFieldDisplayStrategies/Datepicker.md)
-
-Datepicker widget for date & time values.
+    Datepicker widget for date & time values.
 
 
 
@@ -24,80 +23,80 @@ Datepicker widget for date & time values.
 
 #### Singular Relations
 
-[**`RelationSingleDropdown`**](FormFieldDisplayStrategies/RelationSingleDropdown.md)
+- [**`RelationSingleDropdown`**](FormFieldDisplayStrategies/RelationSingleDropdown.md)
 
-Simple multiple select field for `BelongsTo`, `HasOne`, `MorphOne`.
-
-
-[**`RelationSingleAutocomplete`**](FormFieldDisplayStrategies/RelationSingleAutocomplete.md)
-
-Autocomplete select for `BelongsTo`, `HasOne`, `MorphOne`.
+    Simple multiple select field for `BelongsTo`, `HasOne`, `MorphOne`.
 
 
-[**`RelationSingleMorphDropdown`**](FormFieldDisplayStrategies/RelationSingleMorphDropdown.md)
+- [**`RelationSingleAutocomplete`**](FormFieldDisplayStrategies/RelationSingleAutocomplete.md)
 
-Simple multiple select field for `MorphTo`.
+    Autocomplete select for `BelongsTo`, `HasOne`, `MorphOne`.
 
 
-[**`RelationSingleMorphAutocomplete`**](FormFieldDisplayStrategies/RelationSingleMorphAutocomplete.md)
+- [**`RelationSingleMorphDropdown`**](FormFieldDisplayStrategies/RelationSingleMorphDropdown.md)
 
-Autocomplete select field for `MorphTo`.
+    Simple multiple select field for `MorphTo`.
+
+
+- [**`RelationSingleMorphAutocomplete`**](FormFieldDisplayStrategies/RelationSingleMorphAutocomplete.md)
+
+    Autocomplete select field for `MorphTo`.
 
 
 #### Plural Relations
 
-[**`RelationPluralMultiselect`**](FormFieldDisplayStrategies/RelationPluralMultiselect.md)
+- [**`RelationPluralMultiselect`**](FormFieldDisplayStrategies/RelationPluralMultiselect.md)
 
-Simple multiple select field for `BelongsToMany`, `HasMany`, `MorphMany`.
-
-
-[**`RelationPluralAutocomplete`**](FormFieldDisplayStrategies/RelationPluralAutocomplete.md)
-
-Autocomplete select field for `BelongsToMany`, `HasMany`, `MorphMany`.
+    Simple multiple select field for `BelongsToMany`, `HasMany`, `MorphMany`.
 
 
-[**`RelationPivotOrderable`**](FormFieldDisplayStrategies/RelationPivotOrderable.md)
+- [**`RelationPluralAutocomplete`**](FormFieldDisplayStrategies/RelationPluralAutocomplete.md)
 
-Drag-and-drop orderable list of connections to related models, with autocomplete select field for adding new connections. 
-For `BelongsToMany` with integer position column on the pivot table.
+    Autocomplete select field for `BelongsToMany`, `HasMany`, `MorphMany`.
+
+
+- [**`RelationPivotOrderable`**](FormFieldDisplayStrategies/RelationPivotOrderable.md)
+
+    Drag-and-drop orderable list of connections to related models, with autocomplete select field for adding new connections. 
+    For `BelongsToMany` with integer position column on the pivot table.
 
 
 ## Form Store Strategies
 
 ### Properties
 
-[**`Default`**](FormFieldStoreStrategies/Default.md)
+- [**`Default`**](FormFieldStoreStrategies/Default.md)
 
-Default fallback simple direct model storage.
-
-
-[**`Date`**](FormFieldStoreStrategies/Date.md)
-
-For date time values (`timestamp`, `date`, `datetime`, `time`).
+    Default fallback simple direct model storage.
 
 
-[**`PasswordUpdated`**](FormFieldStoreStrategies/PasswordUpdated.md)
+- [**`Date`**](FormFieldStoreStrategies/Date.md)
 
-For storing hashed passwords, but only if entered.
+    For date time values (`timestamp`, `date`, `datetime`, `time`).
+
+
+- [**`PasswordUpdate`**](FormFieldStoreStrategies/PasswordUpdate.md)
+
+    For storing hashed passwords, but only if entered.
 
 
 ### Relations
 
-[**`RelationSingleKey`**](FormFieldStoreStrategies/RelationSingleKey.md)
+- [**`RelationSingleKey`**](FormFieldStoreStrategies/RelationSingleKey.md)
 
-For keys to models related using `BelongsTo`, `HasOne`, `MorphOne`.
-
-
-[**`RelationPluralKeys`**](FormFieldStoreStrategies/RelationPluralKeys.md)
-
-For arrays of keys to models related using `BelongsToMany`, `HasMany`, `MorphMany`.
+    For keys to models related using `BelongsTo`, `HasOne`, `MorphOne`.
 
 
-[**`RelationSingleMorph`**](FormFieldStoreStrategies/RelationSingleMorph.md)
+- [**`RelationPluralKeys`**](FormFieldStoreStrategies/RelationPluralKeys.md)
 
-For combinations of model & key to models related using `MorphTo`.
+    For arrays of keys to models related using `BelongsToMany`, `HasMany`, `MorphMany`.
 
 
-[**`RelationPluralMorph`**](FormFieldStoreStrategies/RelationPluralMorph.md)
+- [**`RelationSingleMorph`**](FormFieldStoreStrategies/RelationSingleMorph.md)
 
-For arrays of combinations of model & key to models related using `MorphToMany`.
+    For combinations of model & key to models related using `MorphTo`.
+
+
+- [**`RelationPluralMorph`**](FormFieldStoreStrategies/RelationPluralMorph.md)
+
+    For arrays of combinations of model & key to models related using `MorphToMany`.

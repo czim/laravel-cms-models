@@ -5,6 +5,13 @@ Strategies keep the CMS flexible. The provided strategies will usually be adequa
 Aliases in configuration files are added for convenience, so that a simple string resolves to a strategy class.
 
 
+## Strategy References
+
+For details and help on using strategies included in the CMS, check out the reference lists:
+ 
+- [Form Strategy reference list](FormStrategyReference.md) 
+
+
 ## Repository Context Strategies
 
 Any model accessed in the CMS will have its records retrieved through a repository. 
