@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Http\Controllers;
 
 use Czim\CmsCore\Support\Enums\FlashLevel;
+use Czim\CmsModels\Events;
 use Czim\CmsModels\Http\Requests\ActivateRequest;
 use Czim\CmsModels\Http\Requests\ModelCreateRequest;
 use Czim\CmsModels\Http\Requests\ModelUpdateRequest;
@@ -139,6 +140,7 @@ class DefaultModelController extends BaseModelController
      * Processes submitted form to create a new record.
      *
      * @return mixed
+     * @event ModelCreatedInCms
      */
     public function store()
     {
@@ -164,6 +166,8 @@ class DefaultModelController extends BaseModelController
             ),
             FlashLevel::SUCCESS
         );
+
+        event( new Events\ModelCreatedInCms($record) );
 
         if ($request->input(static::SAVE_AND_CLOSE_KEY)) {
             return redirect()->route("{$this->routePrefix}.index");
@@ -208,6 +212,7 @@ class DefaultModelController extends BaseModelController
      *
      * @param mixed $id
      * @return mixed
+     * @event ModelUpdatedInCms
      */
     public function update($id)
     {
@@ -233,6 +238,8 @@ class DefaultModelController extends BaseModelController
             FlashLevel::SUCCESS
         );
 
+        event( new Events\ModelUpdatedInCms($record) );
+
         if ($request->input(static::SAVE_AND_CLOSE_KEY)) {
             return redirect()->route("{$this->routePrefix}.index");
         }
@@ -246,6 +253,8 @@ class DefaultModelController extends BaseModelController
      *
      * @param mixed $id
      * @return mixed
+     * @event DeletingModelInCms
+     * @event ModelDeletedInCms
      */
     public function destroy($id)
     {
@@ -257,11 +266,15 @@ class DefaultModelController extends BaseModelController
             );
         }
 
+        event( new Events\DeletingModelInCms($record) );
+
         if ( ! $this->deleteModel($record)) {
             return $this->failureResponse(
                 cms_trans('models.delete.failure.unknown')
             );
         }
+
+        event( new Events\ModelDeletedInCms($this->getModelInformation()->modelClass(), $id) );
 
         if (request()->ajax()) {
             return response()->json([
@@ -321,16 +334,25 @@ class DefaultModelController extends BaseModelController
      * @param ActivateRequest $request
      * @param int             $id
      * @return mixed
+     * @event ModelActivatedInCms
+     * @event ModelDeactivatedInCms
      */
     public function activate(ActivateRequest $request, $id)
     {
-        $record  = $this->modelRepository->findOrFail($id);
-        $success = false;
-        $result  = null;
+        $record    = $this->modelRepository->findOrFail($id);
+        $success   = false;
+        $result    = null;
+        $activated = $request->get('activate');
 
         if ($this->getModelInformation()->list->activatable) {
             $success = true;
-            $result  = $this->changeModelActiveState($record, $request->get('activate'));
+            $result  = $this->changeModelActiveState($record, $activated);
+        }
+
+        if ($activated) {
+            event( new Events\ModelActivatedInCms($record) );
+        } else {
+            event( new Events\ModelDeactivatedInCms($record) );
         }
 
         if (request()->ajax()) {
@@ -356,6 +378,7 @@ class DefaultModelController extends BaseModelController
      * @param OrderUpdateRequest $request
      * @param int                $id
      * @return mixed
+     * @event ModelPositionUpdatedInCms
      */
     public function position(OrderUpdateRequest $request, $id)
     {
@@ -377,6 +400,8 @@ class DefaultModelController extends BaseModelController
                 FlashLevel::SUCCESS
             );
         }
+
+        event( new Events\ModelPositionUpdatedInCms($record) );
 
         if (request()->ajax()) {
             return response()->json([ 'success' => $success, 'position' => $result ]);
