@@ -1,12 +1,14 @@
 <?php
 namespace Czim\CmsModels\Repositories\Collectors\Enricher;
 
+use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelListFilterData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
+use Czim\CmsModels\Support\Enums\RelationType;
 use UnexpectedValueException;
 
 class EnrichListFilterData extends AbstractEnricherStep
@@ -34,7 +36,9 @@ class EnrichListFilterData extends AbstractEnricherStep
 
         foreach ($this->info->attributes as $attribute) {
 
-            if ($attribute->hidden) continue;
+            if ($attribute->hidden || ! $this->shouldAttributeBeFilterable($attribute)) {
+                continue;
+            }
 
             $filterData = $this->makeModelListFilterDataForAttributeData($attribute, $this->info);
 
@@ -83,6 +87,36 @@ class EnrichListFilterData extends AbstractEnricherStep
         }
 
         $this->info->list->filters = $filters;
+    }
+
+    /**
+     * Returns whether a given attribute should be filterable by default.
+     *
+     * @param ModelAttributeDataInterface|ModelAttributeData $attribute
+     * @return bool
+     */
+    protected function shouldAttributeBeFilterable(ModelAttributeDataInterface $attribute)
+    {
+        // If an attribute is a foreign key, it shouldn't be a filter by default.
+
+        foreach ($this->info->relations as $key => $relation) {
+
+            switch ($relation->type) {
+
+                case RelationType::MORPH_TO:
+                case RelationType::BELONGS_TO:
+                case RelationType::BELONGS_TO_THROUGH:
+
+                    $keys = $relation->foreign_keys ?: [];
+
+                    if (in_array($attribute->name, $keys)) {
+                        return false;
+                    }
+                    break;
+            }
+        }
+
+        return true;
     }
 
     /**
