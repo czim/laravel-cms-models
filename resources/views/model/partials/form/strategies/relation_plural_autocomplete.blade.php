@@ -30,7 +30,9 @@
     <script>
         $(function() {
             $('#field-{{ $key }}').select2({
-                ajax: {
+                placeholder : '--',
+                allowClear  : {{ $required ? 'false' : 'true' }},
+                ajax        : {
                     headers    : {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -38,7 +40,6 @@
                     type      : 'POST',
                     dataType  : 'json',
                     delay     : 250,
-                    allowClear: {{ $required ? 'false' : 'true' }},
 
                     data: function (params) {
                         return {

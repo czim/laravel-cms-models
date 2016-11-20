@@ -42,16 +42,14 @@
             };
 
             $('#field-{{ $key }}').select2({
-                ajax: {
-                    headers    : {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url        : '{{ cms_route('models-meta.references') }}',
-                    type       : 'POST',
-                    dataType   : 'json',
-                    delay      : 250,
-                    placeHolder: '--',
-                    allowclear : {{ $required ? 'false' : 'true' }},
+                placeholder : '--',
+                allowClear  : {{ $required ? 'false' : 'true' }},
+                ajax        : {
+                    headers   : { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    url       : '{{ cms_route('models-meta.references') }}',
+                    type      : 'POST',
+                    dataType  : 'json',
+                    delay     : 250,
 
                     data: function (params) {
                         return {

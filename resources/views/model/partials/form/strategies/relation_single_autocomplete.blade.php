@@ -22,9 +22,10 @@
     <!-- form field display strategy: relation single autocomplete -->
     <script>
         $(function() {
-
             $('#field-{{ $key }}').select2({
-                ajax: {
+                placeholder : '--',
+                allowClear  : {{ $required ? 'false' : 'true' }},
+                ajax        : {
                     headers    : {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -32,8 +33,6 @@
                     type       : 'POST',
                     dataType   : 'json',
                     delay      : 250,
-                    placeHolder: '--',
-                    allowclear : {{ $required ? 'false' : 'true' }},
 
                     data: function (params) {
                         return {

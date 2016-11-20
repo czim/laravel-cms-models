@@ -65,7 +65,9 @@
                 currentRows = $('#field-{{ $key }}__current__');
 
             addSelect.select2({
-                ajax: {
+                placeholder : '--',
+                allowClear  : {{ $required ? 'false' : 'true' }},
+                ajax        : {
                     headers    : {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -74,9 +76,6 @@
                     type       : 'POST',
                     dataType   : 'json',
                     delay      : 250,
-                    placeholder: '--',
-                    allowClear : true,
-                    cache      : false,
 
                     data: function (params) {
                         return {
