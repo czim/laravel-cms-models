@@ -222,7 +222,7 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
     {
         $cmsModelsDir = config('cms-models.collector.source.dir');
 
-        if ( ! $cmsModelsDir) {
+        if ( ! $cmsModelsDir || ! $this->files->isDirectory($cmsModelsDir)) {
             return [];
         }
 
