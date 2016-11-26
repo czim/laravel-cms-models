@@ -18,14 +18,13 @@ A custom date format may be set for PHP, and optionally a specific one for Momen
 PHP date formats are automatically converted to Moment date formats, insofar possible. 
 In most cases, it is not necessary to set the Moment date format manually.
 
-- `format` (string)
-    If not set uses `'Y-m-d H:i'`, `'Y-m-d'`, or `'H:i'` for DateTime, Date and Time strategies respectively.
+- `format` (string)  
+    If not set uses `'Y-m-d H:i'`, `'Y-m-d'`, or `'H:i'` for DateTime, Date and Time strategies respectively.  
     Any PHP date format is allowed.
      
-- `moment_format` (string)
-    If not set, `format` value is converted to match.
+- `moment_format` (string)  
+    If not set, `format` value is converted to match.  
     For some special PHP date formats, it may be necessary to enter the Moment equivalent manually through this option.
-    
     
  
  ```php

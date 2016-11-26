@@ -1,5 +1,8 @@
 # CMS for Laravel - Main Models Module
 
+This module offers the means to edit Eloquent models through the Laravel CMS.
+
+To be used to with the [Laravel CMS Core](https://github.com/czim/laravel-cms-core).
 
 
 ## Contributing

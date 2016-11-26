@@ -29,14 +29,17 @@ If the related model is not part of the CMS, no attempt is made to determine whe
 
 Either way, the behavior may be configured by setting the following `options` keys for the form field's data:
 
-- `detach` (boolean, default: `true`)
+- `detach` (boolean, default: `true`)  
     Set this to `false` to disable detaching models entirely.
-- `nullable_keys` (boolean or `null`, default: `null`)
-    Set this to `true` to force detaching by nullifying keys.
+    
+- `nullable_keys` (boolean or `null`, default: `null`)  
+    Set this to `true` to force detaching by nullifying keys.  
     If set to `null`, CMS model data will be used to determine whether nullifying keys is possible.
-- `delete` (boolean, default: `false`)
-    If set to `true`, will allow deleting models to detach them.
+    
+- `delete` (boolean, default: `false`)  
+    If set to `true`, will allow deleting models to detach them.  
     Obviously, it is really important to be careful with this, as it can easily result in data loss.
+
 
 ```php
     'options' => [

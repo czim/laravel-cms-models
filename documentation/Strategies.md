@@ -111,11 +111,18 @@ Use `strategy` and `source` values in the form field's `options` to configure re
 In the `form.fields` section for the field for which a reference should configured, 
 configure its `options` section for the following keys:
   
-- `strategy`: the reference strategy FQN, classname or alias to use,
-- `source`: the source attribute(s) to pass on to the reference strategy,
-- `target`: the target attributes to use for searching, if a search term for autocomplete strategies is given.
+- `strategy` (string)  
+    The reference strategy FQN, classname or alias to use,
+    
+- `source` (string)  
+    The source attribute(s) to pass on to the reference strategy,
+    
+- `target` (string)  
+    The target attributes to use for searching, if a search term for autocomplete strategies is given.  
     If no target is defined, the `source` attribute(s) are searched instead, if possible.
-- `context_strategy`: an extra optional context strategy FQN, classname or alias to modify the query for the references.
+    
+- `context_strategy` (string)  
+    An extra optional context strategy FQN, classname or alias to modify the query for the references.
 
 For an example of a form field display strategy that makes use of this, see `Czim\CmsModels\View\FormFieldStrategies\ModelRelationSingleStrategy`.
 

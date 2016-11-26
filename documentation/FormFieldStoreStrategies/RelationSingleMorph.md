@@ -17,8 +17,8 @@ as as string, concatenated by a colon: `<class>:<key>`.
 It is generally not necessary to set options for this strategy if the morphable related models are all part of the CMS.
  
 
-- `models` (array, associative, keyed by model class FQN)
-    Set this to configure which models are selectable in the dropdown or the autocomplete search results.
+- `models` (array, associative, keyed by model class FQN)  
+    Set this to configure which models are selectable in the dropdown or the autocomplete search results.  
     If the model is not present as a key in this list, its instances will not be selectable 
     and no references will be retrieved for autocomplete searches.
 

@@ -11,8 +11,8 @@ If set, the `format` option described below is used for this.
 
 ## Options
 
-- `format` (string)
-    If not set uses `'Y-m-d H:i'`, `'Y-m-d'`, or `'H:i'` for DateTime, Date and Time strategies respectively.
+- `format` (string)  
+    If not set uses `'Y-m-d H:i'`, `'Y-m-d'`, or `'H:i'` for DateTime, Date and Time strategies respectively.  
     Any PHP date format is allowed.
 
  ```php

@@ -15,7 +15,7 @@ Position is ascending, starting at 1.
 
 It is generally not necessary to set options for this strategy if the related model is part of the CMS.
 
-- `position_column` (string, default: `'position'`)
+- `position_column` (string, default: `'position'`)  
     The pivot table column used for ordering records. New order positions will be saved to this column.
 
  ```php

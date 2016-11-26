@@ -11,27 +11,27 @@ It submits an array with model keys that may be stored with the [RelationPluralK
 It is generally not necessary to set options for this strategy if the related model is part of the CMS.
 In any case these options may still be overridden to specificy specific reference behavior.
  
-- `source` (string)
-    If not set, the model's default reference source is used (if it is part of the CMS). 
+- `source` (string)  
+    If not set, the model's default reference source is used (if it is part of the CMS).   
     Otherwise, the model's key will be used.
     
-- `strategy` (string)
-    Strategy identifier for a [model reference strategy](../Strategies.md#model-reference-strategies). The `source` value is used for this strategy.
-    If not set, the model's default reference strategy is used (if it is part of the CMS). 
-    Otherwise, the model's key will be displayed.
+- `strategy` (string)  
+    Strategy identifier for a [model reference strategy](../Strategies.md#model-reference-strategies). The `source` value is used for this strategy.  
+    If not set, the model's default reference strategy is used (if it is part of the CMS).
+    Otherwise, the model's key will be displayed.  
     This determines how the related models are referenced as displayed options.
  
-- `context_strategy` (string)
+- `context_strategy` (string)  
     Strategy identifier for a [repository context strategy](../Strategies.md#repository-context-strategies).
-     If not set, the model's default `context_strategy` is used (if it is part of the CMS). 
-     Otherwise, only `withoutGlobalScopes()` will be applied to the query.
+     If not set, the model's default `context_strategy` is used (if it is part of the CMS).   
+     Otherwise, only `withoutGlobalScopes()` will be applied to the query.  
      This allows you to (un)restrict the models that will be available as options for the select input.
 
-- `sort_direction` (string: `asc` or `desc`)
-    This determines the direction the displayed model references will be sorted in. This will only work for table columns directly belonging to the model, or columns on related translation models.
+- `sort_direction` (string: `asc` or `desc`)  
+    This determines the direction the displayed model references will be sorted in. This will only work for table columns directly belonging to the model, or columns on related translation models.  
     Other sources are currently not supported, and will not be used for sorting references.
     
-- `parameters` (array, associative)
+- `parameters` (array, associative)  
     Optional parameters that may be required by the `strategy`.
     
     

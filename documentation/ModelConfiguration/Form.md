@@ -27,16 +27,16 @@ If fields are defined, only the ones included in the configuration will be displ
 
 Keys that may be set:
 
-- `store_strategy` (string)
+- `store_strategy` (string)  
     The strategy that is used to retrieve and store the date edited using this field.
 
-- `display_strategy` (string)
+- `display_strategy` (string)  
     The strategy that is used to render this field.
 
-- `source` (string)
+- `source` (string)  
     Indicates the source to be used for the data edited using this field. Default: field entry's key.
 
-- `options` (array, associative)
+- `options` (array, associative)  
     Options pertaining to either or both of the strategies used.
 
 
