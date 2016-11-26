@@ -164,6 +164,11 @@ class EnrichFormFieldData extends AbstractEnricherStep
             return false;
         }
 
+        // Orderable column for listify is used in listing, hide in edit form
+        if ($info->list->orderable && $info->list->order_column == $attribute->name) {
+            return false;
+        }
+
         // Automated timestamp columns
         if (    $this->model->timestamps
             &&  (   $attribute->name == $this->model->getCreatedAtColumn()
