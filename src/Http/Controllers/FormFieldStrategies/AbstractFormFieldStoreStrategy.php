@@ -207,6 +207,10 @@ class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyInterface
      */
     protected function adjustValue($value)
     {
+        if ($this->isNullable() && empty($value)) {
+            return null;
+        }
+
         return $value;
     }
 
