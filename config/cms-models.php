@@ -374,4 +374,23 @@ return [
 
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | WYSIWYG / CKEditor Configuration
+    |--------------------------------------------------------------------------
+    |
+    | The default behavior for the 'wysiwyg' form display strategy's
+    | use of CKEditor may be configured here.
+    |
+    */
+
+    'ckeditor' => [
+
+        // Base path for configuration files, relative to the public/ path.
+        'path' => '_cms/js/ckeditor',
+
+        // Default configuration file to use, relative to the base path
+        'config' => 'default.js',
+    ],
+
 ];
