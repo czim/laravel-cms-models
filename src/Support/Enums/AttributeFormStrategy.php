@@ -13,13 +13,13 @@ class AttributeFormStrategy extends Enum
     const NUMERIC_DECIMAL = 'numericDecimal';
     const NUMERIC_YEAR    = 'numericYear';
 
-    const TEXT = 'text';
+    const TEXT     = 'text';
     const TEXTAREA = 'textarea';
 
     const SELECT_DROPDOWN = 'selectDropdown';
 
-    const DATEPICKER_DATE = 'datepickerDate';
-    const DATEPICKER_TIME = 'datepickerTime';
+    const DATEPICKER_DATE     = 'datepickerDate';
+    const DATEPICKER_TIME     = 'datepickerTime';
     const DATEPICKER_DATETIME = 'datepickerDatetime';
 
     const ATTACHMENT_STAPLER_FILE  = 'attachmentStaplerFile';
