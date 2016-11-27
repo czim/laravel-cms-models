@@ -20,6 +20,8 @@ use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
 use Czim\CmsModels\Contracts\View\FormFieldStrategyInterface;
 use Czim\CmsModels\Contracts\View\ListStrategyInterface;
+use Czim\CmsModels\Events;
+use Czim\CmsModels\Listeners\ModelLogListener;
 use Czim\CmsModels\Repositories\Collectors\CmsModelInformationInterpreter;
 use Czim\CmsModels\Repositories\Collectors\ModelInformationEnricher;
 use Czim\CmsModels\Repositories\CurrentModelInformation;
@@ -46,6 +48,21 @@ class CmsModelsServiceProvider extends ServiceProvider
      */
     protected $core;
 
+    /**
+     * Event bindings to set up.
+     *
+     * @var array
+     */
+    protected $events = [
+        Events\ModelCreatedInCms::class         => ModelLogListener::class . '@modelCreated',
+        Events\ModelUpdatedInCms::class         => ModelLogListener::class . '@modelUpdated',
+        Events\DeletingModelInCms::class        => ModelLogListener::class . '@deletingModel',
+        Events\ModelDeletedInCms::class         => ModelLogListener::class . '@modelDeleted',
+        Events\ModelActivatedInCms::class       => ModelLogListener::class . '@modelActivated',
+        Events\ModelDeactivatedInCms::class     => ModelLogListener::class . '@modelDeactivated',
+        Events\ModelPositionUpdatedInCms::class => ModelLogListener::class . '@modelPositionUpdated',
+    ];
+
 
     public function boot()
     {
@@ -61,7 +78,8 @@ class CmsModelsServiceProvider extends ServiceProvider
              ->registerCommands()
              ->loadViews()
              ->registerInterfaceBindings()
-             ->registerConfiguredCollector();
+             ->registerConfiguredCollector()
+             ->registerEventListeners();
     }
 
     /**
@@ -196,6 +214,20 @@ class CmsModelsServiceProvider extends ServiceProvider
     protected function registerConfiguredCollector()
     {
         $this->app->singleton(ModelInformationCollectorInterface::class, config('cms-models.collector.class'));
+
+        return $this;
+    }
+
+    /**
+     * Registers listeners for events.
+     *
+     * @return $this
+     */
+    protected function registerEventListeners()
+    {
+        foreach ($this->events as $event => $listener) {
+            \Event::listen($event, $listener);
+        }
 
         return $this;
     }
