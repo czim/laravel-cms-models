@@ -18,8 +18,7 @@ class FormDisplayStrategy extends Enum
     const PASSWORD   = 'text';
     const TEXTAREA   = 'textarea';
     const WYSIWYG    = 'wysiwyg';
-
-    const SELECT_DROPDOWN = 'select-dropdown';
+    const DROPDOWN   = 'dropdown';
 
     const DATEPICKER_DATE     = 'datepicker-date';
     const DATEPICKER_TIME     = 'datepicker-time';

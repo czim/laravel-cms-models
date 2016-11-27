@@ -270,6 +270,7 @@ return [
                 Enums\FormDisplayStrategy::BOOLEAN_DROPDOWN => 'BooleanDropdownStrategy',
                 Enums\FormDisplayStrategy::TEXTAREA         => 'TextAreaStrategy',
                 Enums\FormDisplayStrategy::WYSIWYG          => 'WysiwygStrategy',
+                Enums\FormDisplayStrategy::DROPDOWN         => 'DropdownStrategy',
 
                 Enums\FormDisplayStrategy::DATEPICKER_DATETIME => 'DateTimeStrategy',
                 Enums\FormDisplayStrategy::DATEPICKER_DATE     => 'DateStrategy',

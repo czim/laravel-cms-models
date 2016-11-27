@@ -96,7 +96,7 @@ class AttributeStrategyResolver
                 switch ($data->type) {
 
                     case 'enum':
-                        $type = FormDisplayStrategy::SELECT_DROPDOWN;
+                        $type = FormDisplayStrategy::DROPDOWN;
                         break;
 
                     case 'year':
@@ -253,6 +253,10 @@ class AttributeStrategyResolver
 
             case 'string':
                 $options['maxlength'] = $data->length;
+
+                if ($data->type === 'enum') {
+                    $options['values'] = $data->values ?: [];
+                }
                 break;
 
             // default omitted on purpose
