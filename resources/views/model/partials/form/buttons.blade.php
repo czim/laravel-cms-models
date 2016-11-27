@@ -1,5 +1,5 @@
 
-<div class="form-group edit-button-row">
+<div class="form-group edit-button-row clearfix">
 
     <div class="col-sm-4">
 

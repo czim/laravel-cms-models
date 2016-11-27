@@ -111,7 +111,12 @@
 
                         @foreach ($records as $record)
 
-                            <tr class="records-row">
+                            <?php
+                                $style = $model->list->activatable && ! $record->{$model->list->active_column}
+                                       ? 'inactive' : null;
+                            ?>
+
+                            <tr class="records-row {{ $style }}">
                                 @if ($model->list->activatable)
                                     @include('cms-models::model.partials.list.column_activate', compact('model', 'record'))
                                 @endif
