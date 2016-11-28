@@ -103,8 +103,23 @@ return [
 
     'analyzer' => [
 
-        'attributes' => [
+        'reference' => [
 
+            // Default attributes to look for when automatically picking a reference source for a model.
+            // The first attribute in this list that matches is used.
+            'sources' => [
+                'name',
+                'title',
+                'label',
+                'code',
+                'slug',
+                'last_name',
+                'surname',
+                'handle',
+            ],
+        ],
+
+        'attributes' => [
         ],
 
         'filters' => [
@@ -205,11 +220,12 @@ return [
 
             // The default namespace to prefix for relative strategy class names
             'default-namespace' => 'Czim\\CmsModels\\View\\ReferenceStrategies\\',
-            'default-strategy'  => ReferenceStrategies\DefaultReference::class,
+            'default-strategy'  => ReferenceStrategies\IdAndAttribute::class,
 
             // Aliases for reference display strategy classes
             'aliases' => [
-                'default' => ReferenceStrategies\DefaultReference::class,
+                'default'          => ReferenceStrategies\DefaultReference::class,
+                'id-and-attribute' => ReferenceStrategies\IdAndAttribute::class,
             ],
         ],
 
