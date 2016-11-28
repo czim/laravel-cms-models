@@ -29,7 +29,7 @@ Strategies for displaying content of model listing table cells.
 - [**`Time`**](ListColumnDisplayStrategies/CommonStrategies.md#time)  
     Displays a formatted datetime value as time only.
 
-- [**`StaplerFile`**](ListColumnDisplayStrategies/CommonStrategies.md#stapler-file.md)  
+- [**`StaplerFile`**](ListColumnDisplayStrategies/CommonStrategies.md#stapler-file)  
     Displays a stapler file name as a link.
     
 - [**`StaplerImage`**](ListColumnDisplayStrategies/CommonStrategies.md#stapler-image)  
