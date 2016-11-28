@@ -31,7 +31,38 @@ class EnrichListFilterData extends AbstractEnricherStep
      */
     protected function fillDataForEmpty()
     {
-        // Set default filters if they are empty
+        // We either create separate filters, or combine strings in a single 'any' field
+        if (config('cms-models.analyzer.filters.single-any-string')) {
+            $filters = $this->makeCombinedFiltersWithAnyStringFilter();
+        } else {
+            $filters = $this->makeFiltersForAllAttributes();
+        }
+
+        $this->info->list->filters = $filters;
+    }
+
+    /**
+     * Makes a single 'any' string filter and optionally complementary filter data sets.
+     *
+     * @return ModelListFilterData[]
+     */
+    protected function makeCombinedFiltersWithAnyStringFilter()
+    {
+        $filters = [];
+
+        $anyKey = config('cms-models.analyzer.any-string-key', 'any');
+        $filters[ $anyKey ] = $this->makeModelListFilterDataForAnyStringFilter();
+
+        return $filters;
+    }
+
+    /**
+     * Makes separate filter data sets for all attributes.
+     *
+     * @return ModelListFilterData[]
+     */
+    protected function makeFiltersForAllAttributes()
+    {
         $filters = [];
 
         foreach ($this->info->attributes as $attribute) {
@@ -47,7 +78,7 @@ class EnrichListFilterData extends AbstractEnricherStep
             $filters[$attribute->name] = $filterData;
         }
 
-        $this->info->list->filters = $filters;
+        return $filters;
     }
 
     /**
@@ -167,6 +198,30 @@ class EnrichListFilterData extends AbstractEnricherStep
             'strategy' => $strategy,
             'values'   => $options,
         ]);
+    }
+
+    /**
+     * Makes list filter data given attribute data.
+     *
+     * @return ModelListFilterData
+     */
+    protected function makeModelListFilterDataForAnyStringFilter()
+    {
+        return new ModelListFilterData([
+            'label_translated' => $this->getAnyStringFilterLabel(),
+            'target'           => '*',
+            'strategy'         => 'string-split',
+        ]);
+    }
+
+    /**
+     * Returns translation label for any string filter.
+     *
+     * @return string
+     */
+    protected function getAnyStringFilterLabel()
+    {
+        return 'models.filter.anything-label';
     }
 
 }

@@ -107,6 +107,15 @@ return [
 
         ],
 
+        'filters' => [
+
+            // Whether to create a single search-for-any string filter, instead of separate filters
+            'single-any-string' => true,
+
+            // The filter key to use for a combined any-string filter
+            'any-string-key' => 'any',
+        ],
+
         'scopes' => [
 
             // Scopes (without the scope prefix) to always ignore
