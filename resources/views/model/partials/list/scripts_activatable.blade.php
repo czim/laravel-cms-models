@@ -40,9 +40,11 @@
                     if (active) {
                         parent.find('.active').removeClass('hidden');
                         parent.closest('.activate-toggle').addClass('tr-show-on-hover');
+                        parent.closest('tr').removeClass('inactive');
                     } else {
                         parent.find('.inactive').removeClass('hidden');
                         parent.closest('.activate-toggle').removeClass('tr-show-on-hover');
+                        parent.closest('tr').addClass('inactive');
                     }
                     parent.find('.loading').addClass('hidden');
 
@@ -53,9 +55,11 @@
                     if (state) {
                         parent.find('.active').removeClass('hidden');
                         parent.closest('.activate-toggle').addClass('tr-show-on-hover');
+                        parent.closest('tr').removeClass('inactive');
                     } else {
                         parent.find('.inactive').removeClass('hidden');
                         parent.closest('.activate-toggle').removeClass('tr-show-on-hover');
+                        parent.closest('tr').addClass('inactive');
                     }
                     parent.find('.loading').addClass('hidden');
                 });
