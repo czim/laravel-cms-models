@@ -17,13 +17,13 @@ Strategies for displaying content of model listing table cells.
 - [**`Check`**](ListColumnDisplayStrategies/CommonStrategies.md#check)  
     Displays a checkbox icon based on a boolean value, interpreting `null` as `false`.
     
-- [**`CheckNullable`**](ListColumnDisplayStrategies/CommonStrategies.md#check-nullable)  
+- [**`CheckNullable`**](ListColumnDisplayStrategies/CommonStrategies.md#checknullable)  
     Displays a checkbox icon based on a boolean value, not displaying anything for `null` values.
       
 - [**`Date`**](ListColumnDisplayStrategies/CommonStrategies.md#date)  
     Displays a formatted date value.
     
-- [**`DateTime`**](ListColumnDisplayStrategies/CommonStrategies.md#date-time)  
+- [**`DateTime`**](ListColumnDisplayStrategies/CommonStrategies.md#datetime)  
     Displays a formatted datetime value.
 
 - [**`Time`**](ListColumnDisplayStrategies/CommonStrategies.md#time)  
@@ -38,10 +38,10 @@ Strategies for displaying content of model listing table cells.
 
 ### Relations
 
-- [**`RelationCount`**](ListColumnDisplayStrategies/RelationStrategies.md#relation-count)  
+- [**`RelationCount`**](ListColumnDisplayStrategies/RelationStrategies.md#relationcount)  
     Displays a plural relation as a simple count value.
     
-- [**`RelationReference`**](ListColumnDisplayStrategies/RelationStrategies.md#relation-reference)  
+- [**`RelationReference`**](ListColumnDisplayStrategies/RelationStrategies.md#relationreference)  
     Displays a single relation as a model reference string.
 
 
