@@ -9,6 +9,7 @@ use Czim\CmsModels\Contracts\Data\ModelListColumnDataInterface;
  *
  * Data container that represents a column presence in an index/listing for a model.
  *
+ * @property bool $hide
  * @property string $source
  * @property string|array $strategy
  * @property string $label
@@ -18,7 +19,7 @@ use Czim\CmsModels\Contracts\Data\ModelListColumnDataInterface;
  * @property bool $sortable
  * @property string $sort_strategy
  * @property string $sort_direction asc|desc
- * @proeprty bool $hide
+ * @property array $options
  */
 class ModelListColumnData extends AbstractDataObject implements ModelListColumnDataInterface
 {
@@ -53,6 +54,9 @@ class ModelListColumnData extends AbstractDataObject implements ModelListColumnD
 
         // Default sort direction for this column, if sortable
         'sort_direction' => 'asc',
+
+        // Extra options for strategy configuration
+        'options' => [],
     ];
 
     /**
@@ -74,13 +78,27 @@ class ModelListColumnData extends AbstractDataObject implements ModelListColumnD
     }
 
     /**
+     * Returns associative array with custom options for strategies.
+     *
+     * @return array
+     */
+    public function options()
+    {
+        return $this->options ?: [];
+    }
+
+    /**
      * @param ModelListColumnDataInterface|ModelListColumnData $with
      */
     public function merge(ModelListColumnDataInterface $with)
     {
-        foreach ($this->getKeys() as $key) {
+        $normalMerge = array_diff($this->getKeys(), ['options']);
+
+        foreach ($normalMerge as $key) {
             $this->mergeAttribute($key, $with->{$key});
         }
+
+        $this->options = array_merge($this->options(), $with->options());
     }
 
 }
