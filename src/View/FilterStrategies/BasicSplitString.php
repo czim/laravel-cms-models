@@ -1,12 +1,6 @@
 <?php
 namespace Czim\CmsModels\View\FilterStrategies;
 
-use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
-use Czim\CmsModels\Support\Data\ModelAttributeData;
-use Czim\CmsModels\Support\Data\ModelListFilterData;
-use Czim\CmsModels\Support\Enums\AttributeCast;
-use Illuminate\Database\Eloquent\Builder;
-
 /**
  * Class BasicSplitString
  *
