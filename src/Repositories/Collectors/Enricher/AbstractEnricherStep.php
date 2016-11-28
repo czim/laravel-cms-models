@@ -93,6 +93,11 @@ abstract class AbstractEnricherStep implements EnricherStepInterface
             return false;
         }
 
+        // Hide orderable position column if the model if orderable
+        if ($info->list->orderable && $info->list->order_column == $attribute->name) {
+            return false;
+        }
+
         // Hide stapler fields other than the main field
         if (preg_match('#^(?<field>[^_]+)_(file_name|file_size|content_type|updated_at)$#', $attribute->name, $matches)) {
             if (array_has($info->attributes, $matches['field'])) {
