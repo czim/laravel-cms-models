@@ -20,28 +20,40 @@
 
 
     {{-- locale switcher --}}
-    <div class="dropdown translated-form-field-locale-select">
-        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-            <img src="{{ asset("_cms/img/flags/{$currentLocale}.png") }}" title="{{ $currentLocale }}">
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-            @foreach ($locales as $locale)
+    @if (count($locales) < 2)
+        <div class="dropdown translated-form-field-locale-select">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" disabled="disabled">
+                <img src="{{ asset("_cms/img/flags/{$currentLocale}.png") }}" title="{{ $currentLocale }}">
+            </button>
+        </div>
+    @else
+        <div class="dropdown translated-form-field-locale-select">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                <img src="{{ asset("_cms/img/flags/{$currentLocale}.png") }}" title="{{ $currentLocale }}">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                @foreach ($locales as $locale)
 
-                <li role="presentation"
-                    class="translated-form-field-locale-option"
-                    data-locale="{{ $locale }}"
-                    @if ($locale === $currentLocale) style="display: none" @endif
-                >
-                    <a role="menuitem" tabindex="-1" href="#"
-                       data-locale="{{ $locale }}"
-                       data-asset="{{ asset("_cms/img/flags/{$locale}.png") }}"
+                    <li role="presentation"
+                        class="translated-form-field-locale-option"
+                        data-locale="{{ $locale }}"
+                        @if ($locale === $currentLocale) style="display: none" @endif
                     >
-                        <img src="{{ asset("_cms/img/flags/{$locale}.png") }}" title="{{ $locale }}">
-                    </a>
-                </li>
-            @endforeach
-        </ul>
-    </div>
+                        <a role="menuitem" tabindex="-1" href="#"
+                           data-locale="{{ $locale }}"
+                           data-asset="{{ asset("_cms/img/flags/{$locale}.png") }}"
+                        >
+                            <img src="{{ asset("_cms/img/flags/{$locale}.png") }}" title="{{ $locale }}">
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+
+    {{-- If there are errors for any of the translated fields, make sure the error status is visible --}}
+    {{-- todo --}}
 
 </div>
