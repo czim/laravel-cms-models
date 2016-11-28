@@ -1,7 +1,7 @@
 
 <input id="field-{{ $key }}"
        type="{{ $type ?: 'text' }}"
-       name="{{ $name ?: $key }}"
+       name="{{ $name ?: (isset($baseKey) ? $baseKey : $key) }}"
        value="{{ $value }}"
        class="form-control"
        @if ($required && ! $translated) required="required" @endif
@@ -15,6 +15,9 @@
        @if (array_get($options, 'pattern')) pattern="{{ array_get($options, 'pattern') }}" @endif
 >
 
-@include('cms-models::model.partials.form.field_errors', compact('key', 'errors'))
 
-
+@include('cms-models::model.partials.form.field_errors', [
+    'key'        => isset($baseKey) ? $baseKey : $key,
+    'errors'     => $errors,
+    'translated' => $translated,
+])

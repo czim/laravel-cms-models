@@ -22,7 +22,8 @@ abstract class AbstractDefaultStrategy extends AbstractFormFieldDisplayStrategy
 
         $data = [
             'record'     => $this->model,
-            'key'        => $this->field->key(),
+            'key'        => $this->field->key() . ($locale ? '-locale:' . $locale : null),
+            'baseKey'    => $this->field->key(),
             'name'       => $this->getFormFieldName($locale),
             'value'      => $value,
             'original'   => $originalValue,

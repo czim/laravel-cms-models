@@ -36,11 +36,11 @@
             {{ ucfirst(cms_trans('models.upload.browse')) }}
 
             {{-- Whether we should keep the old file --}}
-            <input name="{{ $name ?: $key }}[keep]" class="file-upload-keep-input" type="hidden" value="1">
+            <input name="{{ $name ?: (isset($baseKey) ? $baseKey : $key) }}[keep]" class="file-upload-keep-input" type="hidden" value="1">
 
             <input id="field-{{ $key }}"
                    type="file"
-                   name="{{ $name ?: $key }}[upload]"
+                   name="{{ $name ?: (isset($baseKey) ? $baseKey : $key) }}[upload]"
                    style="display: none;"
                    accept="image/*"
                    @if ($required && ! $translated) required="required" @endif
@@ -63,7 +63,11 @@
 </div>
 
 
-@include('cms-models::model.partials.form.field_errors', compact('key', 'errors'))
+@include('cms-models::model.partials.form.field_errors', [
+    'key'        => isset($baseKey) ? $baseKey : $key,
+    'errors'     => $errors,
+    'translated' => $translated,
+])
 
 
 @push('javascript-end')

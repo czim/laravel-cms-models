@@ -51,9 +51,14 @@
             </ul>
         </div>
     @endif
+</div>
 
-
-    {{-- If there are errors for any of the translated fields, make sure the error status is visible --}}
-    {{-- todo --}}
-
+{{-- If there are errors for any of the translated fields, make sure the error status is visible --}}
+<div>
+    @foreach ($locales as $locale)
+        @include('cms-models::model.partials.form.field_errors', [
+            'key'    => $field->key(),
+            'errors' => array_get($errors, $locale, []),
+        ])
+    @endforeach
 </div>

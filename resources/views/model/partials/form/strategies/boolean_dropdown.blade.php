@@ -1,6 +1,6 @@
 
 <select id="field-{{ $key }}"
-        name="{{ $name ?: $key }}"
+        name="{{ $name ?: (isset($baseKey) ? $baseKey : $key) }}"
         class="form-control"
 >
     <option value=""
@@ -28,4 +28,8 @@
     @endforeach
 </select>
 
-@include('cms-models::model.partials.form.field_errors', compact('key', 'errors'))
+@include('cms-models::model.partials.form.field_errors', [
+    'key'        => isset($baseKey) ? $baseKey : $key,
+    'errors'     => $errors,
+    'translated' => $translated,
+])

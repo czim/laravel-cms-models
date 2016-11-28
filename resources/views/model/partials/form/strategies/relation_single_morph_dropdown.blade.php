@@ -24,4 +24,9 @@
 
 </select>
 
-@include('cms-models::model.partials.form.field_errors', compact('key', 'errors'))
+
+@include('cms-models::model.partials.form.field_errors', [
+    'key'        => isset($baseKey) ? $baseKey : $key,
+    'errors'     => $errors,
+    'translated' => $translated,
+])

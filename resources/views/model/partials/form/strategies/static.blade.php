@@ -1,9 +1,7 @@
 
-<input id="field-{{ $key }}"
-       type="checkbox"
-       name="{{ $name ?: (isset($baseKey) ? $baseKey : $key) }}"
-       @if ($value) checked="checked" @endif
->
+<p id="field-{{ $key }}" class="form-control-static">
+    {{ $value }}
+</p>
 
 @include('cms-models::model.partials.form.field_errors', [
     'key'        => isset($baseKey) ? $baseKey : $key,
