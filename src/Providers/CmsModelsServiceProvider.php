@@ -19,7 +19,6 @@ use Czim\CmsModels\Contracts\Support\MetaReferenceDataProviderInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
 use Czim\CmsModels\Contracts\View\FormFieldStrategyInterface;
-use Czim\CmsModels\Contracts\View\ListStrategyInterface;
 use Czim\CmsModels\Events;
 use Czim\CmsModels\Listeners\ModelLogListener;
 use Czim\CmsModels\Repositories\Collectors\CmsModelInformationInterpreter;
@@ -35,7 +34,6 @@ use Czim\CmsModels\Support\Routing\RouteHelper;
 use Czim\CmsModels\Support\Strategies\MetaReferenceDataProvider;
 use Czim\CmsModels\View\FilterStrategy;
 use Czim\CmsModels\View\FormFieldStrategy;
-use Czim\CmsModels\View\ListStrategy;
 use Illuminate\Support\ServiceProvider;
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsCore\Support\Enums\Component;
@@ -185,7 +183,6 @@ class CmsModelsServiceProvider extends ServiceProvider
      */
     protected function registerStrategyInterfaceBindings()
     {
-        $this->app->singleton(ListStrategyInterface::class, ListStrategy::class);
         $this->app->singleton(FilterStrategyInterface::class, FilterStrategy::class);
         $this->app->singleton(ActivateStrategyResolverInterface::class, ActivateStrategyResolver::class);
         $this->app->singleton(OrderableStrategyResolverInterface::class, OrderableStrategyResolver::class);
