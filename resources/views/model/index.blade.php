@@ -130,10 +130,16 @@
                                     ])
                                 @endif
 
-                                @foreach ($model->list->columns as $column)
+                                @foreach ($model->list->columns as $key => $column)
                                     @continue($column->hide)
 
-                                    @include('cms-models::model.partials.list.column_strategy', compact('model', 'record'))
+                                    @include('cms-models::model.partials.list.column_strategy', [
+                                        'key'      => $key,
+                                        'column'   => $column,
+                                        'strategy' => $listStrategies[ $key ],
+                                        'model'    => $model,
+                                        'record'   => $record,
+                                    ])
                                 @endforeach
 
                                 @include('cms-models::model.partials.list.column_actions', compact(

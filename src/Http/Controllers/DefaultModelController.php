@@ -19,6 +19,7 @@ class DefaultModelController extends BaseModelController
         Traits\DefaultModelSorting,
         Traits\DeletesModel,
         Traits\HandlesFormFields,
+        Traits\HandlesListColumnStrategies,
         Traits\SetsModelActivateState,
         Traits\SetsModelOrderablePosition;
 
@@ -80,6 +81,7 @@ class DefaultModelController extends BaseModelController
             'model'               => $this->modelInformation,
             'records'             => $records,
             'totalCount'          => $totalCount,
+            'listStrategies'      => $this->getListColumnStrategyInstances(),
             'sortColumn'          => $this->getActualSort(),
             'sortDirection'       => $this->getActualSortDirection(),
             'pageSize'            => $this->getActualPageSize(),

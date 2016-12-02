@@ -1,6 +1,7 @@
-
 <?php
-    $strategy = app(\Czim\CmsModels\Contracts\View\ListStrategyInterface::class);
+    /** @var \Czim\CmsModels\Contracts\View\ListDisplayInterface $strategy */
+    /** @var \Czim\CmsModels\Support\Data\ModelListColumnData $column */
+    /** @var \Illuminate\Database\Eloquent\Model $record */
 
     $attributes = [
         'class' => trim('column ' . $column->style . ' ' . $strategy->style($record, $column->strategy, $column->source)),
@@ -14,10 +15,5 @@
             {{ $attributeKey }}="{{ $attributeValue }}"
         @endforeach
 >
-    {!! $strategy->render(
-            $record,
-            $column->strategy,
-            $column->source
-       )
-    !!}
+    {!! $strategy->render($record, $column->source) !!}
 </td>
