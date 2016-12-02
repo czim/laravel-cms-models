@@ -17,17 +17,46 @@ If the value is null, neither is shown, leaving the cell empty.
 
 ## Date
 
-Displays a `DateTime` value formatted to show only the date.  
+Displays a `DateTime` value formatted to show only the date.
+
+- `format` (string)  
+    Any PHP date format. Defaults to `'Y-m-d'`.
+    
+```php
+    'options' => [
+        // The date format to render the date source in
+        'format' => 'd/m/Y',
+    ]
+```
 
 
 ## DateTime
 
 Displays a `DateTime` value formatted to show date and time.
 
+- `format` (string)  
+    Any PHP date format. Defaults to `'Y-m-d H:i'`.
+    
+```php
+    'options' => [
+        // The date format to render the date source in
+        'format' => 'd/m/Y H:i:s',
+    ]
+```
 
 ## Time
 
 Displays a `DateTime` value formatted to show only the time.
+
+- `format` (string)  
+    Any PHP date format. Defaults to `'H:i'`.
+    
+```php
+    'options' => [
+        // The date format to render the date source in
+        'format' => 'H:i:s',
+    ]
+```
 
 
 ## Stapler File
