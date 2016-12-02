@@ -7,6 +7,6 @@ class Time extends Date
     /**
      * @var string
      */
-    protected $format = 'H:i:s';
+    protected $format = 'H:i';
 
 }

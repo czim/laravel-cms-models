@@ -7,6 +7,6 @@ class DateTime extends Date
     /**
      * @var string
      */
-    protected $format = 'Y-m-d H:i:s';
+    protected $format = 'Y-m-d H:i';
 
 }
