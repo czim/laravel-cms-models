@@ -1,30 +1,23 @@
 <?php
-namespace Czim\CmsModels\View;
+namespace Czim\CmsModels\Support\Factories;
 
 use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
 use Czim\CmsModels\Contracts\View\FilterApplicationInterface;
 use Czim\CmsModels\Contracts\View\FilterDisplayInterface;
-use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
-use Czim\CmsModels\Support\Data\ModelListFilterData;
-use Czim\CmsModels\View\Traits\ResolvesSourceStrategies;
-use Illuminate\Database\Eloquent\Builder;
 use RuntimeException;
 
-class FilterStrategy implements FilterStrategyInterface
+class FilterStrategyFactory
 {
-    use ResolvesSourceStrategies;
-
 
     /**
-     * Applies a strategy to render a filter field.
+     * Makes a filter display instance.
      *
-     * @param string  $strategy
-     * @param string  $key
-     * @param mixed   $value
-     * @param ModelFilterDataInterface|ModelListFilterData $info
-     * @return string
+     * @param string                        $strategy
+     * @param string|null                   $key
+     * @param ModelFilterDataInterface|null $info
+     * @return FilterDisplayInterface
      */
-    public function render($strategy, $key, $value, ModelFilterDataInterface $info)
+    public function makeForDisplay($strategy, $key = null, ModelFilterDataInterface $info = null)
     {
         // A filter must have a resolvable strategy for displaying
         if ( ! ($strategyClass = $this->resolveDisplayStrategyClass($strategy))) {
@@ -36,30 +29,25 @@ class FilterStrategy implements FilterStrategyInterface
         /** @var FilterDisplayInterface $instance */
         $instance = app($strategyClass);
 
-        return $instance->render($key, $value, $info);
+        // todo: set info on instance
+
+        return $instance;
     }
 
     /**
-     * Applies the filter value for a strategy to a query builder.
+     * Make a filter application instance.
      *
-     * @param Builder $query
-     * @param string  $strategy
-     * @param string  $target
-     * @param mixed   $value
+     * @param string                        $strategy
+     * @param string|null                   $key
+     * @param ModelFilterDataInterface|null $info
+     * @return FilterApplicationInterface
      */
-    public function apply($query, $strategy, $target, $value)
+    public function makeForApplication($strategy, $key = null, ModelFilterDataInterface $info = null)
     {
-        // A filter must have a resolvable strategy for applying
-        if ( ! ($strategyClass = $this->resolveApplicationStrategyClass($strategy))) {
-            throw new RuntimeException(
-                "Could not resolve application strategy class for {$target}: '{$strategy}'"
-            );
-        }
-
         /** @var FilterApplicationInterface $instance */
-        $instance = app($strategyClass);
+        $instance = $this->makeForDisplay($strategy, $key, $info);
 
-        return $instance->apply($query, $target, $value);
+        return $instance;
     }
 
 

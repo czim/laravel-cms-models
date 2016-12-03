@@ -19,6 +19,7 @@ class DefaultModelController extends BaseModelController
         Traits\DefaultModelSorting,
         Traits\DeletesModel,
         Traits\HandlesFormFields,
+        Traits\HandlesFilterStrategies,
         Traits\HandlesListColumnStrategies,
         Traits\SetsModelActivateState,
         Traits\SetsModelOrderablePosition;
@@ -87,6 +88,7 @@ class DefaultModelController extends BaseModelController
             'pageSize'            => $this->getActualPageSize(),
             'pageSizeOptions'     => $this->getPageSizeOptions(),
             'filters'             => $this->getActiveFilters(),
+            'filterStrategies'    => $this->getFilterStrategyInstances(),
             'activeScope'         => $this->getActiveScope(),
             'scopeCounts'         => $scopeCounts,
             'unconditionalDelete' => $this->isUnconditionallyDeletable(),

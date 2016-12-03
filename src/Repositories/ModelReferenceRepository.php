@@ -6,7 +6,7 @@ use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelReferenceRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\SortStrategyInterface;
-use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
+use Czim\CmsModels\Contracts\Support\Factories\FilterStrategyFactoryInterface;
 use Czim\CmsModels\Http\Controllers\Traits\AppliesRepositoryContext;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Contracts\Data\Strategies\ModelMetaReferenceInterface;
@@ -229,12 +229,9 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
             $strategy = config('cms-models.meta-references.filter-strategy');
         }
 
-        $this->getFilterStrategy()->apply(
-            $query,
-            $strategy,
-            $target,
-            $value
-        );
+        $filter = $this->getFilterFactory()->makeForApplication($strategy);
+
+        $filter->apply($query, $target, $value);
     }
 
     /**
@@ -315,11 +312,11 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
     }
 
     /**
-     * @return FilterStrategyInterface
+     * @return FilterStrategyFactoryInterface
      */
-    protected function getFilterStrategy()
+    protected function getFilterFactory()
     {
-        return app(FilterStrategyInterface::class);
+        return app(FilterStrategyFactoryInterface::class);
     }
 
 }

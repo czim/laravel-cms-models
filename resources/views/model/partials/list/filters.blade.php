@@ -14,10 +14,12 @@
 
         @foreach ($filterData as $key => $filter)
 
-            @include('cms-models::model.partials.list.filters_strategy', [
-                'filter' => $filter,
-                'value'  => array_get($filters, $key),
-            ])
+            <?php /** @var \Czim\CmsModels\Contracts\View\FilterDisplayInterface[] $filterStrategies */ ?>
+            {!! $filterStrategies[ $key ]->render(
+                $key,
+                array_get($filters, $key),
+                $filter
+            ) !!}
 
         @endforeach
 

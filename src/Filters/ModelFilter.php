@@ -3,7 +3,7 @@ namespace Czim\CmsModels\Filters;
 
 use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
-use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
+use Czim\CmsModels\Contracts\Support\Factories\FilterStrategyFactoryInterface;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelListFilterData;
 use Czim\Filter\Contracts\FilterDataInterface;
@@ -55,20 +55,21 @@ class ModelFilter extends Filter
         // We know about this filter, load up the relevant application strategy and apply it
         $information = $this->filterInformation[ $parameterName ];
 
-        $this->getFilterStrategy()->apply(
-            $query,
+        $filter = $this->getFilterFactory()->makeForApplication(
             $information->strategy(),
-            $information->target(),
-            $parameterValue
+            $parameterName,
+            $this->filterInformation[ $parameterName ]
         );
+
+        $filter->apply($query, $information->target(), $parameterValue);
     }
 
     /**
-     * @return FilterStrategyInterface
+     * @return FilterStrategyFactoryInterface
      */
-    protected function getFilterStrategy()
+    protected function getFilterFactory()
     {
-        return app(FilterStrategyInterface::class);
+        return app(FilterStrategyFactoryInterface::class);
     }
 
     /**
