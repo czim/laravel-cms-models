@@ -93,7 +93,7 @@ class TranslatedAttribute extends AbstractSortStrategy
 
         /** @var Builder $query */
         if ($this->nullLast && $supportsIf) {
-            $query->orderBy(DB::raw("IF(`{$subQueryAlias}`.`{$column}` IS NULL,1,0)"));
+            $query->orderBy(DB::raw("IF(`{$subQueryAlias}`.`{$column}` IS NULL OR `{$subQueryAlias}`.`{$column}` = '',1,0)"));
         }
 
         $query->orderBy("{$subQueryAlias}.{$column}", $direction);

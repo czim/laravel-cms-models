@@ -27,7 +27,7 @@ class NullLast extends AbstractSortStrategy
         $supportsIf = $this->databaseSupportsIf($query);
 
         if ($supportsIf) {
-            $query = $query->orderBy(DB::raw("IF(`{$column}` IS NULL,1,0)"));
+            $query = $query->orderBy(DB::raw("IF(`{$column}` IS NULL OR `{$column}` = '',1,0)"));
         }
 
         return $query->orderBy($column, $direction);
