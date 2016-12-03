@@ -5,11 +5,9 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\View\ListDisplayInterface;
 use Czim\CmsModels\Http\Controllers\BaseModelController;
 use Czim\CmsModels\Support\Data\ModelInformation;
-use Czim\CmsModels\View\Traits\ResolvesSourceStrategies;
 
 trait HandlesListColumnStrategies
 {
-    use ResolvesSourceStrategies;
 
     /**
      * Collects and returns strategy instances for list columns.
