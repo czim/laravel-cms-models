@@ -17,6 +17,7 @@ use Czim\CmsModels\Contracts\Repositories\OrderableStrategyResolverInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
 use Czim\CmsModels\Contracts\Support\Factories\FilterStrategyFactoryInterface;
 use Czim\CmsModels\Contracts\Support\Factories\FormFieldStrategyFactoryInterface;
+use Czim\CmsModels\Contracts\Support\Factories\ListDisplayStrategyFactoryInterface;
 use Czim\CmsModels\Contracts\Support\MetaReferenceDataProviderInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Events;
@@ -31,6 +32,7 @@ use Czim\CmsModels\Repositories\ActivateStrategies\ActivateStrategyResolver;
 use Czim\CmsModels\Repositories\OrderableStrategies\OrderableStrategyResolver;
 use Czim\CmsModels\Support\Factories\FilterStrategyFactory;
 use Czim\CmsModels\Support\Factories\FormFieldStrategyFactory;
+use Czim\CmsModels\Support\Factories\ListDisplayStrategyFactory;
 use Czim\CmsModels\Support\ModuleHelper;
 use Czim\CmsModels\Support\Routing\RouteHelper;
 use Czim\CmsModels\Support\Strategies\MetaReferenceDataProvider;
@@ -187,6 +189,7 @@ class CmsModelsServiceProvider extends ServiceProvider
         $this->app->singleton(ActivateStrategyResolverInterface::class, ActivateStrategyResolver::class);
         $this->app->singleton(OrderableStrategyResolverInterface::class, OrderableStrategyResolver::class);
         $this->app->singleton(FormFieldStrategyFactoryInterface::class, FormFieldStrategyFactory::class);
+        $this->app->singleton(ListDisplayStrategyFactoryInterface::class, ListDisplayStrategyFactory::class);
 
         return $this;
     }
