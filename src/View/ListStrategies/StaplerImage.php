@@ -23,15 +23,30 @@ class StaplerImage extends AbstractListDisplayStrategy
             throw new UnexpectedValueException("Stapler strategy expects Attachment as source");
         }
 
-        $smallestResize = $this->getSmallestResize($source);
+        $resize = $this->getResizetoUse($source);
 
         return view('cms-models::model.partials.list.strategies.stapler_image', [
             'filename'    => $source->originalFilename(),
-            'urlThumb'    => $source->url($smallestResize),
+            'urlThumb'    => $source->url($resize),
             'urlOriginal' => $source->url(),
             'width'       => 64,
             'height'      => 64,
         ])->render();
+    }
+
+    /**
+     * Returns the stapler resize to display.
+     *
+     * @param Attachment $attachment
+     * @return string
+     */
+    protected function getResizetoUse(Attachment $attachment)
+    {
+        return array_get(
+            $this->listColumnData->options(),
+            'stapler_style',
+            $this->getSmallestResize($attachment)
+        );
     }
 
     /**
