@@ -19,6 +19,8 @@ If the value is null, neither is shown, leaving the cell empty.
 
 Displays a `DateTime` value formatted to show only the date.
 
+### Options
+
 - `format` (string)  
     Any PHP date format. Defaults to `'Y-m-d'`.
     
@@ -34,6 +36,8 @@ Displays a `DateTime` value formatted to show only the date.
 
 Displays a `DateTime` value formatted to show date and time.
 
+### Options
+
 - `format` (string)  
     Any PHP date format. Defaults to `'Y-m-d H:i'`.
     
@@ -47,6 +51,8 @@ Displays a `DateTime` value formatted to show date and time.
 ## Time
 
 Displays a `DateTime` value formatted to show only the time.
+
+### Options
 
 - `format` (string)  
     Any PHP date format. Defaults to `'H:i'`.
@@ -68,3 +74,16 @@ Displays a Stapler upload field as the filename, with a link to the uploaded fil
 
 Displays a Stapler upload field for images as a thumbnail.
 This uses the smallest available stapler resize by default. 
+
+### Options
+
+- `stapler_style` (string)  
+    The stapler resize style to use.  
+    If not set, defaults to using the smallest available. 
+    
+```php
+    'options' => [
+        // The stapler resize style to use
+        'stapler_style' => 'thumbnail',
+    ]
+```
