@@ -19,6 +19,7 @@
                         'model',
                         'values',
                         'fields',
+                        'fieldStrategies',
                         'errors'
                     ),
                     [

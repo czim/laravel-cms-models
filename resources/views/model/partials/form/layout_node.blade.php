@@ -14,8 +14,9 @@
                     'errors'
                 ),
                 [
-                    'key'   => $node,
-                    'field' => $model->form->fields[ $node ],
+                    'key'      => $node,
+                    'field'    => $model->form->fields[ $node ],
+                    'strategy' => $fieldStrategies[ $node ],
                 ]
             ))
 

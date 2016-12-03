@@ -95,6 +95,7 @@
                         'record',
                         'model',
                         'fields',
+                        'fieldStrategies',
                         'values',
                         'fieldErrors',
                         'tabs',
@@ -118,6 +119,7 @@
                             'record',
                             'model',
                             'fields',
+                            'fieldStrategies',
                             'values'
                         ),
                         [

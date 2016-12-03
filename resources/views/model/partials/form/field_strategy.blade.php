@@ -11,7 +11,8 @@
     <div class="col-sm-10">
 
         <?php
-            $strategy = app(\Czim\CmsModels\Contracts\View\FormFieldStrategyInterface::class);
+            /** @var \Czim\CmsModels\Contracts\View\FormFieldDisplayInterface $strategy */
+
             $value = old() ? old($key) : array_get($values, $key);
         ?>
 

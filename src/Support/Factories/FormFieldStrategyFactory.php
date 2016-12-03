@@ -1,45 +1,20 @@
 <?php
-namespace Czim\CmsModels\View;
+namespace Czim\CmsModels\Support\Factories;
 
-use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
+use Czim\CmsModels\Contracts\Support\Factories\FormFieldStrategyFactoryInterface;
 use Czim\CmsModels\Contracts\View\FormFieldDisplayInterface;
-use Czim\CmsModels\Contracts\View\FormFieldStrategyInterface;
-use Czim\CmsModels\Support\Data\ModelFormFieldData;
-use Illuminate\Database\Eloquent\Model;
 
-class FormFieldStrategy implements FormFieldStrategyInterface
+class FormFieldStrategyFactory implements FormFieldStrategyFactoryInterface
 {
 
     /**
-     * Applies a strategy to render a form field.
-     *
-     * @param Model                                          $model
-     * @param ModelFormFieldDataInterface|ModelFormFieldData $field
-     * @param mixed                                          $value
-     * @param mixed                                          $originalValue
-     * @param array                                          $errors
-     * @return string
-     */
-    public function render(
-        Model $model,
-        ModelFormFieldDataInterface $field,
-        $value,
-        $originalValue,
-        array $errors = []
-    ) {
-        $instance = $this->makeFormFieldDisplayStrategyInstance($field->display_strategy);
-
-        return $instance->render($model, $field, $value, $originalValue, $errors);
-    }
-
-    /**
-     * Makes a form field display strategy instance for a given strategy string.
+     * Makes a form field display strategy instance.
      *
      * @param string $strategy
      * @return FormFieldDisplayInterface
      */
-    protected function makeFormFieldDisplayStrategyInstance($strategy)
+    public function make($strategy)
     {
         // If the strategy indicates the FQN of display strategy,
         // or a classname that can be found in the default strategy name path, use it.

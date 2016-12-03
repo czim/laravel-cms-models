@@ -20,6 +20,7 @@ class DefaultModelController extends BaseModelController
         Traits\DeletesModel,
         Traits\HandlesFormFields,
         Traits\HandlesFilterStrategies,
+        Traits\HandlesFormFieldStrategies,
         Traits\HandlesListColumnStrategies,
         Traits\SetsModelActivateState,
         Traits\SetsModelOrderablePosition;
@@ -134,6 +135,7 @@ class DefaultModelController extends BaseModelController
             'record'           => $record,
             'creating'         => true,
             'fields'           => $fields,
+            'fieldStrategies'  => $this->getFormFieldStrategyInstances($fields),
             'values'           => $values,
             'fieldErrors'      => $this->getNormalizedFormFieldErrors(),
             'errorsPerTab'     => $this->getErrorCountsPerTabPane(),
@@ -205,6 +207,7 @@ class DefaultModelController extends BaseModelController
             'record'           => $record,
             'creating'         => false,
             'fields'           => $fields,
+            'fieldStrategies'  => $this->getFormFieldStrategyInstances($fields),
             'values'           => $values,
             'fieldErrors'      => $this->getNormalizedFormFieldErrors(),
             'errorsPerTab'     => $this->getErrorCountsPerTabPane(),
