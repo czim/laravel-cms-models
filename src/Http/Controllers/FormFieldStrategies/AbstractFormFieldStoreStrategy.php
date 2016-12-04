@@ -164,28 +164,16 @@ class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyInterface
         ModelFormFieldDataInterface $field = null,
         ModelInformationInterface $modelInformation = null
     ) {
-        if ( ! $field || ! $modelInformation) {
-            return false;
-        }
+        // Default behavior is to check for attribute/relation validation rules
+        $rules = $this->getStrategySpecificRules($field);
 
-        $rules = false;
+        // Fallback behavior is to check for attribute/relation validation rules
+        $modelRules = $this->getModelInformationBasedRules($field, $modelInformation);
+
+        // Merge the rules together sensibly
+        $rules = $this->mergeValidationRules($rules, $modelRules);
 
         $key = $field->key();
-
-        if (array_key_exists($key, $modelInformation->attributes)) {
-
-            $rules = $this->getAttributeValidationResolver()->determineValidationRules(
-                $modelInformation->attributes[ $key ],
-                $field
-            );
-
-        } elseif (array_key_exists($key, $modelInformation->relations)) {
-
-            $rules = $this->getRelationValidationResolver()->determineValidationRules(
-                $modelInformation->relations[ $key ],
-                $field
-            );
-        }
 
         // Translations are handled with locale-keyed associative arrays
         if ($rules && $field->translated()) {
@@ -196,6 +184,128 @@ class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyInterface
         }
 
         return $rules;
+    }
+
+    /**
+     * Returns validation rules specific for the strategy.
+     *
+     * Override this to set validation rules that should override attribute- or
+     * relation-based validation rules.
+     *
+     * @param ModelFormFieldDataInterface|ModelFormFieldData $field
+     * @return array|false|null     null to fall back to default rules.
+     */
+    protected function getStrategySpecificRules(ModelFormFieldDataInterface $field = null)
+    {
+        return null;
+    }
+
+    /**
+     * Returns validation rules based on model information.
+     *
+     * @param ModelFormFieldDataInterface|ModelFormFieldData|null $field
+     * @param ModelInformationInterface|ModelInformation|null     $modelInformation
+     * @return array|false
+     */
+    protected function getModelInformationBasedRules(
+        ModelFormFieldDataInterface $field = null,
+        ModelInformationInterface $modelInformation = null
+    ) {
+        if ( ! $field || ! $modelInformation) {
+            return false;
+        }
+
+        $key = $field->key();
+
+        if (array_key_exists($key, $modelInformation->attributes)) {
+
+            return $this->getAttributeValidationResolver()->determineValidationRules(
+                $modelInformation->attributes[ $key ],
+                $field
+            );
+
+        }
+
+        if (array_key_exists($key, $modelInformation->relations)) {
+
+            return $this->getRelationValidationResolver()->determineValidationRules(
+                $modelInformation->relations[ $key ],
+                $field
+            );
+        }
+
+        return false;
+    }
+
+    /**
+     * Sensibly merges validation rules set specifically for the model and determined by model information.
+     *
+     * @param array|string|false $specificRules
+     * @param array|string|false $modelRules
+     * @return array|string|false
+     */
+    protected function mergeValidationRules($specificRules, $modelRules)
+    {
+        if (empty($specificRules)) {
+            return $modelRules;
+        }
+
+        if (empty($modelRules)) {
+            return $specificRules;
+        }
+
+        $specificRules = is_array($specificRules) ? $specificRules : [ $specificRules ];
+        $modelRules    = is_array($modelRules)    ? $modelRules    : [ $modelRules ];
+
+        $flippedInheritable = array_flip($this->inheritableRules());
+
+        // Remove rules that may not be inherited, because present in specific rules
+        array_forget($flippedInheritable, array_map([ $this, 'getRuleType' ], $specificRules));
+
+        foreach ($modelRules as $modelRule) {
+
+            $ruleType = $this->getRuleType($modelRule);
+
+            if ( ! array_key_exists($ruleType, $flippedInheritable)) {
+                continue;
+            }
+
+            $specificRules[] = $modelRule;
+        }
+
+        return $specificRules;
+    }
+
+    /**
+     * Returns validation rules that may be inherited from model information data,
+     * to be included into specific strategy rules if not already present.
+     *
+     * @return array
+     */
+    protected function inheritableRules()
+    {
+        return [
+            'required',
+            'filled',
+            'nullable',
+            'unique',
+            'exists',
+        ];
+    }
+
+    /**
+     * Returns a rule type for a given validation rule.
+     *
+     * @param $rule
+     * @return string
+     */
+    protected function getRuleType($rule)
+    {
+        if (false === ($pos = strpos($rule, ':'))) {
+            return $rule;
+        }
+
+        return substr($rule, 0, $pos);
     }
 
 
