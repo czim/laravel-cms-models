@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Support\Data;
 
 use Czim\CmsModels\Contracts\Data\ModelFormFieldsetDataInterface;
+use Czim\CmsModels\Support\Enums\LayoutNodeType;
 
 /**
  * Class ModelFormFieldsetData
@@ -11,18 +12,22 @@ use Czim\CmsModels\Contracts\Data\ModelFormFieldsetDataInterface;
  * @property string $type
  * @property string $label
  * @property string $label_translated
- * @property array $children
+ * @property bool   $required
+ * @property array  $children
  */
 class ModelFormFieldsetData extends AbstractModelFormLayoutNodeData  implements ModelFormFieldsetDataInterface
 {
 
     protected $attributes = [
 
-        'type' => 'fieldset',
+        'type' => LayoutNodeType::FIELDSET,
 
         // Fieldset label (or translation key) to show
         'label'            => null,
         'label_translated' => null,
+
+        // Whether the fields belonging to this are required (affects display only)
+        'required' => null,
 
         // Nested layout children (field keys or nested fieldsets/groups).
         'chilren' => [],

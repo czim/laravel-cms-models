@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Support\Data;
 
 use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelFormLayoutNodeInterface;
+use Czim\CmsModels\Support\Enums\LayoutNodeType;
 use Czim\DataObject\Contracts\DataObjectInterface;
 use UnexpectedValueException;
 
@@ -12,6 +13,7 @@ use UnexpectedValueException;
  * @property string $type
  * @property string $label
  * @property string $label_translated
+ * @property bool   $required
  * @property array|string[] $children
  */
 class AbstractModelFormLayoutNodeData extends AbstractDataObject implements ModelFormLayoutNodeInterface
@@ -39,6 +41,16 @@ class AbstractModelFormLayoutNodeData extends AbstractDataObject implements Mode
         }
 
         return $this->label;
+    }
+
+    /**
+     * Returns whether the field(s) related to this node are required.
+     *
+     * @return bool
+     */
+    public function required()
+    {
+        return (bool) $this->required;
     }
 
     /**
@@ -77,12 +89,16 @@ class AbstractModelFormLayoutNodeData extends AbstractDataObject implements Mode
 
                 switch ($type) {
 
-                    case 'fieldset':
+                    case LayoutNodeType::FIELDSET:
                         $value = new ModelFormFieldsetData($value);
                         break;
 
-                    case 'group':
+                    case LayoutNodeType::GROUP:
                         $value = new ModelFormFieldGroupData($value);
+                        break;
+
+                    case LayoutNodeType::LABEL:
+                        $value = new ModelFormFieldLabelData($value);
                         break;
 
                     default:

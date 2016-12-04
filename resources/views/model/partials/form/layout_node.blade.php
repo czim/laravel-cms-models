@@ -30,7 +30,7 @@
 
     @endif
 
-@elseif ($node->type() === 'fieldset')
+@elseif ($node->type() === \Czim\CmsModels\Support\Enums\LayoutNodeType::FIELDSET)
 
     @include('cms-models::model.partials.form.layout_fieldset', array_merge(
         compact(
@@ -46,7 +46,7 @@
         ]
     ))
 
-@elseif ($node->type() === 'group')
+@elseif ($node->type() === \Czim\CmsModels\Support\Enums\LayoutNodeType::GROUP)
 
     @include('cms-models::model.partials.form.layout_group', array_merge(
         compact(
@@ -61,6 +61,13 @@
             'group' => $node,
         ]
     ))
+
+@elseif ($node->type() === \Czim\CmsModels\Support\Enums\LayoutNodeType::LABEL)
+
+    @include('cms-models::model.partials.form.layout_label', [
+            'key'   => $nodeKey,
+            'label' => $node,
+    ])
 
 @else
 

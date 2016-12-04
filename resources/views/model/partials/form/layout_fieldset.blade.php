@@ -1,7 +1,9 @@
 
 <fieldset id="fieldset-{{ $key }}">
 
-    <legend>{{ $fieldset->display() }}</legend>
+    <legend @if ($fieldset->required()) class="required" @endif>
+        {{ $fieldset->display() }}
+    </legend>
 
     @foreach ($fieldset->children as $nodeKey => $node)
 

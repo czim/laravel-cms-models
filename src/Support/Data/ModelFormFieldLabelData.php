@@ -4,22 +4,22 @@ namespace Czim\CmsModels\Support\Data;
 use Czim\CmsModels\Support\Enums\LayoutNodeType;
 
 /**
- * Class ModelFormFieldGroupData
+ * Class ModelFormFieldLabelData
  *
- * Data container for layout of an (in-row) group of editable fields on a model's edit form.
+ * Data container for label in layout. Useful for field group, to add
+ * in-row labels.
  *
  * @property string $type
  * @property string $label
  * @property string $label_translated
  * @property bool   $required
- * @property array|string[] $children
  */
-class ModelFormFieldGroupData extends AbstractModelFormLayoutNodeData
+class ModelFormFieldLabelData extends AbstractModelFormLayoutNodeData
 {
 
     protected $attributes = [
 
-        'type' => LayoutNodeType::GROUP,
+        'type' => LayoutNodeType::LABEL,
 
         // Field label (or translation key) to show
         'label'            => null,
@@ -28,7 +28,7 @@ class ModelFormFieldGroupData extends AbstractModelFormLayoutNodeData
         // Whether the fields belonging to this are required (affects display only)
         'required' => null,
 
-        // Nested layout (field keys only at this level)
+        // This layout type should not have children
         'children' => [],
     ];
 

@@ -1,7 +1,7 @@
 
-<div id="field-group-{{ $key }}">
+<div @if ( ! is_numeric($key)) id="field-group-{{ $key }}" @endif>
 
-    <label for="field-{{ $key }}" class="col-sm-2">
+    <label class="col-sm-2 @if ($label->required()) required @endif">
         {{ $group->display() }}
     </label>
 
