@@ -3,16 +3,8 @@ namespace Czim\CmsModels\View\FormFieldStrategies;
 
 class DateStrategy extends DateTimeStrategy
 {
+    const DEFAULT_FORMAT = 'Y-m-d';
 
-    /**
-     * Returns default PHP date format.
-     *
-     * @return string
-     */
-    protected function defaultDateFormat()
-    {
-        return 'Y-m-d';
-    }
 
     /**
      * @return string

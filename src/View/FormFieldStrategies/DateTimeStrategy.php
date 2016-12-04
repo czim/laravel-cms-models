@@ -5,6 +5,8 @@ use DateTime;
 
 class DateTimeStrategy extends AbstractDefaultStrategy
 {
+    const DEFAULT_FORMAT = 'Y-m-d H:i';
+
 
     /**
      * Returns the view partial that should be used.
@@ -70,7 +72,7 @@ class DateTimeStrategy extends AbstractDefaultStrategy
      */
     protected function defaultDateFormat()
     {
-        return 'Y-m-d H:i';
+        return static::DEFAULT_FORMAT;
     }
 
     /**
