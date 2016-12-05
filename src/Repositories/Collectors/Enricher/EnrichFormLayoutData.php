@@ -56,7 +56,13 @@ class EnrichFormLayoutData extends AbstractEnricherStep
             }
 
             /** @var ModelFormTabData|ModelFormFieldsetData|ModelFormFieldGroupData $nodes */
-            $nodes->required = $this->markRequiredForNestedLayoutChildren($nodes->children());
+
+            $required = $this->markRequiredForNestedLayoutChildren($nodes->children());
+
+            // Only set the required status if not explicitly set in configuration
+            if (null === $nodes->required) {
+                $nodes->required = $required;
+            }
 
             return $nodes->required;
         }
