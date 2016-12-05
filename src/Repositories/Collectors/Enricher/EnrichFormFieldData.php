@@ -56,7 +56,7 @@ class EnrichFormFieldData extends AbstractEnricherStep
     }
 
     /**
-     * Fills column data if no field data is set.
+     * Fills form field data if no field data is set.
      */
     protected function fillDataForEmpty()
     {
