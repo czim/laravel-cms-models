@@ -42,7 +42,7 @@
                    type="file"
                    name="{{ $name ?: (isset($baseKey) ? $baseKey : $key) }}[upload]"
                    style="display: none;"
-                   accept="image/*"
+                   @if ($accept) accept="{{ $accept }}" @endif
                    @if ($required && ! $translated) required="required" @endif
             >
         </span>

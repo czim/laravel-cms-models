@@ -39,6 +39,7 @@
             <input id="field-{{ $key }}"
                    type="file"
                    name="{{ $name ?: (isset($baseKey) ? $baseKey : $key) }}[upload]"
+                   @if ($accept) accept="{{ $accept }}" @endif
                    style="display: none;"
                    @if ($required && ! $translated) required="required" @endif
             >
