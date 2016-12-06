@@ -1,6 +1,7 @@
 <?php
 namespace Czim\CmsModels\Http\Controllers\Traits;
 
+use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelFormLayoutNodeInterface;
 use Czim\CmsModels\Contracts\Data\ModelFormTabDataInterface;
@@ -55,11 +56,17 @@ trait HandlesFormFields
                 );
             }
 
-            if ($creating) {
-                return $this->getModelInformation()->form->fields[$key]->create();
+            $fieldData = $this->getModelInformation()->form->fields[$key];
+
+            if ( ! $this->allowedToUseFormFieldData($fieldData)) {
+                return false;
             }
 
-            return $this->getModelInformation()->form->fields[$key]->update();
+            if ($creating) {
+                return $fieldData->create();
+            }
+
+            return $fieldData->update();
         });
 
         return $fieldKeys;
@@ -137,7 +144,11 @@ trait HandlesFormFields
         $strategies = [];
 
         foreach (array_keys($values) as $key) {
-            $fields[ $key ]     = $this->getModelFormFieldDataForKey($key);
+
+            $field = $this->getModelFormFieldDataForKey($key);
+            if ( ! $this->allowedToUseFormFieldData($field)) continue;
+
+            $fields[ $key ]     = $field;
             $strategies[ $key ] = $this->getFormFieldStoreStrategyInstanceForField($fields[ $key ]);
 
             $strategies[ $key ]->setFormFieldData($fields[ $key ]);
@@ -256,5 +267,40 @@ trait HandlesFormFields
 
         return $tabData->descendantFieldKeys();
     }
+
+    /**
+     * Returns whether current user has permission to use the form field.
+     *
+     * @param ModelFormFieldDataInterface $field
+     * @return bool
+     */
+    protected function allowedToUseFormFieldData(ModelFormFieldDataInterface $field)
+    {
+        if ( ! $field->adminOnly() && ! count($field->permissions())) {
+            return true;
+        }
+
+        $user = $this->getCore()->auth()->user();
+
+        if ( ! $user) {
+            return false;
+        }
+
+        if ($field->adminOnly() && ! $user->isAdmin()) {
+            return false;
+        }
+
+        if ( ! count($field->permissions())) {
+            return true;
+        }
+
+        return $user->can($field->permissions());
+    }
+
+
+    /**
+     * @return CoreInterface
+     */
+    abstract protected function getCore();
 
 }

@@ -64,6 +64,20 @@ interface ModelFormFieldDataInterface extends ArrayAccess, Arrayable
     public function options();
 
     /**
+     * Returns whether only the super admin may use the field.
+     *
+     * @return bool
+     */
+    public function adminOnly();
+
+    /**
+     * Returns permissions required to use the field.
+     *
+     * @return string[]
+     */
+    public function permissions();
+
+    /**
      * @param ModelFormFieldDataInterface $with
      */
     public function merge(ModelFormFieldDataInterface $with);

@@ -1,6 +1,7 @@
 <?php
 namespace Czim\CmsModels\Http\Requests;
 
+use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Http\Controllers\DefaultModelController;
 use Czim\CmsModels\Http\Controllers\Traits\HandlesFormFields;
 use Illuminate\Contracts\Validation\Validator;
@@ -51,6 +52,14 @@ class AbstractModelFormRequest extends AbstractModelRequest
     protected function generalErrorsKey()
     {
         return DefaultModelController::GENERAL_ERRORS_KEY;
+    }
+
+    /**
+     * @return CoreInterface
+     */
+    protected function getCore()
+    {
+        return app(CoreInterface::class);
     }
 
 }

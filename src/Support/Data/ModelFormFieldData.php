@@ -22,6 +22,8 @@ use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
  * @property array $options
  * @property bool $translated
  * @property string $style
+ * @property bool $admin_only
+ * @property string|string[] $permissions
  */
 class ModelFormFieldData extends AbstractDataObject implements ModelFormFieldDataInterface
 {
@@ -65,6 +67,12 @@ class ModelFormFieldData extends AbstractDataObject implements ModelFormFieldDat
 
         // Custom options relevant for the strategy
         'options' => [],
+
+        // Whether the field is visible & usable by super admins only
+        'admin_only' => null,
+
+        // A permission key or an array of permission keys that is required to see & use this field
+        'permissions' => null,
     ];
 
     /**
@@ -176,6 +184,34 @@ class ModelFormFieldData extends AbstractDataObject implements ModelFormFieldDat
     }
 
     /**
+     * Returns whether only the super admin may use the field.
+     *
+     * @return bool
+     */
+    public function adminOnly()
+    {
+        return (bool) $this->admin_only;
+    }
+
+    /**
+     * Returns permissions required to use the field.
+     *
+     * @return string[]
+     */
+    public function permissions()
+    {
+        if (is_array($this->permissions)) {
+            return $this->permissions;
+        }
+
+        if ($this->permissions) {
+            return [ $this->permissions ];
+        }
+
+        return [];
+    }
+
+    /**
      * @param ModelFormFieldDataInterface $with
      */
     public function merge(ModelFormFieldDataInterface $with)
@@ -188,4 +224,5 @@ class ModelFormFieldData extends AbstractDataObject implements ModelFormFieldDat
 
         $this->options = array_merge($this->options(), $with->options());
     }
+
 }
