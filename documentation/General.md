@@ -38,8 +38,8 @@ A user with *any* permissions for the model (ie. checks for `<model key>.*` perm
 
 The permissions are prefixed as follows:
 
-    'models.models.' + model key + '.'
+    'models.' + model key + '.'
     
 So for the model `App\Models\Post` this would make, for instance:
 
-    models.models.app-models-post.create
+    models.app-models-post.create
