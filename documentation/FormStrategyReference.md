@@ -20,7 +20,15 @@ This list is not exhaustive; custom strategy classes and aliases may be created 
     
 - [**`Wysiwyg`**](FormFieldDisplayStrategies/Wysiwyg.md)  
     WYSIWYG rich text editor (HTML) field.
+   
 
+### Files
+
+- [**`AttachmentStaplerFile`**](FormFieldDisplayStrategies/AttachmentStaplerFile.md)  
+    File upload field for [Stapler](https://github.com/CodeSleeve/laravel-stapler) attribute.
+    
+- [**`AttachmentStaplerImage`**](FormFieldDisplayStrategies/AttachmentStaplerImage.md)  
+    File upload field for [Stapler](https://github.com/CodeSleeve/laravel-stapler) image attribute, with preview.
 
 
 ### Relations
