@@ -1,5 +1,5 @@
 
-@if (cms_auth()->can(["{$permissionPrefix}edit", "{$permissionPrefix}delete"]))
+@if (cms_auth()->canAnyOf(["{$permissionPrefix}edit", "{$permissionPrefix}delete"]))
     <td>
         <div class="btn-group btn-group-xs record-actions pull-right tr-show-on-hover" role="group">
 
