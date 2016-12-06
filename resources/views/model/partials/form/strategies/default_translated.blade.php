@@ -2,12 +2,14 @@
 <div class="translated-form-field-container">
 
     <?php
-        // todo fix this to be variable other than through entire locale
-        $currentLocale = app()->getLocale();
+        /** @var \Czim\CmsModels\Contracts\Support\Translation\TranslationLocaleHelperInterface $helper */
+        $helper = app(\Czim\CmsModels\Contracts\Support\Translation\TranslationLocaleHelperInterface::class);
+        $currentLocale      = $helper->activeLocale();
+        $translationLocales = $helper->availableLocales();
     ?>
 
     {{-- for each active locale show the pre-rendered form field strategy view --}}
-    @foreach ($locales as $locale)
+    @foreach ($translationLocales as $locale)
 
         <div class="translated-form-field-wrapper"
              data-locale="{{ $locale }}"
@@ -20,7 +22,7 @@
 
 
     {{-- locale switcher --}}
-    @if (count($locales) < 2)
+    @if (count($translationLocales) < 2)
         <div class="dropdown translated-form-field-locale-select">
             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" disabled="disabled">
                 <img src="{{ asset("_cms/img/flags/{$currentLocale}.png") }}" title="{{ $currentLocale }}">
@@ -33,7 +35,7 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-                @foreach ($locales as $locale)
+                @foreach ($translationLocales as $locale)
 
                     <li role="presentation"
                         class="translated-form-field-locale-option"
@@ -55,7 +57,7 @@
 
 {{-- If there are errors for any of the translated fields, make sure the error status is visible --}}
 <div>
-    @foreach ($locales as $locale)
+    @foreach ($translationLocales as $locale)
         @include('cms-models::model.partials.form.field_errors', [
             'key'    => $field->key(),
             'errors' => array_get($errors, $locale, []),

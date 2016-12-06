@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Http\Controllers;
 
 use Czim\CmsCore\Support\Enums\FlashLevel;
+use Czim\CmsModels\Contracts\Support\Translation\TranslationLocaleHelperInterface;
 use Czim\CmsModels\Events;
 use Czim\CmsModels\Http\Requests\ActivateRequest;
 use Czim\CmsModels\Http\Requests\ModelCreateRequest;
@@ -45,6 +46,13 @@ class DefaultModelController extends BaseModelController
      * @var string
      */
     const ACTIVE_TAB_PANE_KEY = '__active_tab__';
+
+    /**
+     * The form data key for the currently active translation locale.
+     *
+     * @var string
+     */
+    const ACTIVE_TRANSLATION_LOCALE_KEY = '__active_translation_locale__';
 
 
     /**
@@ -152,8 +160,9 @@ class DefaultModelController extends BaseModelController
     {
         /** @var FormRequest $request */
         $request = app($this->getCreateRequestClass());
+        $record  = $this->getNewModelInstance();
 
-        $record = $this->getNewModelInstance();
+        $this->updateActiveTranslationLocale();
 
         $data = $request->only($this->getRelevantFormFieldKeys(true));
 
@@ -226,6 +235,8 @@ class DefaultModelController extends BaseModelController
         /** @var FormRequest $request */
         $request = app($this->getUpdateRequestClass());
         $record  = $this->modelRepository->findOrFail($id);
+
+        $this->updateActiveTranslationLocale();
 
         $data = $request->only($this->getRelevantFormFieldKeys());
 
@@ -518,6 +529,21 @@ class DefaultModelController extends BaseModelController
         }
 
         return redirect()->back();
+    }
+
+    /**
+     * Updates active translation locale based on request input.
+     */
+    protected function updateActiveTranslationLocale()
+    {
+        $locale = request()->input(static::ACTIVE_TRANSLATION_LOCALE_KEY);
+
+        if ( ! $locale) return;
+
+        /** @var TranslationLocaleHelperInterface $helper */
+        $helper = app(TranslationLocaleHelperInterface::class);
+
+        $helper->setActiveLocale($locale);
     }
 
     /**

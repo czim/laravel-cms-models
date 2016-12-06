@@ -20,6 +20,7 @@ use Czim\CmsModels\Contracts\Support\Factories\FormFieldStrategyFactoryInterface
 use Czim\CmsModels\Contracts\Support\Factories\ListDisplayStrategyFactoryInterface;
 use Czim\CmsModels\Contracts\Support\MetaReferenceDataProviderInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
+use Czim\CmsModels\Contracts\Support\Translation\TranslationLocaleHelperInterface;
 use Czim\CmsModels\Events;
 use Czim\CmsModels\Listeners\ModelLogListener;
 use Czim\CmsModels\Repositories\Collectors\CmsModelInformationInterpreter;
@@ -36,6 +37,7 @@ use Czim\CmsModels\Support\Factories\ListDisplayStrategyFactory;
 use Czim\CmsModels\Support\ModuleHelper;
 use Czim\CmsModels\Support\Routing\RouteHelper;
 use Czim\CmsModels\Support\Strategies\MetaReferenceDataProvider;
+use Czim\CmsModels\Support\Translation\TranslationLocaleHelper;
 use Illuminate\Support\ServiceProvider;
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsCore\Support\Enums\Component;
@@ -157,6 +159,7 @@ class CmsModelsServiceProvider extends ServiceProvider
         $this->app->singleton(RouteHelperInterface::class, RouteHelper::class);
         $this->app->singleton(ModuleHelperInterface::class, ModuleHelper::class);
         $this->app->singleton(MetaReferenceDataProviderInterface::class, MetaReferenceDataProvider::class);
+        $this->app->singleton(TranslationLocaleHelperInterface::class, TranslationLocaleHelper::class);
 
         return $this;
     }
@@ -202,6 +205,7 @@ class CmsModelsServiceProvider extends ServiceProvider
     protected function registerFacadeBindings()
     {
         $this->app->bind('cms-models-modelinfo', CurrentModelInformationInterface::class);
+        $this->app->bind('cms-translation-locale-helper', TranslationLocaleHelperInterface::class);
 
         return $this;
     }
