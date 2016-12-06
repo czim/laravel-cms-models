@@ -179,7 +179,9 @@ class ModelModule implements ModuleInterface
      */
     public function mapWebRoutes(Router $router)
     {
-        $permissionPrefix = $this->routeHelper->getPermissionPrefixForModuleKey($this->key);
+        $permissionPrefix = $this->routeHelper->getPermissionPrefixForModuleKey(
+            $this->getModuleModelKey()
+        );
 
         $router->group(
             [
@@ -271,7 +273,9 @@ class ModelModule implements ModuleInterface
      */
     public function mapApiRoutes(Router $router)
     {
-        $permissionPrefix = $this->routeHelper->getPermissionPrefixForModuleKey($this->key);
+        $permissionPrefix = $this->routeHelper->getPermissionPrefixForModuleKey(
+            $this->getModuleModelKey()
+        );
 
         $router->group(
             [
@@ -281,8 +285,7 @@ class ModelModule implements ModuleInterface
             ],
             function (Router $router) use ($permissionPrefix) {
 
-                $controller     = $this->getModelApiController();
-                $permissionSlug = $this->getRouteSlug();
+                $controller = $this->getModelApiController();
 
                 $router->get('/', [
                     'as'   => 'index',
@@ -362,6 +365,9 @@ class ModelModule implements ModuleInterface
             'type'       => MenuPresenceType::ACTION,
             'action'     => $this->routeHelper->getRouteNameForModelClass($this->class, true) . '.index',
             'parameters' => [],
+            'permissions' => [
+                "models.{$this->getRouteSlug()}.*",
+            ],
         ];
     }
 
@@ -458,6 +464,16 @@ class ModelModule implements ModuleInterface
     protected function getRouteSlug()
     {
         return $this->routeHelper->getRouteSlugForModelClass($this->class);
+    }
+
+    /**
+     * Returns the module's model key (without 'models.').
+     *
+     * @return string
+     */
+    protected function getModuleModelKey()
+    {
+        return $this->moduleHelper->moduleKeyForModel($this->class);
     }
 
 }
