@@ -65,11 +65,11 @@
 
                     <thead>
                         <tr>
-                            @if ($model->list->activatable)
+                            @if ($model->list->activatable && cms_auth()->can("{$permissionPrefix}edit"))
                                 <th class="column column-activate"></th>
                             @endif
 
-                            @if ($model->list->orderable)
+                            @if ($model->list->orderable && cms_auth()->can("{$permissionPrefix}edit"))
                                 <th class="column column-orderable">
                                     @include('cms-models::model.partials.list.column_header', [
                                         'sortKey'       => $model->list->order_column ?: 'position',
@@ -117,11 +117,12 @@
                             ?>
 
                             <tr class="records-row {{ $style }}">
-                                @if ($model->list->activatable)
+
+                                @if ($model->list->activatable && cms_auth()->can("{$permissionPrefix}edit"))
                                     @include('cms-models::model.partials.list.column_activate', compact('model', 'record'))
                                 @endif
 
-                                @if ($model->list->orderable)
+                                @if ($model->list->orderable && cms_auth()->can("{$permissionPrefix}edit"))
                                     @include('cms-models::model.partials.list.column_orderable', [
                                         'model'         => $model,
                                         'record'        => $record,
