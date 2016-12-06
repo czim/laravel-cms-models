@@ -63,7 +63,8 @@ Keys that may be set:
     
 - `permissions` (string or array of strings)  
     The permission(s) required to be able to use this field.
-    If more than one, users must have all permissions in order to use the field.
+    If more than one, users must have all permissions in order to use the field.  
+    Note that any *custom* permissions added here will not automatically be known by the CMS (or ACL module). For that, they must be added to the CMS configuration. For more information, check the documentation for your chosen [ACL module](https://github.com/czim/laravel-cms-acl-module). 
 
 - `options` (array, associative)  
     Options pertaining to either or both of the strategies used.
