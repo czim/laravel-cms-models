@@ -27,8 +27,8 @@ All sections of a model configuration are optional.
 Only the sections and fields included are used, otherwise the default values are used.
 
 - [General & Meta Data](ModelConfiguration/Meta.md)
-- [List](ModelConfiguration/List.md)
-- [Form](ModelConfiguration/Form.md)
+- [List columns, filter options, scopes, etc.](ModelConfiguration/List.md)
+- [Form fields and layout](ModelConfiguration/Form.md)
 
 
 ## Example Model Configuration

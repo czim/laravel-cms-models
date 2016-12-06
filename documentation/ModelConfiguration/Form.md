@@ -36,6 +36,35 @@ Keys that may be set:
 - `source` (string)  
     Indicates the source to be used for the data edited using this field. Default: field entry's key.
 
+- `label` (string)  
+    Explicitly label to show next to the form field.
+        
+- `label_translated` (string)  
+    The translation key for a CMS translation to use as the field label.
+    If set, this overrides the `label`.
+
+- `required` (bool)  
+    Whether the field may not be left empty.
+    If not explicitly set, model analysis sets this to true for attributes that are not `nullable`.
+
+- `translated` (bool)  
+    Whether the field corresponds to an attribute on a translation of the record.  
+    It is not recommended to set this manually. This defaults to a model analysis result that checks for a Translatable setup.
+
+- `create` (bool)  
+    Set to false to hide the field on the form to create a new record.
+     
+- `update` (bool)  
+    Set to false to hide the field on forms to edit an existing record.
+
+- `admin_only` (bool)  
+    Set to true to make the field only usable by super admins.
+    This overrides any `permissions`.
+    
+- `permissions` (string or array of strings)  
+    The permission(s) required to be able to use this field.
+    If more than one, users must have all permissions in order to use the field.
+
 - `options` (array, associative)  
     Options pertaining to either or both of the strategies used.
 
@@ -64,7 +93,14 @@ For custom fields, there are no defaults the CMS can fall back on, so the form f
 ### Example Fields
 
 ```php
-    'layout' => [
+    'fields' => [
+        
+        'title' => [
+        ],
+        
+        'body' => [
+            'create' => false,
+        ],
     ]
 ```
 
