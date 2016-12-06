@@ -3,6 +3,8 @@
 
     <?php
         $count = 0;
+
+        $oldTabKey = old(\Czim\CmsModels\Http\Controllers\DefaultModelController::ACTIVE_TAB_PANE_KEY);
     ?>
 
     @foreach ($tabs as $key => $tab)
@@ -11,7 +13,6 @@
         <?php
             $count++;
 
-            $oldTabKey = old(\Czim\CmsModels\Http\Controllers\DefaultModelController::ACTIVE_TAB_PANE_KEY);
             $tabActive = $oldTabKey ? $oldTabKey === $key : $count == 1;
         ?>
 

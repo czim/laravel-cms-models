@@ -162,8 +162,6 @@ class DefaultModelController extends BaseModelController
         $request = app($this->getCreateRequestClass());
         $record  = $this->getNewModelInstance();
 
-        $this->updateActiveTranslationLocale();
-
         $data = $request->only($this->getRelevantFormFieldKeys(true));
 
         if ( ! $this->storeFormFieldValuesForModel($record, $data)) {
@@ -235,8 +233,6 @@ class DefaultModelController extends BaseModelController
         /** @var FormRequest $request */
         $request = app($this->getUpdateRequestClass());
         $record  = $this->modelRepository->findOrFail($id);
-
-        $this->updateActiveTranslationLocale();
 
         $data = $request->only($this->getRelevantFormFieldKeys());
 
@@ -529,21 +525,6 @@ class DefaultModelController extends BaseModelController
         }
 
         return redirect()->back();
-    }
-
-    /**
-     * Updates active translation locale based on request input.
-     */
-    protected function updateActiveTranslationLocale()
-    {
-        $locale = request()->input(static::ACTIVE_TRANSLATION_LOCALE_KEY);
-
-        if ( ! $locale) return;
-
-        /** @var TranslationLocaleHelperInterface $helper */
-        $helper = app(TranslationLocaleHelperInterface::class);
-
-        $helper->setActiveLocale($locale);
     }
 
     /**

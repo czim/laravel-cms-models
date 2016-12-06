@@ -9,6 +9,7 @@ use Czim\CmsCore\Support\Enums\MenuPresenceType;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
+use Czim\CmsModels\Http\Middleware\StoreActiveFormContext;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Illuminate\Routing\Router;
 use UnexpectedValueException;
@@ -203,7 +204,10 @@ class ModelModule implements ModuleInterface
 
                 $router->post('/', [
                     'as'         => 'store',
-                    'middleware' => [cms_mw_permission("{$permissionPrefix}create")],
+                    'middleware' => [
+                        cms_mw_permission("{$permissionPrefix}create"),
+                        StoreActiveFormContext::class,
+                    ],
                     'uses'       => $controller . '@store',
                 ]);
 
@@ -243,7 +247,10 @@ class ModelModule implements ModuleInterface
 
                 $router->put('{key}', [
                     'as'         => 'update',
-                    'middleware' => [cms_mw_permission("{$permissionPrefix}edit")],
+                    'middleware' => [
+                        cms_mw_permission("{$permissionPrefix}edit"),
+                        StoreActiveFormContext::class,
+                    ],
                     'uses'       => $controller . '@update',
                 ]);
 
