@@ -13,7 +13,20 @@ use Czim\CmsModels\Contracts\Support\Translation\TranslationLocaleHelperInterfac
  */
 class TranslationLocaleHelper implements TranslationLocaleHelperInterface
 {
+
+    /**
+     * The session key in which the currently active translation locale is stored.
+     *
+     * @var string
+     */
     const ACTIVE_LOCALE_SESSION_KEY = 'active-translation-locale';
+
+    /**
+     * The placeholder in validation rules to be replaced for each locale.
+     *
+     * @var string
+     */
+    const VALIDATION_LOCALE_PLACEHOLDER = '<trans>';
 
 
     /**

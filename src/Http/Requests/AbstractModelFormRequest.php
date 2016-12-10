@@ -4,11 +4,25 @@ namespace Czim\CmsModels\Http\Requests;
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Http\Controllers\DefaultModelController;
 use Czim\CmsModels\Http\Controllers\Traits\HandlesFormFields;
+use Czim\CmsModels\Support\Translation\DecoratesTranslatedValidationRules;
 use Illuminate\Contracts\Validation\Validator;
 
 class AbstractModelFormRequest extends AbstractModelRequest
 {
-    use HandlesFormFields;
+    use HandlesFormFields,
+        DecoratesTranslatedValidationRules;
+
+    /**
+     * Returns post-processed validation rules.
+     *
+     * @return array
+     */
+    public function processedRules()
+    {
+        return $this->decorateTranslatedValidationRules(
+            $this->container->call([$this, 'rules'])
+        );
+    }
 
     /**
      * Format the errors from the given Validator instance.

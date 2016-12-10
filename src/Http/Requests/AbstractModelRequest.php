@@ -33,10 +33,20 @@ abstract class AbstractModelRequest extends Request
 
         return $factory->make(
             $this->validationData(),
-            $this->container->call([$this, 'rules']),
+            $this->container->call([$this, 'processedRules']),
             $this->messages(),
             $this->attributes()
         );
+    }
+
+    /**
+     * Returns post-processed validation rules.
+     *
+     * @return array
+     */
+    public function processedRules()
+    {
+        return $this->container->call([$this, 'rules']);
     }
 
     /**
