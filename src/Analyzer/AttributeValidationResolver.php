@@ -1,6 +1,7 @@
 <?php
 namespace Czim\CmsModels\Analyzer;
 
+use Czim\CmsModels\Http\Controllers\FormFieldStrategies\AbstractFormFieldStoreStrategy;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelFormFieldData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
@@ -19,11 +20,7 @@ class AttributeValidationResolver
     {
         $rules = [];
 
-        $required = false;
-
-        if ($field->required() && ! $field->translated()) {
-            $required = true;
-        }
+        $required = $field->required();
 
         switch ($attribute->cast) {
 
@@ -101,6 +98,10 @@ class AttributeValidationResolver
         }
 
         if ($required) {
+            // Special case for translated fields: required should be treated as required only if
+            // any other translated fields for that locale are entered.
+            // This should be handled by the class that requested the attribute validation rules.
+            /** @see AbstractFormFieldStoreStrategy */
             $rules[] = 'required';
         }
 

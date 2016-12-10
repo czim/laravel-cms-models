@@ -3,12 +3,15 @@ namespace Czim\CmsModels\Http\Controllers\FormFieldStrategies;
 
 use Czim\CmsModels\Analyzer\AttributeValidationResolver;
 use Czim\CmsModels\Analyzer\RelationValidationResolver;
+use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
+use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelFormFieldData;
 use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\Support\Translation\TranslationLocaleHelper;
 use Czim\CmsModels\View\Traits\ResolvesSourceStrategies;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
@@ -175,15 +178,69 @@ class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyInterface
 
         $key = $field->key();
 
-        // Translations are handled with locale-keyed associative arrays
+        // Translations are handled with locale-keyed associative arrays, using placeholders
         if ($rules && $field->translated()) {
+
+            $placeholder = TranslationLocaleHelper::VALIDATION_LOCALE_PLACEHOLDER;
+
+            // Modify and overwrite required rule, if present to special locale-context required rule
+            if (is_string($rules)) {
+                if ($rules === 'required') {
+                    $rules = $this->getTranslationRequiredWithRule($modelInformation, $key);
+                }
+            } elseif ($index = array_search('required', $rules)) {
+                $rules[$index] = $this->getTranslationRequiredWithRule($modelInformation, $key);
+            }
+
             $rules = [
-                $key        => 'array',
-                $key . '.*' => $rules
+                $key                      => 'array',
+                $key . '.' . $placeholder => $rules
             ];
         }
 
         return $rules;
+    }
+
+    /**
+     * Returns required with rule for translated attributes.
+     *
+     * This collects all, except the indicated, attribute/field keys and
+     * combines them into a single 'required_with' validation rule, with
+     * a locale placeholder.
+     *
+     * @param ModelInformationInterface|ModelInformation $info
+     * @param string|null                                $key field/attribute key
+     * @return string
+     */
+    protected function getTranslationRequiredWithRule(ModelInformationInterface $info, $key = null)
+    {
+        $translated = array_keys(
+            array_filter(
+                $info->attributes,
+                function (ModelAttributeDataInterface $attribute) use ($key) {
+                    /** @var ModelAttributeData $attribute */
+
+                    if (null !== $key && $key == $attribute->name) {
+                        return false;
+                    }
+
+                    return $attribute->translated;
+                }
+            )
+        );
+
+        if ( ! count($translated)) {
+            return '';
+        }
+
+        $translated = array_map(
+            function ($key) {
+                return $key . '.<trans>';
+            },
+            $translated
+        );
+
+        return 'required_with:' . implode(',', $translated);
     }
 
     /**
