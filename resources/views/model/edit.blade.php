@@ -2,9 +2,9 @@
 
 <?php
     if ($creating) {
-        $title = $model->verbose_name . ' - ' . cms_trans('common.action.create');
+        $title = ucfirst($model->verbose_name) . ' - ' . cms_trans('common.action.create');
     } else {
-        $title = $model->verbose_name . ' (' . $record->getKey() .  ') - ' . cms_trans('common.action.edit');
+        $title = ucfirst($model->verbose_name) . ' (' . $record->getKey() .  ') - ' . cms_trans('common.action.edit');
     }
 ?>
 
@@ -19,7 +19,7 @@
         </li>
         <li>
             <a href="{{ cms_route("{$routePrefix}.index") }}">
-                {{ $model->verbose_name_plural }}
+                {{ ucfirst($model->verbose_name_plural) }}
             </a>
         </li>
         <li class="active">

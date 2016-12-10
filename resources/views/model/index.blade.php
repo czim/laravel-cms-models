@@ -1,17 +1,18 @@
 @extends(cms_config('views.layout'))
 
-@section('title', $model->verbose_name_plural)
+<?php $title = ucfirst($model->verbose_name_plural); ?>
 
+@section('title', $title)
 
 @section('breadcrumbs')
     <ol class="breadcrumb">
         <li>
             <a href="{{ cms_route(\Czim\CmsCore\Support\Enums\NamedRoute::HOME) }}">
-                {{ cms_trans('common.home') }}
+                {{ ucfirst(cms_trans('common.home')) }}
             </a>
         </li>
         <li class="active">
-            {{ $model->verbose_name_plural }}
+            {{ $title }}
         </li>
     </ol>
 @endsection
@@ -42,7 +43,7 @@
             </div>
         </div>
 
-        <h1>{{ $model->verbose_name_plural }}</h1>
+        <h1>{{ $title }}</h1>
     </div>
 
     <div class="row">
