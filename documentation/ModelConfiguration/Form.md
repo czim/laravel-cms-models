@@ -139,7 +139,32 @@ It may optionally have a `label` or a `label_translated`, displayed as the field
 Fields may be grouped on a single form row by nesting them under a field group.
 
 The type for this layout node is `group`.
-It should have a `label` or a `label_translated`, displayed as the main label for the form row. 
+
+Field groups do not support nesting; only use field keys or field labels (see below) as children of this layout node type.
+
+It should have a `label` or a `label_translated`, displayed as the main label for the form row.
+
+Additionally, the following properties may be set:
+
+- `columns` (array of integers)  
+    The grid column layout of the field group row.
+    The grid size used is 12, the field group label takes up 2;
+    The remaining grid size of 10 may be distributed over the group children. See the author group in the example layout below.  
+    By default, this sets an even spread: labels will take up 2, fields evenly divide up the remaining grid space.  
+
+- `label_for` (string)  
+    The field key for which this is a label. This will set a `for` attribute on the label tag, pointing to the correct input.
+
+### Field Labels
+
+This serves as an in-line label for further fields within the field group. This should only be used in field groups.
+
+It should have a `label` or a `label_translated`.
+
+Additionally, the following property may be set:
+
+- `label_for` (string)    
+    The field key for which this is a label. This will set a `for` attribute on the label tag, pointing to the correct input.
 
 
 ### Example layout
@@ -156,8 +181,15 @@ It should have a `label` or a `label_translated`, displayed as the main label fo
                 [
                     'type'  => 'group',
                     'label' => 'Author',
+                    'label_for' => 'author_first_name',
+                    'columns' => [ 3, 2, 5 ],
                     'children' => [
                         'author_first_name',
+                        [
+                            'type' => 'label',
+                            'label' => 'Last Name',
+                            'label_for' => 'author_last_name',
+                        ],
                         'author_last_name',
                     ]
                 ]
