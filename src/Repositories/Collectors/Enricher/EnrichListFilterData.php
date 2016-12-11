@@ -179,8 +179,8 @@ class EnrichListFilterData extends AbstractEnricherStep
 
         } elseif ($attribute->type === 'enum') {
 
-            $strategy = 'enum';
-            $options  = $attribute->values;
+            $strategy = 'dropdown';
+            $options['values'] = $attribute->values;
 
         } elseif ($attribute->cast === AttributeCast::STRING) {
 
@@ -196,7 +196,7 @@ class EnrichListFilterData extends AbstractEnricherStep
             'label'    => str_replace('_', ' ', snake_case($attribute->name)),
             'target'   => $attribute->name,
             'strategy' => $strategy,
-            'values'   => $options,
+            'options'  => $options,
         ]);
     }
 

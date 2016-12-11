@@ -272,7 +272,7 @@ return [
             // Aliases for filter strategy classes
             'aliases' => [
                 'boolean'      => FilterStrategies\DropdownBoolean::class,
-                'enum'         => FilterStrategies\DropdownEnum::class,
+                'dropdown'     => FilterStrategies\DropdownEnum::class,
                 'string'       => FilterStrategies\BasicString::class,
                 'string-split' => FilterStrategies\BasicSplitString::class,
             ],
