@@ -14,9 +14,10 @@
                     'errors'
                 ),
                 [
-                    'key'      => $node,
-                    'field'    => $model->form->fields[ $node ],
-                    'strategy' => $fieldStrategies[ $node ],
+                    'key'         => $node,
+                    'field'       => $model->form->fields[ $node ],
+                    'strategy'    => $fieldStrategies[ $node ],
+                    'columnWidth' => isset($columnWidth) ? $columnWidth : null,
                 ]
             ))
 
@@ -65,8 +66,9 @@
 @elseif ($node->type() === \Czim\CmsModels\Support\Enums\LayoutNodeType::LABEL)
 
     @include('cms-models::model.partials.form.layout_label', [
-            'key'   => $nodeKey,
-            'label' => $node,
+            'key'         => $nodeKey,
+            'label'       => $node,
+            'columnWidth' => isset($columnWidth) ? $columnWidth : null,
     ])
 
 @else

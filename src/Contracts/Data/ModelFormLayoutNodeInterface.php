@@ -34,4 +34,11 @@ interface ModelFormLayoutNodeInterface extends DataObjectInterface
      */
     public function descendantFieldKeys();
 
+    /**
+     * Returns what field (key) the label for the node should connected with.
+     *
+     * @return string|null
+     */
+    public function labelFor();
+
 }

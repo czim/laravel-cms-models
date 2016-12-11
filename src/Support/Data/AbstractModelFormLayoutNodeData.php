@@ -15,6 +15,7 @@ use UnexpectedValueException;
  * @property string $label_translated
  * @property bool   $required
  * @property array|string[] $children
+ * @property null|string    $label_for
  */
 class AbstractModelFormLayoutNodeData extends AbstractDataObject implements ModelFormLayoutNodeInterface
 {
@@ -140,6 +141,16 @@ class AbstractModelFormLayoutNodeData extends AbstractDataObject implements Mode
         }
 
         return $keys;
+    }
+
+    /**
+     * Returns what field (key) the label for the node should connected with.
+     *
+     * @return string|null
+     */
+    public function labelFor()
+    {
+        return $this->label_for;
     }
 
 }

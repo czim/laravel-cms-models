@@ -1,37 +1,40 @@
 
-<div @if ( ! is_numeric($key)) id="field-group-{{ $key }}" @endif>
+<div @if ( ! is_numeric($key)) id="field-group-{{ $key }}" @endif
+     class="form-group row @if ($group->matchesFieldKeys(array_keys($errors))) has-error @endif"
+>
 
-    <label class="col-sm-2 control-label @if ($group->required()) required @endif">
+    <label class="col-sm-2 control-label @if ($group->required()) required @endif"
+           @if ($group->labelFor()) for="field-{{ $group->labelFor() }}" @endif
+    >
         {{ $group->display() }}
     </label>
 
-    <div class="col-sm-10 field-group-container">
+    <?php
+        $columnWidths = $group->columns();
+        $index = 0;
+    ?>
 
-        @foreach ($group->children as $nodeKey => $node)
+    @foreach ($group->children as $nodeKey => $node)
 
-            <div class="field-group-child">
+        @include('cms-models::model.partials.form.layout_node', array_merge(
+            compact(
+                'node',
+                'nodeKey',
+                'record',
+                'model',
+                'values',
+                'fields',
+                'fieldStrategies',
+                'errors'
+            ),
+            [
+                'parent'      => $group,
+                'columnWidth' => $columnWidths[ $index ],
+            ]
+        ))
 
-                @include('cms-models::model.partials.form.layout_node', array_merge(
-                    compact(
-                        'node',
-                        'nodeKey',
-                        'record',
-                        'model',
-                        'values',
-                        'fields',
-                        'fieldStrategies',
-                        'errors'
-                    ),
-                    [
-                        'parent' => $group,
-                    ]
-                ))
-
-            </div>
-
-        @endforeach
-
-    </div>
+        <?php $index++ ?>
+    @endforeach
 
 </div>
 
