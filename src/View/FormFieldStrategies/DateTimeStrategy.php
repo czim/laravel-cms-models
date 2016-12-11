@@ -1,6 +1,7 @@
 <?php
 namespace Czim\CmsModels\View\FormFieldStrategies;
 
+use Carbon\Carbon;
 use DateTime;
 
 class DateTimeStrategy extends AbstractDefaultStrategy
@@ -62,7 +63,50 @@ class DateTimeStrategy extends AbstractDefaultStrategy
             array_set($data, 'options.moment_format', $momentFormat);
         }
 
+        // Prepare special properties for datepicker
+        if ($indicator = array_get($data, 'options.minimum_date')) {
+            $data['minimumDate'] = $this->interpretDateIndicator($indicator);
+        }
+        if ($indicator = array_get($data, 'options.maximum_date')) {
+            $data['maximumDate'] = $this->interpretDateIndicator($indicator);
+        }
+
+        $data['excludedDates'] = [];
+        if (($indicators = array_get($data, 'options.excluded_dates')) && is_array($indicators)) {
+            $data['excludedDates'] = array_map([ $this, 'interpretDateIndicator' ], $indicators);
+        }
+
         return $data;
+    }
+
+    /**
+     * Interprets a date indicator string value as a date time string relative to the current date.
+     *
+     * @param string $indicator
+     * @return string
+     */
+    protected function interpretDateIndicator($indicator)
+    {
+        if ( ! is_string($indicator)) {
+            throw new \UnexpectedValueException('Unexpected date indicator value: ' . print_r($indicator, true));
+        }
+
+        if ('now' === strtolower($indicator)) {
+            return Carbon::now()->format('Y-m-d H:i:s');
+        }
+
+        if (starts_with($indicator, '-')) {
+            return Carbon::now()->sub(
+                new \DateInterval(substr($indicator, 1))
+            )->format('Y-m-d H:i:s');
+        }
+        if (starts_with($indicator, '+')) {
+            return Carbon::now()->add(
+                new \DateInterval(substr($indicator, 1))
+            )->format('Y-m-d H:i:s');
+        }
+
+        return (new Carbon($indicator))->format('Y-m-d H:i:s');
     }
 
     /**
