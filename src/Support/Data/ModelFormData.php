@@ -12,17 +12,32 @@ use UnexpectedValueException;
  *
  * Data container that represents form representation for the model.
  *
- * @property array                      $layout
- * @property array|ModelFormFieldData[] $fields
+ * @property array                        $layout
+ * @property array|ModelFormFieldData[]   $fields
+ * @property array|ModelViewReferenceData $before
+ * @property array|ModelViewReferenceData $after
+ * @property array|ModelViewReferenceData $before_form
+ * @property array|ModelViewReferenceData $after_form
  */
 class ModelFormData extends AbstractDataObject implements ModelFormDataInterface
 {
 
     protected $objects = [
+        'before'      => ModelViewReferenceData::class,
+        'after'       => ModelViewReferenceData::class,
+        'before_form' => ModelViewReferenceData::class,
+        'after_form'  => ModelViewReferenceData::class,
         'fields' => ModelFormFieldData::class . '[]',
     ];
 
     protected $attributes = [
+
+        // Views to show before and/or after the form. Instance of ModelViewReferenceData.
+        // Before_ and after_form are displayed within the <form> tag.
+        'before'      => null,
+        'after'       => null,
+        'before_form' => null,
+        'after_form'  => null,
 
         // The layout of the form fields
         // Tabs, Fieldsets and keys for fields (in the order they should appear).
@@ -119,6 +134,10 @@ class ModelFormData extends AbstractDataObject implements ModelFormDataInterface
 
         $standardMergeKeys = [
             'layout',
+            'before',
+            'after',
+            'before_form',
+            'after_form',
         ];
 
         foreach ($standardMergeKeys as $key) {

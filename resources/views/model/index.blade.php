@@ -46,6 +46,13 @@
         <h1>{{ $title }}</h1>
     </div>
 
+
+    {{-- Before view --}}
+    @if ($model->list->before && $model->list->before->view)
+        @include($model->list->before->view, $model->list->before->variables())
+    @endif
+
+
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
 
@@ -191,6 +198,12 @@
 
         </div>
     </div>
+
+
+    {{-- After view --}}
+    @if ($model->list->after && $model->list->after->view)
+        @include($model->list->after->view, $model->list->after->variables())
+    @endif
 
 
     @if ($model->allowDelete())

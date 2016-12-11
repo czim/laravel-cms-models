@@ -22,6 +22,8 @@ use Czim\CmsModels\Contracts\Data\ModelListDataInterface;
  * @property string $order_column
  * @property bool $activatable
  * @property string $active_column
+ * @property array|ModelViewReferenceData $before
+ * @property array|ModelViewReferenceData $after
  */
 class ModelListData extends AbstractDataObject implements ModelListDataInterface
 {
@@ -31,6 +33,8 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
         'filters'  => ModelListFilterData::class . '[]',
         'includes' => ModelIncludesData::class,
         'scopes'   => ModelScopeData::class . '[]',
+        'before'   => ModelViewReferenceData::class,
+        'after'    => ModelViewReferenceData::class,
     ];
 
     protected $attributes = [
@@ -73,6 +77,10 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
         'disable_scopes' => null,
         // Scopes or scoping strategies, keyed by the scope name.
         'scopes' => [],
+
+        // Views to show before and/or after the list. Instance of ModelViewReferenceData.
+        'before' => null,
+        'after'  => null,
     ];
 
     /**
@@ -130,6 +138,8 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
             'default_sort',
             'disable_filters',
             'disable_scopes',
+            'before',
+            'after',
         ];
 
         foreach ($standardMergeKeys as $key) {

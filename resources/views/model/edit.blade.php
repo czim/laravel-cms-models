@@ -53,6 +53,12 @@
         <h1>{{ $title }}</h1>
     </div>
 
+    {{-- Before view --}}
+    @if ($model->form->before && $model->form->before->view)
+        @include($model->form->before->view, $model->form->before->variables())
+    @endif
+
+
     @if ($creating)
         <form class="model-form"
               method="post"
@@ -73,6 +79,11 @@
             <input id="edit-form-active-tab-input" type="hidden" name="__active_tab__"
                    value="{{ old(\Czim\CmsModels\Http\Controllers\DefaultModelController::ACTIVE_TAB_PANE_KEY) }}">
             <input id="edit-form-active-translation-locale-input" type="hidden" name="__active_translation_locale__" value="">
+
+        {{-- Before view in form --}}
+        @if ($model->form->before_form && $model->form->before_form->view)
+            @include($model->form->before_form->view, $model->form->before_form->variables())
+        @endif
 
 
         @if ($model->form->hasTabs())
@@ -133,9 +144,21 @@
             @endforeach
         @endif
 
+
+        {{-- After view in form --}}
+        @if ($model->form->after_form && $model->form->after_form->view)
+            @include($model->form->after_form->view, $model->form->after_form->variables())
+        @endif
+
+
         @include('cms-models::model.partials.form.buttons', compact('record', 'model'))
 
     </form>
+
+    {{-- After view --}}
+    @if ($model->form->after && $model->form->after->view)
+        @include($model->form->after->view, $model->form->after->variables())
+    @endif
 
 @endsection
 
