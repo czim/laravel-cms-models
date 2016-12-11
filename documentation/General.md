@@ -43,3 +43,16 @@ The permissions are prefixed as follows:
 So for the model `App\Models\Post` this would make, for instance:
 
     models.app-models-post.create
+
+
+## Caching Model Information
+
+The CMS analyzes the models and loads custom model configuration files for models it should include. Once this is done, the information is cached, unless the config option `cms-models.repository.cache` is set to `false`. The CMS cache driver is used.
+  
+If the cache is used, model information is not rebuilt as long as the cache is set. This means that any model configuration changes made will not take effect until the cache is cleared manually (or by expiring naturally).
+
+To clear the model information cache, use the following command:
+
+```bash
+php artisan cms:models:clear
+```
