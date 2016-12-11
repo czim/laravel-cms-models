@@ -183,3 +183,29 @@ It should have a `label` or a `label_translated`, displayed as the main label fo
         ]
     ]
 ```
+
+## Custom Before or After Views
+
+To futher customize the form page, it is possible to indicate `before` and/or `after`, `before_form` and/or `after_form` view references: pointers to a view path and (optionally) a list of variables that should be passed into them.
+
+`before` and `after` views will be displayed outside of the `<form>` tag, `before_form` and `after_form` inside of it. Additionally `after_form` will be displayed above the form submit button row.
+
+
+Example:
+
+```php
+<?php
+    
+    'form' => [
+        
+        'before' => [
+            'view'      => 'partials.some.path.index',
+            'variables' => [ 'record', 'model' ]
+        ],
+        
+        'after_form' => [
+            'view' => 'partials.some.other.path.index'
+        ],
+    
+        // ...
+```

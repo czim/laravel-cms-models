@@ -152,3 +152,22 @@ The value may be:
 - An **array** of integers, the first of which is the default page size. 
     The others are added as selectable options. 
 
+
+## Custom Before or After Views
+
+To futher customize the listing page, it is possible to indicate a `before` and/or `after` view reference: a pointer to a view path and (optionally) a list of variables that should be passed into it.
+
+Example:
+
+```php
+<?php
+    
+    'list' => [
+        
+        'before' => [
+            'view'      => 'partials.some.path.index',
+            'variables' => [ 'records', 'model' ]
+        ],
+    
+        // ...
+```
