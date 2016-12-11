@@ -9,6 +9,12 @@ class DropdownBoolean extends AbstractFilterStrategy
 {
 
     /**
+     * @var ModelFilterDataInterface|ModelListFilterData
+     */
+    protected $filterInfo;
+
+
+    /**
      * Applies a strategy to render a filter field.
      *
      * @param string  $key
@@ -18,6 +24,8 @@ class DropdownBoolean extends AbstractFilterStrategy
      */
     public function render($key, $value, ModelFilterDataInterface $info)
     {
+        $this->filterInfo = $info;
+
         if ('' === $value) {
             $value = null;
         }
@@ -27,17 +35,53 @@ class DropdownBoolean extends AbstractFilterStrategy
         }
 
         return view(
-            'cms-models::model.partials.filters.dropdown-enum',
+            'cms-models::model.partials.filters.dropdown-boolean',
             [
                 'label'    => $info->label(),
                 'key'      => $key,
                 'selected' => $value,
                 'options'  => [
-                    '1' => 'true',
-                    '0' => 'false',
+                    '1' => $this->getTrueLabel(),
+                    '0' => $this->getFalseLabel(),
                 ],
             ]
         )->render();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTrueLabel()
+    {
+        $label = array_get($this->filterInfo->options(), 'true_label_translated');
+        if ($label) {
+            return cms_trans($label);
+        }
+
+        $label = array_get($this->filterInfo->options(), 'true_label');
+        if ($label) {
+            return $label;
+        }
+
+        return cms_trans('common.boolean.true');
+    }
+
+    /**
+     * @return string
+     */
+    protected function getFalseLabel()
+    {
+        $label = array_get($this->filterInfo->options(), 'false_label_translated');
+        if ($label) {
+            return cms_trans($label);
+        }
+
+        $label = array_get($this->filterInfo->options(), 'false_label');
+        if ($label) {
+            return $label;
+        }
+
+        return cms_trans('common.boolean.false');
     }
 
     /**

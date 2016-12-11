@@ -15,6 +15,7 @@ use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
  * @property string $target
  * @property string $strategy
  * @property array  $values
+ * @property array  $options
  */
 class ModelListFilterData extends AbstractDataObject implements ModelFilterDataInterface
 {
@@ -36,6 +37,9 @@ class ModelListFilterData extends AbstractDataObject implements ModelFilterDataI
 
         // Values for strategies that require a list of values
         'values' => [],
+
+        // Custom options for the strategy
+        'options' => [],
 
     ];
 
@@ -94,17 +98,30 @@ class ModelListFilterData extends AbstractDataObject implements ModelFilterDataI
     }
 
     /**
+     * Returns special options for the strategy.
+     *
+     * @return array
+     */
+    public function options()
+    {
+        return $this->options ?: [];
+    }
+
+
+    /**
      * @param ModelFilterDataInterface|ModelListFilterData $with
      */
     public function merge(ModelFilterDataInterface $with)
     {
-        $standardMergeKeys = array_diff($this->getKeys(), ['values']);
+        $standardMergeKeys = array_diff($this->getKeys(), ['values', 'options']);
 
-        // Merge values separately
+        // Merge arrays separately
         $this->values = array_merge($this->values ?: [], $with->values ?: []);
+        $this->options = array_merge($this->options ?: [], $with->options ?: []);
 
         foreach ($standardMergeKeys as $key) {
             $this->mergeAttribute($key, $with->{$key});
         }
     }
+
 }

@@ -1,12 +1,14 @@
 <?php
 namespace Czim\CmsModels\View\FilterStrategies;
 
+use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\View\FilterApplicationInterface;
 use Czim\CmsModels\Contracts\View\FilterDisplayInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\Support\Data\ModelListFilterData;
 use Czim\CmsModels\View\Traits\HandlesTranslatedTarget;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -50,6 +52,7 @@ abstract class AbstractFilterStrategy implements FilterDisplayInterface, FilterA
      * @var ModelInformationInterface|ModelInformation
      */
     protected $modelInfo;
+
 
     /**
      * Applies the filter value to the query.

@@ -37,11 +37,18 @@ interface ModelFilterDataInterface extends ArrayAccess, Arrayable
 
 
     /**
-     * Return values for strategies that require a list of values.
+     * Returns values for strategies that require a list of values.
      *
      * @return array
      */
     public function values();
+
+    /**
+     * Returns special options for the strategy.
+     *
+     * @return array
+     */
+    public function options();
     
     /**
      * @param ModelFilterDataInterface $with
