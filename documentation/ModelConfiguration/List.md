@@ -62,9 +62,9 @@ If the only filter needed is a text input for any textual column, loosely matchi
 ```
 'filters' => [
     'any' => [
-        'label'    => 'Anything',
-        'target'   => '*',
-        'strategy' => 'string-split',
+        'strategy'         => 'string-split',
+        'label_translated' => 'models.filter.anything-label',
+        'target'           => '*',
     ]   
 ]
 ```
