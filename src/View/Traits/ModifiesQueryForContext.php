@@ -17,8 +17,8 @@ trait ModifiesQueryForContext
     /**
      * Modifies the relation query according to the model's CMS information.
      *
-     * @param Model   $model
-     * @param Builder $query
+     * @param Model            $model
+     * @param Builder|Relation $query
      * @return Builder
      */
     protected function modifyRelationQueryForContext(Model $model, $query)

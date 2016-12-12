@@ -16,7 +16,6 @@ class ClearModelInformationCache extends Command
      * Execute the console command.
      *
      * @param ModelInformationRepositoryInterface $repository
-     * @return mixed
      */
     public function handle(ModelInformationRepositoryInterface $repository)
     {

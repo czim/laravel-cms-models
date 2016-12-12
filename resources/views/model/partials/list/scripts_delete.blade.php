@@ -100,7 +100,7 @@
                         .effect('shake', {
                             'direction': 'up',
                             'distance' : 2.5,
-                            'times'    : 2,
+                            'times'    : 2
                         });
                     return false;
                 }

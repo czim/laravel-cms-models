@@ -4,10 +4,10 @@
     /** @var \Illuminate\Database\Eloquent\Model $record */
 
     $attributes = [
-        'class' => trim('column ' . $column->style . ' ' . $strategy->style($record, $column->strategy, $column->source)),
+        'class' => trim('column ' . $column->style . ' ' . $strategy->style($record, $column->source)),
     ];
 
-    $attributes = array_merge($attributes, $strategy->attributes($record, $column->strategy, $column->source));
+    $attributes = array_merge($attributes, $strategy->attributes($record, $column->source));
 ?>
 
 <td

@@ -4,7 +4,7 @@
 
         $('.activate-toggle').click(function() {
             var id     = $(this).attr('data-id'),
-                state  = parseInt($(this).attr('data-active'), 10) ? true : false,
+                state  = !! parseInt($(this).attr('data-active'), 10),
                 url    = '{{ cms_route("{$routePrefix}.activate", [ 'IDHERE' ]) }}',
                 parent = $(this);
 

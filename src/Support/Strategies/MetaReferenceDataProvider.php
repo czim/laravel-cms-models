@@ -89,7 +89,7 @@ class MetaReferenceDataProvider implements MetaReferenceDataProviderInterface
      * @param ModelInformationInterface|ModelInformation $info
      * @param string   $key
      * @param string   $targetModel     the nested model class, if multiple model definitions set
-     * @return ModelMetaReference|false
+     * @return ModelMetaReferenceInterface|false
      */
     protected function getInformationReferenceDataForFormField(
         ModelInformationInterface $info,

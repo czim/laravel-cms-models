@@ -2,7 +2,6 @@
 namespace Czim\CmsModels\Http\Controllers;
 
 use Czim\CmsCore\Support\Enums\FlashLevel;
-use Czim\CmsModels\Contracts\Support\Translation\TranslationLocaleHelperInterface;
 use Czim\CmsModels\Events;
 use Czim\CmsModels\Http\Requests\ActivateRequest;
 use Czim\CmsModels\Http\Requests\ModelCreateRequest;
