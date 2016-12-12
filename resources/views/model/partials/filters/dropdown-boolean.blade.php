@@ -1,12 +1,17 @@
 
 <div class="form-group">
-    <select id="filter.{{ $key }}" name="filter[{{ $key }}]" class="form-control input-sm">
+    <select id="filter.{{ $key }}" name="filter[{{ $key }}]" class="form-control input-sm placeholder">
 
-        <option value=""
+        <option value="" class="placeholder"
+                disabled="disabled"
+                hidden="hidden"
                 @if (null === $selected)
                     selected="selected"
                 @endif
-            ></option>
+        >
+            {{ ucfirst($label) }}
+        </option>
+        <option value=""></option>
 
         @foreach ($options as $option => $display)
 
@@ -20,3 +25,5 @@
         @endforeach
     </select>
 </div>
+
+
