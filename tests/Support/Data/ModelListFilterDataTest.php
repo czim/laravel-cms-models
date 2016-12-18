@@ -13,21 +13,26 @@ class ModelListFilterDataTest extends TestCase
     function it_merges_with_another_model_list_filter_data_object()
     {
         $dataA = new ModelListFilterData([
-            'label' => 'some label',
+            'label'            => 'some label',
             'label_translated' => null,
-            'source' => 'column_a',
-            'target' => 'column_b',
-            'strategy' => 'testStrategy',
+            'source'           => 'column_a',
+            'target'           => 'column_b',
+            'strategy'         => 'testStrategy',
+            'options'          => [
+                'test' => 'something',
+            ]
         ]);
 
         $dataB = new ModelListFilterData([
-            'label' => 'some label new',
+            'label'            => 'some label new',
             'label_translated' => null,
-            'source' => 'column_c',
-            'target' => 'column_d',
-            'strategy' => 'overruledStrategy',
-            'values' => [
-                'value_z',
+            'source'           => 'column_c',
+            'target'           => 'column_d',
+            'strategy'         => 'overruledStrategy',
+            'options'          => [
+                'values' => [
+                    'value_z',
+                ],
             ],
         ]);
 
@@ -37,13 +42,15 @@ class ModelListFilterDataTest extends TestCase
         $this->assertEquals('column_c', $dataA['source']);
         $this->assertEquals('column_d', $dataA['target']);
         $this->assertEquals('overruledStrategy', $dataA['strategy']);
-        $this->assertEquals([ 'value_z' ], $dataA['values']);
+        $this->assertCount(2, $dataA['options']);
+        $this->assertEquals('something', $dataA['options']['test']);
+        $this->assertEquals([ 'value_z' ], $dataA['options']['values']);
     }
 
     /**
      * @test
      */
-    function it_merges_values_for_another_model_list_filter_data_object()
+    function it_overrides_option_values_for_another_model_list_filter_data_object()
     {
         $dataA = new ModelListFilterData([
             'label' => 'some label',
@@ -51,21 +58,25 @@ class ModelListFilterDataTest extends TestCase
             'source' => 'column_a',
             'target' => 'column_b',
             'strategy' => 'testStrategy',
-            'values' => [
-                'value_x',
-                'value_y',
+            'options' => [
+                'values' => [
+                    'value_x',
+                    'value_y',
+                ],
             ],
         ]);
 
         $dataB = new ModelListFilterData([
-            'values' => [
-                'value_z',
+            'options' => [
+                'values' => [
+                    'value_z',
+                ],
             ],
         ]);
 
         $dataA->merge($dataB);
 
-        $this->assertEquals([ 'value_x', 'value_y', 'value_z' ], $dataA['values']);
+        $this->assertEquals([ 'value_z' ], $dataA['options']['values']);
     }
 
 }
