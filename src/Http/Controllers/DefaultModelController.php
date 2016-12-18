@@ -22,6 +22,7 @@ class DefaultModelController extends BaseModelController
         Traits\HandlesFilterStrategies,
         Traits\HandlesFormFieldStrategies,
         Traits\HandlesListColumnStrategies,
+        Traits\HandlesShowFieldStrategies,
         Traits\SetsModelActivateState,
         Traits\SetsModelOrderablePosition;
 
@@ -113,8 +114,13 @@ class DefaultModelController extends BaseModelController
     {
         $record = $this->modelRepository->findOrFail($id);
 
-        return view('cms::blank.index', [
-            'record' => $record,
+        return view($this->getShowView(), [
+            'moduleKey'        => $this->moduleKey,
+            'routePrefix'      => $this->routePrefix,
+            'permissionPrefix' => $this->permissionPrefix,
+            'model'            => $this->modelInformation,
+            'record'           => $record,
+            'fieldStrategies'  => $this->getShowFieldStrategyInstances(),
         ]);
     }
 

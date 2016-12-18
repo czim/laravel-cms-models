@@ -32,6 +32,7 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
         Enricher\EnrichListFilterData::class,
         Enricher\EnrichFormFieldData::class,
         Enricher\EnrichFormLayoutData::class,
+        Enricher\EnrichShowFieldData::class,
         Enricher\EnrichValidationData::class,
     ];
 

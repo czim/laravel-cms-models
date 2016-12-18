@@ -31,6 +31,7 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
  * @property array|ModelRelationData[] $relations
  * @property array|ModelListData $list
  * @property array|ModelFormData $form
+ * @property array|ModelShowData $show
  * @property array $validation
  * @property array $export
  */
@@ -43,6 +44,7 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
         'reference'  => ModelReferenceData::class,
         'list'       => ModelListData::class,
         'form'       => ModelFormData::class,
+        'show'       => ModelShowData::class,
         'attributes' => ModelAttributeData::class . '[]',
         'relations'  => ModelRelationData::class . '[]',
     ];
@@ -193,6 +195,14 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
             'fields' => [],
         ],
 
+        // Settings for rendering the show model page
+        'show' => [
+
+            // Arrays (instances of ModelShowFieldData) that define the fields to be displayed for
+            // the model's show page in the order in which they should appear.
+            'fields' => [],
+        ],
+
         // Settings for validation of submitted data.
         'validation' => [
             // Validation rules or methods that generate them, when creating a record.
@@ -334,6 +344,7 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
 
         $this->mergeAttribute('list', $with->list);
         $this->mergeAttribute('form', $with->form);
+        $this->mergeAttribute('show', $with->show);
         $this->mergeAttribute('reference', $with->reference);
         $this->mergeAttribute('includes', $with->includes);
 

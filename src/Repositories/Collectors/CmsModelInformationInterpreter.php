@@ -9,6 +9,7 @@ use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelListColumnData;
 use Czim\CmsModels\Support\Data\ModelListFilterData;
 use Czim\CmsModels\Support\Data\ModelScopeData;
+use Czim\CmsModels\Support\Data\ModelShowFieldData;
 
 class CmsModelInformationInterpreter implements ModelInformationInterpreterInterface
 {
@@ -30,6 +31,7 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
 
         $this->interpretListData()
              ->interpretFormData()
+             ->interpretShowData()
              ->interpretValidationData();
 
         return $this->createInformationInstance();
@@ -98,6 +100,23 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
             );
 
             $this->raw['form']['layout'] = array_get($this->raw['form'], 'layout', []);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function interpretShowData()
+    {
+        if (array_has($this->raw, 'show') && is_array($this->raw['show'])) {
+
+            $this->raw['show']['fields'] = $this->normalizeStandardArrayProperty(
+                array_get($this->raw['show'], 'fields', []),
+                'strategy',
+                ModelShowFieldData::class
+            );
         }
 
         return $this;

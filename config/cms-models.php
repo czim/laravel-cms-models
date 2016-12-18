@@ -327,6 +327,18 @@ return [
 
         ],
 
+        'show' => [
+
+            // The default namespace to prefix for relative strategy class names
+            'default-namespace' => 'Czim\\CmsModels\\View\\ListStrategies\\',
+            'default-strategy'  => ListStrategies\DefaultStrategy::class,
+
+            // Aliases for show field display strategy classes
+            // If no match is found, falls back to list.aliases
+            'aliases' => [
+            ],
+        ],
+
         'delete' => [
 
             // The default namespace to prefix for relative strategy class names
@@ -378,6 +390,7 @@ return [
         'index'  => 'cms-models::model.index',
         'create' => 'cms-models::model.edit',
         'edit'   => 'cms-models::model.edit',
+        'show'   => 'cms-models::model.show',
     ],
 
     /*
