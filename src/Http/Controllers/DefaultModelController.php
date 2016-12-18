@@ -83,7 +83,9 @@ class DefaultModelController extends BaseModelController
             $records = $query->paginate($this->getActualPageSize(), ['*'], 'page', $records->lastPage());
         }
 
-        return view(config('cms-models.views.index'), [
+        $view = array_get($this->modelInformation->meta->views, 'index', config('cms-models.views.index'));
+
+        return view($view, [
             'moduleKey'           => $this->moduleKey,
             'routePrefix'         => $this->routePrefix,
             'permissionPrefix'    => $this->permissionPrefix,
@@ -134,7 +136,9 @@ class DefaultModelController extends BaseModelController
 
         $values = $this->getFormFieldValuesFromModel($record, array_keys($fields));
 
-        return view(config('cms-models.views.edit'), [
+        $view = array_get($this->modelInformation->meta->views, 'create', config('cms-models.views.create'));
+
+        return view($view, [
             'moduleKey'        => $this->moduleKey,
             'routePrefix'      => $this->routePrefix,
             'permissionPrefix' => $this->permissionPrefix,
@@ -205,7 +209,9 @@ class DefaultModelController extends BaseModelController
 
         $values = $this->getFormFieldValuesFromModel($record, array_keys($fields));
 
-        return view(config('cms-models.views.edit'), [
+        $view = array_get($this->modelInformation->meta->views, 'edit', config('cms-models.views.edit'));
+
+        return view($view, [
             'moduleKey'        => $this->moduleKey,
             'routePrefix'      => $this->routePrefix,
             'permissionPrefix' => $this->permissionPrefix,
