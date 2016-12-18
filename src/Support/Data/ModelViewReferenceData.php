@@ -17,7 +17,7 @@ class ModelViewReferenceData extends AbstractDataObject implements ModelViewRefe
 
     protected $attributes = [
 
-        // The vull identifier for a view
+        // The full identifier for a view
         'view' => null,
 
         // A list of strings for variables that should be passed into the view

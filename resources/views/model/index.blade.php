@@ -69,6 +69,41 @@
 
             @if (count($records))
 
+                <?php
+                    // Prepare the default action for clicking table rows
+                    /** @var \Czim\CmsModels\Contracts\Data\ModelActionReferenceDataInterface $defaultAction */
+                    $defaultAction = $model->list->getDefaultAction();
+
+                    if ($defaultAction) {
+
+                        // Interpret special types as localized routes
+                        if ($defaultAction->type()) {
+
+                            switch ($defaultAction->type()) {
+                                case \Czim\CmsModels\Support\Enums\ActionReferenceType::SHOW:
+                                    $defaultAction->route       = "{$routePrefix}.show";
+                                    $defaultAction->permissions = [ "{$permissionPrefix}show" ];
+                                    $defaultAction->variables   = [ 'recordKey' ];
+                                    break;
+
+                                case \Czim\CmsModels\Support\Enums\ActionReferenceType::EDIT:
+                                    $defaultAction->route       = "{$routePrefix}.edit";
+                                    $defaultAction->permissions = [ "{$permissionPrefix}edit" ];
+                                    $defaultAction->variables   = [ 'recordKey' ];
+                                    break;
+
+                                default:
+                                    $defaultAction = null;
+                            }
+
+                        }
+
+                        if ( ! $defaultAction->route()) {
+                            $defaultAction = null;
+                        }
+                    }
+                ?>
+
                 <table class="table table-striped table-hover records-table">
 
                     <thead>
@@ -120,11 +155,23 @@
                         @foreach ($records as $record)
 
                             <?php
+                                $recordKey = $record->getKey();
+
                                 $style = $model->list->activatable && ! $record->{$model->list->active_column}
                                        ? 'inactive' : null;
+
+                                $defaultActionUrl = null;
+                                if ($defaultAction) {
+
+                                    $resolvedVariables = [];
+                                    foreach ($defaultAction->variables() as $variable) {
+                                        $resolvedVariables[] = isset(${$variable}) ? ${$variable} : null;
+                                    }
+                                    $defaultActionUrl = route($defaultAction->route(), $resolvedVariables);
+                                }
                             ?>
 
-                            <tr class="records-row {{ $style }}">
+                            <tr class="records-row {{ $style }}" default-action-url="{{ $defaultActionUrl }}">
 
                                 @if ($model->list->activatable && cms_auth()->can("{$permissionPrefix}edit"))
                                     @include('cms-models::model.partials.list.column_activate', compact('model', 'record'))

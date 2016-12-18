@@ -1,7 +1,9 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
+use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsCore\Support\Data\AbstractDataObject;
+use Czim\CmsModels\Contracts\Data\ModelActionReferenceDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelListDataInterface;
 
 /**
@@ -22,6 +24,7 @@ use Czim\CmsModels\Contracts\Data\ModelListDataInterface;
  * @property string $order_column
  * @property bool $activatable
  * @property string $active_column
+ * @property array|ModelActionReferenceData[] $default_action
  * @property array|ModelViewReferenceData $before
  * @property array|ModelViewReferenceData $after
  */
@@ -29,12 +32,13 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
 {
 
     protected $objects = [
-        'columns'  => ModelListColumnData::class . '[]',
-        'filters'  => ModelListFilterData::class . '[]',
-        'includes' => ModelIncludesData::class,
-        'scopes'   => ModelScopeData::class . '[]',
-        'before'   => ModelViewReferenceData::class,
-        'after'    => ModelViewReferenceData::class,
+        'columns'        => ModelListColumnData::class . '[]',
+        'filters'        => ModelListFilterData::class . '[]',
+        'includes'       => ModelIncludesData::class,
+        'scopes'         => ModelScopeData::class . '[]',
+        'default_action' => ModelActionReferenceData::class . '[]',
+        'before'         => ModelViewReferenceData::class,
+        'after'          => ModelViewReferenceData::class,
     ];
 
     protected $attributes = [
@@ -78,6 +82,10 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
         // Scopes or scoping strategies, keyed by the scope name.
         'scopes' => [],
 
+        // The default action(s) for clicking on a (normal) table row.
+        // The first action that is permissible will apply, if any.
+        'default_action' => [],
+
         // Views to show before and/or after the list. Instance of ModelViewReferenceData.
         'before' => null,
         'after'  => null,
@@ -91,6 +99,42 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
     public function getOrderableColumn()
     {
         return $this->order_column ?: 'position';
+    }
+
+    /**
+     * Returns the default action for list rows.
+     *
+     * @return ModelActionReferenceDataInterface|null
+     */
+    public function getDefaultAction()
+    {
+        // Determine the appliccable action
+        if ( ! $this->default_action) {
+            return null;
+        }
+
+        $actions = $this->default_action;
+
+        if ( ! is_array($actions)) {
+            $actions = [ $actions ];
+        }
+
+        $core = $this->getCore();
+
+
+        foreach ($actions as $action) {
+
+            $permissions = $action->permissions();
+
+            if (    ! count($permissions)
+                ||  $core->auth()->user()->isAdmin()
+                ||  $core->auth()->user()->can($permissions)
+            ) {
+                return $action;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -127,6 +171,11 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
             $this->scopes = $with->scopes;
         }
 
+        // Overwrite default action if specifically set
+        if ($with->default_action && count($with->default_action)) {
+            $this->default_action = $with->default_action;
+        }
+
 
         $standardMergeKeys = [
             'page_size',
@@ -147,6 +196,14 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return CoreInterface
+     */
+    public function getCore()
+    {
+        return app(CoreInterface::class);
     }
 
 }

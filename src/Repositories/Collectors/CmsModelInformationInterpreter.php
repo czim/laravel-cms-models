@@ -4,6 +4,7 @@ namespace Czim\CmsModels\Repositories\Collectors;
 use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationInterpreterInterface;
+use Czim\CmsModels\Support\Data\ModelActionReferenceData;
 use Czim\CmsModels\Support\Data\ModelFormFieldData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelListColumnData;
@@ -56,6 +57,12 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
     protected function interpretListData()
     {
         if (array_has($this->raw, 'list') && is_array($this->raw['list'])) {
+
+            $this->raw['list']['default_action'] = $this->normalizeStandardArrayProperty(
+                array_get($this->raw['list'], 'default_action', []),
+                'type',
+                ModelActionReferenceData::class
+            );
 
             $this->raw['list']['columns'] = $this->normalizeStandardArrayProperty(
                 array_get($this->raw['list'], 'columns', []),
@@ -177,7 +184,7 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
         foreach ($source as $key => $value) {
 
             // list column may just set for order, defaults need to be filled in
-            if (is_numeric($key)) {
+            if (is_numeric($key) && ! is_array($value)) {
                 $key    = $value;
                 $value = [];
             }
