@@ -8,7 +8,7 @@ use Czim\DataObject\Contracts\DataObjectInterface;
 use UnexpectedValueException;
 
 /**
- * Class ModelFormInformation
+ * Class ModelFormData
  *
  * Data container that represents form representation for the model.
  *

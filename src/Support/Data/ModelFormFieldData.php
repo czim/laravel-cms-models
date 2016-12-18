@@ -160,7 +160,7 @@ class ModelFormFieldData extends AbstractDataObject implements ModelFormFieldDat
     }
 
     /**
-     * Returns whether the field must be filled in.
+     * Returns whether the field is translated.
      *
      * @return bool
      */
