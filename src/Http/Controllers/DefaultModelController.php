@@ -83,9 +83,7 @@ class DefaultModelController extends BaseModelController
             $records = $query->paginate($this->getActualPageSize(), ['*'], 'page', $records->lastPage());
         }
 
-        $view = array_get($this->modelInformation->meta->views, 'index', config('cms-models.views.index'));
-
-        return view($view, [
+        return view($this->getIndexView(), [
             'moduleKey'           => $this->moduleKey,
             'routePrefix'         => $this->routePrefix,
             'permissionPrefix'    => $this->permissionPrefix,
@@ -136,9 +134,7 @@ class DefaultModelController extends BaseModelController
 
         $values = $this->getFormFieldValuesFromModel($record, array_keys($fields));
 
-        $view = array_get($this->modelInformation->meta->views, 'create', config('cms-models.views.create'));
-
-        return view($view, [
+        return view($this->getCreateView(), [
             'moduleKey'        => $this->moduleKey,
             'routePrefix'      => $this->routePrefix,
             'permissionPrefix' => $this->permissionPrefix,
@@ -209,9 +205,7 @@ class DefaultModelController extends BaseModelController
 
         $values = $this->getFormFieldValuesFromModel($record, array_keys($fields));
 
-        $view = array_get($this->modelInformation->meta->views, 'edit', config('cms-models.views.edit'));
-
-        return view($view, [
+        return view($this->getEditView(), [
             'moduleKey'        => $this->moduleKey,
             'routePrefix'      => $this->routePrefix,
             'permissionPrefix' => $this->permissionPrefix,
@@ -493,6 +487,46 @@ class DefaultModelController extends BaseModelController
     protected function getGeneralStoreFailureError()
     {
         return cms_trans('models.store.general-error');
+    }
+
+    /**
+     * Returns the view key for the index page.
+     *
+     * @return string
+     */
+    protected function getIndexView()
+    {
+        return array_get($this->modelInformation->meta->views, 'index', config('cms-models.views.index'));
+    }
+
+    /**
+     * Returns the view key for the show page.
+     *
+     * @return string
+     */
+    protected function getShowView()
+    {
+        return array_get($this->modelInformation->meta->views, 'show', config('cms-models.views.show'));
+    }
+
+    /**
+     * Returns the view key for the create page.
+     *
+     * @return string
+     */
+    protected function getCreateView()
+    {
+        return array_get($this->modelInformation->meta->views, 'create', config('cms-models.views.create'));
+    }
+
+    /**
+     * Returns the view key for the edit page.
+     *
+     * @return string
+     */
+    protected function getEditView()
+    {
+        return array_get($this->modelInformation->meta->views, 'edit', config('cms-models.views.edit'));
     }
 
     /**
