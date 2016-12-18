@@ -24,6 +24,11 @@ abstract class AbstractListDisplayStrategy implements ListDisplayInterface
      */
     protected $attributeData;
 
+    /**
+     * @var array
+     */
+    protected $options = [];
+
 
     /**
      * Renders a display value to print to the list view.
@@ -72,6 +77,37 @@ abstract class AbstractListDisplayStrategy implements ListDisplayInterface
     public function attributes(Model $model, $source)
     {
         return [];
+    }
+
+    /**
+     * Returns custom options.
+     *
+     * @return array
+     */
+    public function options()
+    {
+        if ($this->options && count($this->options)) {
+            return $this->options;
+        }
+
+        if ( ! $this->listColumnData) {
+            return [];
+        }
+
+        return $this->listColumnData->options();
+    }
+
+    /**
+     * Sets custom options.
+     *
+     * @param array $options
+     * @return $this
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = $options;
+
+        return $this;
     }
 
     /**

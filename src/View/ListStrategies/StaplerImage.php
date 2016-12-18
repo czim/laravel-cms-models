@@ -43,7 +43,7 @@ class StaplerImage extends AbstractListDisplayStrategy
     protected function getResizetoUse(Attachment $attachment)
     {
         return array_get(
-            $this->listColumnData->options(),
+            $this->options(),
             'stapler_style',
             $this->getSmallestResize($attachment)
         );

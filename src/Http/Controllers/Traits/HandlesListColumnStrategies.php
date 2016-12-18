@@ -25,6 +25,7 @@ trait HandlesListColumnStrategies
 
             // Feed any extra information we can gather to the instance
             $instance->setListInformation($data);
+            $instance->setOptions($data->options());
 
             if ($data->source) {
                 if (isset($this->getModelInformation()->attributes[ $data->source ])) {

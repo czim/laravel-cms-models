@@ -79,7 +79,7 @@ class Date extends AbstractListDisplayStrategy
      */
     protected function getFormat()
     {
-        return array_get($this->listColumnData->options(), 'format', $this->format);
+        return array_get($this->options(), 'format', $this->format);
     }
 
 }
