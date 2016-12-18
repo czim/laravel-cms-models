@@ -85,7 +85,7 @@ More information on this may be found in the documentation of the [form strategi
 ### Custom fields
 
 Any field may be added to the form.
-There is no need for the key to exist as either an attribute or relation on the form. 
+There is no need for the key to exist as either an attribute or relation on the model. 
 Custom strategies can and should usually be created to handle such fields.
  
 For custom fields, there are no defaults the CMS can fall back on, so the form field must be defined, including at least `source` and `store_strategy` value.

@@ -29,6 +29,7 @@ Only the sections and fields included are used, otherwise the default values are
 - [General & Meta Data](ModelConfiguration/Meta.md)
 - [List columns, filter options, scopes, etc.](ModelConfiguration/List.md)
 - [Form fields and layout](ModelConfiguration/Form.md)
+- [Show page](ModelConfiguration/Show.md)
 
 
 ## Example Model Configuration
