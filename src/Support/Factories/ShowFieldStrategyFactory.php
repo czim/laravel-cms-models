@@ -35,7 +35,10 @@ class ShowFieldStrategyFactory implements ShowFieldStrategyFactoryInterface
     protected function resolveStrategyClass($strategy)
     {
         if ( ! str_contains($strategy, '.')) {
-            $strategy = config('cms-models.strategies.show.aliases.' . $strategy, $strategy);
+            $strategy = config(
+                'cms-models.strategies.show.aliases.' . $strategy,
+                config('cms-models.strategies.list.aliases.' . $strategy)
+            );
         }
 
         if (class_exists($strategy) && is_a($strategy, ShowFieldInterface::class, true)) {
@@ -57,7 +60,11 @@ class ShowFieldStrategyFactory implements ShowFieldStrategyFactoryInterface
      */
     protected function prefixStrategyNamespace($class)
     {
-        return rtrim(config('cms-models.strategies.show.default-namespace'), '\\') . '\\' . $class;
+        if (config('cms-models.strategies.show.default-namespace')) {
+            return rtrim(config('cms-models.strategies.show.default-namespace'), '\\') . '\\' . $class;
+        }
+
+        return rtrim(config('cms-models.strategies.list.default-namespace'), '\\') . '\\' . $class;
     }
 
     /**
@@ -65,7 +72,11 @@ class ShowFieldStrategyFactory implements ShowFieldStrategyFactoryInterface
      */
     protected function getDefaultStrategy()
     {
-        return app(config('cms-models.strategies.show.default-strategy'));
+        if ($strategy = config('cms-models.strategies.show.default-strategy')) {
+            return app(config('cms-models.strategies.show.default-strategy'));
+        }
+
+        return app(config('cms-models.strategies.list.default-strategy'));
     }
 
 }
