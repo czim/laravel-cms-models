@@ -196,15 +196,68 @@ The value may be:
     The others are added as selectable options. 
 
 
-## Custom Before or After Views
+## Default Actions
 
-To futher customize the listing page, it is possible to indicate a `before` and/or `after` view reference: a pointer to a view path and (optionally) a list of variables that should be passed into it.
+Purely for convenience, it is possible to set a default action for clicking on a model record row in the listing table in `list.default_action`.
+
+This must be an array with one or more arrays with the following keys:
+
+- `type` (string)  
+    A special type for a built-in route for the model.
+    This may be `'edit'` or `'show'` for a quick link to edit/show the model record.  
+    Required if `route` is not set.
+    
+- `route` (string)  
+    The route name for a (CMS) route to use as the action.  
+    Required if `type` is not set.
+
+- `permissions` (string|string[])  
+    One or more permissions that must all be granted in order to use the action. If the user does not have the permission(s), this action will not be offered.
+
+- `variables` (string[])  
+    A list of variable names to use as parameters for the `route`.  
+    Not to be used in combination with `type`.  
+    The variables must be available in the index view (f.i.: `'model'` to use `$model`, and `'modelKey'` to use the primary key of the model record for the row).
+
+The first action that is permitted will be used. 
+This way, a list of potential actions may be set up, offering fall-backs when fewer permissions are granted.
 
 Example:
 
 ```php
 <?php
-    
+    'list' => [
+        
+        'default_action' => [
+            // Action for users with 'edit' permission
+            [
+                'type'        => 'edit',
+                'permissions' => 'models.app-models-post.edit',
+            ],
+            // Action for users with 'show' permission
+            [
+                'type'        => 'show',
+                'permissions' => 'models.app-models-post.show',
+            ],
+            // Fall-back action when no permissions given
+            [
+                'route'       => 'some.fallback.route',
+                'variables'   => [ 'modelKey' ],
+            ]
+        ],
+        
+        // ...
+    ],
+```
+
+## Custom Before or After Views
+
+To futher customize the listing page, it is possible to indicate a `list.before` and/or `list.after` view reference: a pointer to a view path and (optionally) a list of variables that should be passed into it.
+
+Example:
+
+```php
+<?php
     'list' => [
         
         'before' => [
