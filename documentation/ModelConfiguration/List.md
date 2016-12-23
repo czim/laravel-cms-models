@@ -41,6 +41,49 @@ Entries may be:
 
 Note that if the `columns` section is omitted from the configuration, this can easily result in (too) many columns being rendered for hefty models.
 
+
+### Column Display Values
+
+The key values pairs that may be set for a column display are as follows.
+
+- `source` (string)  
+    An identifier for a source relative to the model record displayed.  
+    This may be the name of a model attribute (translated or not), or a dot-notation reference to an attribute on a related model.
+    If this is not set, the list column key is used.
+    
+- `strategy` (string)  
+    An FQN, class name or alias for a list display strategy.
+    
+- `label` (string)  
+    A label text to display in the table header.  
+    If this is not set, the list column key is used (prettified a bit).
+
+- `label_translated` (string)  
+    A translation key to use for a translated table header.  
+    If this is set, it overrides `label`.
+
+- `sortable` (boolean)  
+    Whether the column allows sorting.
+    
+- `sort_strategy` (string)  
+    The strategy for sorting the column.  
+    If none is set, it will default to an alphanumeric, null-last sort.
+
+- `sort_direction` (string: 'asc' or 'desc')  
+    The direction to sort in initially.  
+    Defaults to `'asc'` for most columns (`'desc'` for model timestamps and numeric primary keys). 
+
+- `options` (array)  
+    A list of key-value pairs that may set options to be used by the relevant strategies.
+
+- `disable_default_action` (boolean)  
+    If this is set to `true`, any default row-click action will be disabled for this column. This is useful for preventing problems with columns that offer clickable events that may clash with the 'normal' click action.
+
+- `hide` (boolean)  
+    If `true`, hides the column from the listing entirely.
+    Mainly useful for hiding columns without having to remove the settings entirely.
+
+
 See [List Display Strategies](../Strategies.md#list-display-strategies) for information about strategies that can be used (or how to create new ones).
 
 
