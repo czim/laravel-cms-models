@@ -20,6 +20,7 @@ use Czim\CmsModels\Contracts\Data\ModelListColumnDataInterface;
  * @property string $sort_strategy
  * @property string $sort_direction asc|desc
  * @property array $options
+ * @property bool $disable_default_action
  */
 class ModelListColumnData extends AbstractDataObject implements ModelListColumnDataInterface
 {
@@ -57,6 +58,9 @@ class ModelListColumnData extends AbstractDataObject implements ModelListColumnD
 
         // Extra options for strategy configuration
         'options' => [],
+
+        // Whether to disable the default row click action for this table cell.
+        'disable_default_action' => null,
     ];
 
     /**

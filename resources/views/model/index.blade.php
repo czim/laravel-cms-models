@@ -190,11 +190,12 @@
                                     @continue($column->hide)
 
                                     @include('cms-models::model.partials.list.column_strategy', [
-                                        'key'      => $key,
-                                        'column'   => $column,
-                                        'strategy' => $listStrategies[ $key ],
-                                        'model'    => $model,
-                                        'record'   => $record,
+                                        'key'              => $key,
+                                        'column'           => $column,
+                                        'strategy'         => $listStrategies[ $key ],
+                                        'model'            => $model,
+                                        'record'           => $record,
+                                        'hasDefaultAction' => (bool) $defaultAction,
                                     ])
                                 @endforeach
 
@@ -283,5 +284,16 @@
         'routePrefix',
         'draggableForOrderable'
     ))
+
+    @if ($defaultAction)
+        <script>
+            $(function() {
+                $('tr.records-row td.default-action').click(function () {
+                    window.location.href = $(this).closest('tr').attr('default-action-url');
+                });
+            });
+        </script>
+    @endif
+
 @endpush
 
