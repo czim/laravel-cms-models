@@ -31,3 +31,17 @@ Keys that may be set:
 - **search**: the targets (columns, attributes) that will be used for standard means to find matches for the model (in, f.i., a searchable ajax select dropdown).
 
 See [Model Reference Strategies](../Strategies.md#model-reference-strategies) for more information on the strategies that render the references.
+
+
+## Single Mode
+
+In some exceptional cases an Eloquent model may have only one record.
+In that case the listing may be disabled entirely, offering only the option to create one new model if none exists, or edit only the first (matching) model.
+
+If required, this may be combined with repository context strategies to pick a specific existing model record.
+  
+To enable this 'single mode', set `single` to `true` in the model configuration.
+
+```
+    `single` => true,
+```
