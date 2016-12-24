@@ -17,11 +17,13 @@
                 {{ cms_trans('common.home') }}
             </a>
         </li>
+        @if ( ! $model->single)
         <li>
             <a href="{{ cms_route("{$routePrefix}.index") }}">
                 {{ ucfirst($model->verbose_name_plural) }}
             </a>
         </li>
+        @endif
         <li class="active">
             {{ $title }}
         </li>

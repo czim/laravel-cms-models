@@ -62,6 +62,11 @@ class DefaultModelController extends BaseModelController
      */
     public function index()
     {
+        // For single-item display only, redirect to the relevant show/edit page
+        if ($this->modelInformation->single) {
+            return $this->returnViewForSingleDisplay();
+        }
+
         $this->checkActiveSort()
              ->checkScope()
              ->checkFilters()
@@ -485,6 +490,22 @@ class DefaultModelController extends BaseModelController
     protected function getCreateRequestClass()
     {
         return array_get($this->modelInformation->meta->form_requests, 'create', ModelCreateRequest::class);
+    }
+
+    /**
+     * Returns a create/edit view for a single-item only model record setup.
+     *
+     * @return mixed
+     */
+    protected function returnViewForSingleDisplay()
+    {
+        $record = $this->modelRepository->first();
+
+        if ($record) {
+            return $this->edit($record->getKey());
+        }
+
+        return $this->create();
     }
 
     /**
