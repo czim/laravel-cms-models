@@ -108,12 +108,12 @@
 
                     <thead>
                         <tr>
-                            @if ($model->list->activatable && cms_auth()->can("{$permissionPrefix}edit"))
+                            @if ($model->list->activatable)
                                 <th class="column column-activate"></th>
                             @endif
 
-                            @if ($model->list->orderable && cms_auth()->can("{$permissionPrefix}edit"))
-                                <th class="column column-orderable">
+                            @if ($model->list->orderable)
+                                <th class="column column-orderable column-right">
                                     @include('cms-models::model.partials.list.column_header', [
                                         'sortKey'       => $model->list->order_column ?: 'position',
                                         'label'         => ucfirst(cms_trans('models.orderable.position')),
@@ -173,16 +173,17 @@
 
                             <tr class="records-row {{ $style }}" default-action-url="{{ $defaultActionUrl }}">
 
-                                @if ($model->list->activatable && cms_auth()->can("{$permissionPrefix}edit"))
-                                    @include('cms-models::model.partials.list.column_activate', compact('model', 'record'))
+                                @if ($model->list->activatable)
+                                    @include('cms-models::model.partials.list.column_activate', compact('model', 'record', 'permissionPrefix'))
                                 @endif
 
-                                @if ($model->list->orderable && cms_auth()->can("{$permissionPrefix}edit"))
+                                @if ($model->list->orderable)
                                     @include('cms-models::model.partials.list.column_orderable', [
-                                        'model'         => $model,
-                                        'record'        => $record,
-                                        'isDraggable'   => $draggableForOrderable,
-                                        'sortDirection' => $sortDirection
+                                        'model'            => $model,
+                                        'record'           => $record,
+                                        'isDraggable'      => $draggableForOrderable,
+                                        'sortDirection'    => $sortDirection,
+                                        'permissionPrefix' => $permissionPrefix,
                                     ])
                                 @endif
 
@@ -274,16 +275,19 @@
 
     @include('cms-models::model.partials.list.scripts_activatable', compact(
         'model',
-        'routePrefix'
+        'routePrefix',
+        'permissionPrefix'
     ))
 
-    @include('cms-models::model.partials.list.scripts_orderable', compact(
-        'model',
-        'sortColumn',
-        'sortDirection',
-        'routePrefix',
-        'draggableForOrderable'
-    ))
+    @if (cms_auth()->can("{$permissionPrefix}edit"))
+        @include('cms-models::model.partials.list.scripts_orderable', compact(
+            'model',
+            'sortColumn',
+            'sortDirection',
+            'routePrefix',
+            'draggableForOrderable'
+        ))
+    @endif
 
     @if ($defaultAction)
         <script>
