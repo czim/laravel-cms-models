@@ -333,22 +333,24 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
             $this->validation['update'] = $withUpdate;
         }
 
-        $this->mergeAttribute('meta', $with->meta);
-        $this->mergeAttribute('verbose_name', $with->verbose_name);
-        $this->mergeAttribute('verbose_name_plural', $with->verbose_name_plural);
-        $this->mergeAttribute('single', $with->single);
+        $mergeAttributes = [
+            'single',
+            'meta',
+            'verbose_name',
+            'verbose_name_plural',
+            'allow_delete',
+            'delete_condition',
+            'delete_strategy',
+            'list',
+            'form',
+            'show',
+            'reference',
+            'includes',
+        ];
 
-        $this->mergeAttribute('allow_delete', $with->allow_delete);
-        $this->mergeAttribute('delete_condition', $with->delete_condition);
-        $this->mergeAttribute('delete_strategy', $with->delete_strategy);
-
-        $this->mergeAttribute('list', $with->list);
-        $this->mergeAttribute('form', $with->form);
-        $this->mergeAttribute('show', $with->show);
-        $this->mergeAttribute('reference', $with->reference);
-        $this->mergeAttribute('includes', $with->includes);
-
-        // todo validation
+        foreach ($mergeAttributes as $attribute) {
+            $this->mergeAttribute($attribute, $with->{$attribute});
+        }
     }
 
 }
