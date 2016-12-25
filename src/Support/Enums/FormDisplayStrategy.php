@@ -13,12 +13,13 @@ class FormDisplayStrategy extends Enum
     const NUMERIC_YEAR    = 'numeric-year';
     const NUMERIC_PRICE   = 'numeric-price';
 
-    const TEXT       = 'text';
-    const TEXT_EMAIL = 'text-email';
-    const PASSWORD   = 'text';
-    const TEXTAREA   = 'textarea';
-    const WYSIWYG    = 'wysiwyg';
-    const DROPDOWN   = 'dropdown';
+    const TEXT         = 'text';
+    const TEXT_EMAIL   = 'text-email';
+    const PASSWORD     = 'text';
+    const TEXTAREA     = 'textarea';
+    const WYSIWYG      = 'wysiwyg';
+    const DROPDOWN     = 'dropdown';
+    const STATIC_FIELD = 'static';
 
     const DATEPICKER_DATE     = 'datepicker-date';
     const DATEPICKER_TIME     = 'datepicker-time';

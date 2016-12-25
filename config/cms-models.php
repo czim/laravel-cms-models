@@ -297,6 +297,8 @@ return [
                 Enums\FormDisplayStrategy::WYSIWYG          => 'WysiwygStrategy',
                 Enums\FormDisplayStrategy::DROPDOWN         => 'DropdownStrategy',
 
+                Enums\FormDisplayStrategy::STATIC_FIELD     => 'StaticStrategy',
+
                 Enums\FormDisplayStrategy::DATEPICKER_DATETIME => 'DateTimeStrategy',
                 Enums\FormDisplayStrategy::DATEPICKER_DATE     => 'DateStrategy',
                 Enums\FormDisplayStrategy::DATEPICKER_TIME     => 'TimeStrategy',
