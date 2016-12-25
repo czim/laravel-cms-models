@@ -18,6 +18,9 @@ This list is not exhaustive; custom strategy classes and aliases may be created 
 - [**`Dropdown`**](FormFieldDisplayStrategies/Dropdown.md)  
     Dropdown select with customizable options.
     
+- [**`Static`**](FormFieldDisplayStrategies/Static.md)  
+    Static value display, optionally with list strategy.
+    
 - [**`Wysiwyg`**](FormFieldDisplayStrategies/Wysiwyg.md)  
     WYSIWYG rich text editor (HTML) field.
    
