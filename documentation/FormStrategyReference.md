@@ -12,6 +12,9 @@ This list is not exhaustive; custom strategy classes and aliases may be created 
 - [**`Default`**](FormFieldDisplayStrategies/Default.md)  
     The default fallback: simple text input field.
 
+- [**`Colorpicker`**](FormFieldDisplayStrategies/Colorpicker.md)  
+    Colorpicker widget for a web/css color value.
+
 - [**`Datepicker`**](FormFieldDisplayStrategies/Datepicker.md)  
     Datepicker widget for date & time values.
     
