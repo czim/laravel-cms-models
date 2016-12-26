@@ -302,6 +302,7 @@ return [
                 Enums\FormDisplayStrategy::DATEPICKER_DATETIME => 'DateTimeStrategy',
                 Enums\FormDisplayStrategy::DATEPICKER_DATE     => 'DateStrategy',
                 Enums\FormDisplayStrategy::DATEPICKER_TIME     => 'TimeStrategy',
+                Enums\FormDisplayStrategy::COLORPICKER         => 'ColorStrategy',
 
                 Enums\FormDisplayStrategy::ATTACHMENT_STAPLER_IMAGE => 'AttachmentStaplerImageStrategy',
                 Enums\FormDisplayStrategy::ATTACHMENT_STAPLER_FILE  => 'AttachmentStaplerFileStrategy',

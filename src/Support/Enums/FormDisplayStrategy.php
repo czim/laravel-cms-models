@@ -24,6 +24,7 @@ class FormDisplayStrategy extends Enum
     const DATEPICKER_DATE     = 'datepicker-date';
     const DATEPICKER_TIME     = 'datepicker-time';
     const DATEPICKER_DATETIME = 'datepicker-datetime';
+    const COLORPICKER         = 'colorpicker';
 
     const ATTACHMENT_STAPLER_FILE  = 'attachment-stapler-file';
     const ATTACHMENT_STAPLER_IMAGE = 'attachment-stapler-image';
