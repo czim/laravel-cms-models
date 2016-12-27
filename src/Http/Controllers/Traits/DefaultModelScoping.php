@@ -4,6 +4,7 @@ namespace Czim\CmsModels\Http\Controllers\Traits;
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
+use Czim\CmsModels\Contracts\Support\Session\ModelListMemoryInterface;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\Repository\Contracts\ExtendedRepositoryInterface;
 
@@ -115,7 +116,7 @@ trait DefaultModelScoping
      */
     protected function storeActiveScopeInSession()
     {
-        session()->put($this->getScopeSessionKey(), $this->activeScope);
+        $this->getListMemory()->setScope($this->activeScope);
     }
 
     /**
@@ -123,17 +124,7 @@ trait DefaultModelScoping
      */
     protected function retrieveActiveScopeFromSession()
     {
-        $this->activeScope = session()->get($this->getScopeSessionKey());
-    }
-
-    /**
-     * @return string
-     */
-    protected function getScopeSessionKey()
-    {
-        return $this->getCore()->config('session.prefix')
-             . 'model:' . $this->getModuleKey()
-             . ':scope';
+        $this->activeScope = $this->getListMemory()->getScope();
     }
 
     /**
@@ -187,5 +178,10 @@ trait DefaultModelScoping
      * @return $this
      */
     abstract protected function markResetActivePage($reset = true);
+
+    /**
+     * @return ModelListMemoryInterface
+     */
+    abstract protected function getListMemory();
 
 }

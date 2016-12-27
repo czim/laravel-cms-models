@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Http\Controllers\Traits;
 
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\Support\Session\ModelListMemoryInterface;
 use Czim\CmsModels\Filters\ModelFilter;
 use Czim\CmsModels\Filters\ModelFilterData;
 use Czim\CmsModels\Support\Data\ModelInformation;
@@ -37,7 +38,7 @@ trait DefaultModelFiltering
             return $this;
         }
 
-        if (session()->has($this->getFilterSessionKey())) {
+        if ($this->getListMemory()->hasFilters()) {
             $this->retrieveFiltersFromSession();
         }
 
@@ -96,12 +97,7 @@ trait DefaultModelFiltering
      */
     protected function storeFiltersInSession()
     {
-        if (empty($this->filters)) {
-            session()->forget($this->getFilterSessionKey());
-            return;
-        }
-
-        session()->put($this->getFilterSessionKey(), $this->filters);
+        $this->getListMemory()->setFilters($this->filters);
     }
 
     /**
@@ -109,18 +105,9 @@ trait DefaultModelFiltering
      */
     protected function retrieveFiltersFromSession()
     {
-        $this->filters = session()->get($this->getFilterSessionKey(), []);
+        $this->filters = $this->getListMemory()->getFilters();
     }
 
-    /**
-     * @return string
-     */
-    protected function getFilterSessionKey()
-    {
-        return $this->getCore()->config('session.prefix')
-             . 'model:' . $this->getModuleKey()
-             . ':filters';
-    }
 
     /**
      * Makes and returns filter instance given current context.
@@ -154,4 +141,10 @@ trait DefaultModelFiltering
      * @return $this
      */
     abstract protected function markResetActivePage($reset = true);
+
+    /**
+     * @return ModelListMemoryInterface
+     */
+    abstract protected function getListMemory();
+
 }

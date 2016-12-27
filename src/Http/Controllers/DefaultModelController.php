@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Http\Controllers;
 
 use Czim\CmsCore\Support\Enums\FlashLevel;
+use Czim\CmsModels\Contracts\Support\Session\ModelListMemoryInterface;
 use Czim\CmsModels\Events;
 use Czim\CmsModels\Http\Requests\ActivateRequest;
 use Czim\CmsModels\Http\Requests\ModelCreateRequest;
@@ -56,6 +57,12 @@ class DefaultModelController extends BaseModelController
 
 
     /**
+     * @var ModelListMemoryInterface
+     */
+    protected $listMemory;
+
+
+    /**
      * Returns listing of filtered, sorted records.
      *
      * @return mixed
@@ -66,6 +73,9 @@ class DefaultModelController extends BaseModelController
         if ($this->modelInformation->single) {
             return $this->returnViewForSingleDisplay();
         }
+
+        // Prepare list memory
+        $this->listMemory = $this->getListMemory();
 
         $this->checkActiveSort()
              ->checkScope()
@@ -604,6 +614,34 @@ class DefaultModelController extends BaseModelController
     {
         return ucfirst($this->modelInformation->label())
              . ' #' . $key;
+    }
+
+    /**
+     * @return ModelListMemoryInterface
+     */
+    protected function getListMemory()
+    {
+        if (null !== $this->listMemory) {
+            return $this->listMemory;
+        }
+
+        /** @var ModelListMemoryInterface $memory */
+        $memory = app(ModelListMemoryInterface::class);
+
+        $memory->setContext($this->getModelSessionKey());
+
+        // todo: set children-of-list sub context if given/known
+
+        return $memory;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelSessionKey()
+    {
+        return $this->core->config('session.prefix')
+             . 'model:' . $this->getModuleKey();
     }
 
 }

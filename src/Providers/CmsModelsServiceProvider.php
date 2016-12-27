@@ -21,6 +21,7 @@ use Czim\CmsModels\Contracts\Support\Factories\ListDisplayStrategyFactoryInterfa
 use Czim\CmsModels\Contracts\Support\Factories\ShowFieldStrategyFactoryInterface;
 use Czim\CmsModels\Contracts\Support\MetaReferenceDataProviderInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
+use Czim\CmsModels\Contracts\Support\Session\ModelListMemoryInterface;
 use Czim\CmsModels\Contracts\Support\Translation\TranslationLocaleHelperInterface;
 use Czim\CmsModels\Events;
 use Czim\CmsModels\Listeners\ModelLogListener;
@@ -38,6 +39,7 @@ use Czim\CmsModels\Support\Factories\ListDisplayStrategyFactory;
 use Czim\CmsModels\Support\Factories\ShowFieldStrategyFactory;
 use Czim\CmsModels\Support\ModuleHelper;
 use Czim\CmsModels\Support\Routing\RouteHelper;
+use Czim\CmsModels\Support\Session\ModelListMemory;
 use Czim\CmsModels\Support\Strategies\MetaReferenceDataProvider;
 use Czim\CmsModels\Support\Translation\TranslationLocaleHelper;
 use Illuminate\Support\ServiceProvider;
@@ -162,6 +164,7 @@ class CmsModelsServiceProvider extends ServiceProvider
         $this->app->singleton(ModuleHelperInterface::class, ModuleHelper::class);
         $this->app->singleton(MetaReferenceDataProviderInterface::class, MetaReferenceDataProvider::class);
         $this->app->singleton(TranslationLocaleHelperInterface::class, TranslationLocaleHelper::class);
+        $this->app->singleton(ModelListMemoryInterface::class, ModelListMemory::class);
 
         return $this;
     }

@@ -4,6 +4,7 @@ namespace Czim\CmsModels\Http\Controllers\Traits;
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
+use Czim\CmsModels\Contracts\Support\Session\ModelListMemoryInterface;
 use Czim\CmsModels\Repositories\Criteria\ModelOrderStrategy;
 use Czim\CmsModels\Repositories\SortStrategies\NullLast;
 use Czim\CmsModels\Support\Data\ModelInformation;
@@ -46,7 +47,7 @@ trait DefaultModelSorting
             $this->markResetActivePage()
                  ->storeActiveSortInSession();
 
-        } elseif (session()->has($this->getSortSessionKey())) {
+        } elseif ($this->getListMemory()->hasSortData()) {
 
             $this->retrieveActiveSortFromSession();
         }
@@ -65,10 +66,7 @@ trait DefaultModelSorting
             $direction = null;
         }
 
-        session()->put($this->getSortSessionKey(), [
-            'column'    => $this->activeSort,
-            'direction' => $direction,
-        ]);
+        $this->getListMemory()->setSortData($this->activeSort, $direction);
     }
 
     /**
@@ -76,7 +74,7 @@ trait DefaultModelSorting
      */
     protected function retrieveActiveSortFromSession()
     {
-        $sessionSort = session()->get($this->getSortSessionKey());
+        $sessionSort = $this->getListMemory()->getSortData();
 
         if ( ! is_array($sessionSort)) return;
 
@@ -89,16 +87,6 @@ trait DefaultModelSorting
         } else {
             $this->activeSortDescending = $direction === 'desc';
         }
-    }
-
-    /**
-     * @return string
-     */
-    protected function getSortSessionKey()
-    {
-        return $this->getCore()->config('session.prefix')
-             . 'model:' . $this->getModuleKey()
-             . ':sort';
     }
 
     /**
@@ -245,4 +233,10 @@ trait DefaultModelSorting
      * @return $this
      */
     abstract protected function markResetActivePage($reset = true);
+
+    /**
+     * @return ModelListMemoryInterface
+     */
+    abstract protected function getListMemory();
+
 }

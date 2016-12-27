@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Http\Controllers\Traits;
 
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\Support\Session\ModelListMemoryInterface;
 use Czim\CmsModels\Support\Data\ModelInformation;
 
 trait DefaultModelPagination
@@ -42,7 +43,7 @@ trait DefaultModelPagination
 
             $this->activePage = $request->get('page') ? (int) $request->get('page') : null;
 
-        } elseif (session()->has($this->getPageSessionKey())) {
+        } elseif ($this->getListMemory()->hasPage()) {
 
             $this->retrieveActivePageFromSession();
         }
@@ -52,7 +53,7 @@ trait DefaultModelPagination
             $this->activePageSize = $request->get('pagesize') ? (int) $request->get('pagesize') : null;
             $this->activePage     = null;
 
-        } elseif (session()->has($this->getPageSizeSessionKey())) {
+        } elseif ($this->getListMemory()->hasPageSize()) {
 
             $this->retrieveActivePageSzeFromSession();
         }
@@ -69,8 +70,8 @@ trait DefaultModelPagination
      */
     protected function storeActivePageValuesInSession()
     {
-        session()->put($this->getPageSessionKey(), $this->activePage);
-        session()->put($this->getPageSizeSessionKey(), $this->activePageSize);
+        $this->getListMemory()->setPage($this->activePage);
+        $this->getListMemory()->setPageSize($this->activePageSize);
     }
 
     /**
@@ -78,7 +79,7 @@ trait DefaultModelPagination
      */
     protected function retrieveActivePageFromSession()
     {
-        $this->activePage = session()->get($this->getPageSessionKey());
+        $this->activePage = $this->getListMemory()->getPage();
     }
 
     /**
@@ -86,27 +87,7 @@ trait DefaultModelPagination
      */
     protected function retrieveActivePageSzeFromSession()
     {
-        $this->activePageSize = session()->get($this->getPageSizeSessionKey());
-    }
-
-    /**
-     * @return string
-     */
-    protected function getPageSessionKey()
-    {
-        return $this->getCore()->config('session.prefix')
-             . 'model:' . $this->getModuleKey()
-             . ':page';
-    }
-
-    /**
-     * @return string
-     */
-    protected function getPageSizeSessionKey()
-    {
-        return $this->getCore()->config('session.prefix')
-             . 'model:' . $this->getModuleKey()
-             . ':pagesize';
+        $this->activePageSize = $this->getListMemory()->getPageSize();
     }
 
     /**
@@ -213,5 +194,10 @@ trait DefaultModelPagination
      * @return ModelInformationInterface|ModelInformation|null
      */
     abstract protected function getModelInformation();
+
+    /**
+     * @return ModelListMemoryInterface
+     */
+    abstract protected function getListMemory();
 
 }
