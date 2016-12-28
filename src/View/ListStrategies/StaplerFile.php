@@ -7,6 +7,7 @@ use UnexpectedValueException;
 
 class StaplerFile extends AbstractListDisplayStrategy
 {
+    const VIEW = 'cms-models::model.partials.list.strategies.stapler_file';
 
     /**
      * Renders a display value to print to the list view.
@@ -23,7 +24,7 @@ class StaplerFile extends AbstractListDisplayStrategy
             throw new UnexpectedValueException("Stapler strategy expects Attachment as source");
         }
 
-        return view('cms-models::model.partials.list.strategies.stapler_file', [
+        return view(static::VIEW, [
             'filename'    => $source->originalFilename(),
             'url'         => $source->url(),
         ])->render();

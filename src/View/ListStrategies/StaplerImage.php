@@ -7,6 +7,7 @@ use UnexpectedValueException;
 
 class StaplerImage extends AbstractListDisplayStrategy
 {
+    const VIEW = 'cms-models::model.partials.list.strategies.stapler_image';
 
     /**
      * Renders a display value to print to the list view.
@@ -25,7 +26,7 @@ class StaplerImage extends AbstractListDisplayStrategy
 
         $resize = $this->getResizetoUse($source);
 
-        return view('cms-models::model.partials.list.strategies.stapler_image', [
+        return view(static::VIEW, [
             'filename'    => $source->originalFilename(),
             'urlThumb'    => $source->url($resize),
             'urlOriginal' => $source->url(),
