@@ -7,6 +7,10 @@
                 <a class="btn btn-default edit-record-action" href="{{ route($route, [ $record->getKey() ]) }}" role="button"
                    title="{{ ucfirst(cms_trans('common.action.edit')) }}"
                 ><i class="fa fa-edit"></i></a>
+            @else
+                <a class="btn btn-default show-record-action" href="{{ route($route, [ $record->getKey() ]) }}" role="button"
+                   title="{{ ucfirst(cms_trans('common.action.view')) }}"
+                ><i class="fa fa-eye"></i></a>
             @endif
 
             @if ($model->allowDelete() && cms_auth()->can("{$permissionPrefix}delete"))
