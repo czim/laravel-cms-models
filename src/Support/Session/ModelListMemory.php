@@ -10,6 +10,14 @@ class ModelListMemory implements ModelListMemoryInterface
     const TYPE_PAGE     = 'page';
     const TYPE_PAGESIZE = 'pagesize';
     const TYPE_SCOPE    = 'scope';
+    const TYPE_PARENT   = 'parent';
+
+    /**
+     * Signifies default parent filter has been disabled.
+     *
+     * @var string
+     */
+    const PARENT_DISABLE = '__DISABLED__';
 
     /**
      * The main context for retrieving list parameters.
@@ -310,6 +318,72 @@ class ModelListMemory implements ModelListMemoryInterface
     public function clearScope()
     {
         session()->forget($this->getSessionKey(static::TYPE_PAGE));
+
+        return $this;
+    }
+
+    /**
+     * Returns whether an active parent is set for the current context.
+     *
+     * @return bool
+     */
+    public function hasListParent()
+    {
+        return session()->has($this->getSessionKey(static::TYPE_PARENT));
+    }
+
+    /**
+     * Returns active parent for current context.
+     *
+     * @return null|false|array  associative: 'relation', 'key'; false for disabled filter; null for default/unset
+     */
+    public function getListParent()
+    {
+        $parent = session()->get($this->getSessionKey(static::TYPE_PARENT));
+
+        if (null === $parent) {
+            return null;
+        }
+
+        if (static::PARENT_DISABLE === $parent) {
+            return false;
+        }
+
+        list($relation, $key) = explode('::', $parent);
+
+        return compact('relation', 'key');
+    }
+
+    /**
+     * Sets active parent for the current context.
+     *
+     * @param string|false $relation    false to disable default top-level only filter, otherwise model key string
+     * @param mixed        $recordKey
+     * @return $this
+     */
+    public function setListParent($relation, $recordKey = null)
+    {
+        if (false !== $relation && empty($relation)) {
+            return $this->clearListParent();
+        }
+
+        if (false === $relation) {
+            session()->set($this->getSessionKey(static::TYPE_PARENT), static::PARENT_DISABLE);
+        } else {
+            session()->set($this->getSessionKey(static::TYPE_PARENT), $relation . '::' . $recordKey);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears active parent for the current context.
+     *
+     * @return $this
+     */
+    public function clearListParent()
+    {
+        session()->forget($this->getSessionKey(static::TYPE_PARENT));
 
         return $this;
     }

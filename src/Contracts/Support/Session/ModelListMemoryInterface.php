@@ -173,4 +173,34 @@ interface ModelListMemoryInterface
      */
     public function clearScope();
 
+    /**
+     * Returns whether an active parent is set for the current context.
+     *
+     * @return bool
+     */
+    public function hasListParent();
+
+    /**
+     * Returns active parent for current context.
+     *
+     * @return null|false|array  associative: 'model', 'key'; false for disabled filter; null for default/unset
+     */
+    public function getListParent();
+
+    /**
+     * Sets active parent for the current context.
+     *
+     * @param string|false $relation false to disable default top-level only filter, otherwise model key string
+     * @param mixed        $recordKey
+     * @return $this
+     */
+    public function setListParent($relation, $recordKey = null);
+
+    /**
+     * Clears active parent for the current context.
+     *
+     * @return $this
+     */
+    public function clearListParent();
+
 }
