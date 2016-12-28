@@ -347,7 +347,7 @@
         ))
     @endif
 
-    @if ($defaultAction)
+    @if (count($records) && $defaultAction)
         <script>
             $(function() {
                 $('tr.records-row td.default-action').click(function () {
