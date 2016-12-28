@@ -27,6 +27,8 @@ use Czim\CmsModels\Contracts\Data\ModelListDataInterface;
  * @property array|ModelActionReferenceData[] $default_action
  * @property array|ModelViewReferenceData $before
  * @property array|ModelViewReferenceData $after
+ * @property bool $default_top_only
+ * @property array|ModelListParentData[] $parents
  */
 class ModelListData extends AbstractDataObject implements ModelListDataInterface
 {
@@ -39,6 +41,7 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
         'default_action' => ModelActionReferenceData::class . '[]',
         'before'         => ModelViewReferenceData::class,
         'after'          => ModelViewReferenceData::class,
+        'parents'        => ModelListParentData::class . '[]',
     ];
 
     protected $attributes = [
@@ -89,6 +92,13 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
         // Views to show before and/or after the list. Instance of ModelViewReferenceData.
         'before' => null,
         'after'  => null,
+
+        // Whether to hide everything but top-level list parents by default.
+        // Useful to remove clutter for nested content with a click-through-to-children setup.
+        'default_top_only' => null,
+
+        // List parents for list hierarchy handling (instances of ModelListParentData)
+        'parents' => [],
     ];
 
     /**
@@ -189,6 +199,8 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
             'disable_scopes',
             'before',
             'after',
+            'default_top_only',
+            'parents',
         ];
 
         foreach ($standardMergeKeys as $key) {

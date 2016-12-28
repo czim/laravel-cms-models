@@ -179,6 +179,13 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
             'disable_scopes' => false,
             // Scopes or scoping strategies to present for getting selected sets of the model's records
             'scopes' => [],
+
+            // Whether to hide everything but top-level list parents by default.
+            // Useful to remove clutter for nested content with a click-through-to-children setup.
+            'default_top_only' => null,
+
+            // List parents for list hierarchy handling (instances of ModelListParentData)
+            'parents' => [],
         ],
 
         // Settings for rendering the form by which the model is edited
