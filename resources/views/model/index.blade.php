@@ -112,7 +112,7 @@
 
 
     <div class="row">
-        <div class="col-md-10 col-md-offset-1">
+        <div>
 
             @if ( ! $model->list->disable_scopes && $model->list->scopes && count($model->list->scopes))
                 @include('cms-models::model.partials.list.scopes', [
