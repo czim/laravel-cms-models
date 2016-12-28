@@ -29,6 +29,27 @@ interface ModelActionReferenceDataInterface extends ArrayAccess, Arrayable
     public function variables();
 
     /**
+     * Returns required permissions for this action.
+     *
+     * @return string[]
+     */
+    public function permissions();
+
+    /**
+     * Returns a query string segment to append to the link.
+     *
+     * @return mixed
+     */
+    public function query();
+
+    /**
+     * Returns custom options.
+     *
+     * @return array
+     */
+    public function options();
+
+    /**
      * @param ModelActionReferenceDataInterface $with
      */
     public function merge(ModelActionReferenceDataInterface $with);

@@ -13,6 +13,8 @@ use Czim\CmsModels\Contracts\Data\ModelActionReferenceDataInterface;
  * @property string|string[]|null $permissions
  * @property string|null          $route
  * @property string[]             $variables
+ * @property string               $query
+ * @property array                $options
  */
 class ModelActionReferenceData extends AbstractDataObject implements ModelActionReferenceDataInterface
 {
@@ -20,11 +22,11 @@ class ModelActionReferenceData extends AbstractDataObject implements ModelAction
     protected $attributes = [
 
         // A special type, defaults to using 'route' if none specified
-        // Available types: edit, show
+        // Available types: edit, show. children
         'type' => null,
 
         // The permission(s) required to use this action. May be a string or an array.
-        // If more are given, all must match.
+        // If more are given, all must be permitted.
         'permissions' => null,
 
         // A route, used if no type is set
@@ -32,6 +34,12 @@ class ModelActionReferenceData extends AbstractDataObject implements ModelAction
 
         // A list of strings for variables that should be used as arguments for the route
         'variables' => [],
+
+        // The query string to append to the link
+        'query' => null,
+
+        // Special options for custom types: key value pairs
+        'options' => [],
     ];
 
 
@@ -81,6 +89,26 @@ class ModelActionReferenceData extends AbstractDataObject implements ModelAction
         return $permissions;
     }
 
+    /**
+     * Returns a query string segment to append to the link.
+     *
+     * @return mixed
+     */
+    public function query()
+    {
+        return $this->getAttribute('query');
+    }
+
+    /**
+     * Returns custom options.
+     *
+     * @return array
+     */
+    public function options()
+    {
+        return $this->getAttribute('options') ?: [];
+    }
+
 
     /**
      * @param ModelActionReferenceDataInterface|ModelActionReferenceData $with
@@ -89,6 +117,8 @@ class ModelActionReferenceData extends AbstractDataObject implements ModelAction
     {
         $this->mergeAttribute('type', $with->type);
         $this->mergeAttribute('route', $with->route);
+        $this->mergeAttribute('query', $with->query);
+        $this->mergeAttribute('options', $with->options);
 
         if ( ! empty($with->variables)) {
             $this->variables = array_unique(array_merge($this->variables, $with->variables));
