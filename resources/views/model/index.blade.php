@@ -140,13 +140,13 @@
                             switch ($defaultAction->type()) {
                                 case \Czim\CmsModels\Support\Enums\ActionReferenceType::SHOW:
                                     $defaultAction->route       = "{$routePrefix}.show";
-                                    $defaultAction->permissions = [ "{$permissionPrefix}show" ];
+                                    $defaultAction->permissions = count($defaultAction->permissions) ? $defaultAction->permissions : [ "{$permissionPrefix}show" ];
                                     $defaultAction->variables   = [ 'recordKey' ];
                                     break;
 
                                 case \Czim\CmsModels\Support\Enums\ActionReferenceType::EDIT:
                                     $defaultAction->route       = "{$routePrefix}.edit";
-                                    $defaultAction->permissions = [ "{$permissionPrefix}edit" ];
+                                    $defaultAction->permissions = count($defaultAction->permissions) ? $defaultAction->permissions : [ "{$permissionPrefix}edit" ];
                                     $defaultAction->variables   = [ 'recordKey' ];
                                     break;
 
@@ -156,7 +156,7 @@
 
                         }
 
-                        if ( ! $defaultAction->route()) {
+                        if ( ! $defaultAction || ! $defaultAction->route()) {
                             $defaultAction = null;
                         }
                     }
