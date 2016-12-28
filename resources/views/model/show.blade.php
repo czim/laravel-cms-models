@@ -1,27 +1,21 @@
 @extends(cms_config('views.layout'))
 
 <?php
-    $title = ucfirst($model->verbose_name) . ' (' . $record->getKey() .  ')';
+    $title = ucfirst($model->verbose_name)
+           . ' ' . ($record->incrementing ? '#' . $record->getKey() : "'" . $record->getKey() .  "'");
 ?>
 
 @section('title', $title)
 
+
 @section('breadcrumbs')
-    <ol class="breadcrumb">
-        <li>
-            <a href="{{ cms_route(\Czim\CmsCore\Support\Enums\NamedRoute::HOME) }}">
-                {{ cms_trans('common.home') }}
-            </a>
-        </li>
-        <li>
-            <a href="{{ cms_route("{$routePrefix}.index") }}">
-                {{ ucfirst($model->verbose_name_plural) }}
-            </a>
-        </li>
-        <li class="active">
-            {{ $title }}
-        </li>
-    </ol>
+    @include('cms-models::model.partials.detail_breadcrumbs', compact(
+        'model',
+        'routePrefix',
+        'title',
+        'hasActiveListParent',
+        'listParents'
+    ))
 @endsection
 
 

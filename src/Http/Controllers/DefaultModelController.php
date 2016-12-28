@@ -15,6 +15,7 @@ class DefaultModelController extends BaseModelController
 {
     use Traits\ChecksModelDeletable,
         Traits\DefaultModelFiltering,
+        Traits\DefaultModelListParentHandling,
         Traits\DefaultModelPagination,
         Traits\DefaultModelScoping,
         Traits\DefaultModelSorting,
@@ -74,10 +75,9 @@ class DefaultModelController extends BaseModelController
             return $this->returnViewForSingleDisplay();
         }
 
-        // Prepare list memory
-        $this->listMemory = $this->getListMemory();
-
-        $this->checkActiveSort()
+        $this->checkListParents()
+             ->applyListParentContext()
+             ->checkActiveSort()
              ->checkScope()
              ->checkFilters()
              ->checkActivePage();
@@ -91,6 +91,7 @@ class DefaultModelController extends BaseModelController
         $query = $this->getModelRepository()->query();
 
         $this->applyFilter($query);
+        $this->applyListParentToQuery($query);
 
         $records = $query->paginate($this->getActualPageSize(), ['*'], 'page', $this->getActualPage());
 
@@ -116,6 +117,8 @@ class DefaultModelController extends BaseModelController
             'activeScope'         => $this->getActiveScope(),
             'scopeCounts'         => $scopeCounts,
             'unconditionalDelete' => $this->isUnconditionallyDeletable(),
+            'hasActiveListParent' => (bool) $this->listParentRelation,
+            'listParents'         => $this->listParents,
         ]);
     }
 
@@ -129,6 +132,8 @@ class DefaultModelController extends BaseModelController
     {
         $record = $this->modelRepository->findOrFail($id);
 
+        $this->checkListParents(false);
+
         return view($this->getShowView(), [
             'moduleKey'        => $this->moduleKey,
             'routePrefix'      => $this->routePrefix,
@@ -136,6 +141,8 @@ class DefaultModelController extends BaseModelController
             'model'            => $this->modelInformation,
             'record'           => $record,
             'fieldStrategies'  => $this->getShowFieldStrategyInstances(),
+            'hasActiveListParent' => (bool) $this->listParentRelation,
+            'listParents'         => $this->listParents,
         ]);
     }
 
@@ -155,18 +162,22 @@ class DefaultModelController extends BaseModelController
 
         $values = $this->getFormFieldValuesFromModel($record, array_keys($fields));
 
+        $this->checkListParents(false);
+
         return view($this->getCreateView(), [
-            'moduleKey'        => $this->moduleKey,
-            'routePrefix'      => $this->routePrefix,
-            'permissionPrefix' => $this->permissionPrefix,
-            'model'            => $this->modelInformation,
-            'record'           => $record,
-            'creating'         => true,
-            'fields'           => $fields,
-            'fieldStrategies'  => $this->getFormFieldStrategyInstances($fields),
-            'values'           => $values,
-            'fieldErrors'      => $this->getNormalizedFormFieldErrors(),
-            'errorsPerTab'     => $this->getErrorCountsPerTabPane(),
+            'moduleKey'           => $this->moduleKey,
+            'routePrefix'         => $this->routePrefix,
+            'permissionPrefix'    => $this->permissionPrefix,
+            'model'               => $this->modelInformation,
+            'record'              => $record,
+            'creating'            => true,
+            'fields'              => $fields,
+            'fieldStrategies'     => $this->getFormFieldStrategyInstances($fields),
+            'values'              => $values,
+            'fieldErrors'         => $this->getNormalizedFormFieldErrors(),
+            'errorsPerTab'        => $this->getErrorCountsPerTabPane(),
+            'hasActiveListParent' => (bool) $this->listParentRelation,
+            'listParents'         => $this->listParents,
         ]);
     }
 
@@ -226,18 +237,22 @@ class DefaultModelController extends BaseModelController
 
         $values = $this->getFormFieldValuesFromModel($record, array_keys($fields));
 
+        $this->checkListParents(false);
+
         return view($this->getEditView(), [
-            'moduleKey'        => $this->moduleKey,
-            'routePrefix'      => $this->routePrefix,
-            'permissionPrefix' => $this->permissionPrefix,
-            'model'            => $this->modelInformation,
-            'record'           => $record,
-            'creating'         => false,
-            'fields'           => $fields,
-            'fieldStrategies'  => $this->getFormFieldStrategyInstances($fields),
-            'values'           => $values,
-            'fieldErrors'      => $this->getNormalizedFormFieldErrors(),
-            'errorsPerTab'     => $this->getErrorCountsPerTabPane(),
+            'moduleKey'           => $this->moduleKey,
+            'routePrefix'         => $this->routePrefix,
+            'permissionPrefix'    => $this->permissionPrefix,
+            'model'               => $this->modelInformation,
+            'record'              => $record,
+            'creating'            => false,
+            'fields'              => $fields,
+            'fieldStrategies'     => $this->getFormFieldStrategyInstances($fields),
+            'values'              => $values,
+            'fieldErrors'         => $this->getNormalizedFormFieldErrors(),
+            'errorsPerTab'        => $this->getErrorCountsPerTabPane(),
+            'hasActiveListParent' => (bool) $this->listParentRelation,
+            'listParents'         => $this->listParents,
         ]);
     }
 

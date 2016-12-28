@@ -1,6 +1,23 @@
 @extends(cms_config('views.layout'))
 
-<?php $title = ucfirst($model->verbose_name_plural); ?>
+<?php
+    if ($hasActiveListParent) {
+        if ($listParent = last($listParents)) {
+            $title = cms_trans('models.list-parents.children-for-parent-with-id', [
+                'children' => ucfirst($model->verbose_name_plural),
+                'parent'   => $listParent->information->verbose_name,
+                'id'       => $listParent->model->incrementing
+                    ?   '#' . $listParent->model->getKey()
+                    :   "'" . $listParent->model->getKey() . "'",
+            ]);
+        } else {
+            $title = ucfirst($model->verbose_name_plural);
+        }
+
+    } else {
+        $title = ucfirst($model->verbose_name_plural);
+    }
+?>
 
 @section('title', $title)
 
@@ -11,6 +28,36 @@
                 {{ ucfirst(cms_trans('common.home')) }}
             </a>
         </li>
+
+        @if ($hasActiveListParent)
+
+            @foreach ($listParents as $listParent)
+
+                <li>
+                    @if (cms_auth()->can($listParent->permission_prefix . 'show'))
+                        <a href="{{ cms_route($listParent->route_prefix . '.index') }}">
+                            {{ ucfirst($listParent->information->verbose_name_plural) }}
+                        </a>
+                    @else
+                        {{ ucfirst($listParent->information->verbose_name_plural) }}
+                    @endif
+                </li>
+
+            @endforeach
+
+            <?php /*
+                // todo: consider whether this should be used or not
+                <li>
+                    <a href="{{ cms_route("{$routePrefix}.index") }}?parent=">
+                        {{ cms_trans('models.list-parents.all-models', [
+                            'models' => ucfirst($model->verbose_name_plural)
+                        ]) }}
+                    </a>
+                </li>
+            */ ?>
+
+        @endif
+
         <li class="active">
             {{ $title }}
         </li>
@@ -34,6 +81,17 @@
     <div class="page-header">
 
         <div class="btn-toolbar pull-right">
+
+            @if ($hasActiveListParent)
+                <div class="btn-group">
+                    <a href="{{ cms_route("{$routePrefix}.index") }}?parent=" class="btn btn-default">
+                        {{ cms_trans('models.list-parents.back-to-all-models', [
+                            'models' => ucfirst($model->verbose_name_plural)
+                        ]) }}
+                    </a>
+                </div>
+            @endif
+
             <div class="btn-group">
                 @if (cms_auth()->can("{$permissionPrefix}create"))
                     <a href="{{ cms_route("{$routePrefix}.create") }}" class="btn btn-primary">

@@ -349,7 +349,7 @@ class ModelListMemory implements ModelListMemoryInterface
             return false;
         }
 
-        list($relation, $key) = explode('::', $parent);
+        list($relation, $key) = explode(':', $parent, 2);
 
         return compact('relation', 'key');
     }
@@ -370,7 +370,7 @@ class ModelListMemory implements ModelListMemoryInterface
         if (false === $relation) {
             session()->set($this->getSessionKey(static::TYPE_PARENT), static::PARENT_DISABLE);
         } else {
-            session()->set($this->getSessionKey(static::TYPE_PARENT), $relation . '::' . $recordKey);
+            session()->set($this->getSessionKey(static::TYPE_PARENT), $relation . ':' . $recordKey);
         }
 
         return $this;

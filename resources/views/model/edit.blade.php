@@ -4,30 +4,22 @@
     if ($creating) {
         $title = ucfirst($model->verbose_name) . ' - ' . cms_trans('common.action.create');
     } else {
-        $title = ucfirst($model->verbose_name) . ' (' . $record->getKey() .  ') - ' . cms_trans('common.action.edit');
+        $title = ucfirst($model->verbose_name)
+               . ' ' . ($record->incrementing ? '#' . $record->getKey() : "'" . $record->getKey() .  "'")
+               . ' - ' . cms_trans('common.action.edit');
     }
 ?>
 
 @section('title', $title)
 
 @section('breadcrumbs')
-    <ol class="breadcrumb">
-        <li>
-            <a href="{{ cms_route(\Czim\CmsCore\Support\Enums\NamedRoute::HOME) }}">
-                {{ cms_trans('common.home') }}
-            </a>
-        </li>
-        @if ( ! $model->single)
-        <li>
-            <a href="{{ cms_route("{$routePrefix}.index") }}">
-                {{ ucfirst($model->verbose_name_plural) }}
-            </a>
-        </li>
-        @endif
-        <li class="active">
-            {{ $title }}
-        </li>
-    </ol>
+    @include('cms-models::model.partials.detail_breadcrumbs', compact(
+        'model',
+        'routePrefix',
+        'title',
+        'hasActiveListParent',
+        'listParents'
+    ))
 @endsection
 
 

@@ -12,13 +12,19 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property Model                                      $model
  * @property ModelInformationInterface|ModelInformation $information
+ * @property string                                     $module_key
+ * @property string                                     $route_prefix
+ * @property string                                     $permission_prefix
  */
 class ListParentData extends AbstractDataObject
 {
 
     protected $attributes = [
-        'model'       => null,
-        'information' => null,
+        'model'             => null,
+        'information'       => null,
+        'module_key'        => null,
+        'route_prefix'      => null,
+        'permission_prefix' => null,
     ];
 
 }
