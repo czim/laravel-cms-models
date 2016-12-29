@@ -15,6 +15,7 @@ use Czim\CmsModels\Contracts\Repositories\ModelReferenceRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\OrderableStrategyResolverInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
+use Czim\CmsModels\Contracts\Support\Factories\ActionStrategyFactoryInterface;
 use Czim\CmsModels\Contracts\Support\Factories\FilterStrategyFactoryInterface;
 use Czim\CmsModels\Contracts\Support\Factories\FormFieldStrategyFactoryInterface;
 use Czim\CmsModels\Contracts\Support\Factories\ListDisplayStrategyFactoryInterface;
@@ -33,6 +34,7 @@ use Czim\CmsModels\Repositories\ModelReferenceRepository;
 use Czim\CmsModels\Repositories\ModelRepository;
 use Czim\CmsModels\Repositories\ActivateStrategies\ActivateStrategyResolver;
 use Czim\CmsModels\Repositories\OrderableStrategies\OrderableStrategyResolver;
+use Czim\CmsModels\Support\Factories\ActionStrategyFactory;
 use Czim\CmsModels\Support\Factories\FilterStrategyFactory;
 use Czim\CmsModels\Support\Factories\FormFieldStrategyFactory;
 use Czim\CmsModels\Support\Factories\ListDisplayStrategyFactory;
@@ -199,6 +201,7 @@ class CmsModelsServiceProvider extends ServiceProvider
         $this->app->singleton(FormFieldStrategyFactoryInterface::class, FormFieldStrategyFactory::class);
         $this->app->singleton(ListDisplayStrategyFactoryInterface::class, ListDisplayStrategyFactory::class);
         $this->app->singleton(ShowFieldStrategyFactoryInterface::class, ShowFieldStrategyFactory::class);
+        $this->app->singleton(ActionStrategyFactoryInterface::class, ActionStrategyFactory::class);
 
         return $this;
     }

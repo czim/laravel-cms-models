@@ -9,11 +9,8 @@ use Czim\CmsModels\Contracts\Data\ModelActionReferenceDataInterface;
  *
  * Information about a route action that may be performed, usually for a click.
  *
- * @property string               $type
+ * @property string               $strategy
  * @property string|string[]|null $permissions
- * @property string|null          $route
- * @property string[]             $variables
- * @property string               $query
  * @property array                $options
  */
 class ModelActionReferenceData extends AbstractDataObject implements ModelActionReferenceDataInterface
@@ -21,22 +18,12 @@ class ModelActionReferenceData extends AbstractDataObject implements ModelAction
 
     protected $attributes = [
 
-        // A special type, defaults to using 'route' if none specified
-        // Available types: edit, show. children
-        'type' => null,
+        // An identifier for the strategy: alias or class.
+        'strategy' => null,
 
         // The permission(s) required to use this action. May be a string or an array.
         // If more are given, all must be permitted.
         'permissions' => null,
-
-        // A route, used if no type is set
-        'route' => null,
-
-        // A list of strings for variables that should be used as arguments for the route
-        'variables' => [],
-
-        // The query string to append to the link
-        'query' => null,
 
         // Special options for custom types: key value pairs
         'options' => [],
@@ -44,33 +31,13 @@ class ModelActionReferenceData extends AbstractDataObject implements ModelAction
 
 
     /**
-     * Returns the special type identifier.
+     * Returns the strategy class or alias.
      *
      * @return string|null
      */
-    public function type()
+    public function strategy()
     {
-        return $this->getAttribute('type');
-    }
-
-    /**
-     * Returns the route name.
-     *
-     * @return string|null
-     */
-    public function route()
-    {
-        return $this->getAttribute('route');
-    }
-
-    /**
-     * Returns names for variables to be passed into the view.
-     *
-     * @return string[]
-     */
-    public function variables()
-    {
-        return $this->getAttribute('variables') ?: [];
+        return $this->getAttribute('strategy');
     }
 
     /**
@@ -90,16 +57,6 @@ class ModelActionReferenceData extends AbstractDataObject implements ModelAction
     }
 
     /**
-     * Returns a query string segment to append to the link.
-     *
-     * @return mixed
-     */
-    public function query()
-    {
-        return $this->getAttribute('query');
-    }
-
-    /**
      * Returns custom options.
      *
      * @return array
@@ -115,14 +72,8 @@ class ModelActionReferenceData extends AbstractDataObject implements ModelAction
      */
     public function merge(ModelActionReferenceDataInterface $with)
     {
-        $this->mergeAttribute('type', $with->type);
-        $this->mergeAttribute('route', $with->route);
-        $this->mergeAttribute('query', $with->query);
+        $this->mergeAttribute('strategy', $with->strategy);
         $this->mergeAttribute('options', $with->options);
-
-        if ( ! empty($with->variables)) {
-            $this->variables = array_unique(array_merge($this->variables, $with->variables));
-        }
     }
 
 }

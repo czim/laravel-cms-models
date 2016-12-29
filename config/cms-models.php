@@ -3,6 +3,7 @@
 use Czim\CmsModels\Support\Enums;
 use Czim\CmsModels\Http\Controllers\FormFieldStrategies as FormFieldStoreStrategies;
 use Czim\CmsModels\Repositories\SortStrategies;
+use Czim\CmsModels\View\ActionStrategies;
 use Czim\CmsModels\View\FilterStrategies;
 use Czim\CmsModels\View\FormFieldStrategies;
 use Czim\CmsModels\View\ListStrategies;
@@ -243,6 +244,9 @@ return [
             'default-sort-namespace' => 'Czim\\CmsModels\\Repositories\\SortStrategies\\',
             'default-sort-strategy'  => SortStrategies\NullLast::class,
 
+            // The default strategy namespace for action links
+            'default-action-namespace' => 'Czim\\CmsModels\\View\\ActionStrategies\\',
+
             // Aliases for list display strategy classes
             'aliases' => [
                 Enums\ListDisplayStrategy::CHECK               => 'Check',
@@ -263,6 +267,11 @@ return [
                 'translated' => SortStrategies\TranslatedAttribute::class,
             ],
 
+            // Aliases for action link strategy classes
+            'action-aliases' => [
+                Enums\ActionReferenceType::EDIT => ActionStrategies\EditStrategy::class,
+                Enums\ActionReferenceType::SHOW => ActionStrategies\ShowStrategy::class,
+            ],
         ],
 
         'filter' => [

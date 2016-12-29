@@ -20,6 +20,7 @@ class DefaultModelController extends BaseModelController
         Traits\DefaultModelScoping,
         Traits\DefaultModelSorting,
         Traits\DeletesModel,
+        Traits\HandlesActionStrategies,
         Traits\HandlesFormFields,
         Traits\HandlesFilterStrategies,
         Traits\HandlesFormFieldStrategies,
@@ -117,6 +118,7 @@ class DefaultModelController extends BaseModelController
             'activeScope'         => $this->getActiveScope(),
             'scopeCounts'         => $scopeCounts,
             'unconditionalDelete' => $this->isUnconditionallyDeletable(),
+            'defaultRowAction'    => $this->getDefaultRowActionInstance(),
             'hasActiveListParent' => (bool) $this->listParentRelation,
             'listParents'         => $this->listParents,
         ]);

@@ -127,41 +127,6 @@
 
             @if (count($records))
 
-                <?php
-                    // Prepare the default action for clicking table rows
-                    /** @var \Czim\CmsModels\Contracts\Data\ModelActionReferenceDataInterface $defaultAction */
-                    $defaultAction = $model->list->getDefaultAction();
-
-                    if ($defaultAction) {
-
-                        // Interpret special types as localized routes
-                        if ($defaultAction->type()) {
-
-                            switch ($defaultAction->type()) {
-                                case \Czim\CmsModels\Support\Enums\ActionReferenceType::SHOW:
-                                    $defaultAction->route       = "{$routePrefix}.show";
-                                    $defaultAction->permissions = count($defaultAction->permissions) ? $defaultAction->permissions : [ "{$permissionPrefix}show" ];
-                                    $defaultAction->variables   = [ 'recordKey' ];
-                                    break;
-
-                                case \Czim\CmsModels\Support\Enums\ActionReferenceType::EDIT:
-                                    $defaultAction->route       = "{$routePrefix}.edit";
-                                    $defaultAction->permissions = count($defaultAction->permissions) ? $defaultAction->permissions : [ "{$permissionPrefix}edit" ];
-                                    $defaultAction->variables   = [ 'recordKey' ];
-                                    break;
-
-                                default:
-                                    $defaultAction = null;
-                            }
-
-                        }
-
-                        if ( ! $defaultAction || ! $defaultAction->route()) {
-                            $defaultAction = null;
-                        }
-                    }
-                ?>
-
                 <table class="table table-striped table-hover records-table">
 
                     <thead>
@@ -218,18 +183,11 @@
                                 $style = $model->list->activatable && ! $record->{$model->list->active_column}
                                        ? 'inactive' : null;
 
-                                $defaultActionUrl = null;
-                                if ($defaultAction) {
 
-                                    $resolvedVariables = [];
-                                    foreach ($defaultAction->variables() as $variable) {
-                                        $resolvedVariables[] = isset(${$variable}) ? ${$variable} : null;
-                                    }
-                                    $defaultActionUrl = route($defaultAction->route(), $resolvedVariables);
-                                }
+                                $defaultActionUrl = $defaultRowAction ? $defaultRowAction->link($record) : false;
                             ?>
 
-                            <tr class="records-row {{ $style }}" default-action-url="{{ $defaultActionUrl }}">
+                            <tr class="records-row {{ $style }}" @if ($defaultActionUrl) default-action-url="{{ $defaultActionUrl }}" @endif>
 
                                 @if ($model->list->activatable)
                                     @include('cms-models::model.partials.list.column_activate', compact('model', 'record', 'permissionPrefix'))
@@ -254,7 +212,7 @@
                                         'strategy'         => $listStrategies[ $key ],
                                         'model'            => $model,
                                         'record'           => $record,
-                                        'hasDefaultAction' => (bool) $defaultAction,
+                                        'hasDefaultAction' => (bool) $defaultActionUrl,
                                     ])
                                 @endforeach
 
@@ -347,7 +305,7 @@
         ))
     @endif
 
-    @if (count($records) && $defaultAction)
+    @if (count($records) && $defaultRowAction)
         <script>
             $(function() {
                 $('tr.records-row td.default-action').click(function () {
