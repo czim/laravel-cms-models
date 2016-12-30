@@ -7,6 +7,7 @@ use Czim\CmsCore\Contracts\Modules\ModuleManagerInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
+use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Contracts\Support\Session\ModelListMemoryInterface;
 use Czim\CmsModels\Support\Data\ListParentData;
 use Czim\CmsModels\Support\Data\ModelInformation;
@@ -28,7 +29,10 @@ trait DefaultModelListParentHandling
     /**
      * The current active list parent relation.
      *
-     * @var string
+     * String relation method name, or NULL to fall back to default (show everything or only top),
+     * or FALSE to apply the opposite of the default.
+     *
+     * @var string|null|false
      */
     protected $listParentRelation;
 
@@ -60,17 +64,26 @@ trait DefaultModelListParentHandling
             return $this;
         }
 
+        $this->retrieveActiveParentFromSession();
+        $this->collectListParentHierarchy();
+
         if ($update) {
             $this->updateActiveParent();
         }
 
-        if ($this->getListMemory()->hasListParent()) {
-            $this->retrieveActiveParentFromSession();
-        }
-
-        $this->collectListParentHierarchy();
+        $this->enrichListParents();
 
         return $this;
+    }
+
+    /**
+     * Returns whether a list parent is currently active.
+     *
+     * @return bool
+     */
+    protected function hasActiveListParent()
+    {
+        return (bool) $this->listParentRelation;
     }
 
     /**
@@ -128,31 +141,314 @@ trait DefaultModelListParentHandling
     }
 
     /**
+     * Looks up the current full list parent hierarchy chain to the top level.
+     *
+     * @param string|null $relation     if not set, uses currently stored values
+     * @param mixed|null  $key
+     */
+    protected function collectListParentHierarchy($relation = null, $key = null)
+    {
+        $this->listParents = [];
+
+        if (null === $relation) {
+            $relation = $this->listParentRelation;
+            $key      = $this->listParentRecordKey;
+        }
+
+        if ( ! $relation || null === $key) {
+            return;
+        }
+
+        $model = $this->getNewModelInstance();
+
+        $info = $this->getModelInformationForModel($model);
+
+        $this->listParents = $this->getListParentInformation(
+            $model,
+            $this->listParentRelation,
+            $this->listParentRecordKey,
+            $info,
+            true
+        );
+    }
+
+    /**
      * Updates the active list parent if the request parameter is set.
      *
      * @return $this
      */
     protected function updateActiveParent()
     {
-        if (request()->exists('parent')) {
+        // Check for either a full hierarchy or a 'current level' update
+        if (request()->exists('parents')) {
+
+            $parents = request()->get('parents');
+
+            if ( ! empty($parents)) {
+
+                if (is_string($parents)) {
+                    $parents = explode(';', $parents);
+                }
+
+                $parents = array_values($parents);
+
+                // No need to update if everything is the same down the chain
+                if (count($this->listParents) == count($parents)) {
+                    $same = true;
+                    foreach ($this->listParents as $index => $currentParent) {
+                        if ($currentParent->relation . ':'. $currentParent->key !== $parents[$index]) {
+                            $same = false;
+                            break;
+                        }
+                    }
+
+                    if ($same) {
+                        return $this;
+                    }
+                }
+
+                $this->clearEntireListParentHierarchy();
+
+                // Update, working backwards, starting at the current list; then re-collect the active parent chain
+                $this->updateActiveParents(array_reverse($parents));
+
+            } else {
+
+                // No need to update if no current memorized parent chain
+                if ( ! count($this->listParents)) {
+                    return $this;
+                }
+
+                $this->clearEntireListParentHierarchy();
+            }
+
+        } elseif (request()->exists('parent')) {
 
             $parent = request()->get('parent');
 
-            if (is_string($parent) && false === strpos($parent, ':')) {
-                $parent = null;
+            // Interpret special parent values
+            $parent = $this->normalizeListParentParameter($parent);
+
+            // If nothing has changed, no need to update
+            if (    ! $parent && $this->listParentRelation == $parent
+                ||  $parent == $this->listParentRelation . ':' . $this->listParentRecordKey
+            ) {
+                return $this;
             }
 
             if ( ! $parent) {
+                // Reset this level to its previous list parent, if any
                 $this->listParentRelation  = $parent;
                 $this->listParentRecordKey = null;
             } else {
+
+                // If the parent is already present in the current history, switch to it
+                if ( ! count(array_filter(
+                    $this->listParents,
+                    function ($checkParent) use ($parent) {
+                        /** @var ListParentData $checkParent */
+                        return $checkParent->relation . ':' . $checkParent->key == $parent;
+                    }
+                ))) {
+                    // Not set yet, prepare old parent as one layer deeper
+
+                    $this->setListParentDataInMemory(
+                        $this->listParentRelation,
+                        $this->listParentRecordKey,
+                        $parent
+                    );
+                }
+
                 list($this->listParentRelation, $this->listParentRecordKey) = explode(':', $parent, 2);
             }
-
-            $this->storeActiveParentInSession();
         }
 
+        $this->storeActiveParentInSession();
+        $this->collectListParentHierarchy();
+
         return $this;
+    }
+
+    /**
+     * Normalizes 'parent' query parameter for list parent update.
+     *
+     * @param mixed $parent
+     * @return int|null
+     */
+    protected function normalizeListParentParameter($parent)
+    {
+        if (is_integer($parent) && $parent < 0 || is_string($parent) && preg_match('#-\d+#', $parent)) {
+            $parent = (int) $parent;
+
+            if ($parent < 0) {
+                // The the parent that conforms to the index in the parent chain
+                // This only works within the context of this model, so no cross-model logic is expected
+                $index = count($this->listParents) + $parent - 1;
+
+                if ($index >= 0 && isset($this->listParents[ $index ])) {
+                    $parent = $this->listParents[ $index ]->relation . ':' . $this->listParents[ $index ]->key;
+                } else {
+                    $parent = null;
+                }
+
+            } else {
+                $parent = null;
+            }
+        }
+
+        if (is_string($parent) && false === strpos($parent, ':')) {
+            $parent = null;
+        }
+
+        return $parent;
+    }
+
+    /**
+     * Update a full list parent chain.
+     *
+     * @param array $parents    should be last-first ordered, strings with :-separated relaton:key
+     */
+    protected function updateActiveParents(array $parents)
+    {
+        $modelInfo       = $this->getModelInformation();
+        $modelClass      = $modelInfo->modelClass();
+        $model           = new $modelClass;
+        $previousContext = null;
+        $previousParent  = array_shift($parents);
+
+
+        // Store top level parent as active
+        if ( ! $previousParent || is_string($previousParent) && false === strpos($previousParent, ':')) {
+            $this->listParentRelation  = $previousParent === false ? false : null;
+            $this->listParentRecordKey = null;
+        } else {
+            list($this->listParentRelation, $this->listParentRecordKey) = explode(':', $previousParent, 2);
+        }
+
+        $count = 0;
+
+        // Add 'end' marker to force overwriting a previously longer chain link as a terminator
+        $parents[] = null;
+
+        // Loop through further parents, where $parent is what $previousParent refers back to
+        foreach ($parents as $parent) {
+
+            $count++;
+
+            // If we have no interpretable parent to use as sub-context, stop
+            if ( ! $previousParent || is_string($previousParent) && false === strpos($previousParent, ':')) {
+                break;
+            }
+
+            // If we have no interpretable parent as target, clear the context, and stop
+            if ( ! $parent || is_string($parent) && false === strpos($parent, ':')) {
+                $this->setListParentDataInMemory(null, null, $previousParent, $previousContext);
+                break;
+            }
+
+            list($relation, $key) = explode(':', $parent, 2);
+
+            // Set new parent at this level
+            $this->setListParentDataInMemory($relation, $key, $previousParent, $previousContext);
+
+            // If this is the last parent, then there is no need to prepare for the next iteration
+            if ($count == count($parents)) {
+                break;
+            }
+
+            // If the context (model) changed, determine the new context and remember it for the next iteration
+            $listParentInfo = $this->getListParentInformation($model, $relation, $key, $modelInfo);
+
+            if ( ! count($listParentInfo)) {
+                break;
+            }
+
+            // Check and update the model class (for the memory context) if necessary.
+            // This is only relevant for list parent reference across models.
+            $listParentInfo = head($listParentInfo);
+            /** @var ListParentData $listParentInfo */
+
+
+            if ($modelClass !== get_class($listParentInfo->model)) {
+                $model           = $listParentInfo->model;
+                $modelClass      = get_class($model);
+                $previousContext = $this->getModelSessionKey($this->getModuleHelper()->modelSlug($model));
+            }
+
+            $previousParent = $parent;
+        }
+    }
+
+    /**
+     * Enriches list parent data for view.
+     */
+    protected function enrichListParents()
+    {
+        if (empty($this->listParents)) {
+            return;
+        }
+
+        // Mark for each list parents entry how the query params should be set up
+        // 1. for same-model, top level: parent=0 (or -# to match)
+        // 2. for different model, first level: no param
+        // 3. for same-model, levels: parent=-# reset this many levels
+        // 4. for absolute top level: parents=
+
+        $queries       = [];
+        $backCounter   = 0;
+        $previousModel = $this->getModelInformation()->modelClass();
+
+        /** @var ListParentData[] $reversed */
+        $reversed = array_reverse($this->listParents);
+
+        foreach ($reversed as $parent) {
+
+            if ($previousModel != get_class($parent->model)) {
+                $queries[] = null;
+            } else {
+                $backCounter++;
+                $queries[] = 'parent=-' . $backCounter;
+            }
+
+            $previousModel = get_class($parent->model);
+        }
+
+        $queries = array_values(array_reverse($queries));
+
+        foreach ($queries as $index => $query) {
+            $this->listParents[$index]->query = $query;
+        }
+    }
+
+
+    // ------------------------------------------------------------------------------
+    //      Access & Manipulate List Memory
+    // ------------------------------------------------------------------------------
+
+    /**
+     * Clears list parent chain as currently memorized.
+     */
+    protected function clearEntireListParentHierarchy()
+    {
+        foreach ($this->listParents as $parent) {
+
+            if ( ! $parent || is_string($parent) && false === strpos($parent, ':')) {
+                break;
+            }
+
+            // Unset parent at this level
+            $context = $this->getModelSessionKey(
+                $this->getModuleHelper()->modelSlug(get_class($parent->model))
+            );
+
+            $this->setListParentDataInMemory(null, null, $parent->relation . ':' . $parent->key, $context);
+        }
+
+        $this->setListParentDataInMemory(null, null, $this->globalSubContext());
+
+        $this->listParentRelation  = null;
+        $this->listParentRecordKey = null;
+        $this->listParents         = [];
     }
 
     /**
@@ -160,15 +456,19 @@ trait DefaultModelListParentHandling
      */
     protected function storeActiveParentInSession()
     {
-        $this->getListMemory()->setListParent($this->listParentRelation, $this->listParentRecordKey);
+        $this->setListParentDataInMemory(
+            $this->listParentRelation,
+            $this->listParentRecordKey,
+            $this->globalSubContext()
+        );
     }
 
     /**
-     * Retrieves the filters from the session and restores them.
+     * Retrieves the currently set 'global' list parent from the session and stores it locally.
      */
     protected function retrieveActiveParentFromSession()
     {
-        $parent = $this->getListMemory()->getListParent();
+        $parent = $this->getListParentDataFromMemory($this->globalSubContext());
 
         if (false === $parent || null === $parent) {
             $this->listParentRelation  = $parent;
@@ -181,30 +481,7 @@ trait DefaultModelListParentHandling
     }
 
     /**
-     * Looks up the current full list parent hierarchy chain to the top level.
-     */
-    protected function collectListParentHierarchy()
-    {
-        $this->listParents = [];
-
-        if ( ! $this->listParentRelation || ! $this->listParentRelation || null === $this->listParentRecordKey) {
-            return;
-        }
-
-        $model = $this->getNewModelInstance();
-
-        $info = $this->getModelInformationForModel($model);
-
-        $this->listParents = $this->getListParentInformation(
-            $model,
-            $this->listParentRelation,
-            $this->listParentRecordKey,
-            $info
-        );
-    }
-
-    /**
-     * Returns information about a list parent in the chain.
+     * Returns information about a list parent, or all list parents in the chain.
      *
      * Exceptions will be thrown if there are logical problems with the chain.
      *
@@ -212,14 +489,32 @@ trait DefaultModelListParentHandling
      * @param string                                     $relation
      * @param mixed                                      $key
      * @param ModelInformationInterface|ModelInformation $info
+     * @param bool                                       $recurse   if true, looks up entire chain
      * @return ListParentData[]
      */
-    protected function getListParentInformation(Model $model, $relation, $key, ModelInformationInterface $info)
-    {
-        /** @var Relation $relation */
-        $relation = $model->{$relation}();
+    protected function getListParentInformation(
+        Model $model,
+        $relation,
+        $key,
+        ModelInformationInterface $info,
+        $recurse = false
+    ) {
+        // Don't attempt to load relation methods if the parent relation is not configured
+        if (    empty($info->list->parents)
+            ||  ! count(
+                    array_filter(
+                        $info->list->parents,
+                        function ($parent) use ($relation) { return $parent->relation == $relation; }
+                    )
+                )
+        ) {
+            return [];
+        }
 
-        $parentModel = $this->getModelByKey($relation->getRelated(), $key);
+        /** @var Relation $relationInstance */
+        $relationInstance = $model->{$relation}();
+
+        $parentModel = $this->getModelByKey($relationInstance->getRelated(), $key);
 
         if ( ! $parentModel) {
             return [];
@@ -230,10 +525,16 @@ trait DefaultModelListParentHandling
         $list = [];
 
         // Check for another link in the chain and recurse if there is
-        if ( ! empty($info->list->parents)) {
+        if ($recurse && ! empty($parentInfo->list->parents)) {
 
+            // When switching from one model to another, use the global subcontext,
+            // otherwise, use the subcontext that contains the next step
             // Look up session data for list parent
-            $parentListParent = $this->getListParentForModelFromSession($parentModel);
+
+            $parentListParent = $this->getListParentDataFromMemory(
+                get_class($model) != get_class($parentModel) ? $this->globalSubContext() : $relation . ':' . $key,
+                $this->getModelSessionKey($this->getModuleHelper()->modelSlug($parentModel))
+            );
 
             if (is_array($parentListParent)) {
                 $list = $this->getListParentInformation(
@@ -255,52 +556,19 @@ trait DefaultModelListParentHandling
         $routeHelper = app(RouteHelperInterface::class);
 
         $list[] = new ListParentData([
+            'relation'          => $relation,
+            'key'               => $key,
             'model'             => $parentModel,
             'information'       => $parentInfo,
             'module_key'        => $module->getKey(),
             'route_prefix'      => $routeHelper->getRouteNameForModelClass(get_class($parentModel), true),
-            'permission_prefix' => $routeHelper->getPermissionPrefixForModuleKey($module->getKey()),
+            'permission_prefix' => $routeHelper->getPermissionPrefixForModelSlug(
+                $this->getModuleHelper()->modelInformationKeyForModel($parentModel)
+            ),
         ]);
 
         return $list;
     }
-
-    /**
-     * Returns nested list parent information for a given model.
-     *
-     * @param Model                $model
-     * @param ModuleInterface|null $module
-     * @return array|false|null assoc with 'relation', 'key'
-     */
-    protected function getListParentForModelFromSession(Model $model, ModuleInterface $module = null)
-    {
-        if (null === $module) {
-            $module = $this->getModuleByModel($model);
-        }
-
-        if ( ! $module) {
-            return [];
-        }
-
-        $key = $module->getKey();
-
-        /** @var ModelListMemoryInterface $memory */
-        $memory = app(ModelListMemoryInterface::class);
-
-        $oldContext = $memory->getContext();
-        $oldSubContext = $memory->getSubContext();
-
-        $memory->setContext($key);
-        $memory->setSubContext(null);
-
-        $listParent = $memory->getListParent();
-
-        $memory->setContext($oldContext);
-        $memory->setSubContext($oldSubContext);
-
-        return $listParent;
-    }
-
 
     /**
      * Returns model instance by key.
@@ -349,6 +617,80 @@ trait DefaultModelListParentHandling
         return $info;
     }
 
+    /**
+     * Retrieves list parent data from memory and resets memory context.
+     *
+     * @param string|null $subContext
+     * @param string|null $context
+     * @return array|false|null
+     */
+    protected function getListParentDataFromMemory($subContext, $context = null)
+    {
+        $memory = $this->getListMemory();
+
+        $oldContext    = $memory->getContext();
+        $oldSubContext = $memory->getSubContext();
+
+        if (null !== $context) {
+            $memory->setContext($context);
+        }
+
+        $memory->setSubContext($subContext);
+
+        $listParent = $memory->getListParent();
+
+        if (null !== $context) {
+            $memory->setContext($oldContext);
+        }
+
+        $memory->setSubContext($oldSubContext);
+
+        return $listParent;
+    }
+
+    /**
+     * Stores list parent data in memory and resets memory context.
+     *
+     * @param string|null|false $relation
+     * @param mixed|null        $key
+     * @param string|null       $subContext
+     * @param string|null       $context
+     */
+    protected function setListParentDataInMemory($relation, $key, $subContext, $context = null)
+    {
+        $memory = $this->getListMemory();
+
+        $oldContext    = $memory->getContext();
+        $oldSubContext = $memory->getSubContext();
+
+        if (null !== $context) {
+            $memory->setContext($context);
+        }
+
+        $memory->setSubContext($subContext);
+
+        $memory->setListParent($relation, $key);
+
+        if (null !== $context) {
+            $memory->setContext($oldContext);
+        }
+
+        $memory->setSubContext($oldSubContext);
+    }
+
+    /**
+     * Returns sub-context string for storing global list parent data in.
+     *
+     * This sub-context should hold the 'active' list parent.
+     *
+     * @return string
+     */
+    protected function globalSubContext()
+    {
+        return '__global__';
+    }
+
+
 
     // ------------------------------------------------------------------------------
     //      Dependencies
@@ -370,6 +712,11 @@ trait DefaultModelListParentHandling
     abstract protected function getModelInformation();
 
     /**
+     * @return ModuleHelperInterface
+     */
+    abstract protected function getModuleHelper();
+
+    /**
      * @return Model
      */
     abstract protected function getNewModelInstance();
@@ -378,5 +725,11 @@ trait DefaultModelListParentHandling
      * @return ModelListMemoryInterface
      */
     abstract protected function getListMemory();
+
+    /**
+     * @param string|null $modelSlug    defaults to current module key
+     * @return string
+     */
+    abstract protected function getModelSessionKey($modelSlug = null);
 
 }

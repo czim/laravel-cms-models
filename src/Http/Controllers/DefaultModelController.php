@@ -84,10 +84,13 @@ class DefaultModelController extends BaseModelController
              ->checkActivePage();
 
         $totalCount  = $this->getTotalCount();
-        $scopeCounts = $this->getScopeCounts();
+        $scopeCounts = $this->hasActiveListParent() ? [] : $this->getScopeCounts();
 
-        $this->applySort()
-             ->applyScope($this->modelRepository);
+        $this->applySort();
+
+        if ( ! $this->hasActiveListParent()) {
+            $this->applyScope($this->modelRepository);
+        }
 
         $query = $this->getModelRepository()->query();
 

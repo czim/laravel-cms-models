@@ -22,46 +22,13 @@
 @section('title', $title)
 
 @section('breadcrumbs')
-    <ol class="breadcrumb">
-        <li>
-            <a href="{{ cms_route(\Czim\CmsCore\Support\Enums\NamedRoute::HOME) }}">
-                {{ ucfirst(cms_trans('common.home')) }}
-            </a>
-        </li>
-
-        @if ($hasActiveListParent)
-
-            @foreach ($listParents as $listParent)
-
-                <li>
-                    @if (cms_auth()->can($listParent->permission_prefix . 'show'))
-                        <a href="{{ cms_route($listParent->route_prefix . '.index') }}">
-                            {{ ucfirst($listParent->information->verbose_name_plural) }}
-                        </a>
-                    @else
-                        {{ ucfirst($listParent->information->verbose_name_plural) }}
-                    @endif
-                </li>
-
-            @endforeach
-
-            <?php /*
-                // todo: consider whether this should be used or not
-                <li>
-                    <a href="{{ cms_route("{$routePrefix}.index") }}?parent=">
-                        {{ cms_trans('models.list-parents.all-models', [
-                            'models' => ucfirst($model->verbose_name_plural)
-                        ]) }}
-                    </a>
-                </li>
-            */ ?>
-
-        @endif
-
-        <li class="active">
-            {{ $title }}
-        </li>
-    </ol>
+    @include('cms-models::model.partials.index_breadcrumbs', compact(
+        'model',
+        'routePrefix',
+        'title',
+        'hasActiveListParent',
+        'listParents'
+    ))
 @endsection
 
 
@@ -83,18 +50,16 @@
         <div class="btn-toolbar pull-right">
 
             @if ($hasActiveListParent)
-                <div class="btn-group">
-                    <a href="{{ cms_route("{$routePrefix}.index") }}?parent=" class="btn btn-default">
-                        {{ cms_trans('models.list-parents.back-to-all-models', [
-                            'models' => ucfirst($model->verbose_name_plural)
-                        ]) }}
-                    </a>
-                </div>
+                @include('cms-models::model.partials.index_parent_back_button', compact(
+                    'model',
+                    'listParents'
+                ))
             @endif
 
             <div class="btn-group">
                 @if (cms_auth()->can("{$permissionPrefix}create"))
                     <a href="{{ cms_route("{$routePrefix}.create") }}" class="btn btn-primary">
+                        <i class="fa fa-plus"></i> &nbsp;
                         {{ cms_trans('models.button.new-record', [ 'name' => $model->verbose_name ]) }}
                     </a>
                 @endif
@@ -114,7 +79,7 @@
     <div class="row">
         <div>
 
-            @if ( ! $model->list->disable_scopes && $model->list->scopes && count($model->list->scopes))
+            @if ( ! $hasActiveListParent && ! $model->list->disable_scopes && $model->list->scopes && count($model->list->scopes))
                 @include('cms-models::model.partials.list.scopes', [
                     'model'       => $model,
                     'totalCount'  => $totalCount,
