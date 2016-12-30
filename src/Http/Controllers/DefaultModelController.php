@@ -647,8 +647,6 @@ class DefaultModelController extends BaseModelController
 
         $memory->setContext($this->getModelSessionKey());
 
-        // todo: set children-of-list sub context if given/known
-
         return $memory;
     }
 
