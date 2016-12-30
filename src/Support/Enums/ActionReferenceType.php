@@ -5,6 +5,7 @@ use MyCLabs\Enum\Enum;
 
 class ActionReferenceType extends Enum
 {
-    const SHOW  = 'show';
-    const EDIT  = 'edit';
+    const SHOW     = 'show';
+    const EDIT     = 'edit';
+    const CHILDREN = 'children';
 }

@@ -269,8 +269,9 @@ return [
 
             // Aliases for action link strategy classes
             'action-aliases' => [
-                Enums\ActionReferenceType::EDIT => ActionStrategies\EditStrategy::class,
-                Enums\ActionReferenceType::SHOW => ActionStrategies\ShowStrategy::class,
+                Enums\ActionReferenceType::EDIT     => ActionStrategies\EditStrategy::class,
+                Enums\ActionReferenceType::SHOW     => ActionStrategies\ShowStrategy::class,
+                Enums\ActionReferenceType::CHILDREN => ActionStrategies\ChildrenStrategy::class,
             ],
         ],
 
