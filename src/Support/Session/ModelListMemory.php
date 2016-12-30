@@ -280,7 +280,7 @@ class ModelListMemory implements ModelListMemoryInterface
      */
     public function hasScope()
     {
-        return session()->has($this->getSessionKey(static::TYPE_PAGE));
+        return session()->has($this->getSessionKey(static::TYPE_SCOPE));
     }
 
     /**
@@ -290,7 +290,7 @@ class ModelListMemory implements ModelListMemoryInterface
      */
     public function getScope()
     {
-        return session()->get($this->getSessionKey(static::TYPE_PAGE), []);
+        return session()->get($this->getSessionKey(static::TYPE_SCOPE), []);
     }
 
     /**
@@ -305,7 +305,7 @@ class ModelListMemory implements ModelListMemoryInterface
             return $this->clearScope();
         }
 
-        session()->set($this->getSessionKey(static::TYPE_PAGE), $scope);
+        session()->set($this->getSessionKey(static::TYPE_SCOPE), $scope);
 
         return $this;
     }
@@ -317,7 +317,7 @@ class ModelListMemory implements ModelListMemoryInterface
      */
     public function clearScope()
     {
-        session()->forget($this->getSessionKey(static::TYPE_PAGE));
+        session()->forget($this->getSessionKey(static::TYPE_SCOPE));
 
         return $this;
     }

@@ -60,9 +60,9 @@ trait DefaultModelScoping
 
         $repository->clearScopes();
 
-        $info = $this->getModelInformation();
-
         if ($scope) {
+
+            $info = $this->getModelInformation();
 
             $method = $info->list->scopes[ $scope ]->method ?: $scope;
 
