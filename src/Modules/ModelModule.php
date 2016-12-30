@@ -179,8 +179,8 @@ class ModelModule implements ModuleInterface
      */
     public function mapWebRoutes(Router $router)
     {
-        $permissionPrefix = $this->routeHelper->getPermissionPrefixForModuleKey(
-            $this->getModuleModelKey()
+        $permissionPrefix = $this->routeHelper->getPermissionPrefixForModelSlug(
+            $this->getModelSlug()
         );
 
         $router->group(
@@ -273,8 +273,8 @@ class ModelModule implements ModuleInterface
      */
     public function mapApiRoutes(Router $router)
     {
-        $permissionPrefix = $this->routeHelper->getPermissionPrefixForModuleKey(
-            $this->getModuleModelKey()
+        $permissionPrefix = $this->routeHelper->getPermissionPrefixForModelSlug(
+            $this->getModelSlug()
         );
 
         $router->group(
@@ -467,13 +467,23 @@ class ModelModule implements ModuleInterface
     }
 
     /**
-     * Returns the module's model key (without 'models.').
+     * Returns the module's model key (with 'models.').
      *
      * @return string
      */
     protected function getModuleModelKey()
     {
         return $this->moduleHelper->moduleKeyForModel($this->class);
+    }
+
+    /**
+     * Returns the module's model key (without 'models.').
+     *
+     * @return string
+     */
+    protected function getModelSlug()
+    {
+        return $this->moduleHelper->modelSlug($this->class);
     }
 
 }

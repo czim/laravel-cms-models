@@ -6,7 +6,9 @@ use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
+use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Http\Controllers\Traits\AppliesRepositoryContext;
+use Czim\CmsModels\Support\ModuleHelper;
 use Czim\Repository\Contracts\ExtendedRepositoryInterface;
 use RuntimeException;
 
@@ -39,9 +41,10 @@ abstract class BaseModelController extends Controller
         CoreInterface $core,
         AuthenticatorInterface $auth,
         RouteHelperInterface $routeHelper,
+        ModuleHelperInterface $moduleHelper,
         ModelInformationRepositoryInterface $infoRepository
     ) {
-        parent::__construct($core, $auth, $routeHelper, $infoRepository);
+        parent::__construct($core, $auth, $routeHelper, $moduleHelper, $infoRepository);
 
 
         // artisan commands, like route:list, may instantiate this without requiring
@@ -61,16 +64,17 @@ abstract class BaseModelController extends Controller
     protected function initializeForModelRoute()
     {
         $this->moduleKey        = $this->routeHelper->getModuleKeyForCurrentRoute();
-        $this->permissionPrefix = $this->routeHelper->getPermissionPrefixForModuleKey($this->moduleKey);
+        $this->modelSlug        = $this->routeHelper->getModelSlugForCurrentRoute();
+        $this->permissionPrefix = $this->routeHelper->getPermissionPrefixForModelSlug($this->modelSlug);
 
         if ( ! $this->moduleKey) {
             throw new RuntimeException("Could not determine module key for route");
         }
 
-        $this->modelInformation = $this->infoRepository->getByKey($this->moduleKey);
+        $this->modelInformation = $this->infoRepository->getByKey($this->modelSlug);
 
         if ( ! $this->modelInformation) {
-            throw new RuntimeException("Could not load information for module key '{$this->moduleKey}'");
+            throw new RuntimeException("Could not load information for model key '{$this->modelSlug}'");
         }
 
         $this->routePrefix = $this->routeHelper->getRouteNameForModelClass(

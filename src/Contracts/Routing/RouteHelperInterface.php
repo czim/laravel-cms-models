@@ -21,6 +21,13 @@ interface RouteHelperInterface
     public function getModuleKeyForCurrentRoute();
 
     /**
+     * Returns the model slug for the current route.
+     *
+     * @return false|string     false if this is not a model module route
+     */
+    public function getModelSlugForCurrentRoute();
+
+    /**
      * Returns the model module key by a given route name.
      *
      * @param string $routeName
@@ -73,9 +80,17 @@ interface RouteHelperInterface
     public function getRouteSlugForModelClass($modelClass);
 
     /**
+     * Returns the full permission prefix for a model slug (not the full module key).
+     *
+     * @param string $slug module key to add to the prefix
+     * @return string
+     */
+    public function getPermissionPrefixForModelSlug($slug);
+
+    /**
      * Returns the full permission prefix for a model module's key.
      *
-     * @param string $key    module key to add to the prefix
+     * @param string $key    full module key to add to the prefix
      * @return string
      */
     public function getPermissionPrefixForModuleKey($key);

@@ -15,10 +15,18 @@ interface ModuleHelperInterface
     public function moduleKeyForModel($model);
 
     /**
+     * Returns the model slug for a model or model FQN.
+     *
+     * @param string|Model $model
+     * @return string
+     */
+    public function modelSlug($model);
+
+    /**
      * Returns the model information key that corresponds to a given model FQN.
      *
      * @param string|Model $model
-     * @return mixed
+     * @return string
      */
     public function modelInformationKeyForModel($model);
 

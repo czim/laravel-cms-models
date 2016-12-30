@@ -653,12 +653,19 @@ class DefaultModelController extends BaseModelController
     }
 
     /**
+     * Returns session key to use for storing information about the model (listing).
+     *
+     * This is used as the 'context' by the list memory.
+     *
+     * @param string|null $modelSlug    defaults to current model
      * @return string
      */
-    protected function getModelSessionKey()
+    protected function getModelSessionKey($modelSlug = null)
     {
+        $modelSlug = (null === $modelSlug) ? $this->getModelSlug() : $modelSlug;
+
         return $this->core->config('session.prefix')
-             . 'model:' . $this->getModuleKey();
+             . 'model:' . $modelSlug;
     }
 
 }

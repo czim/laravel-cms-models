@@ -3,6 +3,7 @@ namespace Czim\CmsModels\View\ListStrategies;
 
 use Czim\CmsCore\Contracts\Modules\ModuleManagerInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
+use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -68,8 +69,10 @@ class RelationCountChildrenLink extends RelationCount
 
         /** @var RouteHelperInterface $routeHelper */
         $routeHelper = app(RouteHelperInterface::class);
+        /** @var ModuleHelperInterface $moduleHelper */
+        $moduleHelper = app(ModuleHelperInterface::class);
 
-        $permissionPrefix = $routeHelper->getPermissionPrefixForModuleKey($module->getKey());
+        $permissionPrefix = $routeHelper->getPermissionPrefixForModelSlug($moduleHelper->modelSlug($modelClass));
 
         if ( ! cms_auth()->can("{$permissionPrefix}show")) {
             return false;

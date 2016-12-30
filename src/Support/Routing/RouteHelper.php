@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Support\Routing;
 
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
+use Czim\CmsModels\Support\ModuleHelper;
 
 /**
  * Class RouteHelper
@@ -47,7 +48,21 @@ class RouteHelper implements RouteHelperInterface
     }
 
     /**
+     * Returns the model slug for the current route.
+     *
+     * @return false|string     false if this is not a model module route
+     */
+    public function getModelSlugForCurrentRoute()
+    {
+        return $this->getModelSlugForRouteNameSegment(
+            $this->getModelRouteNameSegment()
+        );
+    }
+
+    /**
      * Returns the model module key by a given route name.
+     *
+     * This includes the 'models.' prefix, it is a full module key.
      *
      * @param string $routeName
      * @return false|string     false if the name is not for a module route
@@ -145,14 +160,29 @@ class RouteHelper implements RouteHelperInterface
     }
 
     /**
+     * Returns the full permission prefix for a model slug (whithout 'models.' prefix).
+     *
+     * @param string $slug  module slug (app-models-post) to add to the prefix
+     * @return string
+     */
+    public function getPermissionPrefixForModelSlug($slug)
+    {
+        return "models.{$slug}.";
+    }
+
+    /**
      * Returns the full permission prefix for a model module's key.
      *
-     * @param string $key    module key to add to the prefix (should not include 'models.')
+     * @param string $key    full module key to add to the prefix
      * @return string
      */
     public function getPermissionPrefixForModuleKey($key)
     {
-        return "models.{$key}.";
+        if (starts_with($key, ModuleHelper::MODULE_PREFIX)) {
+            $key = substr($key, strlen(ModuleHelper::MODULE_PREFIX));
+        }
+
+        return $this->getPermissionPrefixForModelSlug($key);
     }
 
     /**
@@ -172,10 +202,23 @@ class RouteHelper implements RouteHelperInterface
     /**
      * Returns the model module key for a model route name segment.
      *
+     * This includes the 'models.' prefix, it is a full module key.
+     *
      * @param string $nameSegment
      * @return string
      */
     protected function getModelModuleKeyForRouteNameSegment($nameSegment)
+    {
+        return ModuleHelper::MODULE_PREFIX . $this->getModelSlugForRouteNameSegment($nameSegment);
+    }
+
+    /**
+     * Returns the model slug for a model route name segment.
+     *
+     * @param string $nameSegment
+     * @return string
+     */
+    protected function getModelSlugForRouteNameSegment($nameSegment)
     {
         $dotPosition = strpos($nameSegment, '.');
 
