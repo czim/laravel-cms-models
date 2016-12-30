@@ -27,7 +27,7 @@ use Czim\CmsModels\Contracts\Data\ModelListDataInterface;
  * @property array|ModelActionReferenceData[] $default_action
  * @property array|ModelViewReferenceData $before
  * @property array|ModelViewReferenceData $after
- * @property bool $default_top_only
+ * @property bool $default_top_relation
  * @property array|ModelListParentData[] $parents
  */
 class ModelListData extends AbstractDataObject implements ModelListDataInterface
@@ -93,9 +93,10 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
         'before' => null,
         'after'  => null,
 
-        // Whether to hide everything but top-level list parents by default.
+        // Whether to hide everything but top-level list parents by default, and if so, using what relation.
         // Useful to remove clutter for nested content with a click-through-to-children setup.
-        'default_top_only' => null,
+        // Set to relation method name that should be present in 'parents'.
+        'default_top_relation' => null,
 
         // List parents for list hierarchy handling (instances of ModelListParentData)
         'parents' => [],
@@ -199,7 +200,7 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
             'disable_scopes',
             'before',
             'after',
-            'default_top_only',
+            'default_top_relation',
             'parents',
         ];
 

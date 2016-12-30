@@ -121,6 +121,16 @@ trait DefaultModelListParentHandling
     protected function applyListParentToQuery($query)
     {
         if ( ! $this->listParentRelation) {
+
+            $relation = $this->getModelInformation()->list->default_top_relation;
+
+            // If the default is to restrict to top-level only,
+            // or the reverse with a user-initiated reversal (relation = false):
+            // Restrict the query to top level.
+            if ($relation || false === $this->listParentRelation) {
+                $query->has($relation, '<', 1);
+            }
+
             return $this;
         }
 
