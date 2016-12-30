@@ -34,17 +34,6 @@
 
 @section('content')
 
-    <?php
-        $currentCount = method_exists($records, 'total') ? $records->total() : 0;
-
-        // if the list is sorted by the orderable column and all records
-        // are visible, allow drag & drop ordering.
-        $draggableForOrderable = $model->list->getOrderableColumn() === $sortColumn
-            &&  (   $totalCount == $currentCount
-                ||  (! $activeScope  && ! count($filters))
-                );
-    ?>
-
     <div class="page-header">
 
         <div class="btn-toolbar pull-right">
@@ -162,7 +151,7 @@
                                     @include('cms-models::model.partials.list.column_orderable', [
                                         'model'            => $model,
                                         'record'           => $record,
-                                        'isDraggable'      => $draggableForOrderable,
+                                        'isDraggable'      => $draggableOrderable,
                                         'sortDirection'    => $sortDirection,
                                         'permissionPrefix' => $permissionPrefix,
                                     ])
@@ -266,7 +255,7 @@
             'sortColumn',
             'sortDirection',
             'routePrefix',
-            'draggableForOrderable'
+            'draggableOrderable'
         ))
     @endif
 

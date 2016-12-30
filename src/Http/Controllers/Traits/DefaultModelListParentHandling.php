@@ -87,6 +87,22 @@ trait DefaultModelListParentHandling
     }
 
     /**
+     * Returns whether the index will only show the top level parents.
+     *
+     * @return bool
+     */
+    protected function showsTopParentsOnly()
+    {
+        $relation = $this->getModelInformation()->list->default_top_relation;
+
+        // If the default is to restrict to top-level only,
+        // or the reverse with a user-initiated reversal (relation = false):
+        // Restrict the query to top level.
+
+        return $relation && false !== $this->listParentRelation;
+    }
+
+    /**
      * Applies the context for the current list parent scope.
      *
      * Must be called before other list memory is accessed, since it affects the sub-context of the memory.
@@ -122,13 +138,8 @@ trait DefaultModelListParentHandling
     {
         if ( ! $this->listParentRelation) {
 
-            $relation = $this->getModelInformation()->list->default_top_relation;
-
-            // If the default is to restrict to top-level only,
-            // or the reverse with a user-initiated reversal (relation = false):
-            // Restrict the query to top level.
-            if ($relation || false === $this->listParentRelation) {
-                $query->has($relation, '<', 1);
+            if ($this->showsTopParentsOnly()) {
+                $query->has($this->getModelInformation()->list->default_top_relation, '<', 1);
             }
 
             return $this;

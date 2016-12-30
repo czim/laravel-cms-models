@@ -104,6 +104,8 @@ class DefaultModelController extends BaseModelController
             $records = $query->paginate($this->getActualPageSize(), ['*'], 'page', $records->lastPage());
         }
 
+        $currentCount = method_exists($records, 'total') ? $records->total() : 0;
+
         return view($this->getIndexView(), [
             'moduleKey'           => $this->moduleKey,
             'routePrefix'         => $this->routePrefix,
@@ -111,6 +113,7 @@ class DefaultModelController extends BaseModelController
             'model'               => $this->modelInformation,
             'records'             => $records,
             'totalCount'          => $totalCount,
+            'currentCount'        => $currentCount,
             'listStrategies'      => $this->getListColumnStrategyInstances(),
             'sortColumn'          => $this->getActualSort(),
             'sortDirection'       => $this->getActualSortDirection(),
@@ -124,6 +127,8 @@ class DefaultModelController extends BaseModelController
             'defaultRowAction'    => $this->getDefaultRowActionInstance(),
             'hasActiveListParent' => (bool) $this->listParentRelation,
             'listParents'         => $this->listParents,
+            'topListParentOnly'   => $this->showsTopParentsOnly(),
+            'draggableOrderable'  => $this->isListOrderDraggable($totalCount, $currentCount),
         ]);
     }
 
@@ -500,6 +505,31 @@ class DefaultModelController extends BaseModelController
         $modelClass = $this->modelInformation->modelClass();
 
         return new $modelClass;
+    }
+
+    /**
+     * Returns whether, given the current circumstances, the list may be ordered by dragging rows.
+     *
+     * @param int  $totalCount
+     * @param int  $currentCount
+     * @return bool
+     */
+    protected function isListOrderDraggable($totalCount, $currentCount)
+    {
+        $info = $this->getModelInformation();
+
+        if ( ! $info->list->orderable) {
+            return false;
+        }
+
+
+        $hasScope   = (bool) $this->getActiveScope();
+        $hasFilters = ! empty($this->getActiveFilters());
+
+        return  $info->list->getOrderableColumn() === $this->getActualSort()
+            &&  (   $totalCount == $currentCount
+                ||  ( ! $hasScope  && ! $hasFilters)
+                );
     }
 
     /**

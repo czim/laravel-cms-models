@@ -112,7 +112,7 @@
 
 
         {{-- Orderable: drag and drop --}}
-        @if ($model->list->getOrderableColumn() === $sortColumn)
+        @if ($draggableOrderable)
             $(function () {
                 $('.records-table').sortable({
                     handle           : '.orderable-drag-drop',
