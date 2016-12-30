@@ -107,7 +107,7 @@ class ModelModuleGenerator implements ModuleGeneratorInterface
      */
     protected function makeModuleKey($modelClass)
     {
-        return 'models.' . $this->moduleHelper->moduleKeyForModel($modelClass);
+        return $this->moduleHelper->moduleKeyForModel($modelClass);
     }
 
     /**

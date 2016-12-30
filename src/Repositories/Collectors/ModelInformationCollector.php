@@ -113,7 +113,7 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
     {
         foreach ($this->modelClasses as $class) {
 
-            $key = $this->moduleHelper->moduleKeyForModel($class);
+            $key = $this->moduleHelper->modelInformationKeyForModel($class);
 
             $this->information->put($key, $this->modelAnalyzer->analyze($class));
         }
@@ -144,7 +144,7 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
                 $file->getRelativePathname()
             );
 
-            $key = $this->moduleHelper->moduleKeyForModel($modelClass);
+            $key = $this->moduleHelper->modelInformationKeyForModel($modelClass);
 
             if ( ! $this->information->has($key)) {
                 $this->getCore()->log('debug', "CMS model data for unset model information key '{$key}'");

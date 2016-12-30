@@ -14,4 +14,12 @@ interface ModuleHelperInterface
      */
     public function moduleKeyForModel($model);
 
+    /**
+     * Returns the model information key that corresponds to a given model FQN.
+     *
+     * @param string|Model $model
+     * @return mixed
+     */
+    public function modelInformationKeyForModel($model);
+
 }
