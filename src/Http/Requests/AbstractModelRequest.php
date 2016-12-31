@@ -11,11 +11,11 @@ abstract class AbstractModelRequest extends Request
 {
 
     /**
-     * The key for the currently active model module.
+     * The key/slug for the currently active model.
      *
      * @var string
      */
-    protected $moduleKey;
+    protected $modelSlug;
 
     /**
      * @var ModelInformationInterface|ModelInformation
@@ -66,17 +66,17 @@ abstract class AbstractModelRequest extends Request
     {
         $routeHelper = $this->getRouteHelper();
 
-        $this->moduleKey = $routeHelper->getModuleKeyForCurrentRoute();
+        $this->modelSlug = $routeHelper->getModelSlugForCurrentRoute();
 
-        if ( ! $this->moduleKey) {
-            throw new RuntimeException("Could not determine module key for route in request");
+        if ( ! $this->modelSlug) {
+            throw new RuntimeException("Could not determine model slug for route in request");
         }
 
-        $this->modelInformation = $this->getModelInformationRepository()->getByKey($this->moduleKey);
+        $this->modelInformation = $this->getModelInformationRepository()->getByKey($this->modelSlug);
 
         if ( ! $this->modelInformation) {
             throw new RuntimeException(
-                "Could not load information for module key '{$this->moduleKey}' in request"
+                "Could not load information for model slug '{$this->modelSlug}' in request"
             );
         }
 
