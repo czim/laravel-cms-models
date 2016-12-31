@@ -9,16 +9,12 @@ use Czim\CmsModels\Contracts\Data\ModelListParentDataInterface;
  *
  * Data container that represents a parent data presence in an index/listing for a model.
  *
- * @property string $key
  * @property string $relation
  */
 class ModelListParentData extends AbstractDataObject
 {
 
     protected $attributes = [
-
-        // The model key for the parent model
-        'key' => null,
 
         // The relation name for this model's relation to the parent
         'relation' => null,

@@ -9,6 +9,7 @@ use Czim\CmsModels\Support\Data\ModelFormFieldData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelListColumnData;
 use Czim\CmsModels\Support\Data\ModelListFilterData;
+use Czim\CmsModels\Support\Data\ModelListParentData;
 use Czim\CmsModels\Support\Data\ModelScopeData;
 use Czim\CmsModels\Support\Data\ModelShowFieldData;
 
@@ -82,12 +83,24 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
                 );
             }
 
+
             $scopes = array_get($this->raw['list'], 'scopes', []);
             if (false === $scopes) {
                 $this->raw['list']['disable_scopes'] = true;
             } else {
                 $this->raw['list']['scopes'] = $this->normalizeScopeArray($scopes);
             }
+
+
+            $parents = [];
+            foreach (array_get($this->raw['list'], 'parents', []) as $key => $parent) {
+                if ( ! is_string($parent)) {
+                    $parents[ $key ] = $parent;
+                } else {
+                    $parents[ $key ] = new ModelListParentData([ 'relation' => $parent ]);
+                }
+            }
+            $this->raw['list']['parents'] = $parents;
         }
 
         return $this;
