@@ -8,6 +8,7 @@ use Czim\CmsModels\Http\Requests\ActivateRequest;
 use Czim\CmsModels\Http\Requests\ModelCreateRequest;
 use Czim\CmsModels\Http\Requests\ModelUpdateRequest;
 use Czim\CmsModels\Http\Requests\OrderUpdateRequest;
+use Czim\CmsModels\Support\Data\ListParentData;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -523,6 +524,25 @@ class DefaultModelController extends BaseModelController
             return false;
         }
 
+        if ($this->showsTopParentsOnly() || $this->hasActiveListParent()) {
+
+            // Check if the listify scope matches
+            $scopedRelation = $info->list->order_scope_relation;
+
+            if ( ! $scopedRelation) {
+                return false;
+            }
+
+            if ($this->hasActiveListParent()) {
+
+                /** @var ListParentData $parent */
+                $parent = head($this->listParents);
+
+                if (get_class($parent->model) != $info->modelClass() || $scopedRelation != $parent->relation) {
+                    return false;
+                }
+            }
+        }
 
         $hasScope   = (bool) $this->getActiveScope();
         $hasFilters = ! empty($this->getActiveFilters());

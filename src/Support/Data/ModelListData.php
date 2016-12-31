@@ -22,6 +22,7 @@ use Czim\CmsModels\Contracts\Data\ModelListDataInterface;
  * @property bool $orderable
  * @property string $order_strategy
  * @property string $order_column
+ * @property string $order_scope_relation
  * @property bool $activatable
  * @property string $active_column
  * @property array|ModelActionReferenceData[] $default_action
@@ -74,6 +75,8 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
         'order_strategy' => 'listify',
         // The column used for the order strategy ('position' for listify)
         'order_column' => null,
+        // If listify is scoped in a way to restrict it for a relation's foreign key, set the relation method name here.
+        'order_scope_relation' => null,
 
         // Whether the model may be activated/deactived through the listing; ie. whether it has a manipulable 'active' flag.
         'activatable' => null,
@@ -193,6 +196,7 @@ class ModelListData extends AbstractDataObject implements ModelListDataInterface
             'orderable',
             'order_strategy',
             'order_column',
+            'order_scope_relation',
             'activatable',
             'activate_column',
             'default_sort',
