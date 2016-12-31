@@ -100,15 +100,20 @@ class EnrichFormFieldData extends AbstractEnricherStep
             if ( ! isset($this->info->attributes[ $key ]) && ! isset($this->info->relations[ $key ])) {
 
                 // if the data is fully set, no need to enrich
-                if ($this->isFormFieldDataComplete($field)) {
-                    $fields[ $key ] = $field;
-                    continue;
+                if ( ! $this->isFormFieldDataComplete($field)) {
+                    throw new UnexpectedValueException(
+                        "Unenriched form field set with non-attribute/non-relation-name key; "
+                        . "make sure full field data is provided"
+                    );
                 }
 
-                throw new UnexpectedValueException(
-                    "Unenriched form field set with non-attribute/non-relation-name key; "
-                    . "make sure full field data is provided"
-                );
+                // Make sure to set the key if it isn't
+                if ( ! $field->key) {
+                    $field->key = $key;
+                }
+
+                $fields[ $key ] = $field;
+                continue;
             }
 
             if (isset($this->info->attributes[ $key ])) {
@@ -142,7 +147,10 @@ class EnrichFormFieldData extends AbstractEnricherStep
      */
     protected function isFormFieldDataComplete(ModelFormFieldDataInterface $data)
     {
-        return $data->key;
+        // For now, there is no way a form field has too little data
+        // if no strategies are set up, defaults are used.
+        // The key and source are derived from the field array key, if not set.
+        return true;
     }
 
     /**

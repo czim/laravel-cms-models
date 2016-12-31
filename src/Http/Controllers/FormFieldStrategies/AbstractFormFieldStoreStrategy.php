@@ -316,6 +316,13 @@ class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyInterface
 
         $flippedInheritable = array_flip($this->inheritableRules());
 
+        // Detect if any of the specific rules are nested, in which case the normal merging process should be skipped.
+        // Though it is technically possible that these nested properties will match an attribute directly,
+        // this should not be assumed -- configure validation rules manually for the best results.
+        if (count(array_filter($specificRules, 'is_array'))) {
+            return $specificRules;
+        }
+
         // Remove rules that may not be inherited, because present in specific rules
         array_forget($flippedInheritable, array_map([ $this, 'getRuleType' ], $specificRules));
 
