@@ -84,13 +84,10 @@ class DefaultModelController extends BaseModelController
              ->checkActivePage();
 
         $totalCount  = $this->getTotalCount();
-        $scopeCounts = $this->hasActiveListParent() ? [] : $this->getScopeCounts();
+        $scopeCounts = $this->getScopeCounts();
 
-        $this->applySort();
-
-        if ( ! $this->hasActiveListParent()) {
-            $this->applyScope($this->modelRepository);
-        }
+        $this->applySort()
+             ->applyScope($this->modelRepository);
 
         $query = $this->getModelRepository()->query();
 
@@ -492,7 +489,11 @@ class DefaultModelController extends BaseModelController
      */
     protected function getTotalCount()
     {
-        return $this->modelRepository->count();
+        $query = $this->modelRepository->query();
+
+        $this->applyListParentToQuery($query);
+
+        return $query->count();
     }
 
     /**

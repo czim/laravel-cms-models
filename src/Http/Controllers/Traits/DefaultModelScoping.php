@@ -60,6 +60,10 @@ trait DefaultModelScoping
 
         $repository->clearScopes();
 
+        if ($this->hasActiveListParent()) {
+            return $this;
+        }
+
         if ($scope) {
 
             $info = $this->getModelInformation();
@@ -97,7 +101,11 @@ trait DefaultModelScoping
 
             $this->applyScope($repository, $key);
 
-            $counts[ $key ] = $repository->count();
+            $query = $this->getModelRepository()->query();
+
+            $this->applyListParentToQuery($query);
+
+            $counts[ $key ] = $query->count();
         }
 
         return $counts;
@@ -183,5 +191,16 @@ trait DefaultModelScoping
      * @return ModelListMemoryInterface
      */
     abstract protected function getListMemory();
+
+    /**
+     * @return bool
+     */
+    abstract protected function hasActiveListParent();
+
+    /**
+     * @param $query
+     * @return $this
+     */
+    abstract protected function applyListParentToQuery($query);
 
 }
