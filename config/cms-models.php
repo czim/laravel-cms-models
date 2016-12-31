@@ -313,6 +313,7 @@ return [
                 Enums\FormDisplayStrategy::DATEPICKER_DATETIME => 'DateTimeStrategy',
                 Enums\FormDisplayStrategy::DATEPICKER_DATE     => 'DateStrategy',
                 Enums\FormDisplayStrategy::DATEPICKER_TIME     => 'TimeStrategy',
+                Enums\FormDisplayStrategy::DATEPICKER_RANGE    => 'DateRangeStrategy',
                 Enums\FormDisplayStrategy::COLORPICKER         => 'ColorStrategy',
 
                 Enums\FormDisplayStrategy::ATTACHMENT_STAPLER_IMAGE => 'AttachmentStaplerImageStrategy',
@@ -332,6 +333,7 @@ return [
             'store-aliases' => [
                 Enums\FormStoreStrategy::BOOLEAN                => 'BooleanStrategy',
                 Enums\FormStoreStrategy::DATE                   => 'DateStrategy',
+                Enums\FormStoreStrategy::DATE_RANGE             => 'DateRangeStrategy',
                 Enums\FormStoreStrategy::STAPLER                => 'StaplerStrategy',
                 Enums\FormStoreStrategy::RELATION_SINGLE_KEY    => 'RelationSingleKey',
                 Enums\FormStoreStrategy::RELATION_PLURAL_KEYS   => 'RelationPluralKeys',
