@@ -66,3 +66,12 @@ Strategies that determine the display and application of filters for a model lis
     
 - [**`DropdownEnum`**](FilterStrategies/DropdownEnum.md)  
     For filtering on enum values with a select dropdown.
+
+
+## Action Strategies
+
+Strategies that determine the action hyperlink that may be used for a listing row click.
+
+- [**`EditStrategy`**](ActionStrategies/CommonStrategies.md#edit)  
+- [**`ShowStrategy`**](ActionStrategies/CommonStrategies.md#show)
+- [**`ChildrenStrategy`**](ActionStrategies/CommonStrategies.md#children)
