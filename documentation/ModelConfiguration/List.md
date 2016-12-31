@@ -195,6 +195,10 @@ The value may be:
 - An **array** of integers, the first of which is the default page size. 
     The others are added as selectable options. 
 
+## List Parent / Child Setup
+
+For information about setting up a 'click-through' to children lists for typical parent-child Eloquent relations, see the [list parent setup documentation](ListParentSetup.md).
+
 
 ## Default Actions
 

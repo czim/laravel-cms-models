@@ -44,6 +44,9 @@ Strategies for displaying content of model listing table cells.
 - [**`RelationReference`**](ListColumnDisplayStrategies/RelationStrategies.md#relationreference)  
     Displays a single relation as a model reference string.
 
+- [**`RelationCountChildrenLink`**](ListColumnDisplayStrategies/RelationStrategies.md#relationcountchildrenlink)  
+    Displays a plural relation with a count value, and offers link to children using a list parent setup.
+    
 
 
 ## Filter Strategies

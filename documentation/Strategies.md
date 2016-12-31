@@ -8,8 +8,9 @@ Aliases in configuration files are added for convenience, so that a simple strin
 ## Strategy References
 
 For details and help on using strategies included in the CMS, check out the reference lists:
- 
-- [Form Strategy reference list](FormStrategyReference.md) 
+
+- [List Strategy reference list](ListStrategyReference.md) for strategies used in lists: columns, filters, actions. 
+- [Form Strategy reference list](FormStrategyReference.md) for strategies used in forms: fields and storing values.
 
 
 ## Repository Context Strategies
@@ -52,7 +53,7 @@ Included:
  
 
 By default, if no strategy is defined, the source will be displayed as a plain string value.
- 
+
 ### Source 
 
 The display strategy renders HTML on the basis of a source value.
@@ -87,6 +88,19 @@ This may be nested to any depth. (ex.: `author.name`, `post.comments.author.name
 For translated attributes, the current and fallback locales are matched against.
 
 When combining muliple targets, by default the **or** boolean combination operator is used.
+
+## List Action Strategies
+
+Action strategies determine a hyperlink used for a default action for clicking on a list row.  
+Actions are defined in the model configuration under `list.default_action` and refer to a strategy of this kind.
+ 
+Included:
+
+- **Edit**: a link to the edit form for the model record. 
+- **Show**: a link to the show page for the model record.
+- **Children**: a link to a list of 'children' of the model record.
+
+There is no default strategy, one of these (or a custom strategy) must be indicated.
 
 
 ## Form strategies
