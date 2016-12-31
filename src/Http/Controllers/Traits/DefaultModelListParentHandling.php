@@ -415,20 +415,25 @@ trait DefaultModelListParentHandling
         // 3. for same-model, levels: parent=-# reset this many levels
         // 4. for absolute top level: parents=
 
-        $queries       = [];
-        $backCounter   = 0;
-        $previousModel = $this->getModelInformation()->modelClass();
+        $queries        = [];
+        $previousModel  = $this->getModelInformation()->modelClass();
 
         /** @var ListParentData[] $reversed */
         $reversed = array_reverse($this->listParents);
 
-        foreach ($reversed as $parent) {
+        foreach ($reversed as $index => $parent) {
+
+            $nextParent = isset($reversed[ $index + 1 ]) ? $reversed[ $index + 1 ] : null;
 
             if ($previousModel != get_class($parent->model)) {
                 $queries[] = null;
             } else {
-                $backCounter++;
-                $queries[] = 'parent=-' . $backCounter;
+
+                if ($nextParent) {
+                    $queries[] = 'parent=' . $nextParent->relation . ':' . $nextParent->key;
+                } else {
+                    $queries[] = 'parents=';
+                }
             }
 
             $previousModel = get_class($parent->model);
