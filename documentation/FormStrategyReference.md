@@ -18,6 +18,9 @@ This list is not exhaustive; custom strategy classes and aliases may be created 
 - [**`Datepicker`**](FormFieldDisplayStrategies/Datepicker.md)  
     Datepicker widget for date & time values.
     
+- [**`DatepickerRange`**](FormFieldDisplayStrategies/DatepickerRange.md)  
+    Datepicker widget for selecting the start and end a date range.
+    
 - [**`Dropdown`**](FormFieldDisplayStrategies/Dropdown.md)  
     Dropdown select with customizable options.
     
@@ -83,6 +86,9 @@ This list is not exhaustive; custom strategy classes and aliases may be created 
 
 - [**`Date`**](FormFieldStoreStrategies/Date.md)  
     For date time values (`timestamp`, `date`, `datetime`, `time`).
+
+- [**`Date`**](FormFieldStoreStrategies/DateRange.md)
+    Stores start and end a date range values for separate attributes of a model.
 
 - [**`PasswordUpdate`**](FormFieldStoreStrategies/PasswordUpdate.md)  
     For storing hashed passwords, but only if entered.
