@@ -389,7 +389,6 @@ trait DefaultModelListParentHandling
             $listParentInfo = head($listParentInfo);
             /** @var ListParentData $listParentInfo */
 
-
             if ($modelClass !== get_class($listParentInfo->model)) {
                 $model           = $listParentInfo->model;
                 $modelClass      = get_class($model);
@@ -410,11 +409,6 @@ trait DefaultModelListParentHandling
         }
 
         // Mark for each list parents entry how the query params should be set up
-        // 1. for same-model, top level: parent=0 (or -# to match)
-        // 2. for different model, first level: no param
-        // 3. for same-model, levels: parent=-# reset this many levels
-        // 4. for absolute top level: parents=
-
         $queries        = [];
         $previousModel  = $this->getModelInformation()->modelClass();
 
@@ -567,7 +561,8 @@ trait DefaultModelListParentHandling
                     $parentModel,
                     array_get($parentListParent, 'relation'),
                     array_get($parentListParent, 'key'),
-                    $parentInfo
+                    $parentInfo,
+                    true
                 );
             }
         }
