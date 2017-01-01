@@ -340,7 +340,7 @@ class ModelModule implements ModuleInterface
         return [
             [
                 'id'          => 'models.' . $this->getRouteSlug(),
-                'label'       => $this->getInformation()->labelPlural(),
+                'label'       => ucfirst($this->getInformation()->labelPlural()),
                 'type'        => AclPresenceType::GROUP,
                 'permissions' => [
                     "models.{$slug}.show",
@@ -361,7 +361,7 @@ class ModelModule implements ModuleInterface
     {
         return [
             'id'         => 'models.' . $this->getRouteSlug(),
-            'label'      => $this->getInformation()->labelPlural(),
+            'label'      => ucfirst($this->getInformation()->labelPlural()),
             'type'       => MenuPresenceType::ACTION,
             'action'     => $this->routeHelper->getRouteNameForModelClass($this->class, true) . '.index',
             'parameters' => [],
