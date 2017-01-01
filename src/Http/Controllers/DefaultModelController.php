@@ -165,7 +165,7 @@ class DefaultModelController extends BaseModelController
 
         $fields = array_only(
             $this->modelInformation->form->fields,
-            $this->getRelevantFormFieldKeys()
+            $this->getRelevantFormFieldKeys(true)
         );
 
         $values = $this->getFormFieldValuesFromModel($record, array_keys($fields));
