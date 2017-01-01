@@ -10,6 +10,8 @@ Features:
     - Customizable listing columns, scopes, filters, sorting, etc.
     - Customizable edit form html, fields, validation rules, create vs. edit forms, etc.
     - Customizable model references, display labels, etc.
+- Support for Translatable models
+- Support for Listify'd models, with drag/drop reordering
 - Support for nested child-parent listings and breadcrumb trails
 
 
