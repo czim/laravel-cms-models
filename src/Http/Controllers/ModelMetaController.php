@@ -8,6 +8,7 @@ use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelReferenceRepositoryInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
 use Czim\CmsModels\Contracts\Support\MetaReferenceDataProviderInterface;
+use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Http\Requests\ModelMetaReferenceRequest;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\Strategies\ModelMetaReference;
@@ -40,6 +41,7 @@ class ModelMetaController extends Controller
      * @param CoreInterface                       $core
      * @param AuthenticatorInterface              $auth
      * @param RouteHelperInterface                $routeHelper
+     * @param ModuleHelperInterface               $moduleHelper
      * @param ModelInformationRepositoryInterface $infoRepository
      * @param ModelReferenceRepositoryInterface   $referenceRepository
      * @param MetaReferenceDataProviderInterface  $referenceDataProvider
@@ -48,11 +50,12 @@ class ModelMetaController extends Controller
         CoreInterface $core,
         AuthenticatorInterface $auth,
         RouteHelperInterface $routeHelper,
+        ModuleHelperInterface $moduleHelper,
         ModelInformationRepositoryInterface $infoRepository,
         ModelReferenceRepositoryInterface $referenceRepository,
         MetaReferenceDataProviderInterface $referenceDataProvider
     ) {
-        parent::__construct($core, $auth, $routeHelper, $infoRepository);
+        parent::__construct($core, $auth, $routeHelper, $moduleHelper, $infoRepository);
 
         $this->referenceRepository   = $referenceRepository;
         $this->referenceDataProvider = $referenceDataProvider;
