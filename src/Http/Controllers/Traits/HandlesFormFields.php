@@ -120,6 +120,13 @@ trait HandlesFormFields
                 $this->getFormFieldStoreStrategyParametersForField($field)
             );
 
+            // If we're creating a new model, pre-select the form field for the active list parent
+            if ( ! $model->exists && $this->isFieldValueBeDerivableFromListParent($field->key)) {
+
+                $values[ $key ] = $instance->valueForListParentKey($this->getListParentRecordKey());
+                continue;
+            }
+
             $values[ $key ] = $instance->retrieve($model, $field->source ?: $field->key);
         }
 
@@ -302,5 +309,16 @@ trait HandlesFormFields
      * @return CoreInterface
      */
     abstract protected function getCore();
+
+    /**
+     * @param string $field
+     * @return bool
+     */
+    abstract protected function isFieldValueBeDerivableFromListParent($field);
+
+    /**
+     * @return mixed|null
+     */
+    abstract protected function getListParentRecordKey();
 
 }

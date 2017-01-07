@@ -168,9 +168,9 @@ class DefaultModelController extends BaseModelController
             $this->getRelevantFormFieldKeys(true)
         );
 
-        $values = $this->getFormFieldValuesFromModel($record, array_keys($fields));
-
         $this->checkListParents(false);
+
+        $values = $this->getFormFieldValuesFromModel($record, array_keys($fields));
 
         return view($this->getCreateView(), [
             'moduleKey'           => $this->moduleKey,
@@ -243,9 +243,9 @@ class DefaultModelController extends BaseModelController
             $this->getRelevantFormFieldKeys()
         );
 
-        $values = $this->getFormFieldValuesFromModel($record, array_keys($fields));
-
         $this->checkListParents(false);
+
+        $values = $this->getFormFieldValuesFromModel($record, array_keys($fields));
 
         return view($this->getEditView(), [
             'moduleKey'           => $this->moduleKey,

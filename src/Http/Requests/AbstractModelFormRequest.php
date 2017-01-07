@@ -76,4 +76,24 @@ class AbstractModelFormRequest extends AbstractModelRequest
         return app(CoreInterface::class);
     }
 
+    /**
+     * Not relevant here, only for retrieving the actual values.
+     *
+     * @param string $field
+     * @return bool
+     */
+    protected function isFieldValueBeDerivableFromListParent($field)
+    {
+        return false;
+    }
+
+    /**
+     * Not relevant here, only for retrieving the actual values.
+     *
+     * @return mixed|null
+     */
+    protected function getListParentRecordKey()
+    {
+        return null;
+    }
 }

@@ -5,12 +5,14 @@ use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsCore\Contracts\Modules\ModuleInterface;
 use Czim\CmsCore\Contracts\Modules\ModuleManagerInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\Data\ModelListParentDataInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Contracts\Support\Session\ModelListMemoryInterface;
 use Czim\CmsModels\Support\Data\ListParentData;
 use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\Support\Data\ModelListParentData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -45,11 +47,33 @@ trait DefaultModelListParentHandling
 
 
     /**
+     * Returns list of currently active list parent chain.
+     *
      * @return array
      */
     protected function getListParents()
     {
         return $this->listParents;
+    }
+
+    /**
+     * Returns currently active list parent relation name, if any.
+     *
+     * @return string|false|null
+     */
+    protected function getListParentRelation()
+    {
+        return $this->listParentRelation;
+    }
+
+    /**
+     * Returns currently active list parent record key/indicator, if any.
+     *
+     * @return string|false|null
+     */
+    protected function getListParentRecordKey()
+    {
+        return $this->listParentRecordKey;
     }
 
     /**
@@ -617,6 +641,50 @@ trait DefaultModelListParentHandling
         $modules = app(ModuleManagerInterface::class);
 
         return $modules->getByAssociatedClass(get_class($model));
+    }
+
+    /**
+     * Returns whether the set list parent corresponds to a given field key.
+     *
+     * @param string $field
+     * @return bool
+     */
+    protected function isFieldValueBeDerivableFromListParent($field)
+    {
+        if ( ! $this->hasActiveListParent()) {
+            return false;
+        }
+
+        $listParentData = $this->getListParentDataForRelation($this->listParentRelation);
+
+        if ( ! $listParentData) {
+            return false;
+        }
+
+        return $field == $listParentData->field();
+    }
+
+    /**
+     * @param string                         $relation
+     * @param ModelInformationInterface|null $information
+     * @return ModelListParentDataInterface|ModelListParentData|false
+     */
+    protected function getListParentDataForRelation($relation, ModelInformationInterface $information = null)
+    {
+        $information = $information ?: $this->getModelInformation();
+
+        if (empty($information->list->parents)) {
+            return false;
+        }
+
+        foreach ($information->list->parents as $parentData) {
+
+            if ($parentData->relation == $relation) {
+                return $parentData;
+            }
+        }
+
+        return false;
     }
 
     /**
