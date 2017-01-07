@@ -10,15 +10,47 @@ use Czim\CmsModels\Contracts\Data\ModelListParentDataInterface;
  * Data container that represents a parent data presence in an index/listing for a model.
  *
  * @property string $relation
+ * @property string $field
  */
-class ModelListParentData extends AbstractDataObject
+class ModelListParentData extends AbstractDataObject implements ModelListParentDataInterface
 {
 
     protected $attributes = [
 
-        // The relation name for this model's relation to the parent
+        // The relation name for this model's relation to the parent.
         'relation' => null,
+
+        // The key of the form field that allows selection of the parent model.
+        // If not set, defaults to the relation name.
+        'field' => null,
     ];
+
+
+    /**
+     * Returns the relation method name.
+     *
+     * @return mixed
+     */
+    public function relation()
+    {
+        return $this->getAttribute('relation');
+    }
+
+    /**
+     * Returns the field key.
+     *
+     * @return mixed
+     */
+    public function field()
+    {
+        $field = $this->getAttribute('field');
+
+        if ($field || false === $field) {
+            return $field;
+        }
+
+        return $this->getAttribute('relation');
+    }
 
 
     /**

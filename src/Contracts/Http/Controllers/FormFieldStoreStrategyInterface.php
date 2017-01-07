@@ -5,7 +5,7 @@ use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Illuminate\Database\Eloquent\Model;
 
-interface FormFieldStoreStrategyInterface
+interface FormFieldStoreStrategyInterface extends FormFieldListParentValueInterface
 {
 
     /**

@@ -47,6 +47,17 @@ class RelationPivotOrdered extends AbstractRelationStrategy
     }
 
     /**
+     * Returns field value based on list parent key data.
+     *
+     * @param string $key
+     * @return mixed
+     */
+    public function valueForListParentKey($key)
+    {
+        return [ $key ];
+    }
+
+    /**
      * @param Model  $model
      * @param string $source
      * @param mixed  $value

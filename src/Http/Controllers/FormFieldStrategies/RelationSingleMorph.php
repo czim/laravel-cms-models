@@ -14,6 +14,20 @@ class RelationSingleMorph extends AbstractRelationStrategy
 
 
     /**
+     * Returns field value based on list parent key data.
+     *
+     * Note that the handling of morph list parent record 'keys' should use
+     * static::CLASS_AND_KEY_SEPARATOR for this to work as-is!
+     *
+     * @param string $key
+     * @return mixed
+     */
+    public function valueForListParentKey($key)
+    {
+        return $key;
+    }
+
+    /**
      * @param Model  $model
      * @param string $source
      * @param mixed  $value
