@@ -146,6 +146,16 @@ This will hide the controls and drag-and-drop interface for changing list positi
 
 To change the listify column or strategy, set `list.order_column` and `list.order_strategy`, respectively. This should not generally be necessary; if required, it is probably better to change the model analysis instead.
 
+### Listify Scopes
+
+Listify scopes will affect the drag-drop functionality. The CMS will automatically attempt to detect `BelongsTo` relation scopes set.
+
+If this fails, the scope relation method name must be set manually in `list.order_scope_relation`.
+
+
+Only relation-based scopes are supported for now. Any special customized scope will require orderable functionality to be disabled for now. 
+
+
 ## Scopes
 
 Scopes are automatically read on model analysis and added as tabs above the listing.
