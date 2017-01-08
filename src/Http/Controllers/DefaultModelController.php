@@ -124,6 +124,7 @@ class DefaultModelController extends BaseModelController
             'unconditionalDelete' => $this->isUnconditionallyDeletable(),
             'defaultRowAction'    => $this->getDefaultRowActionInstance(),
             'hasActiveListParent' => (bool) $this->listParentRelation,
+            'forcedListParentAll' => $this->listParentRelation === false,
             'listParents'         => $this->listParents,
             'topListParentOnly'   => $this->showsTopParentsOnly(),
             'draggableOrderable'  => $this->isListOrderDraggable($totalCount, $currentCount),
@@ -143,13 +144,14 @@ class DefaultModelController extends BaseModelController
         $this->checkListParents(false);
 
         return view($this->getShowView(), [
-            'moduleKey'        => $this->moduleKey,
-            'routePrefix'      => $this->routePrefix,
-            'permissionPrefix' => $this->permissionPrefix,
-            'model'            => $this->modelInformation,
-            'record'           => $record,
-            'fieldStrategies'  => $this->getShowFieldStrategyInstances(),
+            'moduleKey'           => $this->moduleKey,
+            'routePrefix'         => $this->routePrefix,
+            'permissionPrefix'    => $this->permissionPrefix,
+            'model'               => $this->modelInformation,
+            'record'              => $record,
+            'fieldStrategies'     => $this->getShowFieldStrategyInstances(),
             'hasActiveListParent' => (bool) $this->listParentRelation,
+            'forcedListParentAll' => $this->listParentRelation === false,
             'listParents'         => $this->listParents,
         ]);
     }
@@ -185,6 +187,7 @@ class DefaultModelController extends BaseModelController
             'fieldErrors'         => $this->getNormalizedFormFieldErrors(),
             'errorsPerTab'        => $this->getErrorCountsPerTabPane(),
             'hasActiveListParent' => (bool) $this->listParentRelation,
+            'forcedListParentAll' => $this->listParentRelation === false,
             'listParents'         => $this->listParents,
         ]);
     }
@@ -260,6 +263,7 @@ class DefaultModelController extends BaseModelController
             'fieldErrors'         => $this->getNormalizedFormFieldErrors(),
             'errorsPerTab'        => $this->getErrorCountsPerTabPane(),
             'hasActiveListParent' => (bool) $this->listParentRelation,
+            'forcedListParentAll' => $this->listParentRelation === false,
             'listParents'         => $this->listParents,
         ]);
     }

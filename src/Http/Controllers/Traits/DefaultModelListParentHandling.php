@@ -262,7 +262,26 @@ trait DefaultModelListParentHandling
 
             $parents = request()->get('parents');
 
-            if ( ! empty($parents)) {
+            if ($parents === 'all' || empty($parents)) {
+
+                // No need to update if no current memorized parent chain
+                if (count($this->listParents)) {
+                    $this->clearEntireListParentHierarchy();
+                }
+
+                $defaultTopRelation = $this->getModelInformation()->list->default_top_relation;
+
+                // Toggling display to all for relations that limit to top by default,
+                // which should reset on a home reset aswell.
+                if ($parents == 'all') {
+                    $this->listParentRelation  = false;
+                    $this->listParentRecordKey = null;
+                } elseif (request()->has('home') && $defaultTopRelation) {
+                    $this->listParentRelation  = null;
+                    $this->listParentRecordKey = null;
+                }
+
+            } else {
 
                 if (is_string($parents)) {
                     $parents = explode(';', $parents);
@@ -289,15 +308,6 @@ trait DefaultModelListParentHandling
 
                 // Update, working backwards, starting at the current list; then re-collect the active parent chain
                 $this->updateActiveParents(array_reverse($parents));
-
-            } else {
-
-                // No need to update if no current memorized parent chain
-                if ( ! count($this->listParents)) {
-                    return $this;
-                }
-
-                $this->clearEntireListParentHierarchy();
             }
 
         } elseif (request()->exists('parent')) {

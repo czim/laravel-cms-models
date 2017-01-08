@@ -27,6 +27,7 @@
         'routePrefix',
         'title',
         'hasActiveListParent',
+        'forcedListParentAll',
         'listParents'
     ))
 @endsection
@@ -38,12 +39,12 @@
 
         <div class="btn-toolbar pull-right">
 
-            @if ($hasActiveListParent)
-                @include('cms-models::model.partials.index_parent_back_button', compact(
-                    'model',
-                    'listParents'
-                ))
-            @endif
+            @include('cms-models::model.partials.index_parent_back_button', compact(
+                'model',
+                'listParents',
+                'hasActiveListParent',
+                'forcedListParentAll'
+            ))
 
             <div class="btn-group">
                 @if (cms_auth()->can("{$permissionPrefix}create"))
