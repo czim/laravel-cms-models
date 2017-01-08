@@ -247,10 +247,15 @@ trait DefaultModelListParentHandling
      */
     protected function updateActiveParent()
     {
+        // If no update is required, return immediately
+        if ( ! request()->exists('parents') && ! request()->has('home') && ! request()->exists('parent')) {
+            return $this;
+        }
+
         $separator = $this->getListParentSeparator();
 
         // Check for either a full hierarchy or a 'current level' update
-        if (request()->exists('parents')) {
+        if (request()->exists('parents') || request()->has('home')) {
 
             $parents = request()->get('parents');
 

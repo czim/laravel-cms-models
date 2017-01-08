@@ -364,7 +364,9 @@ class ModelModule implements ModuleInterface
             'label'      => ucfirst($this->getInformation()->labelPlural()),
             'type'       => MenuPresenceType::ACTION,
             'action'     => $this->routeHelper->getRouteNameForModelClass($this->class, true) . '.index',
-            'parameters' => [],
+            'parameters' => [
+                'home' => true
+            ],
             'permissions' => [
                 "models.{$this->getRouteSlug()}.*",
             ],
