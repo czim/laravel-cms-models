@@ -27,7 +27,7 @@
         'routePrefix',
         'title',
         'hasActiveListParent',
-        'forcedListParentAll',
+        'topListParentOnly',
         'listParents'
     ))
 @endsection
@@ -43,7 +43,7 @@
                 'model',
                 'listParents',
                 'hasActiveListParent',
-                'forcedListParentAll'
+                'topListParentOnly'
             ))
 
             <div class="btn-group">

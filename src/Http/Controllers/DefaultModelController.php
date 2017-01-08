@@ -124,7 +124,6 @@ class DefaultModelController extends BaseModelController
             'unconditionalDelete' => $this->isUnconditionallyDeletable(),
             'defaultRowAction'    => $this->getDefaultRowActionInstance(),
             'hasActiveListParent' => (bool) $this->listParentRelation,
-            'forcedListParentAll' => $this->listParentRelation === false,
             'listParents'         => $this->listParents,
             'topListParentOnly'   => $this->showsTopParentsOnly(),
             'draggableOrderable'  => $this->isListOrderDraggable($totalCount, $currentCount),
@@ -151,7 +150,7 @@ class DefaultModelController extends BaseModelController
             'record'              => $record,
             'fieldStrategies'     => $this->getShowFieldStrategyInstances(),
             'hasActiveListParent' => (bool) $this->listParentRelation,
-            'forcedListParentAll' => $this->listParentRelation === false,
+            'topListParentOnly'   => $this->showsTopParentsOnly(),
             'listParents'         => $this->listParents,
         ]);
     }
@@ -187,7 +186,7 @@ class DefaultModelController extends BaseModelController
             'fieldErrors'         => $this->getNormalizedFormFieldErrors(),
             'errorsPerTab'        => $this->getErrorCountsPerTabPane(),
             'hasActiveListParent' => (bool) $this->listParentRelation,
-            'forcedListParentAll' => $this->listParentRelation === false,
+            'topListParentOnly'   => $this->showsTopParentsOnly(),
             'listParents'         => $this->listParents,
         ]);
     }
@@ -263,7 +262,7 @@ class DefaultModelController extends BaseModelController
             'fieldErrors'         => $this->getNormalizedFormFieldErrors(),
             'errorsPerTab'        => $this->getErrorCountsPerTabPane(),
             'hasActiveListParent' => (bool) $this->listParentRelation,
-            'forcedListParentAll' => $this->listParentRelation === false,
+            'topListParentOnly'   => $this->showsTopParentsOnly(),
             'listParents'         => $this->listParents,
         ]);
     }
