@@ -38,7 +38,7 @@ class EnrichValidationData extends AbstractEnricherStep
      */
     protected function enrichCreateRules()
     {
-        $rules = $this->info->validation['create'] ?: [];
+        $rules = $this->info->form->validation['create'] ?: [];
 
         // Store original rules so they may be used as a basis for update rules later.
         $this->originalCreateRules = $rules;
@@ -51,7 +51,7 @@ class EnrichValidationData extends AbstractEnricherStep
             $rules = $this->enrichRulesWithFormRules($rules, $formRules);
         }
 
-        $this->info->validation['create'] = $rules;
+        $this->info->form->validation['create'] = $rules;
 
         return $this;
     }
@@ -61,7 +61,7 @@ class EnrichValidationData extends AbstractEnricherStep
      */
     protected function enrichUpdateRules()
     {
-        $rules = $this->info->validation['update'];
+        $rules = $this->info->form->validation['update'];
 
         $formRules = $this->getFormFieldBaseRules(false);
 
@@ -78,7 +78,7 @@ class EnrichValidationData extends AbstractEnricherStep
             $rules = $this->enrichRulesWithFormRules($rules, $formRules);
         }
 
-        $this->info->validation['update'] = $rules;
+        $this->info->form->validation['update'] = $rules;
 
         return $this;
     }

@@ -9,7 +9,7 @@ class ModelCreateRequest extends AbstractModelFormRequest
      */
     public function rules()
     {
-        return array_get($this->modelInformation->validation, 'create', []);
+        return $this->modelInformation->form->validation->create();
     }
 
 }

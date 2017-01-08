@@ -32,7 +32,6 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
  * @property array|ModelListData $list
  * @property array|ModelFormData $form
  * @property array|ModelShowData $show
- * @property array $validation
  * @property array $export
  */
 class ModelInformation extends AbstractDataObject implements ModelInformationInterface
@@ -201,6 +200,21 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
             // Arrays (instances of ModelFormFieldData or ModelFormFieldGroupData) that define the editable fields for
             // the model's form in the order in which they should appear by default.
             'fields' => [],
+
+            // Settings for validation of submitted data.
+            'validation' => [
+                // Validation rules, when creating a record.
+                'create' => [],
+
+                // Validation rules, when updating a record.
+                // If null, will default to create validation rules.
+                'update' => null,
+
+                // If true, will replace default create rules set under 'create' entirely.
+                'create_replace' => null,
+                // If true, will replace default update rules set under 'update' entirely.
+                'update_replace' => null,
+            ],
         ],
 
         // Settings for rendering the show model page
@@ -209,15 +223,6 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
             // Arrays (instances of ModelShowFieldData) that define the fields to be displayed for
             // the model's show page in the order in which they should appear.
             'fields' => [],
-        ],
-
-        // Settings for validation of submitted data.
-        'validation' => [
-            // Validation rules or methods that generate them, when creating a record.
-            'create' => [],
-            // Validation rules or methods that generate them, when updating a record.
-            // If null, will default to create validation rules.
-            'update' => null,
         ],
 
         // Settings for building an export of the listing of records for this model.
@@ -329,16 +334,6 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
 
         if ( ! empty($with->original_model)) {
             $this->original_model = $with->original_model;
-        }
-
-        $withCreate = array_get($with->validation, 'create', []);
-        if (count($withCreate)) {
-            $this->validation['create'] = $withCreate;
-        }
-
-        $withUpdate = array_get($with->validation, 'update');
-        if ($withUpdate) {
-            $this->validation['update'] = $withUpdate;
         }
 
         $mergeAttributes = [

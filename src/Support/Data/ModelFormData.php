@@ -12,12 +12,13 @@ use UnexpectedValueException;
  *
  * Data container that represents form representation for the model.
  *
- * @property array                        $layout
- * @property array|ModelFormFieldData[]   $fields
- * @property array|ModelViewReferenceData $before
- * @property array|ModelViewReferenceData $after
- * @property array|ModelViewReferenceData $before_form
- * @property array|ModelViewReferenceData $after_form
+ * @property array                         $layout
+ * @property array|ModelFormFieldData[]    $fields
+ * @property array|ModelViewReferenceData  $before
+ * @property array|ModelViewReferenceData  $after
+ * @property array|ModelViewReferenceData  $before_form
+ * @property array|ModelViewReferenceData  $after_form
+ * @property array|ModelFormValidationData $validation
  */
 class ModelFormData extends AbstractDataObject implements ModelFormDataInterface
 {
@@ -27,7 +28,8 @@ class ModelFormData extends AbstractDataObject implements ModelFormDataInterface
         'after'       => ModelViewReferenceData::class,
         'before_form' => ModelViewReferenceData::class,
         'after_form'  => ModelViewReferenceData::class,
-        'fields' => ModelFormFieldData::class . '[]',
+        'fields'      => ModelFormFieldData::class . '[]',
+        'validation'  => ModelFormValidationData::class,
     ];
 
     protected $attributes = [
@@ -48,6 +50,20 @@ class ModelFormData extends AbstractDataObject implements ModelFormDataInterface
         // Arrays (instances of ModelFormFieldData or ModelFormFieldGroupData) that define the editable fields for
         // the model's form in the order in which they should appear by default.
         'fields' => [],
+
+        'validation' => [
+            // Validation rules, when creating a record.
+            'create' => [],
+
+            // Validation rules, when updating a record.
+            // If null, will default to create validation rules.
+            'update' => null,
+
+            // If true, will replace default create rules set under 'create' entirely.
+            'create_replace' => null,
+            // If true, will replace default update rules set under 'update' entirely.
+            'update_replace' => null,
+        ],
     ];
 
 
@@ -138,6 +154,7 @@ class ModelFormData extends AbstractDataObject implements ModelFormDataInterface
             'after',
             'before_form',
             'after_form',
+            'validation',
         ];
 
         foreach ($standardMergeKeys as $key) {
