@@ -194,6 +194,7 @@ trait DefaultModelListParentHandling
             $parentType = $this->getRelationMappedMorphType($parentType);
 
             $query
+                ->withoutGlobalScopes()
                 ->where($query->getModel()->getTable() . '.' . $relationInstance->getMorphType(), $parentType)
                 ->where($relationInstance->getQualifiedForeignKey(), $parentKey);
 
@@ -202,7 +203,9 @@ trait DefaultModelListParentHandling
 
         $query->whereHas($this->listParentRelation, function ($query) use ($parentInfo) {
             /** @var Builder $query */
-            $query->where($parentInfo->model->getKeyName(), $this->listParentRecordKey);
+            $query
+                ->withoutGlobalScopes()
+                ->where($parentInfo->model->getKeyName(), $this->listParentRecordKey);
         });
 
         return $this;
