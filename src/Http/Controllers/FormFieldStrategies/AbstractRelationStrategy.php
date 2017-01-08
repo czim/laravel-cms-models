@@ -62,7 +62,18 @@ abstract class AbstractRelationStrategy extends AbstractFormFieldStoreStrategy
             );
         }
 
-        return $this->getValueFromRelationQuery($relation);
+        try {
+            return $this->getValueFromRelationQuery($relation);
+
+        } catch (\Exception $e) {
+
+            throw new RuntimeException(
+                "Exception retrieving relation values for source '{$source}' "
+                . "for form field key '{$this->formFieldData->key}'",
+                0,
+                $e
+            );
+        }
     }
 
     /**
