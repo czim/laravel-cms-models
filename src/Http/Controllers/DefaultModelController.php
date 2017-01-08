@@ -527,24 +527,35 @@ class DefaultModelController extends BaseModelController
             return false;
         }
 
-        if ($this->showsTopParentsOnly() || $this->hasActiveListParent()) {
+        $showTopParentsOnly = $this->showsTopParentsOnly();
 
-            // Check if the listify scope matches
+        if ($showTopParentsOnly || $this->hasActiveListParent()) {
+
+            // Check if the listify scope relation matches on the actively scoped list parent relation
             $scopedRelation = $info->list->order_scope_relation;
 
             if ( ! $scopedRelation) {
                 return false;
             }
 
-            if ($this->hasActiveListParent()) {
+            if ($showTopParentsOnly) {
 
+                if ($scopedRelation != $info->list->default_top_relation) {
+                    return false;
+                }
+
+            } else {
                 /** @var ListParentData $parent */
                 $parent = head($this->listParents);
 
-                if (get_class($parent->model) != $info->modelClass() || $scopedRelation != $parent->relation) {
+                if ($scopedRelation != $parent->relation) {
                     return false;
                 }
             }
+
+        } else {
+            // If there is a listify relation scope and the list is not scoped at all, never draggable
+            return false;
         }
 
         $hasScope   = (bool) $this->getActiveScope();
