@@ -15,6 +15,7 @@ use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelListParentData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use UnexpectedValueException;
 
@@ -142,7 +143,7 @@ trait DefaultModelListParentHandling
         }
 
         if ($this->listParentRelation) {
-            $contextKey = $this->listParentRelation . ':' . $this->listParentRecordKey;
+            $contextKey = $this->listParentRelation . $this->getListParentSeparator() . $this->listParentRecordKey;
         } else {
             $contextKey = null;
         }
@@ -174,6 +175,28 @@ trait DefaultModelListParentHandling
         $parentInfo = array_last($this->listParents);
 
         if ( ! $parentInfo) {
+            return $this;
+        }
+
+        // For morph relation, we need a special query
+        $relationInstance = $query->getModel()->{$this->listParentRelation}();
+        if ($relationInstance instanceof MorphTo) {
+
+            $separator = $this->getListParentMorphKeySeparator();
+
+            // If parent record indicator $key does not contain class/key separator symbol, ignore
+            if (false === strpos($this->listParentRecordKey, $separator)) {
+                return $this;
+            }
+
+            list($parentType, $parentKey) = explode($separator, $this->listParentRecordKey, 2);
+
+            $parentType = $this->getRelationMappedMorphType($parentType);
+
+            $query
+                ->where($query->getModel()->getTable() . '.' . $relationInstance->getMorphType(), $parentType)
+                ->where($relationInstance->getQualifiedForeignKey(), $parentKey);
+
             return $this;
         }
 
@@ -224,6 +247,8 @@ trait DefaultModelListParentHandling
      */
     protected function updateActiveParent()
     {
+        $separator = $this->getListParentSeparator();
+
         // Check for either a full hierarchy or a 'current level' update
         if (request()->exists('parents')) {
 
@@ -241,7 +266,7 @@ trait DefaultModelListParentHandling
                 if (count($this->listParents) == count($parents)) {
                     $same = true;
                     foreach ($this->listParents as $index => $currentParent) {
-                        if ($currentParent->relation . ':'. $currentParent->key !== $parents[$index]) {
+                        if ($currentParent->relation . $separator . $currentParent->key !== $parents[$index]) {
                             $same = false;
                             break;
                         }
@@ -276,7 +301,7 @@ trait DefaultModelListParentHandling
 
             // If nothing has changed, no need to update
             if (    ! $parent && $this->listParentRelation == $parent
-                ||  $parent == $this->listParentRelation . ':' . $this->listParentRecordKey
+                ||  $parent == $this->listParentRelation . $separator . $this->listParentRecordKey
             ) {
                 return $this;
             }
@@ -290,9 +315,9 @@ trait DefaultModelListParentHandling
                 // If the parent is already present in the current history, switch to it
                 if ( ! count(array_filter(
                     $this->listParents,
-                    function ($checkParent) use ($parent) {
+                    function ($checkParent) use ($parent, $separator) {
                         /** @var ListParentData $checkParent */
-                        return $checkParent->relation . ':' . $checkParent->key == $parent;
+                        return $checkParent->relation . $separator . $checkParent->key == $parent;
                     }
                 ))) {
                     // Not set yet, prepare old parent as one layer deeper
@@ -304,7 +329,7 @@ trait DefaultModelListParentHandling
                     );
                 }
 
-                list($this->listParentRelation, $this->listParentRecordKey) = explode(':', $parent, 2);
+                list($this->listParentRelation, $this->listParentRecordKey) = explode($separator, $parent, 2);
             }
         }
 
@@ -322,6 +347,8 @@ trait DefaultModelListParentHandling
      */
     protected function normalizeListParentParameter($parent)
     {
+        $separator = $this->getListParentSeparator();
+
         if (is_integer($parent) && $parent < 0 || is_string($parent) && preg_match('#-\d+#', $parent)) {
             $parent = (int) $parent;
 
@@ -331,7 +358,7 @@ trait DefaultModelListParentHandling
                 $index = count($this->listParents) + $parent - 1;
 
                 if ($index >= 0 && isset($this->listParents[ $index ])) {
-                    $parent = $this->listParents[ $index ]->relation . ':' . $this->listParents[ $index ]->key;
+                    $parent = $this->listParents[ $index ]->relation . $separator . $this->listParents[ $index ]->key;
                 } else {
                     $parent = null;
                 }
@@ -341,7 +368,7 @@ trait DefaultModelListParentHandling
             }
         }
 
-        if (is_string($parent) && false === strpos($parent, ':')) {
+        if (is_string($parent) && false === strpos($parent, $separator)) {
             $parent = null;
         }
 
@@ -360,14 +387,14 @@ trait DefaultModelListParentHandling
         $model           = new $modelClass;
         $previousContext = null;
         $previousParent  = array_shift($parents);
-
+        $separator       = $this->getListParentSeparator();
 
         // Store top level parent as active
-        if ( ! $previousParent || is_string($previousParent) && false === strpos($previousParent, ':')) {
+        if ( ! $previousParent || is_string($previousParent) && false === strpos($previousParent, $separator)) {
             $this->listParentRelation  = $previousParent === false ? false : null;
             $this->listParentRecordKey = null;
         } else {
-            list($this->listParentRelation, $this->listParentRecordKey) = explode(':', $previousParent, 2);
+            list($this->listParentRelation, $this->listParentRecordKey) = explode($separator, $previousParent, 2);
         }
 
         $count = 0;
@@ -381,17 +408,17 @@ trait DefaultModelListParentHandling
             $count++;
 
             // If we have no interpretable parent to use as sub-context, stop
-            if ( ! $previousParent || is_string($previousParent) && false === strpos($previousParent, ':')) {
+            if ( ! $previousParent || is_string($previousParent) && false === strpos($previousParent, $separator)) {
                 break;
             }
 
             // If we have no interpretable parent as target, clear the context, and stop
-            if ( ! $parent || is_string($parent) && false === strpos($parent, ':')) {
+            if ( ! $parent || is_string($parent) && false === strpos($parent, $separator)) {
                 $this->setListParentDataInMemory(null, null, $previousParent, $previousContext);
                 break;
             }
 
-            list($relation, $key) = explode(':', $parent, 2);
+            list($relation, $key) = explode($separator, $parent, 2);
 
             // Set new parent at this level
             $this->setListParentDataInMemory($relation, $key, $previousParent, $previousContext);
@@ -448,7 +475,7 @@ trait DefaultModelListParentHandling
             } else {
 
                 if ($nextParent) {
-                    $queries[] = 'parent=' . $nextParent->relation . ':' . $nextParent->key;
+                    $queries[] = 'parent=' . $nextParent->relation . $this->getListParentSeparator() . $nextParent->key;
                 } else {
                     $queries[] = 'parents=';
                 }
@@ -474,9 +501,11 @@ trait DefaultModelListParentHandling
      */
     protected function clearEntireListParentHierarchy()
     {
+        $separator = $this->getListParentSeparator();
+
         foreach ($this->listParents as $parent) {
 
-            if ( ! $parent || is_string($parent) && false === strpos($parent, ':')) {
+            if ( ! $parent || is_string($parent) && false === strpos($parent, $separator)) {
                 break;
             }
 
@@ -485,7 +514,7 @@ trait DefaultModelListParentHandling
                 $this->getModuleHelper()->modelSlug(get_class($parent->model))
             );
 
-            $this->setListParentDataInMemory(null, null, $parent->relation . ':' . $parent->key, $context);
+            $this->setListParentDataInMemory(null, null, $parent->relation . $separator . $parent->key, $context);
         }
 
         $this->setListParentDataInMemory(null, null, $this->globalSubContext());
@@ -558,7 +587,35 @@ trait DefaultModelListParentHandling
         /** @var Relation $relationInstance */
         $relationInstance = $model->{$relation}();
 
-        $parentModel = $this->getModelByKey($relationInstance->getRelated(), $key);
+        // For MorphTo relations, we cannot know the related model from the relation
+        // instance, it being polymorphic. We have to trust the record 'key' to contain the model.
+        if ($relationInstance instanceof MorphTo) {
+
+            $separator = $this->getListParentMorphKeySeparator();
+
+            // If parent record indicator $key does not contain class/key separator symbol, ignore
+            if (false === strpos($key, $separator)) {
+                return [];
+            }
+
+            list($parentType, $parentKey) = explode($separator, $key, 2);
+
+            $parentModelClass = $this->getRelationMappedMorphClass($parentType);
+
+            if ( ! is_a($parentModelClass, Model::class, true)) {
+                throw new UnexpectedValueException(
+                    "Parent record indicator {$key} does not refer to usable Eloquent model parent."
+                );
+            }
+
+            $parentModel = new $parentModelClass;
+            $key         = $parentKey;
+
+        } else {
+            $parentModel = $relationInstance->getRelated();
+        }
+
+        $parentModel = $this->getModelByKey($parentModel, $key);
 
         if ( ! $parentModel) {
             return [];
@@ -777,6 +834,66 @@ trait DefaultModelListParentHandling
     protected function globalSubContext()
     {
         return '__global__';
+    }
+
+    /**
+     * Returns separator between relation method name and list parent record key (or morph indicator).
+     *
+     * @return string
+     */
+    protected function getListParentSeparator()
+    {
+        return ':';
+    }
+
+    /**
+     * Returns separator between class name and key for ListParentRecordKeys for MorphTo.
+     *
+     * @return string
+     */
+    protected function getListParentMorphKeySeparator()
+    {
+        return ':';
+    }
+
+    /**
+     * Returns morph relation type string for a model class, or returns class if not mapped.
+     *
+     * @param string $class
+     * @return string
+     */
+    protected function getRelationMappedMorphType($class)
+    {
+        $map = Relation::morphMap();
+
+        if (empty($map)) {
+            return ltrim($class, '\\');
+        }
+
+        if (    false !== ($type = array_search($class, $map))
+            ||  false !== ($type = array_search(ltrim($class, '\\'), $map))
+        ) {
+            return $type;
+        }
+
+        return trim($class, '\\');
+    }
+
+    /**
+     * Returns morph relation class string for a morph relation type, or type if already a class.
+     *
+     * @param string $type
+     * @return string
+     */
+    protected function getRelationMappedMorphClass($type)
+    {
+        $map = Relation::morphMap();
+
+        if (empty($map)) {
+            return $type;
+        }
+
+        return array_get($map, $type, ltrim($type, '\\'));
     }
 
 

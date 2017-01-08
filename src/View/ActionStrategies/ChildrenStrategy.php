@@ -4,6 +4,8 @@ namespace Czim\CmsModels\View\ActionStrategies;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class ChildrenStrategy extends AbstractActionStrategy
 {
@@ -37,6 +39,13 @@ class ChildrenStrategy extends AbstractActionStrategy
      */
     protected $relation;
 
+    /**
+     * Whether the relation is of the MorphTo type.
+     *
+     * @var bool
+     */
+    protected $isMorphTo;
+
 
     /**
      * Performs initialization.
@@ -45,7 +54,8 @@ class ChildrenStrategy extends AbstractActionStrategy
     protected function performInit()
     {
         $this->prepareTargetRoute()
-             ->prepareParentParameter();
+             ->prepareParentParameter()
+             ->checkForMorphToRelation();
 
 
         // Check permissions
@@ -70,8 +80,15 @@ class ChildrenStrategy extends AbstractActionStrategy
             return false;
         }
 
+        // If the relation is morphTo, the key needs to be prepared with type:key identicator
+        if ($this->isMorphTo) {
+            $parentIndicator = $this->getMorphTypeForModel($this->modelClass) . ':' . $model->getKey();
+        } else {
+            $parentIndicator = $model->getKey();
+        }
+
         return route($this->routePrefix . static::ROUTE_POSTFIX)
-             . '?parent=' . $this->relation . ':' . $model->getKey();
+             . '?parent=' . $this->relation . ':' . $parentIndicator;
     }
 
     /**
@@ -106,7 +123,27 @@ class ChildrenStrategy extends AbstractActionStrategy
     }
 
     /**
+     * @return $this
+     */
+    protected function checkForMorphToRelation()
+    {
+        $relationInstance = (new $this->otherModelClass)->{$this->relation}();
+
+        if ( ! ($relationInstance instanceof Relation)) {
+            throw new \UnexpectedValueException(
+                "Method '{$this->relation}' on model '{$this->otherModelClass}' is not a relation"
+            );
+        }
+
+        $this->isMorphTo = $relationInstance instanceof MorphTo;
+
+        return $this;
+    }
+
+    /**
      * Returns the model FQN for the target model for the link.
+     *
+     * If the relationship is MorphTo, we cannot know the model class in every case.
      *
      * @return string
      */

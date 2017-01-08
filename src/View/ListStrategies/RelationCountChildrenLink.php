@@ -5,6 +5,8 @@ use Czim\CmsCore\Contracts\Modules\ModuleManagerInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
  * Class RelationCountChildrenLink
@@ -39,20 +41,61 @@ class RelationCountChildrenLink extends RelationCount
 
         $childrenName = $this->getVerboseChildrenName($modelClass);
 
+        if ($this->isMorphToRelation($modelClass, $relationMethod)) {
+            $parentIndicator = $this->getMorphTypeForModel($model) . ':' . $model->getKey();
+        } else {
+            $parentIndicator = $model->getKey();
+        }
+
         return view(static::VIEW, [
             'count'        => $count,
-            'link'         => $this->getChildrenLink($model->getKey(), $relationMethod, $modelClass),
+            'link'         => $this->getChildrenLink($parentIndicator, $relationMethod, $modelClass),
             'childrenName' => $childrenName,
         ])->render();
     }
 
     /**
-     * @param mixed  $parentKey         key of the current model
+     * Returns whether the relation on a model class is a MorphTo relation.
+     *
+     * @param string $modelClass
+     * @param string $relation
+     * @return bool
+     */
+    protected function isMorphToRelation($modelClass, $relation)
+    {
+        $relationInstance = (new $modelClass)->{$relation}();
+
+        return $relationInstance instanceof MorphTo;
+    }
+
+    /**
+     * @param Model $model
+     * @return string
+     */
+    protected function getMorphTypeForModel(Model $model)
+    {
+        $map = Relation::morphMap();
+
+        $class = ltrim(get_class($model), '\\');
+
+        if (empty($map)) {
+            return $class;
+        }
+
+        if (false !== ($type = array_search($class, $map))) {
+            return $type;
+        }
+
+        return $class;
+    }
+
+    /**
+     * @param mixed  $parentIndicator   key of the current model, or class/type:key for morphTo
      * @param string $relationMethod
      * @param null   $modelClass        key of the related model (for which the current model is the parent)
      * @return bool|string
      */
-    protected function getChildrenLink($parentKey, $relationMethod, $modelClass)
+    protected function getChildrenLink($parentIndicator, $relationMethod, $modelClass)
     {
         if (empty($relationMethod)) {
             throw new \UnexpectedValueException(get_class($this) . ' requires option.relation to be set!');
@@ -80,7 +123,7 @@ class RelationCountChildrenLink extends RelationCount
 
         $routePrefix = $routeHelper->getRouteNameForModelClass($modelClass, true);
 
-        return cms_route("{$routePrefix}.index") . "?parent={$relationMethod}:{$parentKey}";
+        return cms_route("{$routePrefix}.index") . "?parent={$relationMethod}:{$parentIndicator}";
     }
 
     /**
