@@ -90,9 +90,9 @@ class ModelAnalyzer
              ->fillBasicInformation()
              ->analyzeGlobalScopes()
              ->analyzeAttributes()
+             ->analyzeRelationships()
              ->analyzeTraits()
              ->analyzeScopes()
-             ->analyzeRelationships()
              ->analyzeTranslation();
 
         return $this->info;
@@ -363,6 +363,17 @@ class ModelAnalyzer
             $this->info->list->orderable      = true;
             $this->info->list->order_strategy = 'listify';
             $this->info->list->order_column   = $this->model->positionColumn();
+
+            // Determine whether an (interpretable) scope is configured
+            if (method_exists($this->model, 'getScopeName')) {
+                $scope = $this->model->getScopeName();
+
+                if ($scope instanceof Relation) {
+                    // Attempt to resolve the relation method name from the relation instance
+                    $this->info->list->order_scope_relation = $this->getRelationNameFromRelationInstance($scope);
+                }
+            }
+
         }
 
         return $this;
@@ -745,6 +756,25 @@ class ModelAnalyzer
         $this->reflection = new ReflectionClass($this->class);
 
         return $this;
+    }
+
+    /**
+     * Returns relation method name related to a relation instance.
+     *
+     * @param Relation $relation
+     * @return null|string
+     */
+    protected function getRelationNameFromRelationInstance(Relation $relation)
+    {
+        // Get all relations, load instances and compare them loosely
+        foreach ($this->info->relations as $relationData) {
+
+            if ($relation == $this->model->{$relationData->method}()) {
+                return $relationData->method;
+            }
+        }
+
+        return null;
     }
 
     /**
