@@ -528,11 +528,11 @@ class DefaultModelController extends BaseModelController
         }
 
         $showTopParentsOnly = $this->showsTopParentsOnly();
+        $scopedRelation     = $info->list->order_scope_relation;
 
         if ($showTopParentsOnly || $this->hasActiveListParent()) {
 
             // Check if the listify scope relation matches on the actively scoped list parent relation
-            $scopedRelation = $info->list->order_scope_relation;
 
             if ( ! $scopedRelation) {
                 return false;
@@ -553,7 +553,7 @@ class DefaultModelController extends BaseModelController
                 }
             }
 
-        } else {
+        } elseif ($scopedRelation) {
             // If there is a listify relation scope and the list is not scoped at all, never draggable
             return false;
         }
