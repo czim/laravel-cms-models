@@ -8,7 +8,7 @@ interface ActionStrategyInterface
 {
 
     /**
-     * Initializes the strategy instances for further calls.
+     * Initializes the strategy instance for further calls.
      *
      * @param ModelActionReferenceDataInterface $data
      * @param string                            $modelClass     FQN of current model

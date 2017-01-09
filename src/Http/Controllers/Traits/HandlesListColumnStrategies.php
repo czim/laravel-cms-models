@@ -19,18 +19,21 @@ trait HandlesListColumnStrategies
     {
         $instances = [];
 
-        foreach ($this->getModelInformation()->list->columns as $key => $data) {
+        $info = $this->getModelInformation();
+
+        foreach ($info->list->columns as $key => $data) {
 
             $instance = $this->getListDisplayFactory()->make($data->strategy);
 
             // Feed any extra information we can gather to the instance
-            $instance->setListInformation($data);
-            $instance->setOptions($data->options());
+            $instance
+                ->setListInformation($data)
+                ->setOptions($data->options());
 
             if ($data->source) {
-                if (isset($this->getModelInformation()->attributes[ $data->source ])) {
+                if (isset($info->attributes[ $data->source ])) {
                     $instance->setAttributeInformation(
-                        $this->getModelInformation()->attributes[ $data->source ]
+                        $info->attributes[ $data->source ]
                     );
                 }
             }

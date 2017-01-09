@@ -1,12 +1,20 @@
 <?php
 namespace Czim\CmsModels\Contracts\View;
 
-use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelListColumnDataInterface;
-use Illuminate\Database\Eloquent\Model;
 
 interface ListDisplayInterface extends ShowFieldInterface
 {
+
+    /**
+     * Initializes the strategy instance for further calls.
+     *
+     * Should be called after setListInformation, if this is set at all.
+     *
+     * @param string $modelClass
+     * @return $this
+     */
+    public function initialize($modelClass);
 
     /**
      * Sets the list column data to use.
