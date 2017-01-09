@@ -291,6 +291,9 @@ Example:
     ]
 ```
 
+Regardless of whether rules are replaced or enriched, any rule configured with a value of `false` or `null` will be disabled.
+No default rules for that field key (or specific rule key) will be included in the final ruleset.
+
 
 ## Custom Before or After Views
 
