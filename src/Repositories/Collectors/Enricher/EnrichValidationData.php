@@ -19,6 +19,20 @@ class EnrichValidationData extends AbstractEnricherStep
     protected $originalCreateRules;
 
     /**
+     * List of rules generated for the current context (create/update).
+     *
+     * @var array
+     */
+    protected $generatedRules = [];
+
+    /**
+     * Mapping of generated rules per form field.
+     *
+     * @var array   associative, list of rule keys, keyed by form field key
+     */
+    protected $generatedRulesMap = [];
+
+    /**
      * Performs enrichment of validation rules based on form field strategies.
      */
     protected function performEnrichment()
@@ -38,17 +52,19 @@ class EnrichValidationData extends AbstractEnricherStep
      */
     protected function enrichCreateRules()
     {
+        $this->generatedRulesMap = [];
+
         $rules = $this->info->form->validation['create'] ?: [];
 
         // Store original rules so they may be used as a basis for update rules later.
         $this->originalCreateRules = $rules;
 
-        $formRules = $this->getFormFieldBaseRules(true);
+        $this->generatedRules = $this->getFormFieldBaseRules(true);
 
         if ( ! count($rules)) {
-            $rules = $formRules;
+            $rules = $this->generatedRules;
         } else {
-            $rules = $this->enrichRulesWithFormRules($rules, $formRules);
+            $rules = $this->enrichRulesWithFormRules($rules, true);
         }
 
         $this->info->form->validation['create'] = $rules;
@@ -63,7 +79,7 @@ class EnrichValidationData extends AbstractEnricherStep
     {
         $rules = $this->info->form->validation['update'];
 
-        $formRules = $this->getFormFieldBaseRules(false);
+        $this->generatedRules = $this->getFormFieldBaseRules(false);
 
         // If no specific update rules were defined, use the
         // create rules as a starting point.
@@ -73,9 +89,9 @@ class EnrichValidationData extends AbstractEnricherStep
         }
 
         if ( ! count($rules)) {
-            $rules = $formRules;
+            $rules = $this->generatedRules;
         } else {
-            $rules = $this->enrichRulesWithFormRules($rules, $formRules);
+            $rules = $this->enrichRulesWithFormRules($rules);
         }
 
         $this->info->form->validation['update'] = $rules;
@@ -87,23 +103,32 @@ class EnrichValidationData extends AbstractEnricherStep
      * Enrich a given set of rules with form field data determined.
      *
      * @param array $rules      rules to be enriched
-     * @param array $formRules  rules determined based on form field data
+     * @param bool  $forCreate  whether the enrichment is for the 'create' section
      * @return array
      */
-    protected function enrichRulesWithFormRules(array $rules, array $formRules)
+    protected function enrichRulesWithFormRules(array $rules, $forCreate = false)
     {
         // If rules are set, they should not overwritten,
         // and unkeyed string values should be enriched.
         // But keys not present should not be enriched or included.
 
-        $enrichedRules = [];
+        $enrichedRules    = [];
+        $disabledRuleKeys = [];
+
+        $replace = $this->info->form->validation->{($forCreate ? 'create' : 'update') . '_replace'};
 
         foreach ($rules as $key => $ruleParts) {
 
+            // If the value for this key is false, the rule must be ignored entirely.
+            if (false === $ruleParts) {
+                $disabledRuleKeys[] = $key;
+                continue;
+            }
+
             // Enrich keys without values if possible
             if (is_string($ruleParts) && is_numeric($key)) {
-                if (array_key_exists($ruleParts, $formRules)) {
-                    $enrichedRules[ $ruleParts ] = $formRules[ $ruleParts ];
+                if (array_key_exists($ruleParts, $this->generatedRules)) {
+                    $enrichedRules[ $ruleParts ] = $this->generatedRules[ $ruleParts ];
                 }
                 continue;
             }
@@ -114,6 +139,31 @@ class EnrichValidationData extends AbstractEnricherStep
             }
 
             $enrichedRules[ $key ] = $ruleParts;
+        }
+
+        // If not replacing all rules, append any key not present
+        // and not explicitly disabled.
+        if ( ! $replace) {
+
+            foreach ($this->generatedRulesMap as $fieldKey => $ruleKeys) {
+
+                // The field key or any of the child rules keys may be disabled.
+                if (in_array($fieldKey, $disabledRuleKeys) || array_key_exists($fieldKey, $enrichedRules)) {
+                    continue;
+                }
+
+                foreach (array_diff($ruleKeys, $disabledRuleKeys) as $ruleKey) {
+
+                    if (    ! array_key_exists($ruleKey, $this->generatedRules)
+                        ||  ! count($this->generatedRules[ $ruleKey ])
+                        ||  array_key_exists($ruleKey, $enrichedRules)
+                    ) {
+                        continue;
+                    }
+
+                    $enrichedRules[ $ruleKey ] = $this->generatedRules[ $ruleKey ];
+                }
+            }
         }
 
         return $enrichedRules;
@@ -127,9 +177,13 @@ class EnrichValidationData extends AbstractEnricherStep
      */
     protected function getFormFieldBaseRules($forCreate = true)
     {
+        $this->generatedRulesMap = [];
+
         $rules = [];
 
         foreach ($this->info->form->fields as $field) {
+
+            $this->generatedRulesMap[ $field->key() ] = [];
 
             // Leave out fields that are not relevant
             if ($forCreate && ! $field->create() || ! $forCreate && ! $field->update()) {
@@ -152,9 +206,11 @@ class EnrichValidationData extends AbstractEnricherStep
             if (Arr::isAssoc($fieldRules)) {
                 foreach ($fieldRules as $key => $nestedFieldRules) {
                     $rules[ $key ] = $nestedFieldRules;
+                    $this->generatedRulesMap[ $field->key() ][] = $key;
                 }
             } else {
                 $rules[ $field->key() ] = $fieldRules;
+                $this->generatedRulesMap[ $field->key() ][] = $field->key();
             }
         }
 

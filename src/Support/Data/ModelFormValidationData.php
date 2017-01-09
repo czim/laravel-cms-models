@@ -68,6 +68,10 @@ class ModelFormValidationData extends AbstractDataObject implements ModelFormVal
         }
 
         // Merge validation rules
+        //
+        // Note that actual _replace logic and generation of validation rules based on
+        // attributes/relations and model analysis is done during enrichment.
+
         $withCreate = $with->create;
         if (count($withCreate)) {
             $this->create = $withCreate;
