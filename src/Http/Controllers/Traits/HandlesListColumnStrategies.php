@@ -38,6 +38,8 @@ trait HandlesListColumnStrategies
                 }
             }
 
+            $instance->initialize($info->modelClass());
+
             $instances[ $key ] = $instance;
         }
 

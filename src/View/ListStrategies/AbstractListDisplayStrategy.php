@@ -136,4 +136,17 @@ abstract class AbstractListDisplayStrategy implements ListDisplayInterface
         return $this;
     }
 
+    /**
+     * Initializes the strategy instance for further calls.
+     *
+     * Should be called after setListInformation, if this is set at all.
+     *
+     * @param string $modelClass
+     * @return $this
+     */
+    public function initialize($modelClass)
+    {
+        return $this;
+    }
+
 }
