@@ -29,7 +29,7 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
     /**
      * @var ModelInformationRepositoryInterface
      */
-    private $infoRepository;
+    protected $infoRepository;
 
 
     /**
