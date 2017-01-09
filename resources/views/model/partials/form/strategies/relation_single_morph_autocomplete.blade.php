@@ -36,7 +36,7 @@
              * @return string
              */
             var getReferenceForModelClass = function(modelClass) {
-                console.log(modelClass);
+
                 switch (modelClass) {
     @foreach ($modelLabels as $modelClass => $label)
                 case "{{ str_replace('\\', '\\\\', $modelClass) }}":
