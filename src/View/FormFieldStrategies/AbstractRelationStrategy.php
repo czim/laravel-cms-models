@@ -4,9 +4,18 @@ namespace Czim\CmsModels\View\FormFieldStrategies;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelReferenceRepositoryInterface;
 use Czim\CmsModels\Contracts\Support\MetaReferenceDataProviderInterface;
+use Illuminate\Database\Eloquent\Model;
+use UnexpectedValueException;
 
 abstract class AbstractRelationStrategy extends AbstractDefaultStrategy
 {
+
+    /**
+     * Thesholds for increasing minimum input length for autocomplete fields
+     */
+    const AUTOCOMPLETE_INPUT_THRESHOLD_ONE   = 50;
+    const AUTOCOMPLETE_INPUT_THRESHOLD_TWO   = 250;
+    const AUTOCOMPLETE_INPUT_THRESHOLD_THREE = 1000;
 
     /**
      * Returns references for model keys as an array keyed per model key.
@@ -79,6 +88,70 @@ abstract class AbstractRelationStrategy extends AbstractDefaultStrategy
         return ucfirst(str_replace('\\', ' ', $modelClass));
     }
 
+    /**
+     * Returns the best minimum input length for autocomplete input ajax triggers.
+     *
+     * @return int
+     */
+    protected function determineBestMinimumInputLength()
+    {
+        $info = $this->getModelInformation(get_class($this->model));
+
+        // Check if this is a multiple-model (morphTo), get the target models.
+        $models = $this->getReferenceDataProvider()->getNestedModelClassesByType(
+            $info,
+            'form.field',
+            $this->field->key()
+        );
+
+        if ($models && count($models)) {
+
+            $total = array_reduce($models, function ($carry, $modelClass) {
+                return $carry + $this->getCountForModel($modelClass);
+            });
+
+        } else {
+            // Otherwise, rely on the reference data to provide
+            $referenceData = $this->getReferenceDataProvider()
+                ->getForInformationByType($info, 'form.field', $this->field->key());
+
+            $total = $this->getCountForModel($referenceData->model());
+        }
+
+        if (null === $total) {
+            return 1;
+        }
+
+        if ($total > static::AUTOCOMPLETE_INPUT_THRESHOLD_THREE) {
+            return 3;
+        }
+
+        if ($total > static::AUTOCOMPLETE_INPUT_THRESHOLD_TWO) {
+            return 2;
+        }
+
+        if ($total > static::AUTOCOMPLETE_INPUT_THRESHOLD_ONE) {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Returns total count for a model classname.
+     *
+     * @param string $modelClass
+     * @return int
+     */
+    protected function getCountForModel($modelClass)
+    {
+        if ( ! is_a($modelClass, Model::class, true)) {
+            throw new UnexpectedValueException("'{$modelClass}' is not an Eloquent model class.");
+        }
+
+        return $modelClass::withoutGlobalScopes()->count() ?: 0;
+    }
+
 
     /**
      * @return MetaReferenceDataProviderInterface
@@ -97,7 +170,7 @@ abstract class AbstractRelationStrategy extends AbstractDefaultStrategy
     }
 
     /**
-     * @param $modelClass
+     * @param string $modelClass
      * @return \Czim\CmsModels\Support\Data\ModelInformation|false
      */
     protected function getModelInformation($modelClass)

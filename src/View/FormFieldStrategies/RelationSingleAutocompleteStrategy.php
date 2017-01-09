@@ -27,6 +27,13 @@ class RelationSingleAutocompleteStrategy extends AbstractRelationStrategy
 
         $data['references'] = $this->getReferencesForModelKeys([ $data['value'] ]);
 
+        // Determine the min. input length to trigger autocomplete ajax lookups
+        $data['minimumInputLength'] = array_get(
+            $this->field->options(),
+            'minimum_input_length',
+            $this->determineBestMinimumInputLength()
+        );
+
         return $data;
     }
 

@@ -100,7 +100,7 @@
                     cache: false
                 },
 
-                minimumInputLength: 1
+                minimumInputLength: {{ $minimumInputLength }}
             });
         });
     </script>

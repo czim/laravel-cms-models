@@ -68,7 +68,7 @@
                     cache   : false
                 },
 
-                minimumInputLength: 1
+                minimumInputLength: {{ $minimumInputLength }}
 
                 // let our custom formatter work
 //                escapeMarkup: function (markup) { return markup; }

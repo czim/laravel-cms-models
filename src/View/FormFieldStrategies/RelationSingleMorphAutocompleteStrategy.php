@@ -49,6 +49,16 @@ class RelationSingleMorphAutocompleteStrategy extends AbstractRelationStrategy
             $data['references'] = [];
         }
 
+
+        // Determine the min. input length to trigger autocomplete ajax lookups
+        // Since it may be assumed that the result count is large for combined model results,
+        // always default to at least 1 character.
+        $data['minimumInputLength'] = array_get(
+            $this->field->options(),
+            'minimum_input_length',
+            $this->determineBestMinimumInputLength()
+        );
+
         return $data;
     }
 
