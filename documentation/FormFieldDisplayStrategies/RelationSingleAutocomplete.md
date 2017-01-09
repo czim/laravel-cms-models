@@ -37,7 +37,9 @@ In any case these options may still be overridden to specificy specific referenc
 - `parameters` (array, associative)  
     Optional parameters that may be required by the `strategy`.
     
-    
+- `minimum_input_length` (integer)  
+    The minimum input length to trigger ajax lookups for the autocomplete input. `0` Opens with full list by default.
+
  
  ```php
      'options' => [
