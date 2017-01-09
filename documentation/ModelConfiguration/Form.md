@@ -216,6 +216,82 @@ Additionally, the following property may be set:
     ]
 ```
 
+## Validation Rules
+
+Validation rules are defined in the `form.validation`  section of the model configuration.
+ 
+They defined per [form field](#fields) key.
+The syntax should follow standard Laravel validation rule syntax: a string with `|` separated rules, or an array of rule strings.
+
+
+### Create & Update Rules
+
+By default (in CMS-generated validation rules configuration), create and update form validation rules are the same.
+
+When setting rules manually that should similarly affect both forms, set them in the `create` section. 
+As long as the `update` section is left empty, create rules will be used in any case.
+
+Example:
+```php
+    'form' => [
+        // ...
+        
+        'validation' => [
+            
+            'create' => [
+                'name'        => 'required|string',
+                'description' => [ 'string', 'max:512' ],
+            ]
+        ]
+    ]
+```
+
+It is possible to make different rules for the create and update forms, by defining rules for each section separately.\
+
+In case only the `update` section rules are set, create rules are left default.
+
+Example:
+
+```php
+    'validation' => [
+    
+        // Only require the 'name' field to be filled when creating.
+        'create' => [
+            'name' => 'required|string',
+        ],
+        
+        'update' => [
+            'name' => 'string',
+        ]
+    ]
+```
+
+### Overriding vs. Enriching Rules
+
+By default, any configured rules are will replace all default rules *for that form field*, but leave all *other* form field validation rules unaffected.
+
+It is possible to change this behaviour using the `form.validation.create_replace` and `form.validation.update_replace` keys. 
+Set them to `true` to let the `create` and `update` sections, respectively, completed replace any default CMS-defined rules.
+If this is used, any key not present in the relevant rule section will *not* have validation rules at all.
+
+Example:
+```php
+    'validation' => [
+    
+        // Put the update rule section in 'replace' mode. 
+        `update_replace` => true,
+        
+        // Now the *only* validation rule for the update form 
+        // will be for the 'name' form field.
+        'update' => [
+            'name' => 'required|string',
+        ]
+        
+        // The create rules are unaffected by this.
+    ]
+```
+
+
 ## Custom Before or After Views
 
 To futher customize the form page, it is possible to indicate `before` and/or `after`, `before_form` and/or `after_form` view references: pointers to a view path and (optionally) a list of variables that should be passed into them.
