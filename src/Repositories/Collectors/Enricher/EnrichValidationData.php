@@ -119,8 +119,8 @@ class EnrichValidationData extends AbstractEnricherStep
 
         foreach ($rules as $key => $ruleParts) {
 
-            // If the value for this key is false, the rule must be ignored entirely.
-            if (false === $ruleParts) {
+            // If the value for this key is false/null, the rule must be ignored entirely.
+            if (false === $ruleParts || empty($ruleParts)) {
                 $disabledRuleKeys[] = $key;
                 continue;
             }
