@@ -24,11 +24,15 @@ This list is not exhaustive; custom strategy classes and aliases may be created 
 - [**`Dropdown`**](FormFieldDisplayStrategies/Dropdown.md)  
     Dropdown select with customizable options.
     
+- [**`Location`**](FormFieldDisplayStrategies/Location.md)  
+    Google Maps based location picker.
+    
 - [**`Static`**](FormFieldDisplayStrategies/Static.md)  
     Static value display, optionally with list strategy.
     
 - [**`Wysiwyg`**](FormFieldDisplayStrategies/Wysiwyg.md)  
     WYSIWYG rich text editor (HTML) field.
+    
    
 
 ### Files
@@ -87,8 +91,11 @@ This list is not exhaustive; custom strategy classes and aliases may be created 
 - [**`Date`**](FormFieldStoreStrategies/Date.md)  
     For date time values (`timestamp`, `date`, `datetime`, `time`).
 
-- [**`Date`**](FormFieldStoreStrategies/DateRange.md)
+- [**`DateRange`**](FormFieldStoreStrategies/DateRange.md)  
     Stores start and end a date range values for separate attributes of a model.
+    
+- [**`LocationFields`**](FormFieldStoreStrategies/LocationFields.md)  
+    Stores location fields (latitude, longitude, and location string).
 
 - [**`PasswordUpdate`**](FormFieldStoreStrategies/PasswordUpdate.md)  
     For storing hashed passwords, but only if entered.

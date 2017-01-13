@@ -315,6 +315,7 @@ return [
                 Enums\FormDisplayStrategy::DATEPICKER_TIME     => 'TimeStrategy',
                 Enums\FormDisplayStrategy::DATEPICKER_RANGE    => 'DateRangeStrategy',
                 Enums\FormDisplayStrategy::COLORPICKER         => 'ColorStrategy',
+                Enums\FormDisplayStrategy::LOCATIONPICKER      => 'LocationStrategy',
 
                 Enums\FormDisplayStrategy::ATTACHMENT_STAPLER_IMAGE => 'AttachmentStaplerImageStrategy',
                 Enums\FormDisplayStrategy::ATTACHMENT_STAPLER_FILE  => 'AttachmentStaplerFileStrategy',
@@ -334,6 +335,7 @@ return [
                 Enums\FormStoreStrategy::BOOLEAN                => 'BooleanStrategy',
                 Enums\FormStoreStrategy::DATE                   => 'DateStrategy',
                 Enums\FormStoreStrategy::DATE_RANGE             => 'DateRangeStrategy',
+                Enums\FormStoreStrategy::LOCATION_FIELDS        => 'LocationFieldsStrategy',
                 Enums\FormStoreStrategy::STAPLER                => 'StaplerStrategy',
                 Enums\FormStoreStrategy::RELATION_SINGLE_KEY    => 'RelationSingleKey',
                 Enums\FormStoreStrategy::RELATION_PLURAL_KEYS   => 'RelationPluralKeys',
@@ -445,6 +447,41 @@ return [
 
         // Default configuration file to use, relative to the base path
         'config' => 'default.js',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | API Keys
+    |--------------------------------------------------------------------------
+    |
+    | Third party service API keys.
+    |
+    */
+
+    'api-keys' => [
+
+        'google-maps' => env('GOOGLE_MAPS_API_KEY'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Strategy Settings
+    |--------------------------------------------------------------------------
+    |
+    | Settings for custom form, list and other strategies.
+    |
+    */
+
+    'custom-strategies' => [
+
+        'location' => [
+            'default' => [
+                'location'  => '2312 HZ Leiden, Netherlands',
+                'latitude'  => 52.1601144,
+                'longitude' => 4.497009700000035,
+            ]
+        ],
+
     ],
 
 ];
