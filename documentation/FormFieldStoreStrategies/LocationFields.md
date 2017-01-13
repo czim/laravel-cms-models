@@ -11,8 +11,8 @@ Expects an array like so:
 
 ```
     [
-        'latitude'  => 4.497009700000035,
-        'longitude' => 52.1601144,
+        'latitude'  => 52.1601144,
+        'longitude' => 4.497009700000035,
         'location'  => '2312 HZ Leiden, Netherlands',
     ]
 ```
