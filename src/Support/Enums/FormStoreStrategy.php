@@ -8,6 +8,7 @@ class FormStoreStrategy extends Enum
     const BOOLEAN                = 'boolean';
     const DATE                   = 'date';
     const DATE_RANGE             = 'date-range';
+    const LOCATION_FIELDS        = 'location-fields';
     const STAPLER                = 'stapler';
     const RELATION_SINGLE_KEY    = 'relation-single-key';
     const RELATION_PLURAL_KEYS   = 'relation-plural-key';
