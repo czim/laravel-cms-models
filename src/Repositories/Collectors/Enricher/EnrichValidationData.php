@@ -33,6 +33,11 @@ class EnrichValidationData extends AbstractEnricherStep
     protected $generatedRulesMap = [];
 
     /**
+     * @var array
+     */
+    protected $layoutFields = [];
+
+    /**
      * Performs enrichment of validation rules based on form field strategies.
      */
     protected function performEnrichment()
@@ -40,6 +45,8 @@ class EnrichValidationData extends AbstractEnricherStep
         if ( ! count($this->info->form->fields)) {
             return;
         }
+
+        $this->layoutFields = $this->info->form->getLayoutFormFieldKeys();
 
         $this->enrichCreateRules()
              ->enrichUpdateRules();
@@ -185,8 +192,10 @@ class EnrichValidationData extends AbstractEnricherStep
 
             $this->generatedRulesMap[ $field->key() ] = [];
 
-            // Leave out fields that are not relevant
-            if ($forCreate && ! $field->create() || ! $forCreate && ! $field->update()) {
+            // Leave out fields that are not relevant (or not in the layout)
+            if (    $forCreate && ! $field->create() || ! $forCreate && ! $field->update()
+                ||  ! in_array($field->key(), $this->layoutFields)
+            ) {
                 continue;
             }
 
