@@ -111,3 +111,7 @@
 @push('javascript-head')
     <script src="//maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&sensor=false&libraries=places"></script>
 @endpush
+
+@push('javascript-end')
+    <script src="{{ asset('_cms/js/locationpicker.jquery.min.js') }}"></script>
+@endpush
