@@ -102,6 +102,17 @@ class ModelLogListener
         );
     }
 
+    public function modelListExported(Events\ModelListExportedInCms $event)
+    {
+        $this->core->log(
+            LogLevel::INFO,
+            "Model list was exported ({$event->strategy}) "
+            . $event->modelClass
+            . $this->getUserPostfix()
+            . $this->getIpPostfix()
+        );
+    }
+
     /**
      * Returns user name for currently logged in user, if known.
      *

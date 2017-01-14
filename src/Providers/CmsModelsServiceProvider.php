@@ -44,9 +44,9 @@ use Czim\CmsModels\Support\Routing\RouteHelper;
 use Czim\CmsModels\Support\Session\ModelListMemory;
 use Czim\CmsModels\Support\Strategies\MetaReferenceDataProvider;
 use Czim\CmsModels\Support\Translation\TranslationLocaleHelper;
-use Illuminate\Support\ServiceProvider;
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsCore\Support\Enums\Component;
+use Illuminate\Support\ServiceProvider;
 
 class CmsModelsServiceProvider extends ServiceProvider
 {
@@ -69,6 +69,7 @@ class CmsModelsServiceProvider extends ServiceProvider
         Events\ModelActivatedInCms::class       => ModelLogListener::class . '@modelActivated',
         Events\ModelDeactivatedInCms::class     => ModelLogListener::class . '@modelDeactivated',
         Events\ModelPositionUpdatedInCms::class => ModelLogListener::class . '@modelPositionUpdated',
+        Events\ModelListExportedInCms::class    => ModelLogListener::class . '@modelListExported',
     ];
 
 
