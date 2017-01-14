@@ -29,6 +29,13 @@ interface ModelFormDataInterface extends ArrayAccess, Arrayable
     public function layout();
 
     /**
+     * Returns a list of form field keys present in the layout.
+     *
+     * @return string[]
+     */
+    public function getLayoutFormFieldKeys();
+
+    /**
      * @param ModelFormDataInterface $with
      */
     public function merge(ModelFormDataInterface $with);

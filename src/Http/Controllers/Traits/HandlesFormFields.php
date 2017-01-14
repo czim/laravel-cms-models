@@ -3,7 +3,6 @@ namespace Czim\CmsModels\Http\Controllers\Traits;
 
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
-use Czim\CmsModels\Contracts\Data\ModelFormLayoutNodeInterface;
 use Czim\CmsModels\Contracts\Data\ModelFormTabDataInterface;
 use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
 use Czim\CmsModels\Support\Data\ModelFormFieldData;
@@ -26,25 +25,7 @@ trait HandlesFormFields
      */
     protected function getRelevantFormFieldKeys($creating = false)
     {
-        $layout = $this->getModelInformation()->form->layout();
-
-        $fieldKeys = [];
-
-        foreach ($layout as $key => $value) {
-
-            if ($value instanceof ModelFormLayoutNodeInterface) {
-                $fieldKeys = array_merge($fieldKeys, $this->getNestedFormFieldKeys($value));
-                continue;
-            }
-
-            if ( ! is_string($value)) {
-                continue;
-            }
-
-            $fieldKeys[] = $value;
-        }
-
-        $fieldKeys = array_unique($fieldKeys);
+        $fieldKeys = $this->getModelInformation()->form->getLayoutFormFieldKeys();
 
         // Filter out keys that should not be available
         $fieldKeys = array_filter($fieldKeys, function ($key) use ($creating) {
@@ -68,33 +49,6 @@ trait HandlesFormFields
 
             return $fieldData->update();
         });
-
-        return $fieldKeys;
-    }
-
-    /**
-     * @param ModelFormLayoutNodeInterface $node
-     * @return string[]
-     */
-    protected function getNestedFormFieldKeys(ModelFormLayoutNodeInterface $node)
-    {
-        $children = $node->children();
-
-        $fieldKeys = [];
-
-        foreach ($children as $key => $value) {
-
-            if ($value instanceof ModelFormLayoutNodeInterface) {
-                $fieldKeys = array_merge($fieldKeys, $this->getNestedFormFieldKeys($value));
-                continue;
-            }
-
-            if ( ! is_string($value)) {
-                continue;
-            }
-
-            $fieldKeys[] = $value;
-        }
 
         return $fieldKeys;
     }

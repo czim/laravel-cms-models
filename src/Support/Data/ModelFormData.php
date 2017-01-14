@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Support\Data;
 
 use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelFormDataInterface;
+use Czim\CmsModels\Contracts\Data\ModelFormLayoutNodeInterface;
 use Czim\CmsModels\Contracts\Data\ModelFormTabDataInterface;
 use Czim\DataObject\Contracts\DataObjectInterface;
 use UnexpectedValueException;
@@ -124,6 +125,50 @@ class ModelFormData extends AbstractDataObject implements ModelFormDataInterface
 
         return array_keys($this->fields);
     }
+
+    /**
+     * Returns a list of form field keys present in the layout.
+     *
+     * @return string[]
+     */
+    public function getLayoutFormFieldKeys()
+    {
+        return array_unique($this->getNestedFormFieldKeys());
+    }
+
+    /**
+     * Returns a list of form field keys recursively for a given layout node.
+     *
+     * @param ModelFormLayoutNodeInterface $node
+     * @return string[]
+     */
+    protected function getNestedFormFieldKeys(ModelFormLayoutNodeInterface $node = null)
+    {
+        if (null === $node) {
+            $children = $this->layout();
+        } else {
+            $children = $node->children();
+        }
+
+        $fieldKeys = [];
+
+        foreach ($children as $key => $value) {
+
+            if ($value instanceof ModelFormLayoutNodeInterface) {
+                $fieldKeys = array_merge($fieldKeys, $this->getNestedFormFieldKeys($value));
+                continue;
+            }
+
+            if ( ! is_string($value)) {
+                continue;
+            }
+
+            $fieldKeys[] = $value;
+        }
+
+        return $fieldKeys;
+    }
+
 
     /**
      * @param ModelFormDataInterface|ModelFormData $with
