@@ -30,16 +30,17 @@ trait DefaultModelPagination
     /**
      * Checks and sets the active sort settings.
      *
+     * @param bool $update
      * @return $this
      */
-    protected function checkActivePage()
+    protected function checkActivePage($update = true)
     {
         $request = request();
 
-        $pageSetByRequest     = $request->has('page') || $this->resetActivePage;
+        $pageSetByRequest     = $request->exists('page') || $this->resetActivePage;
         $pageSizeSetByRequest = $request->has('pagesize');
 
-        if ($pageSetByRequest) {
+        if ($update && $pageSetByRequest) {
 
             $this->activePage = $request->get('page') ? (int) $request->get('page') : null;
 
@@ -48,7 +49,7 @@ trait DefaultModelPagination
             $this->retrieveActivePageFromSession();
         }
 
-        if ($pageSizeSetByRequest) {
+        if ($update && $pageSizeSetByRequest) {
 
             $this->activePageSize = $request->get('pagesize') ? (int) $request->get('pagesize') : null;
             $this->activePage     = null;
@@ -58,7 +59,7 @@ trait DefaultModelPagination
             $this->retrieveActivePageSzeFromSession();
         }
 
-        if ($pageSetByRequest || $pageSizeSetByRequest) {
+        if ($update && ($pageSetByRequest || $pageSizeSetByRequest)) {
             $this->storeActivePageValuesInSession();
         }
 

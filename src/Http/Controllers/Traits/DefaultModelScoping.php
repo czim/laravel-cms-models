@@ -22,13 +22,14 @@ trait DefaultModelScoping
     /**
      * Checks for the active scope.
      *
+     * @param bool $update
      * @return $this
      */
-    protected function checkScope()
+    protected function checkScope($update = true)
     {
         $request = request();
 
-        if ($request->has('scope') || in_array('scope', array_keys($request->query()))) {
+        if ($update && $request->exists('scope')) {
 
             $this->activeScope = $request->get('scope');
 

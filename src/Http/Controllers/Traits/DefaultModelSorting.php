@@ -28,13 +28,14 @@ trait DefaultModelSorting
     /**
      * Checks and sets the active sort settings.
      *
+     * @param bool $update
      * @return $this
      */
-    protected function checkActiveSort()
+    protected function checkActiveSort($update = true)
     {
         $request = request();
 
-        if ($request->has('sort')) {
+        if ($update && $request->exists('sort')) {
 
             $this->activeSort = $request->get('sort');
 
