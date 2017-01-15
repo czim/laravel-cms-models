@@ -27,6 +27,7 @@ class FormDisplayStrategy extends Enum
     const DATEPICKER_RANGE    = 'datepicker-range';
     const COLORPICKER         = 'colorpicker';
     const LOCATIONPICKER      = 'locationpicker';
+    const TAGGABLE            = 'taggable';
 
     const ATTACHMENT_STAPLER_FILE  = 'attachment-stapler-file';
     const ATTACHMENT_STAPLER_IMAGE = 'attachment-stapler-image';

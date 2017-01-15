@@ -150,6 +150,9 @@ return [
                 'name',
                 'listifyScope',
                 'inList',
+                // taggable
+                'withAllTags',
+                'withAnyTag',
             ],
         ],
 
@@ -261,6 +264,7 @@ return [
                 Enums\ListDisplayStrategy::RELATION_COUNT      => 'RelationCount',
                 Enums\ListDisplayStrategy::RELATION_REFERENCE  => 'RelationReference',
                 Enums\ListDisplayStrategy::RELATION_COUNT_LINK => 'RelationCountChildrenLink',
+                Enums\ListDisplayStrategy::TAGS                => 'TagList',
             ],
 
             // Aliases for sort strategy classes
@@ -318,6 +322,7 @@ return [
                 Enums\FormDisplayStrategy::DATEPICKER_RANGE    => 'DateRangeStrategy',
                 Enums\FormDisplayStrategy::COLORPICKER         => 'ColorStrategy',
                 Enums\FormDisplayStrategy::LOCATIONPICKER      => 'LocationStrategy',
+                Enums\FormDisplayStrategy::TAGGABLE            => 'TaggableAutocompleteStrategy',
 
                 Enums\FormDisplayStrategy::ATTACHMENT_STAPLER_IMAGE => 'AttachmentStaplerImageStrategy',
                 Enums\FormDisplayStrategy::ATTACHMENT_STAPLER_FILE  => 'AttachmentStaplerFileStrategy',
@@ -339,6 +344,7 @@ return [
                 Enums\FormStoreStrategy::DATE_RANGE             => 'DateRangeStrategy',
                 Enums\FormStoreStrategy::LOCATION_FIELDS        => 'LocationFieldsStrategy',
                 Enums\FormStoreStrategy::STAPLER                => 'StaplerStrategy',
+                Enums\FormStoreStrategy::TAGGABLE               => 'TaggableStrategy',
                 Enums\FormStoreStrategy::RELATION_SINGLE_KEY    => 'RelationSingleKey',
                 Enums\FormStoreStrategy::RELATION_PLURAL_KEYS   => 'RelationPluralKeys',
                 Enums\FormStoreStrategy::RELATION_PIVOT_ORDERED => 'RelationPivotOrdered',

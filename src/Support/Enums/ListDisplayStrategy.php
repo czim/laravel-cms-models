@@ -11,7 +11,7 @@ class ListDisplayStrategy extends Enum
     const DATE     = 'date';
     const TIME     = 'time';
     const DATETIME = 'datetime';
-
+    const TAGS     = 'tags';
 
     const STAPLER_FILENAME  = 'stapler-filename';
     const STAPLER_THUMBNAIL = 'stapler-thumbnail';
