@@ -2,10 +2,13 @@
 namespace Czim\CmsModels\Support\Exporting\Strategies;
 
 use Czim\CmsModels\Contracts\Data\ModelExportStrategyDataInterface;
+use Czim\CmsModels\Contracts\Repositories\CurrentModelInformationInterface;
+use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Support\Exporting\ExportColumnInterface;
 use Czim\CmsModels\Contracts\Support\Exporting\ModelExporterInterface;
 use Czim\CmsModels\Contracts\Support\Factories\ExportColumnStrategyFactoryInterface;
 use Czim\CmsModels\Support\Data\ModelExportStrategyData;
+use Czim\CmsModels\Support\Data\ModelInformation;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use UnexpectedValueException;
@@ -106,6 +109,8 @@ abstract class AbstractModelListExporter implements ModelExporterInterface
             throw new UnexpectedValueException("No export information set, cannot determine column strategies");
         }
 
+        $information = $this->getModelInformation();
+
         $factory = $this->getExportColumnStrategyFactory();
 
         $instances = [];
@@ -115,6 +120,14 @@ abstract class AbstractModelListExporter implements ModelExporterInterface
             $instance = $factory->make($columnData->strategy);
 
             $instance->setColumnInformation($columnData);
+
+            if ($columnData->source) {
+                if (isset($information->attributes[ $columnData->source ])) {
+                    $instance->setAttributeInformation(
+                        $information->attributes[ $columnData->source ]
+                    );
+                }
+            }
 
             $instances[ $key ] = $instance->initialize($this->modelClass);
         }
@@ -132,6 +145,24 @@ abstract class AbstractModelListExporter implements ModelExporterInterface
     protected function getExportColumnStrategyFactory()
     {
         return app(ExportColumnStrategyFactoryInterface::class);
+    }
+
+    /**
+     * @return ModelInformation|false
+     */
+    protected function getModelInformation()
+    {
+        if ( ! $this->modelClass) {
+            /** @var CurrentModelInformationInterface $current */
+            $current = app(CurrentModelInformationInterface::class);
+
+            $this->modelClass = $current->forModel();
+        }
+
+        /** @var ModelInformationRepositoryInterface $repository */
+        $repository = app(ModelInformationRepositoryInterface::class);
+
+        return $repository->getByModelClass($this->modelClass);
     }
 
 }

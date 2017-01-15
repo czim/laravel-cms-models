@@ -7,6 +7,7 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Support\Exporting\ModelExporterInterface;
 use Czim\CmsModels\Contracts\Support\Factories\ExportStrategyFactoryInterface;
 use Czim\CmsModels\Http\Controllers\BaseModelController;
+use Czim\CmsModels\Support\Data\ModelExportStrategyData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 
 trait HandlesExporting
@@ -57,6 +58,7 @@ trait HandlesExporting
     {
         $instance = $this->getExportStrategyFactory()->make($strategy);
 
+        /** @var ModelExportStrategyData $strategyData */
         $strategyData = array_get($this->getModelInformation()->export->strategies, $strategy);
 
         if ($strategyData) {
