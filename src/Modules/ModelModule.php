@@ -218,6 +218,12 @@ class ModelModule implements ModuleInterface
                     'uses' => $controller . '@filter',
                 ]);
 
+                $router->get('export/{strategy}', [
+                    'as'         => 'export',
+                    'middleware' => [cms_mw_permission("{$permissionPrefix}export")],
+                    'uses'       => $controller . '@export',
+                ]);
+
                 $router->get('{key}', [
                     'as'   => 'show',
                     'uses' => $controller . '@show',
@@ -347,6 +353,7 @@ class ModelModule implements ModuleInterface
                     "models.{$slug}.create",
                     "models.{$slug}.edit",
                     "models.{$slug}.delete",
+                    "models.{$slug}.export",
                 ],
             ],
         ];

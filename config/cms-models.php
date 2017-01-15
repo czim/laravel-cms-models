@@ -3,6 +3,8 @@
 use Czim\CmsModels\Support\Enums;
 use Czim\CmsModels\Http\Controllers\FormFieldStrategies as FormFieldStoreStrategies;
 use Czim\CmsModels\Repositories\SortStrategies;
+use Czim\CmsModels\Support\Exporting\Strategies as ExportStrategies;
+use Czim\CmsModels\Support\Exporting\ColumnStrategies as ExportColumnStrategies;
 use Czim\CmsModels\View\ActionStrategies;
 use Czim\CmsModels\View\FilterStrategies;
 use Czim\CmsModels\View\FormFieldStrategies;
@@ -371,6 +373,27 @@ return [
 
             // Aliases for delete condition strategy classes
             'condition-aliases' => [
+            ],
+        ],
+
+        'export' => [
+
+            // The default namespace to prefix for relative strategy class names
+            'default-namespace' => 'Czim\\CmsModels\\Support\\Exporting\\Strategies\\',
+
+            // The default namespace to prefix for relative strategy class names
+            'default-column-namespace' => 'Czim\\CmsModels\\Support\\Exporting\\ColumnStrategies\\',
+            'default-column-strategy'  => ExportColumnStrategies\DefaultStrategy::class,
+
+            // Aliases for exporter strategy classes
+            'aliases' => [
+                Enums\ExportStrategy::CSV   => ExportStrategies\CsvExportStrategy::class,
+                //Enums\ExportStrategy::EXCEL => ExportStrategies\ExcelExportStrategy::class,
+                //Enums\ExportStrategy::XML   => ExportStrategies\XmlExportStrategy::class,
+            ],
+
+            // Aliases for export column strategy classes
+            'column-aliases' => [
             ],
         ],
 

@@ -22,6 +22,7 @@ class DefaultModelController extends BaseModelController
         Traits\DefaultModelSorting,
         Traits\DeletesModel,
         Traits\HandlesActionStrategies,
+        Traits\HandlesExporting,
         Traits\HandlesFormFields,
         Traits\HandlesFilterStrategies,
         Traits\HandlesFormFieldStrategies,
@@ -92,8 +93,8 @@ class DefaultModelController extends BaseModelController
 
         $query = $this->getModelRepository()->query();
 
-        $this->applyFilter($query);
-        $this->applyListParentToQuery($query);
+        $this->applyFilter($query)
+             ->applyListParentToQuery($query);
 
         $records = $query->paginate($this->getActualPageSize(), ['*'], 'page', $this->getActualPage());
 
@@ -468,6 +469,47 @@ class DefaultModelController extends BaseModelController
         }
 
         return redirect()->back();
+    }
+
+    /**
+     * Exports the current listing with a given strategy.
+     *
+     * @param string $strategy
+     * @return false|mixed
+     */
+    public function export($strategy)
+    {
+        // Check if the strategy is available and allowed to be used
+        if ( ! $this->isExportStrategyAvailable($strategy)) {
+            abort(403, "Not possible or allowed to perform export '{$strategy}'");
+        }
+
+        // Prepare the strategy instance
+        $exporter = $this->getExportStrategyInstance($strategy);
+        $filename = $this->getExportDownloadFilename($strategy, $exporter->extension());
+
+        $this->checkListParents()
+             ->checkActiveSort(false)
+             ->checkScope(false)
+             ->checkFilters()
+             ->checkActivePage(false)
+             ->applySort()
+             ->applyScope($this->modelRepository);
+
+        $query = $this->getModelRepository()->query();
+
+        $this->applyFilter($query)
+             ->applyListParentToQuery($query);
+
+        $download = $exporter->download($query, $filename);
+
+        if (false === $download) {
+            abort(500, "Fail to export model listing for strategy '{$strategy}'");
+        }
+
+        event( new Events\ModelListExportedInCms($this->modelInformation->modelClass(), $strategy) );
+
+        return $download;
     }
 
 
