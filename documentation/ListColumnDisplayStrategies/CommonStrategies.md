@@ -87,3 +87,7 @@ This uses the smallest available stapler resize by default.
         'stapler_style' => 'thumbnail',
     ]
 ```
+
+## Tag List
+
+Displays a comma-separated list of tags for a model with the [Taggable trait](https://github.com/rtconner/laravel-tagging). 

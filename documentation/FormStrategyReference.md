@@ -30,6 +30,9 @@ This list is not exhaustive; custom strategy classes and aliases may be created 
 - [**`Static`**](FormFieldDisplayStrategies/Static.md)  
     Static value display, optionally with list strategy.
     
+- [**`TaggableAutocomplete`**](FormFieldDisplayStrategies/TaggableAutocomplete.md)  
+    Autocomplete field for tags.
+    
 - [**`Wysiwyg`**](FormFieldDisplayStrategies/Wysiwyg.md)  
     WYSIWYG rich text editor (HTML) field.
     
@@ -100,6 +103,8 @@ This list is not exhaustive; custom strategy classes and aliases may be created 
 - [**`PasswordUpdate`**](FormFieldStoreStrategies/PasswordUpdate.md)  
     For storing hashed passwords, but only if entered.
 
+- [**`Taggable`**](FormFieldStoreStrategies/Taggable.md)  
+    For storing tags to a model with the Taggable trait.
 
 ### Relations
 

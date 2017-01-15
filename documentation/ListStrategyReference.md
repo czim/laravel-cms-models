@@ -34,6 +34,9 @@ Strategies for displaying content of model listing table cells.
     
 - [**`StaplerImage`**](ListColumnDisplayStrategies/CommonStrategies.md#stapler-image)  
     Displays a stapler image thumbnail.
+    
+- [**`TagList`**](ListColumnDisplayStrategies/CommonStrategies.md#tag-list)  
+    Displays a comma-separated list of tags for Taggable models.
 
 
 ### Relations
