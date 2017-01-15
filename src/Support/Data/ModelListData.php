@@ -7,7 +7,7 @@ use Czim\CmsModels\Contracts\Data\ModelActionReferenceDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelListDataInterface;
 
 /**
- * Class ModelListInformation
+ * Class ModelListData
  *
  * Data container that represents list representation for the model.
  *
