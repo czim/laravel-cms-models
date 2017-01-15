@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Analyzer;
 
 use Czim\CmsModels\Support\Data\ModelAttributeData;
+use Czim\CmsModels\Support\Enums\ExportColumnStrategy;
 use Czim\CmsModels\Support\Enums\FormDisplayStrategy;
 use Czim\CmsModels\Support\Enums\FormStoreStrategy;
 use Czim\CmsModels\Support\Enums\ListDisplayStrategy;
@@ -263,6 +264,31 @@ class AttributeStrategyResolver
         }
 
         return $options;
+    }
+
+    /**
+     * Determines an export column strategy string for given attribute data.
+     *
+     * @param ModelAttributeData $data
+     * @return string|null
+     */
+    public function determineExportColumnStrategy(ModelAttributeData $data)
+    {
+        $type = null;
+
+        switch ($data->cast) {
+
+            case 'boolean':
+            case 'bool':
+                $type = ExportColumnStrategy::BOOLEAN_STRING;
+                break;
+
+            case 'stapler-attachment':
+                $type = ExportColumnStrategy::STAPLER_FILE_LINK;
+                break;
+        }
+
+        return $type;
     }
 
     /**

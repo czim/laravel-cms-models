@@ -10,7 +10,7 @@ use Czim\CmsModels\Contracts\Data\ModelExportDataInterface;
  * Data container that represents list representation for the model.
  *
  * @property bool $enabled
- * @property array|ModelExportData[] $columns
+ * @property array|ModelExportColumnData[] $columns
  * @property array|ModelExportStrategyData[] $strategies
  */
 class ModelExportData extends AbstractDataObject implements ModelExportDataInterface

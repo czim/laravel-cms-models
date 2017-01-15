@@ -5,6 +5,7 @@ use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationInterpreterInterface;
 use Czim\CmsModels\Support\Data\ModelActionReferenceData;
+use Czim\CmsModels\Support\Data\ModelExportColumnData;
 use Czim\CmsModels\Support\Data\ModelFormFieldData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelListColumnData;
@@ -33,7 +34,8 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
 
         $this->interpretListData()
              ->interpretFormData()
-             ->interpretShowData();
+             ->interpretShowData()
+             ->interpretExportData();
 
         return $this->createInformationInstance();
     }
@@ -144,6 +146,44 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
                 'strategy',
                 ModelShowFieldData::class
             );
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function interpretExportData()
+    {
+        if (array_has($this->raw, 'export') && is_array($this->raw['export'])) {
+
+            $this->raw['export']['columns'] = $this->normalizeStandardArrayProperty(
+                array_get($this->raw['export'], 'columns', []),
+                'strategy',
+                ModelExportColumnData::class
+            );
+
+            if ( ! array_has($this->raw['export'], 'strategies') || ! is_array($this->raw['export']['strategies'])) {
+                $this->raw['export']['strategies'] = [];
+            }
+
+            foreach ($this->raw['export']['strategies'] as $key => $strategy) {
+
+                if (false === $strategy) {
+                    continue;
+                }
+
+                if (true === $strategy) {
+                    $strategy = [];
+                }
+
+                $this->raw['export']['strategies'][ $key ] = $this->normalizeStandardArrayProperty(
+                    array_get($strategy, 'columns', []),
+                    'strategy',
+                    ModelExportColumnData::class
+                );
+            }
         }
 
         return $this;
