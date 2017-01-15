@@ -32,7 +32,7 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
  * @property array|ModelListData $list
  * @property array|ModelFormData $form
  * @property array|ModelShowData $show
- * @property array $export
+ * @property array|ModelExportData $export
  */
 class ModelInformation extends AbstractDataObject implements ModelInformationInterface
 {
@@ -44,6 +44,7 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
         'list'       => ModelListData::class,
         'form'       => ModelFormData::class,
         'show'       => ModelShowData::class,
+        'export'     => ModelExportData::class,
         'attributes' => ModelAttributeData::class . '[]',
         'relations'  => ModelRelationData::class . '[]',
     ];
@@ -228,14 +229,17 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
         // Settings for building an export of the listing of records for this model.
         // If no export data is set, its column properties will be based on the 'list' data.
         'export' => [
+
             // Whether to allow exporting at all
             'enable' => false,
-            // FQN for the exporter class that should build the export
-            'handler' => null,
 
-            // Arrays (instances of ModelListColumnData) with information about a single column.
+            // Default columns to include for every export strategy that does not override them.
+            // Arrays (instances of ModelExportColumnData) with information about a single column.
             // All columns that should be present in the export, should be listed here, in the right order.
             'columns' => [],
+
+            // Strategies for exporting: csv, excel, xml
+            'strategies' => [],
         ],
 
     ];
@@ -347,6 +351,7 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
             'list',
             'form',
             'show',
+            'export',
             'reference',
             'includes',
         ];
