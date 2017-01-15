@@ -4,7 +4,7 @@ namespace Czim\CmsModels\Support\Factories;
 use Czim\CmsModels\Contracts\Support\Factories\ListDisplayStrategyFactoryInterface;
 use Czim\CmsModels\Contracts\View\ListDisplayInterface;
 
-class ListDisplayStrategyFactory implements ListDisplayStrategyFactoryInterface
+class ListDisplayStrategyFactory extends AbstractStrategyFactory implements ListDisplayStrategyFactoryInterface
 {
 
     /**
@@ -26,41 +26,6 @@ class ListDisplayStrategyFactory implements ListDisplayStrategyFactoryInterface
     }
 
     /**
-     * Resolves strategy assuming it is the class name or FQN of a list display interface
-     * implementation or an alias for one.
-     *
-     * @param string $strategy
-     * @return string|false     returns full class namespace if it was resolved succesfully
-     */
-    protected function resolveStrategyClass($strategy)
-    {
-        if ( ! str_contains($strategy, '.')) {
-            $strategy = config('cms-models.strategies.list.aliases.' . $strategy, $strategy);
-        }
-
-        if (class_exists($strategy) && is_a($strategy, ListDisplayInterface::class, true)) {
-            return $strategy;
-        }
-
-        $strategy = $this->prefixStrategyNamespace($strategy);
-
-        if (class_exists($strategy) && is_a($strategy, ListDisplayInterface::class, true)) {
-            return $strategy;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param string $class
-     * @return string
-     */
-    protected function prefixStrategyNamespace($class)
-    {
-        return rtrim(config('cms-models.strategies.list.default-namespace'), '\\') . '\\' . $class;
-    }
-
-    /**
      * @return ListDisplayInterface
      */
     protected function getDefaultStrategy()
@@ -68,4 +33,33 @@ class ListDisplayStrategyFactory implements ListDisplayStrategyFactoryInterface
         return app(config('cms-models.strategies.list.default-strategy'));
     }
 
+    /**
+     * Returns interface FQN for the strategy.
+     *
+     * @return string
+     */
+    protected function getStrategyInterfaceClass()
+    {
+        return ListDisplayInterface::class;
+    }
+
+    /**
+     * Returns the configuration key for the aliases map.
+     *
+     * @return string
+     */
+    protected function getAliasesBaseConfigKey()
+    {
+        return 'cms-models.strategies.list.aliases.';
+    }
+
+    /**
+     * Returns the configuration key for the default namespace.
+     *
+     * @return string
+     */
+    protected function getNamespaceConfigKey()
+    {
+        return 'cms-models.strategies.list.default-namespace';
+    }
 }

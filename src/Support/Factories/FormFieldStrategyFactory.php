@@ -1,11 +1,10 @@
 <?php
 namespace Czim\CmsModels\Support\Factories;
 
-use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Support\Factories\FormFieldStrategyFactoryInterface;
 use Czim\CmsModels\Contracts\View\FormFieldDisplayInterface;
 
-class FormFieldStrategyFactory implements FormFieldStrategyFactoryInterface
+class FormFieldStrategyFactory extends AbstractStrategyFactory implements FormFieldStrategyFactoryInterface
 {
 
     /**
@@ -27,41 +26,6 @@ class FormFieldStrategyFactory implements FormFieldStrategyFactoryInterface
     }
 
     /**
-     * Resolves strategy assuming it is the class name or FQN of a form field display interface
-     * implementation or an alias for one.
-     *
-     * @param $strategy
-     * @return string|false     returns full class namespace if it was resolved succesfully
-     */
-    protected function resolveStrategyClass($strategy)
-    {
-        if ( ! str_contains($strategy, '.')) {
-            $strategy = config('cms-models.strategies.form.aliases.' . $strategy, $strategy);
-        }
-
-        if (class_exists($strategy) && is_a($strategy, FormFieldDisplayInterface::class, true)) {
-            return $strategy;
-        }
-
-        $strategy = $this->prefixStrategyNamespace($strategy);
-
-        if (class_exists($strategy) && is_a($strategy, FormFieldDisplayInterface::class, true)) {
-            return $strategy;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param string $class
-     * @return string
-     */
-    protected function prefixStrategyNamespace($class)
-    {
-        return rtrim(config('cms-models.strategies.form.default-namespace'), '\\') . '\\' . $class;
-    }
-
-    /**
      * @return FormFieldDisplayInterface
      */
     protected function getDefaultStrategy()
@@ -70,11 +34,32 @@ class FormFieldStrategyFactory implements FormFieldStrategyFactoryInterface
     }
 
     /**
-     * @return ModelInformationRepositoryInterface
+     * Returns interface FQN for the strategy.
+     *
+     * @return string
      */
-    protected function getInformationRepository()
+    protected function getStrategyInterfaceClass()
     {
-        return app(ModelInformationRepositoryInterface::class);
+        return FormFieldDisplayInterface::class;
     }
 
+    /**
+     * Returns the configuration key for the aliases map.
+     *
+     * @return string
+     */
+    protected function getAliasesBaseConfigKey()
+    {
+        return 'cms-models.strategies.form.aliases.';
+    }
+
+    /**
+     * Returns the configuration key for the default namespace.
+     *
+     * @return string
+     */
+    protected function getNamespaceConfigKey()
+    {
+        return 'cms-models.strategies.form.default-namespace';
+    }
 }

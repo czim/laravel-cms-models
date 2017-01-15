@@ -5,11 +5,11 @@ use Czim\CmsModels\Contracts\Support\Factories\ActionStrategyFactoryInterface;
 use Czim\CmsModels\Contracts\View\ActionStrategyInterface;
 use RuntimeException;
 
-class ActionStrategyFactory implements ActionStrategyFactoryInterface
+class ActionStrategyFactory extends AbstractStrategyFactory implements ActionStrategyFactoryInterface
 {
 
     /**
-     * Makes a action strategy instance.
+     * Makes an action strategy instance.
      *
      * @param string $strategy
      * @return ActionStrategyInterface
@@ -27,42 +27,32 @@ class ActionStrategyFactory implements ActionStrategyFactoryInterface
     }
 
     /**
-     * Resolves strategy assuming it is the class name or FQN of an action strategy interface
-     * implementation or an alias for one.
+     * Returns interface FQN for the strategy.
      *
-     * @param string $strategy
-     * @return string|false     returns full class namespace if it was resolved succesfully
+     * @return string
      */
-    protected function resolveStrategyClass($strategy)
+    protected function getStrategyInterfaceClass()
     {
-        if (empty($strategy)) {
-            return false;
-        }
-
-        if ( ! str_contains($strategy, '.')) {
-            $strategy = config('cms-models.strategies.list.action-aliases.' . $strategy, $strategy);
-        }
-
-        if (class_exists($strategy) && is_a($strategy, ActionStrategyInterface::class, true)) {
-            return $strategy;
-        }
-
-        $strategy = $this->prefixStrategyNamespace($strategy);
-
-        if (class_exists($strategy) && is_a($strategy, ActionStrategyInterface::class, true)) {
-            return $strategy;
-        }
-
-        return false;
+        return ActionStrategyInterface::class;
     }
 
     /**
-     * @param string $class
+     * Returns the configuration key for the aliases map.
+     *
      * @return string
      */
-    protected function prefixStrategyNamespace($class)
+    protected function getAliasesBaseConfigKey()
     {
-        return rtrim(config('cms-models.strategies.list.default-action-namespace'), '\\') . '\\' . $class;
+        return 'cms-models.strategies.list.action-aliases.';
     }
 
+    /**
+     * Returns the configuration key for the default namespace.
+     *
+     * @return string
+     */
+    protected function getNamespaceConfigKey()
+    {
+        return 'cms-models.strategies.list.default-action-namespace';
+    }
 }
