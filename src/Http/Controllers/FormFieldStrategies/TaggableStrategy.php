@@ -30,7 +30,7 @@ class TaggableStrategy extends AbstractFormFieldStoreStrategy
      * Adjusts a value for compatibility with taggable methods.
      *
      * @param mixed $value
-     * @return null
+     * @return array
      */
     protected function adjustValue($value)
     {
@@ -42,7 +42,7 @@ class TaggableStrategy extends AbstractFormFieldStoreStrategy
             $value = [];
         }
 
-        return $value;
+        return array_filter($value);
     }
 
     /**
@@ -63,6 +63,8 @@ class TaggableStrategy extends AbstractFormFieldStoreStrategy
      */
     public function performStoreAfter(Model $model, $source, $value)
     {
+        $value = $this->adjustValue($value);
+
         $model->retag($value);
     }
 
