@@ -13,9 +13,7 @@
         @foreach ($value as $singleValue)
             @continue (null === $singleValue)
 
-            <option value="{{ $singleValue }}" selected="selected">
-                {{ $singleValue }}
-            </option>
+            <option value="{{ $singleValue }}" selected="selected">{{ $singleValue }}</option>
         @endforeach
     @endif
 
@@ -40,7 +38,6 @@
             $('#field-{{ $key }}').select2({
                 tags               : true,
                 placeholder        : '--',
-                allowClear         : {{ $required ? 'false' : 'true' }},
                 data               : {!! json_encode($tagData) !!},
                 minimumInputLength : {{ $minimumInputLength }}
             });
