@@ -4,7 +4,7 @@
     <?php
         $count = 0;
 
-        $oldTabKey = old(\Czim\CmsModels\Http\Controllers\DefaultModelController::ACTIVE_TAB_PANE_KEY);
+        $oldTabKey = old(\Czim\CmsModels\Http\Controllers\DefaultModelController::ACTIVE_TAB_PANE_KEY, $activeTab);
     ?>
 
     @foreach ($tabs as $key => $tab)

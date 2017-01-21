@@ -94,6 +94,7 @@
                     'tabs',
                     'routePrefix',
                     'permissionPrefix',
+                    'activeTab',
                     'errorsPerTab'
                 ))
 
@@ -108,6 +109,7 @@
                         'tabs',
                         'routePrefix',
                         'permissionPrefix',
+                        'activeTab',
                         'errorsPerTab'
                     ),
                     [ 'errors' => $fieldErrors ]

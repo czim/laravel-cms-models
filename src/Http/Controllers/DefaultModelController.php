@@ -59,6 +59,13 @@ class DefaultModelController extends BaseModelController
      */
     const ACTIVE_TRANSLATION_LOCALE_KEY = '__active_translation_locale__';
 
+    /**
+     * The session key postfix that stores the active tab pane.
+     *
+     * @var string
+     */
+    const ACTIVE_TAB_SESSION_KEY = 'active-tab';
+
 
     /**
      * @var ModelListMemoryInterface
@@ -185,6 +192,7 @@ class DefaultModelController extends BaseModelController
             'fieldStrategies'     => $this->getFormFieldStrategyInstances($fields),
             'values'              => $values,
             'fieldErrors'         => $this->getNormalizedFormFieldErrors(),
+            'activeTab'           => $this->getActiveTab(),
             'errorsPerTab'        => $this->getErrorCountsPerTabPane(),
             'hasActiveListParent' => (bool) $this->listParentRelation,
             'topListParentOnly'   => $this->showsTopParentsOnly(),
@@ -213,6 +221,8 @@ class DefaultModelController extends BaseModelController
                     static::GENERAL_ERRORS_KEY => [ $this->getGeneralStoreFailureError() ],
                 ]);
         }
+
+        $this->storeActiveTab($request->input(static::ACTIVE_TAB_PANE_KEY));
 
         cms_flash(
             cms_trans(
@@ -261,6 +271,7 @@ class DefaultModelController extends BaseModelController
             'fieldStrategies'     => $this->getFormFieldStrategyInstances($fields),
             'values'              => $values,
             'fieldErrors'         => $this->getNormalizedFormFieldErrors(),
+            'activeTab'           => $this->getActiveTab(),
             'errorsPerTab'        => $this->getErrorCountsPerTabPane(),
             'hasActiveListParent' => (bool) $this->listParentRelation,
             'topListParentOnly'   => $this->showsTopParentsOnly(),
@@ -290,6 +301,8 @@ class DefaultModelController extends BaseModelController
                     static::GENERAL_ERRORS_KEY => [ $this->getGeneralStoreFailureError() ],
                 ]);
         }
+
+        $this->storeActiveTab($request->input(static::ACTIVE_TAB_PANE_KEY));
 
         cms_flash(
             cms_trans(
@@ -774,6 +787,43 @@ class DefaultModelController extends BaseModelController
 
         return $this->core->config('session.prefix')
              . 'model:' . $modelSlug;
+    }
+
+    /**
+     * Returns the active edit form tab pane key, if it is set.
+     *
+     * @param bool $pull    if true, pulls the value from the session
+     * @return null|string
+     */
+    protected function getActiveTab($pull = true)
+    {
+        $key = $this->getModelSessionKey() . ':' . static::ACTIVE_TAB_SESSION_KEY;
+
+        if ($pull) {
+            return session()->pull($key);
+        }
+
+        return session()->get($key);
+    }
+
+    /**
+     * Stores the currently active edit form tab pane key.
+     *
+     * @param string|null $tab
+     * @return $this
+     */
+    protected function storeActiveTab($tab)
+    {
+        $key = $this->getModelSessionKey() . ':' . static::ACTIVE_TAB_SESSION_KEY;
+
+        if (null === $tab) {
+            session()->forget($key);
+        } else {
+            session()->put($key, $tab);
+        }
+
+
+        return $this;
     }
 
 }
