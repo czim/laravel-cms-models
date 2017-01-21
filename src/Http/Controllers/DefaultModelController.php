@@ -135,6 +135,7 @@ class DefaultModelController extends BaseModelController
             'listParents'         => $this->listParents,
             'topListParentOnly'   => $this->showsTopParentsOnly(),
             'draggableOrderable'  => $this->isListOrderDraggable($totalCount, $currentCount),
+            'availableExportKeys' => $this->getAvailableExportStrategyKeys(),
         ]);
     }
 

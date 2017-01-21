@@ -219,6 +219,14 @@
         </div>
     </div>
 
+    @if (count($availableExportKeys))
+        @include('cms-models::model.partials.list.export_buttons', compact(
+            'model',
+            'routePrefix',
+            'availableExportKeys'
+        ))
+    @endif
+
 
     {{-- After view --}}
     @if ($model->list->after && $model->list->after->view)

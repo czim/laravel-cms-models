@@ -14,6 +14,22 @@ trait HandlesExporting
 {
 
     /**
+     * Returns list of export strategy keys that are availabe for the current user.
+     *
+     * @return string[]
+     */
+    protected function getAvailableExportStrategyKeys()
+    {
+        if (empty($this->getModelInformation()->export->strategies)) {
+            return [];
+        }
+
+        $keys = array_keys($this->getModelInformation()->export->strategies);
+
+        return array_filter($keys, [ $this, 'isExportStrategyAvailable']);
+    }
+
+    /**
      * Returns filename for an export download.
      *
      * @param string $strategy

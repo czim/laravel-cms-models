@@ -12,6 +12,7 @@ use Czim\CmsModels\Contracts\Data\ModelExportStrategyDataInterface;
  * @property string $strategy
  * @property string $label
  * @property string $label_translated
+ * @property string $icon
  * @property string|string[] $permissions
  * @property string $repository_strategy
  * @property array $repository_strategy_parameters
@@ -33,6 +34,10 @@ class ModelExportStrategyData extends AbstractDataObject implements ModelExportS
         // Label (or translation key) to show on the export action link/button.
         'label' => null,
         'label_translated' => null,
+
+        // The name for a glyphicon/font awesome icon (without prefix).
+        // How this is interpreted depends on the export buttons view partial.
+        'icon' => null,
 
         // The permission(s) required to use this export strategy (string or array of strings).
         'permissions' => null,
@@ -68,6 +73,16 @@ class ModelExportStrategyData extends AbstractDataObject implements ModelExportS
         }
 
         return ucfirst(str_replace('_', ' ', snake_case($this->strategy)));
+    }
+
+    /**
+     * Returns icon name to use for the export link/button.
+     *
+     * @return string|null
+     */
+    public function icon()
+    {
+        return $this->getAttribute('icon');
     }
 
     /**

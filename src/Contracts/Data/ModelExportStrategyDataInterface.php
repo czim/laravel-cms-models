@@ -15,6 +15,13 @@ interface ModelExportStrategyDataInterface extends ArrayAccess, Arrayable
     public function label();
 
     /**
+     * Returns icon name to use for the export link/button.
+     *
+     * @return string|null
+     */
+    public function icon();
+
+    /**
      * Returns options for the export strategy.
      *
      * @return array
