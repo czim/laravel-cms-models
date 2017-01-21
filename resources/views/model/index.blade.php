@@ -117,9 +117,7 @@
 
                             @endforeach
 
-                            @if (cms_auth()->can(["{$permissionPrefix}edit", "{$permissionPrefix}delete"]))
-                                <th class="column column-actions"></th>
-                            @endif
+                            <th class="column column-actions"></th>
                         </tr>
                     </thead>
 
