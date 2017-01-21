@@ -8,6 +8,13 @@ interface ModelExportStrategyDataInterface extends ArrayAccess, Arrayable
 {
 
     /**
+     * Returns display label for the export link/button.
+     *
+     * @return string
+     */
+    public function label();
+
+    /**
      * Returns options for the export strategy.
      *
      * @return array

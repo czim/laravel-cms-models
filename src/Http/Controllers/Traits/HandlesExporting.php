@@ -56,10 +56,10 @@ trait HandlesExporting
      */
     protected function getExportStrategyInstance($strategy)
     {
-        $instance = $this->getExportStrategyFactory()->make($strategy);
-
         /** @var ModelExportStrategyData $strategyData */
         $strategyData = array_get($this->getModelInformation()->export->strategies, $strategy);
+
+        $instance = $this->getExportStrategyFactory()->make($strategyData->strategy);
 
         if ($strategyData) {
             $instance->setStrategyData($strategyData);

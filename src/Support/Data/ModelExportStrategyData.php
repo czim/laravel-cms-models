@@ -9,6 +9,9 @@ use Czim\CmsModels\Contracts\Data\ModelExportStrategyDataInterface;
  *
  * Data container that represents list representation for the model.
  *
+ * @property string $strategy
+ * @property string $label
+ * @property string $label_translated
  * @property string|string[] $permission
  * @property string $repository_strategy
  * @property array $repository_strategy_parameters
@@ -23,6 +26,13 @@ class ModelExportStrategyData extends AbstractDataObject implements ModelExportS
     ];
 
     protected $attributes = [
+
+        // The strategy identifier (alias or FQN) for the exporting strategy.
+        'strategy' => null,
+
+        // Label (or translation key) to show on the export action link/button.
+        'label' => null,
+        'label_translated' => null,
 
         // The permission(s) required to use this export strategy (string or array of strings).
         'permission' => null,
@@ -41,6 +51,24 @@ class ModelExportStrategyData extends AbstractDataObject implements ModelExportS
         // Options for this export strategy.
         'options' => [],
     ];
+
+    /**
+     * Returns display label for the export link/button.
+     *
+     * @return string
+     */
+    public function label()
+    {
+        if ($this->label_translated) {
+            return cms_trans($this->label_translated);
+        }
+
+        if ($this->label) {
+            return $this->label;
+        }
+
+        return ucfirst(str_replace('_', ' ', snake_case($this->strategy)));
+    }
 
     /**
      * Returns options for the export strategy.

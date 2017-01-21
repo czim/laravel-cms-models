@@ -6,6 +6,7 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationInterpreterInterface;
 use Czim\CmsModels\Support\Data\ModelActionReferenceData;
 use Czim\CmsModels\Support\Data\ModelExportColumnData;
+use Czim\CmsModels\Support\Data\ModelExportStrategyData;
 use Czim\CmsModels\Support\Data\ModelFormFieldData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelListColumnData;
@@ -168,17 +169,15 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
                 $this->raw['export']['strategies'] = [];
             }
 
+            $this->raw['export']['strategies'] = $this->normalizeStandardArrayProperty(
+                $this->raw['export']['strategies'],
+                'strategy',
+                ModelExportStrategyData::class
+            );
+
             foreach ($this->raw['export']['strategies'] as $key => $strategy) {
 
-                if (false === $strategy) {
-                    continue;
-                }
-
-                if (true === $strategy) {
-                    $strategy = [];
-                }
-
-                $this->raw['export']['strategies'][ $key ] = $this->normalizeStandardArrayProperty(
+                $this->raw['export']['strategies'][ $key ]['columns'] = $this->normalizeStandardArrayProperty(
                     array_get($strategy, 'columns', []),
                     'strategy',
                     ModelExportColumnData::class
@@ -235,6 +234,12 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
                 $value = [];
             }
 
+            // if the value is 'true', the main property is assume to be the same as the key
+            // (this is of limited use, but may make sense for export strategies)
+            if (true === $value) {
+                $value = $key;
+            }
+
             // if value is just a string, it is the list strategy
             if (is_string($value)) {
                 $value = [
@@ -243,6 +248,11 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
             }
 
             if ($objectClass) {
+
+                if (empty($value)) {
+                    $value = [];
+                }
+
                 $value = $this->makeClearedDataObject($objectClass, $value);
             }
 
