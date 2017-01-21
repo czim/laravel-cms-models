@@ -25,13 +25,13 @@
     @if (count($translationLocales) < 2)
         <div class="dropdown translated-form-field-locale-select">
             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" disabled="disabled">
-                <img src="{{ asset("cms/img/flags/{$currentLocale}.png") }}" title="{{ $currentLocale }}">
+                <img src="{{ asset("_cms/img/flags/{$currentLocale}.png") }}" title="{{ $currentLocale }}">
             </button>
         </div>
     @else
         <div class="dropdown translated-form-field-locale-select">
             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-                <img src="{{ asset("cms/img/flags/{$currentLocale}.png") }}" title="{{ $currentLocale }}">
+                <img src="{{ asset("_cms/img/flags/{$currentLocale}.png") }}" title="{{ $currentLocale }}">
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
@@ -44,9 +44,9 @@
                     >
                         <a role="menuitem" tabindex="-1" href="#"
                            data-locale="{{ $locale }}"
-                           data-asset="{{ asset("cms/img/flags/{$locale}.png") }}"
+                           data-asset="{{ asset("_cms/img/flags/{$locale}.png") }}"
                         >
-                            <img src="{{ asset("cms/img/flags/{$locale}.png") }}" title="{{ $locale }}">
+                            <img src="{{ asset("_cms/img/flags/{$locale}.png") }}" title="{{ $locale }}">
                         </a>
                     </li>
                 @endforeach
