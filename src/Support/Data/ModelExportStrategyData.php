@@ -88,7 +88,7 @@ class ModelExportStrategyData extends AbstractDataObject implements ModelExportS
     /**
      * Returns permissions required to use the export strategy.
      *
-     * @return string[]
+     * @return false|string[]
      */
     public function permissions()
     {
@@ -100,7 +100,7 @@ class ModelExportStrategyData extends AbstractDataObject implements ModelExportS
             return [ $this->permissions ];
         }
 
-        return [];
+        return false;
     }
 
     /**

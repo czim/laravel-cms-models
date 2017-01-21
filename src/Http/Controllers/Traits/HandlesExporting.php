@@ -57,7 +57,13 @@ trait HandlesExporting
 
         $strategyInfo = $this->getModelInformation()->export->strategies[ $strategy ];
 
-        if (count($strategyInfo->permissions()) && ! $this->getCore()->auth()->can($strategyInfo->permissions())) {
+        $permissions = $strategyInfo->permissions();
+
+        if (false === $permissions) {
+            $permissions = [ $this->getPermissionPrefix() . 'export' ];
+        }
+
+        if (count($permissions) && ! $this->getCore()->auth()->can($permissions)) {
             return false;
         }
 
@@ -107,5 +113,10 @@ trait HandlesExporting
      * @return string
      */
     abstract protected function getModelSlug();
+
+    /**
+     * @return string
+     */
+    abstract protected function getPermissionPrefix();
 
 }
