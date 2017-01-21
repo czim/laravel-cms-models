@@ -21,6 +21,8 @@ class DateStrategy extends DefaultStrategy
         // todo: would be nice if we could make a date from no matter the format
         $format = $this->getExpectedDateFormat();
 
+        $value = trim($value);
+
         switch ($this->formFieldData->display_strategy) {
 
             case FormDisplayStrategy::DATEPICKER_DATETIME:
@@ -39,6 +41,10 @@ class DateStrategy extends DefaultStrategy
 
             case FormDisplayStrategy::DATEPICKER_TIME:
                 break;
+        }
+
+        if (empty($value)) {
+            $value = null;
         }
 
         return $value;
