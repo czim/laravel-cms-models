@@ -30,6 +30,7 @@ Only the sections and fields included are used, otherwise the default values are
 - [List columns, filter options, scopes, etc.](ModelConfiguration/List.md)
 - [Form fields and layout](ModelConfiguration/Form.md)
 - [Show page](ModelConfiguration/Show.md)
+- [Export strategies and columns](ModelConfiguration/Export.md)
 
 
 ## Example Model Configuration
