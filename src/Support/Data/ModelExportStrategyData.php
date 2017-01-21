@@ -12,7 +12,7 @@ use Czim\CmsModels\Contracts\Data\ModelExportStrategyDataInterface;
  * @property string $strategy
  * @property string $label
  * @property string $label_translated
- * @property string|string[] $permission
+ * @property string|string[] $permissions
  * @property string $repository_strategy
  * @property array $repository_strategy_parameters
  * @property array|ModelExportColumnData[] $columns
@@ -35,7 +35,7 @@ class ModelExportStrategyData extends AbstractDataObject implements ModelExportS
         'label_translated' => null,
 
         // The permission(s) required to use this export strategy (string or array of strings).
-        'permission' => null,
+        'permissions' => null,
 
         // The strategy to apply to the base repository/context query for this export.
         'repository_strategy' => null,
@@ -68,6 +68,24 @@ class ModelExportStrategyData extends AbstractDataObject implements ModelExportS
         }
 
         return ucfirst(str_replace('_', ' ', snake_case($this->strategy)));
+    }
+
+    /**
+     * Returns permissions required to use the export strategy.
+     *
+     * @return string[]
+     */
+    public function permissions()
+    {
+        if (is_array($this->permissions)) {
+            return $this->permissions;
+        }
+
+        if ($this->permissions) {
+            return [ $this->permissions ];
+        }
+
+        return [];
     }
 
     /**
@@ -105,7 +123,7 @@ class ModelExportStrategyData extends AbstractDataObject implements ModelExportS
         }
 
         $standardMergeKeys = [
-            'permission',
+            'permissions',
             'repository_strategy',
             'repository_strategy_parameters',
             'strategies',

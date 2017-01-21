@@ -41,7 +41,7 @@ trait HandlesExporting
 
         $strategyInfo = $this->getModelInformation()->export->strategies[ $strategy ];
 
-        if ($strategyInfo->permission && ! $this->getCore()->auth()->can($strategyInfo->permission)) {
+        if (count($strategyInfo->permissions()) && ! $this->getCore()->auth()->can($strategyInfo->permissions())) {
             return false;
         }
 

@@ -394,8 +394,8 @@ return [
             // Aliases for exporter strategy classes
             'aliases' => [
                 Enums\ExportStrategy::CSV   => ExportStrategies\CsvExportStrategy::class,
-                //Enums\ExportStrategy::EXCEL => ExportStrategies\ExcelExportStrategy::class,
-                //Enums\ExportStrategy::XML   => ExportStrategies\XmlExportStrategy::class,
+                Enums\ExportStrategy::XML   => ExportStrategies\XmlExportStrategy::class,
+                Enums\ExportStrategy::EXCEL => ExportStrategies\ExcelExportStrategy::class,
             ],
 
             // Aliases for export column strategy classes
