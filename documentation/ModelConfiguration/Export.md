@@ -18,9 +18,10 @@ Set the configuration as described here to enable this option for users.
     The translation key for a CMS translation to use as the export button or link text.
     If set, this overrides the `label`.
 
-- `permissions` (string or array of strings)  
+- `permissions` (`false`, string or array of strings)  
     The permission(s) required to be able to see use this export strategy.
     If more than one, users must have all permissions in order to use it.  
+    If `false` or left unset, will default to the model's own '.export' permission.  
     Note that any *custom* permissions added here will not automatically be known by the CMS (or ACL module). For that, they must be added to the CMS configuration. For more information, check the documentation for your chosen [ACL module](https://github.com/czim/laravel-cms-acl-module).
     
 - `options` (array, associative)  
