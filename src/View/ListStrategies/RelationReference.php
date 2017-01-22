@@ -3,9 +3,9 @@ namespace Czim\CmsModels\View\ListStrategies;
 
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Support\Data\ModelInformation;
-use Czim\CmsModels\View\Traits\GetsNestedRelations;
-use Czim\CmsModels\View\Traits\ModifiesQueryForContext;
-use Czim\CmsModels\View\Traits\ResolvesModelReference;
+use Czim\CmsModels\Support\Strategies\Traits\GetsNestedRelations;
+use Czim\CmsModels\Support\Strategies\Traits\ModifiesQueryForContext;
+use Czim\CmsModels\Support\Strategies\Traits\ResolvesModelReference;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;

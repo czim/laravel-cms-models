@@ -6,7 +6,7 @@ use Czim\CmsModels\Contracts\Data\ModelExportColumnDataInterface;
 use Czim\CmsModels\Contracts\Support\Exporting\ExportColumnInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelExportColumnData;
-use Czim\CmsModels\View\Traits\ResolvesSourceStrategies;
+use Czim\CmsModels\Support\Strategies\Traits\ResolvesSourceStrategies;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class AbstractColumnStrategy implements ExportColumnInterface

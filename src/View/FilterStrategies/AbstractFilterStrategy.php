@@ -8,7 +8,7 @@ use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
 use Czim\CmsModels\Filters\ModelFilterData;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
-use Czim\CmsModels\View\Traits\HandlesTranslatedTarget;
+use Czim\CmsModels\Support\Strategies\Traits\HandlesTranslatedTarget;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 

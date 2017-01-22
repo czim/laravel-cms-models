@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\View\Traits;
+namespace Czim\CmsModels\Support\Strategies\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

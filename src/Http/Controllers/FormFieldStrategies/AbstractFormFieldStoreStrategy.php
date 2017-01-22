@@ -12,7 +12,7 @@ use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelFormFieldData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Translation\TranslationLocaleHelper;
-use Czim\CmsModels\View\Traits\ResolvesSourceStrategies;
+use Czim\CmsModels\Support\Strategies\Traits\ResolvesSourceStrategies;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use UnexpectedValueException;

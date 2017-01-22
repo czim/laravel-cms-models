@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\View\Traits;
+namespace Czim\CmsModels\Support\Strategies\Traits;
 
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Builder;

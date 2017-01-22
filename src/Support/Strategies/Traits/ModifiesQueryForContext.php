@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\View\Traits;
+namespace Czim\CmsModels\Support\Strategies\Traits;
 
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;

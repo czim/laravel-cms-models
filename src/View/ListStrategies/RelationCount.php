@@ -2,8 +2,8 @@
 namespace Czim\CmsModels\View\ListStrategies;
 
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
-use Czim\CmsModels\View\Traits\GetsNestedRelations;
-use Czim\CmsModels\View\Traits\ModifiesQueryForContext;
+use Czim\CmsModels\Support\Strategies\Traits\GetsNestedRelations;
+use Czim\CmsModels\Support\Strategies\Traits\ModifiesQueryForContext;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 

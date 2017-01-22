@@ -12,8 +12,8 @@ use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Http\Requests\ModelMetaReferenceRequest;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\Strategies\ModelMetaReference;
-use Czim\CmsModels\View\Traits\GetsNestedRelations;
-use Czim\CmsModels\View\Traits\ResolvesSourceStrategies;
+use Czim\CmsModels\Support\Strategies\Traits\GetsNestedRelations;
+use Czim\CmsModels\Support\Strategies\Traits\ResolvesSourceStrategies;
 
 /**
  * Class ModelMetaController

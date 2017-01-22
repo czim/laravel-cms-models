@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Repositories\Criteria;
 
-use Czim\CmsModels\View\Traits\ResolvesRepositoryContextStrategy;
+use Czim\CmsModels\Support\Strategies\Traits\ResolvesRepositoryContextStrategy;
 use Czim\Repository\Contracts\BaseRepositoryInterface;
 use Czim\Repository\Contracts\CriteriaInterface;
 use Czim\Repository\Contracts\ExtendedRepositoryInterface;
