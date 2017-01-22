@@ -289,6 +289,7 @@ return [
             // Aliases for filter strategy classes
             'aliases' => [
                 Enums\FilterStrategy::BOOLEAN      => FilterStrategies\DropdownBoolean::class,
+                Enums\FilterStrategy::DATE         => FilterStrategies\Datepicker::class,
                 Enums\FilterStrategy::DROPDOWN     => FilterStrategies\DropdownEnum::class,
                 Enums\FilterStrategy::STRING       => FilterStrategies\BasicString::class,
                 Enums\FilterStrategy::STRING_SPLIT => FilterStrategies\BasicSplitString::class,

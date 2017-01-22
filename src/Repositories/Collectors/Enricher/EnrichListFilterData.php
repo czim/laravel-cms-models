@@ -187,6 +187,10 @@ class EnrichListFilterData extends AbstractEnricherStep
         } elseif ($attribute->cast === AttributeCast::STRING) {
 
             $strategy = FilterStrategy::STRING;
+
+        } elseif ($attribute->cast === AttributeCast::DATE) {
+
+            $strategy = FilterStrategy::DATE;
         }
 
         if ( ! $strategy) {
