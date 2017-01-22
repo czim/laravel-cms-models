@@ -34,17 +34,15 @@ Strategies for exporting data that are included in the CMS:
 
 - `csv`  
     Simple comma-separated-values file export.  
-    This strategy requires no special configuration to work.
     
 - `xml`
     Basic XML-data export.  
-    This requires installation of [soapbox/laravel-formatter](https://github.com/SoapBox/laravel-formatter) to work.
     
 - `excel`  
-    Excel file export.  
-    This requires installation of [maatwebsite/excel](https://github.com/Maatwebsite/Laravel-Excel) to work.
+    Excel file export.
+    
   
-
+See [the export strategy documentation](../ExportStrategyReference.md#export-strategies) for more information about export strategies and package installations required for them to work.
 
 ## Columns
 
@@ -52,7 +50,7 @@ Export columns (or whatever the model attribute values are rendered for a given 
 
 In addition, each export strategy may have its own column configuration, overriding these defaults. 
 This may be done by setting the `export.strategies.<strategy key>.columns` array.
- 
+
 
 ### Including columns
 
@@ -101,4 +99,4 @@ Keys that may be set:
 
 Each column definition may have an `options` associative array value.
 What keys may be set is determined by the strategies (`strategy`) for the export column.
-More information on this may be found in the documentation of the [export column strategies](../ExportColumnStrategyReference.md).
+More information on this may be found in the documentation of the [export column strategies](../ExportStrategyReference.md#export-column-strategies).

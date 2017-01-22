@@ -157,3 +157,15 @@ It's advisable to keep this in mind when rolling your own reference setup.
 
 The default target is a property on the model, but more elaborate handling of submitted form data may be handled by the strategy.
 
+
+## Export strategies
+
+Exporting can be initiated, if enabled, on a model's index listing page. These strategies determine what and how data is exported.
+
+### Export strategies
+
+Export strategies take a model listing query and render its results in an exported file, in formats such as CSV, XML, etc.
+
+### Export column strategies
+
+Export column strategies determine how data for each model attribute value is rendered in columns (or, say, XML properties) in a model listing export.
