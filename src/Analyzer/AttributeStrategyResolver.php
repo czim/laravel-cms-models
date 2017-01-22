@@ -286,6 +286,10 @@ class AttributeStrategyResolver
             case 'stapler-attachment':
                 $type = ExportColumnStrategy::STAPLER_FILE_LINK;
                 break;
+
+            case 'date':
+                $type = ExportColumnStrategy::DATE;
+                break;
         }
 
         return $type;
