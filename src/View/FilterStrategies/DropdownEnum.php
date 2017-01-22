@@ -1,9 +1,7 @@
 <?php
 namespace Czim\CmsModels\View\FilterStrategies;
 
-use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
 use Czim\CmsModels\Contracts\View\DropdownStrategyInterface;
-use Czim\CmsModels\Support\Data\ModelListFilterData;
 use Illuminate\Database\Eloquent\Builder;
 use MyCLabs\Enum\Enum;
 
@@ -11,26 +9,18 @@ class DropdownEnum extends AbstractFilterStrategy
 {
 
     /**
-     * @var ModelFilterDataInterface|ModelListFilterData
-     */
-    protected $filterInfo;
-
-    /**
      * Applies a strategy to render a filter field.
      *
      * @param string  $key
      * @param mixed   $value
-     * @param ModelFilterDataInterface|ModelListFilterData $info
      * @return string
      */
-    public function render($key, $value, ModelFilterDataInterface $info)
+    public function render($key, $value)
     {
-        $this->filterInfo = $info;
-
         return view(
             'cms-models::model.partials.filters.dropdown-enum',
             [
-                'label'    => $info->label(),
+                'label'    => $this->filterData ? $this->filterData->label() : $key,
                 'key'      => $key,
                 'selected' => $value,
                 'options'  => $this->getDropdownOptions(),
@@ -86,7 +76,11 @@ class DropdownEnum extends AbstractFilterStrategy
      */
     protected function getDropdownValues()
     {
-        if ($source = array_get($this->filterInfo->options(), 'value_source')) {
+        if ( ! $this->filterData) {
+            return [];
+        }
+
+        if ($source = array_get($this->filterData->options(), 'value_source')) {
 
             $values = $this->getDropdownValuesFromSource($source);
 
@@ -95,7 +89,7 @@ class DropdownEnum extends AbstractFilterStrategy
             }
         }
 
-        return array_get($this->filterInfo->options(), 'values');
+        return array_get($this->filterData->options(), 'values');
     }
 
     /**
@@ -130,7 +124,11 @@ class DropdownEnum extends AbstractFilterStrategy
      */
     protected function getDropdownLabels()
     {
-        if ($source = array_get($this->filterInfo->options(), 'label_source')) {
+        if ( ! $this->filterData) {
+            return [];
+        }
+
+        if ($source = array_get($this->filterData->options(), 'label_source')) {
 
             $labels = $this->getDropdownLabelsFromSource($source);
 
@@ -139,13 +137,13 @@ class DropdownEnum extends AbstractFilterStrategy
             }
         }
 
-        $labels = array_get($this->filterInfo->options(), 'labels_translated', []);
+        $labels = array_get($this->filterData->options(), 'labels_translated', []);
 
         if (count($labels)) {
             return array_map('cms_trans', $labels);
         }
 
-        return array_get($this->filterInfo->options(), 'labels', []);
+        return array_get($this->filterData->options(), 'labels', []);
     }
 
     /**

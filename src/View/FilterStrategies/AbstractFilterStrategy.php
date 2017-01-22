@@ -1,17 +1,18 @@
 <?php
 namespace Czim\CmsModels\View\FilterStrategies;
 
+use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
-use Czim\CmsModels\Contracts\View\FilterApplicationInterface;
-use Czim\CmsModels\Contracts\View\FilterDisplayInterface;
+use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
+use Czim\CmsModels\Filters\ModelFilterData;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\View\Traits\HandlesTranslatedTarget;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-abstract class AbstractFilterStrategy implements FilterDisplayInterface, FilterApplicationInterface
+abstract class AbstractFilterStrategy implements FilterStrategyInterface
 {
     use HandlesTranslatedTarget;
 
@@ -21,6 +22,11 @@ abstract class AbstractFilterStrategy implements FilterDisplayInterface, FilterA
      * @var bool
      */
     protected $translated = false;
+
+    /**
+     * @var ModelFilterDataInterface|ModelFilterData
+     */
+    protected $filterData;
 
     /**
      * Whether to combine any search terms with the OR operator.
@@ -51,6 +57,19 @@ abstract class AbstractFilterStrategy implements FilterDisplayInterface, FilterA
      */
     protected $modelInfo;
 
+
+    /**
+     * Sets the filter's data.
+     *
+     * @param ModelFilterDataInterface|ModelFilterData $data
+     * @return $this
+     */
+    public function setFilterInformation(ModelFilterDataInterface $data)
+    {
+        $this->filterData = $data;
+
+        return $this;
+    }
 
     /**
      * Applies the filter value to the query.

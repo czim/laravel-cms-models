@@ -55,7 +55,7 @@ class ModelFilter extends Filter
         // We know about this filter, load up the relevant application strategy and apply it
         $information = $this->filterInformation[ $parameterName ];
 
-        $filter = $this->getFilterFactory()->makeForApplication(
+        $filter = $this->getFilterFactory()->make(
             $information->strategy(),
             $parameterName,
             $this->filterInformation[ $parameterName ]

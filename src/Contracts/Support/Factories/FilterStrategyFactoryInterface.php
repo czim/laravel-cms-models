@@ -2,30 +2,19 @@
 namespace Czim\CmsModels\Contracts\Support\Factories;
 
 use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
-use Czim\CmsModels\Contracts\View\FilterApplicationInterface;
-use Czim\CmsModels\Contracts\View\FilterDisplayInterface;
+use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
 
 interface FilterStrategyFactoryInterface
 {
 
     /**
-     * Makes a filter display instance.
+     * Makes a filter strategy instance.
      *
      * @param string                        $strategy
      * @param string|null                   $key
      * @param ModelFilterDataInterface|null $info
-     * @return FilterDisplayInterface
+     * @return FilterStrategyInterface
      */
-    public function makeForDisplay($strategy, $key = null, ModelFilterDataInterface $info = null);
-
-    /**
-     * Make a filter application instance.
-     *
-     * @param string                        $strategy
-     * @param string|null                   $key
-     * @param ModelFilterDataInterface|null $info
-     * @return FilterApplicationInterface
-     */
-    public function makeForApplication($strategy, $key = null, ModelFilterDataInterface $info = null);
+    public function make($strategy, $key = null, ModelFilterDataInterface $info = null);
 
 }

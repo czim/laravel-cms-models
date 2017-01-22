@@ -229,7 +229,7 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
             $strategy = config('cms-models.meta-references.filter-strategy');
         }
 
-        $filter = $this->getFilterFactory()->makeForApplication($strategy);
+        $filter = $this->getFilterFactory()->make($strategy);
 
         $filter->apply($query, $target, $value);
     }

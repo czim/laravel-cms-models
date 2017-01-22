@@ -8,6 +8,7 @@ use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelListFilterData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
+use Czim\CmsModels\Support\Enums\FilterStrategy;
 use Czim\CmsModels\Support\Enums\RelationType;
 use UnexpectedValueException;
 
@@ -100,6 +101,7 @@ class EnrichListFilterData extends AbstractEnricherStep
             if ( ! isset($this->info->attributes[ $key ])) {
                 throw new UnexpectedValueException(
                     "Unenriched list filter set with non-attribute key; make sure full filter data is provided ({$key})"
+                    . " (Requies at least strategy & target)"
                 );
             }
 
@@ -108,7 +110,7 @@ class EnrichListFilterData extends AbstractEnricherStep
             if (false === $attributeFilterInfo) {
                 throw new UnexpectedValueException(
                     "Unenriched list filter set for uninterpretable attribute for filter data;"
-                    . " make sure full filter data is provided ({$key})"
+                    . " make sure full filter data is provided ({$key}) (Requies at least strategy & target)"
                 );
             }
 
@@ -175,16 +177,16 @@ class EnrichListFilterData extends AbstractEnricherStep
 
         if ($attribute->cast === AttributeCast::BOOLEAN) {
 
-            $strategy = 'boolean';
+            $strategy = FilterStrategy::BOOLEAN;
 
         } elseif ($attribute->type === 'enum') {
 
-            $strategy = 'dropdown';
+            $strategy = FilterStrategy::DROPDOWN;
             $options['values'] = $attribute->values;
 
         } elseif ($attribute->cast === AttributeCast::STRING) {
 
-            $strategy = 'string';
+            $strategy = FilterStrategy::STRING;
         }
 
         if ( ! $strategy) {

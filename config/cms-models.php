@@ -288,10 +288,10 @@ return [
 
             // Aliases for filter strategy classes
             'aliases' => [
-                'boolean'      => FilterStrategies\DropdownBoolean::class,
-                'dropdown'     => FilterStrategies\DropdownEnum::class,
-                'string'       => FilterStrategies\BasicString::class,
-                'string-split' => FilterStrategies\BasicSplitString::class,
+                Enums\FilterStrategy::BOOLEAN      => FilterStrategies\DropdownBoolean::class,
+                Enums\FilterStrategy::DROPDOWN     => FilterStrategies\DropdownEnum::class,
+                Enums\FilterStrategy::STRING       => FilterStrategies\BasicString::class,
+                Enums\FilterStrategy::STRING_SPLIT => FilterStrategies\BasicSplitString::class,
             ],
         ],
 

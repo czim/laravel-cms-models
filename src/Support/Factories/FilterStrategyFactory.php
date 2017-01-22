@@ -2,11 +2,11 @@
 namespace Czim\CmsModels\Support\Factories;
 
 use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
-use Czim\CmsModels\Contracts\View\FilterApplicationInterface;
-use Czim\CmsModels\Contracts\View\FilterDisplayInterface;
+use Czim\CmsModels\Contracts\Support\Factories\FilterStrategyFactoryInterface;
+use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
 use RuntimeException;
 
-class FilterStrategyFactory
+class FilterStrategyFactory implements FilterStrategyFactoryInterface
 {
 
     /**
@@ -15,84 +15,47 @@ class FilterStrategyFactory
      * @param string                        $strategy
      * @param string|null                   $key
      * @param ModelFilterDataInterface|null $info
-     * @return FilterDisplayInterface
+     * @return FilterStrategyInterface
      */
-    public function makeForDisplay($strategy, $key = null, ModelFilterDataInterface $info = null)
+    public function make($strategy, $key = null, ModelFilterDataInterface $info = null)
     {
         // A filter must have a resolvable strategy for displaying
-        if ( ! ($strategyClass = $this->resolveDisplayStrategyClass($strategy))) {
+        if ( ! ($strategyClass = $this->resolveStrategyClass($strategy))) {
             throw new RuntimeException(
                 "Could not resolve display strategy class for {$key}: '{$strategy}'"
             );
         }
 
-        /** @var FilterDisplayInterface $instance */
+        /** @var FilterStrategyInterface $instance */
         $instance = app($strategyClass);
 
-        // todo: set info on instance
+        if (null !== $info) {
+            $instance->setFilterInformation($info);
+        }
 
         return $instance;
     }
 
-    /**
-     * Make a filter application instance.
-     *
-     * @param string                        $strategy
-     * @param string|null                   $key
-     * @param ModelFilterDataInterface|null $info
-     * @return FilterApplicationInterface
-     */
-    public function makeForApplication($strategy, $key = null, ModelFilterDataInterface $info = null)
-    {
-        /** @var FilterApplicationInterface $instance */
-        $instance = $this->makeForDisplay($strategy, $key, $info);
-
-        return $instance;
-    }
-
-
-    /**
-     * Resolves display strategy assuming it is the class name or FQN of a filter interface implementation.
-     *
-     * @param $strategy
-     * @return string|false     returns full class namespace if it was resolved succesfully
-     */
-    protected function resolveDisplayStrategyClass($strategy)
-    {
-        return $this->resolveStrategyClass($strategy, FilterDisplayInterface::class);
-    }
-
-    /**
-     * Resolves application strategy assuming it is the class name or FQN of a filter interface implementation.
-     *
-     * @param $strategy
-     * @return string|false     returns full class namespace if it was resolved succesfully
-     */
-    protected function resolveApplicationStrategyClass($strategy)
-    {
-        return $this->resolveStrategyClass($strategy, FilterApplicationInterface::class);
-    }
 
     /**
      * Resolves a filter strategy class.
      *
      * @param $strategy
-     * @param $interfaceFqn
      * @return bool|string
      */
-    protected function resolveStrategyClass($strategy, $interfaceFqn)
+    protected function resolveStrategyClass($strategy)
     {
         if ( ! str_contains($strategy, '.')) {
             $strategy = config('cms-models.strategies.filter.aliases.' . $strategy, $strategy);
         }
 
-        if (class_exists($strategy) && is_a($strategy, $interfaceFqn, true)) {
+        if (class_exists($strategy) && is_a($strategy, FilterStrategyInterface::class, true)) {
             return $strategy;
         }
 
         $strategy = $this->prefixStrategyNamespace($strategy);
 
-        if (class_exists($strategy) && is_a($strategy, $interfaceFqn, true)) {
+        if (class_exists($strategy) && is_a($strategy, FilterStrategyInterface::class, true)) {
             return $strategy;
         }
 

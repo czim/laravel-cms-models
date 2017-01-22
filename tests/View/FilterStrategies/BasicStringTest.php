@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\Test\View\FilterStrategies;
 
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
-use Czim\CmsModels\Contracts\View\FilterApplicationInterface;
+use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
@@ -225,7 +225,7 @@ class BasicStringTest extends AbstractFilterStrategyTestCase
     }
 
     /**
-     * @return FilterApplicationInterface
+     * @return FilterStrategyInterface
      */
     protected function makeFilterStrategy()
     {

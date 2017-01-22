@@ -14,12 +14,8 @@
 
         @foreach ($filterData as $key => $filter)
 
-            <?php /** @var \Czim\CmsModels\Contracts\View\FilterDisplayInterface[] $filterStrategies */ ?>
-            {!! $filterStrategies[ $key ]->render(
-                $key,
-                array_get($filters, $key),
-                $filter
-            ) !!}
+            <?php /** @var \Czim\CmsModels\Contracts\View\FilterStrategyInterface[] $filterStrategies */ ?>
+            {!! $filterStrategies[ $key ]->render($key, array_get($filters, $key)) !!}
 
         @endforeach
 

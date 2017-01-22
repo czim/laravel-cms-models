@@ -1,31 +1,20 @@
 <?php
 namespace Czim\CmsModels\View\FilterStrategies;
 
-use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
-use Czim\CmsModels\Support\Data\ModelListFilterData;
 use Illuminate\Database\Eloquent\Builder;
 
 class DropdownBoolean extends AbstractFilterStrategy
 {
 
     /**
-     * @var ModelFilterDataInterface|ModelListFilterData
-     */
-    protected $filterInfo;
-
-
-    /**
      * Applies a strategy to render a filter field.
      *
      * @param string  $key
      * @param mixed   $value
-     * @param ModelFilterDataInterface|ModelListFilterData $info
      * @return string
      */
-    public function render($key, $value, ModelFilterDataInterface $info)
+    public function render($key, $value)
     {
-        $this->filterInfo = $info;
-
         if ('' === $value) {
             $value = null;
         }
@@ -37,7 +26,7 @@ class DropdownBoolean extends AbstractFilterStrategy
         return view(
             'cms-models::model.partials.filters.dropdown-boolean',
             [
-                'label'    => $info->label(),
+                'label'    => $this->filterData ? $this->filterData->label() : $key,
                 'key'      => $key,
                 'selected' => $value,
                 'options'  => [
@@ -53,14 +42,17 @@ class DropdownBoolean extends AbstractFilterStrategy
      */
     protected function getTrueLabel()
     {
-        $label = array_get($this->filterInfo->options(), 'true_label_translated');
-        if ($label) {
-            return cms_trans($label);
-        }
+        if ($this->filterData) {
 
-        $label = array_get($this->filterInfo->options(), 'true_label');
-        if ($label) {
-            return $label;
+            $label = array_get($this->filterData->options(), 'true_label_translated');
+            if ($label) {
+                return cms_trans($label);
+            }
+
+            $label = array_get($this->filterData->options(), 'true_label');
+            if ($label) {
+                return $label;
+            }
         }
 
         return cms_trans('common.boolean.true');
@@ -71,14 +63,17 @@ class DropdownBoolean extends AbstractFilterStrategy
      */
     protected function getFalseLabel()
     {
-        $label = array_get($this->filterInfo->options(), 'false_label_translated');
-        if ($label) {
-            return cms_trans($label);
-        }
+        if ($this->filterData) {
 
-        $label = array_get($this->filterInfo->options(), 'false_label');
-        if ($label) {
-            return $label;
+            $label = array_get($this->filterData->options(), 'false_label_translated');
+            if ($label) {
+                return cms_trans($label);
+            }
+
+            $label = array_get($this->filterData->options(), 'false_label');
+            if ($label) {
+                return $label;
+            }
         }
 
         return cms_trans('common.boolean.false');

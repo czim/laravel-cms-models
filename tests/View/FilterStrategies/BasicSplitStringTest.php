@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\View\FilterStrategies;
 
-use Czim\CmsModels\Contracts\View\FilterApplicationInterface;
+use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Czim\CmsModels\View\FilterStrategies\BasicSplitString;
 
@@ -83,7 +83,7 @@ class BasicSplitStringTest extends AbstractFilterStrategyTestCase
     }
 
     /**
-     * @return FilterApplicationInterface
+     * @return FilterStrategyInterface
      */
     protected function makeFilterStrategy()
     {

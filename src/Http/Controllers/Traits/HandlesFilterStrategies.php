@@ -3,7 +3,7 @@ namespace Czim\CmsModels\Http\Controllers\Traits;
 
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Support\Factories\FilterStrategyFactoryInterface;
-use Czim\CmsModels\Contracts\View\FilterDisplayInterface;
+use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
 use Czim\CmsModels\Http\Controllers\BaseModelController;
 use Czim\CmsModels\Support\Data\ModelInformation;
 
@@ -13,7 +13,7 @@ trait HandlesFilterStrategies
     /**
      * Collects and returns (display) strategy instances for filters.
      *
-     * @return FilterDisplayInterface[]
+     * @return FilterStrategyInterface[]
      */
     protected function getFilterStrategyInstances()
     {
@@ -25,7 +25,7 @@ trait HandlesFilterStrategies
 
         foreach ($this->getModelInformation()->list->filters as $key => $data) {
 
-            $instances[ $key ] = $this->getFilterFactory()->makeForDisplay($data->strategy, $key, $data);
+            $instances[ $key ] = $this->getFilterFactory()->make($data->strategy, $key, $data);
         }
 
         return $instances;

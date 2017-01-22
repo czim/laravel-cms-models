@@ -1,9 +1,7 @@
 <?php
 namespace Czim\CmsModels\View\FilterStrategies;
 
-use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
-use Czim\CmsModels\Support\Data\ModelListFilterData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -37,15 +35,14 @@ class BasicString extends AbstractFilterStrategy
      *
      * @param string  $key
      * @param mixed   $value
-     * @param ModelFilterDataInterface|ModelListFilterData $info
      * @return string
      */
-    public function render($key, $value, ModelFilterDataInterface $info)
+    public function render($key, $value)
     {
         return view(
             'cms-models::model.partials.filters.basic-string',
             [
-                'label' => $info->label(),
+                'label' => $this->filterData ? $this->filterData->label() : $key,
                 'key'   => $key,
                 'value' => $value,
             ]
