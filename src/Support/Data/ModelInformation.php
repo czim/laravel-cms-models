@@ -14,6 +14,8 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
  * @property array|ModelMetaData $meta
  * @property string $verbose_name
  * @property string $verbose_name_plural
+ * @property string $translated_name
+ * @property string $translated_name_plural
  * @property bool $single
  * @property bool $allow_delete
  * @property mixed $delete_condition
@@ -86,10 +88,12 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
 
         // Display name for the model (or translation key)
         // Defaults to: model class name
-        'verbose_name' => null,
+        'verbose_name'    => null,
+        'translated_name' => null,
         // Plural display name for the model (or translation key)
         // Defaults to: model class name, pluralized
-        'verbose_name_plural' => null,
+        'verbose_name_plural'    => null,
+        'translated_name_plural' => null,
 
         // Whether the model will always only have exactly one record
         'single' => false,
@@ -254,19 +258,57 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
     }
 
     /**
+     * Returns label for single item.
+     *
+     * @param bool $translated  return translated if possible
      * @return string
      */
-    public function label()
+    public function label($translated = true)
     {
+        if ($translated && $key = $this->getAttribute('translated_name')) {
+            if (($label = cms_trans($key)) !== $key) {
+                return $label;
+            }
+        }
+
         return $this->getAttribute('verbose_name');
     }
 
     /**
+     * Returns translation key for label for single item.
+     *
      * @return string
      */
-    public function labelPlural()
+    public function labelTranslationKey()
     {
+        return $this->getAttribute('translated_name');
+    }
+
+    /**
+     * Returns label for multiple items.
+     *
+     * @param bool $translated  return translated if possible
+     * @return string
+     */
+    public function labelPlural($translated = true)
+    {
+        if ($translated && $key = $this->getAttribute('translated_name_plural')) {
+            if (($label = cms_trans($key)) !== $key) {
+                return $label;
+            }
+        }
+
         return $this->getAttribute('verbose_name_plural');
+    }
+
+    /**
+     * Returns translation key for label for multiple items.
+     *
+     * @return string
+     */
+    public function labelPluralTranslationKey()
+    {
+        return $this->getAttribute('translated_name_plural');
     }
 
     /**
@@ -344,7 +386,9 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
             'single',
             'meta',
             'verbose_name',
+            'translated_name',
             'verbose_name_plural',
+            'translated_name_plural',
             'allow_delete',
             'delete_condition',
             'delete_strategy',

@@ -14,18 +14,34 @@ interface ModelInformationInterface extends DataObjectInterface
     public function modelClass();
 
     /**
-     * Returns friendly display label for the model.
+     * Returns label for single item.
      *
+     * @param bool $translated  return translated if possible
      * @return string
      */
-    public function label();
+    public function label($translated = true);
 
     /**
-     * Returns friendly display label for the plural model name.
+     * Returns translation key for label for single item.
      *
      * @return string
      */
-    public function labelPlural();
+    public function labelTranslationKey();
+
+    /**
+     * Returns label for multiple items.
+     *
+     * @param bool $translated  return translated if possible
+     * @return string
+     */
+    public function labelPlural($translated = true);
+
+    /**
+     * Returns translation key for label for multiple items.
+     *
+     * @return string
+     */
+    public function labelPluralTranslationKey();
 
     /**
      * Returns whether the model may be deleted at all.
