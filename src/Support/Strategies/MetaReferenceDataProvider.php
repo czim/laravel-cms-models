@@ -8,6 +8,7 @@ use Czim\CmsModels\Contracts\Support\MetaReferenceDataProviderInterface;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\Strategies\ModelMetaReference;
 use Czim\CmsModels\Support\Strategies\Traits\GetsNestedRelations;
+use Czim\CmsModels\Support\Strategies\Traits\HasMorphRelationStrategyOptions;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesSourceStrategies;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -15,8 +16,9 @@ use UnexpectedValueException;
 
 class MetaReferenceDataProvider implements MetaReferenceDataProviderInterface
 {
-    use ResolvesSourceStrategies,
-        GetsNestedRelations;
+    use HasMorphRelationStrategyOptions,
+        GetsNestedRelations,
+        ResolvesSourceStrategies;
 
 
     /**
@@ -149,13 +151,13 @@ class MetaReferenceDataProvider implements MetaReferenceDataProviderInterface
 
         $formFieldData = $info->form->fields[ $key ];
 
-        $nestedModels = array_get($formFieldData->options(), 'models', false);
+        $nestedModels = $this->getMorphableModelsForFieldData($formFieldData);
 
-        if ( ! $nestedModels || ! is_array($nestedModels)) {
+        if ( ! $nestedModels || ! is_array($nestedModels) || ! count($nestedModels)) {
             return false;
         }
 
-        return array_keys($nestedModels);
+        return $nestedModels;
     }
 
     /**

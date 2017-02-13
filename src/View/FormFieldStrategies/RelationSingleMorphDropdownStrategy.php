@@ -1,6 +1,8 @@
 <?php
 namespace Czim\CmsModels\View\FormFieldStrategies;
 
+use Czim\CmsModels\Support\Strategies\Traits\HasMorphRelationStrategyOptions;
+
 /**
  * Class RelationSingleMorphDropdownStrategy
  *
@@ -11,6 +13,8 @@ class RelationSingleMorphDropdownStrategy extends AbstractRelationStrategy
 {
     // The separator symbol that splits the model class and model key parts of the value.
     const CLASS_AND_KEY_SEPARATOR = ':';
+
+    use HasMorphRelationStrategyOptions;
 
 
     /**
@@ -75,9 +79,7 @@ class RelationSingleMorphDropdownStrategy extends AbstractRelationStrategy
      */
     protected function getMorphableModels()
     {
-        return array_keys(
-            array_get($this->field->options(), 'models', [])
-        );
+        return $this->getMorphableModelsForFieldData($this->field);
     }
 
 }

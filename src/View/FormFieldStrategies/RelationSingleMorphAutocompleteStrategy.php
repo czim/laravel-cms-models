@@ -1,6 +1,7 @@
 <?php
 namespace Czim\CmsModels\View\FormFieldStrategies;
 
+use Czim\CmsModels\Support\Strategies\Traits\HasMorphRelationStrategyOptions;
 use UnexpectedValueException;
 
 class RelationSingleMorphAutocompleteStrategy extends AbstractRelationStrategy
@@ -8,6 +9,7 @@ class RelationSingleMorphAutocompleteStrategy extends AbstractRelationStrategy
     // The separator symbol that splits the model class and model key parts of the value.
     const CLASS_AND_KEY_SEPARATOR = ':';
 
+    use HasMorphRelationStrategyOptions;
 
     /**
      * Returns the view partial that should be used.
@@ -89,9 +91,7 @@ class RelationSingleMorphAutocompleteStrategy extends AbstractRelationStrategy
      */
     protected function getMorphableModels()
     {
-        return array_keys(
-            array_get($this->field->options(), 'models', [])
-        );
+        return $this->getMorphableModelsForFieldData($this->field);
     }
 
     /**
