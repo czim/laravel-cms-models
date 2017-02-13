@@ -7,7 +7,8 @@ use Illuminate\Console\Command;
 class ShowModelInformation extends Command
 {
 
-    protected $signature = 'cms:models:show {model? : Model information key or class name}';
+    protected $signature = 'cms:models:show {model? : Model information key or class name} 
+        {--keys : Show only a list of model keys}';
 
     protected $description = 'Shows model information (for debugging purposes)';
 
@@ -20,6 +21,11 @@ class ShowModelInformation extends Command
     public function handle(ModelInformationRepositoryInterface $repository)
     {
         $model = $this->argument('model');
+
+        if ($this->option('keys')) {
+            $this->displayKeys($repository->getAll()->keys());
+            return;
+        }
 
         if ( ! $model) {
             // Show all models
@@ -44,6 +50,20 @@ class ShowModelInformation extends Command
         }
 
         $this->error("Unable to find information for model by key or class '{$model}'");
+    }
+
+    /**
+     * Display model keys in console.
+     *
+     * @param \Iterator|\IteratorAggregate|string[] $keys
+     */
+    protected function displayKeys($keys)
+    {
+        $this->info('Model keys:');
+
+        foreach ($keys as $key) {
+            $this->comment('  ' . $key);
+        }
     }
 
     /**
