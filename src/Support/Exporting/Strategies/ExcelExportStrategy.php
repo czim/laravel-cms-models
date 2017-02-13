@@ -110,7 +110,7 @@ class ExcelExportStrategy extends AbstractModelListExporter
      */
     protected function getTitle()
     {
-        return $this->getModelInformation()->verbose_name_plural . ' - ' . Carbon::now()->format('Y-m-d');
+        return $this->getModelInformation()->labelPlural() . ' - ' . Carbon::now()->format('Y-m-d');
     }
 
     /**
@@ -120,7 +120,7 @@ class ExcelExportStrategy extends AbstractModelListExporter
      */
     protected function getWorksheetTitle()
     {
-        return $this->getModelInformation()->verbose_name_plural;
+        return $this->getModelInformation()->labelPlural();
     }
 
     /**

@@ -2,9 +2,9 @@
 
 <?php
     if ($creating) {
-        $title = ucfirst($model->verbose_name) . ' - ' . cms_trans('common.action.create');
+        $title = ucfirst($model->label()) . ' - ' . cms_trans('common.action.create');
     } else {
-        $title = ucfirst($model->verbose_name)
+        $title = ucfirst($model->label())
                . ' ' . ($record->incrementing ? '#' . $record->getKey() : "'" . $record->getKey() .  "'")
                . ' - ' . cms_trans('common.action.edit');
     }

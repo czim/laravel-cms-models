@@ -8,14 +8,14 @@
                 <a href="{{ cms_route("{$routePrefix}.index") }}?parents=all" class="btn btn-default">
                     <i class="fa fa-list-alt"></i> &nbsp;
                     {{ cms_trans('models.list-parents.all-models', [
-                        'models' => ucfirst($model->verbose_name_plural)
+                        'models' => ucfirst($model->labelPlural())
                     ]) }}
                 </a>
             @else
                 <a href="{{ cms_route("{$routePrefix}.index") }}?home=1" class="btn btn-default">
                     <i class="fa fa-arrow-up"></i> &nbsp;
                     {{ cms_trans('models.list-parents.top-models', [
-                        'models' => ucfirst($model->verbose_name_plural)
+                        'models' => ucfirst($model->labelPlural())
                     ]) }}
                 </a>
             @endif
@@ -26,11 +26,11 @@
                 <i class="fa fa-arrow-up"></i> &nbsp;
                 @if ($model->list->default_top_relation)
                     {{ cms_trans('models.list-parents.back-to-top-models', [
-                        'models' => ucfirst($model->verbose_name_plural)
+                        'models' => ucfirst($model->labelPlural())
                     ]) }}
                 @else
                     {{ cms_trans('models.list-parents.back-to-all-models', [
-                        'models' => ucfirst($model->verbose_name_plural)
+                        'models' => ucfirst($model->labelPlural())
                     ]) }}
                 @endif
             </a>

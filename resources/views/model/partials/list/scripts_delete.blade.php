@@ -44,7 +44,7 @@
                 form.attr('data-url').replace('IDHERE', $(this).attr('data-id'))
             );
             $('.delete-modal-title').text(
-                '{{ ucfirst(cms_trans('common.action.delete')) }} {{ $model->verbose_name }} #' +
+                '{{ ucfirst(cms_trans('common.action.delete')) }} {{ $model->label() }} #' +
                 $(this).attr('data-id')
             );
         });

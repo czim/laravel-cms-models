@@ -4,18 +4,18 @@
     if ($hasActiveListParent) {
         if ($listParent = last($listParents)) {
             $title = cms_trans('models.list-parents.children-for-parent-with-id', [
-                'children' => ucfirst($model->verbose_name_plural),
-                'parent'   => $listParent->information->verbose_name,
+                'children' => ucfirst($model->labelPlural()),
+                'parent'   => $listParent->information->label(),
                 'id'       => $listParent->model->incrementing
                     ?   '#' . $listParent->model->getKey()
                     :   "'" . $listParent->model->getKey() . "'",
             ]);
         } else {
-            $title = ucfirst($model->verbose_name_plural);
+            $title = ucfirst($model->labelPlural());
         }
 
     } else {
-        $title = ucfirst($model->verbose_name_plural);
+        $title = ucfirst($model->labelPlural());
     }
 ?>
 
@@ -50,7 +50,7 @@
                 @if (cms_auth()->can("{$permissionPrefix}create"))
                     <a href="{{ cms_route("{$routePrefix}.create") }}" class="btn btn-primary">
                         <i class="fa fa-plus"></i> &nbsp;
-                        {{ cms_trans('models.button.new-record', [ 'name' => $model->verbose_name ]) }}
+                        {{ cms_trans('models.button.new-record', [ 'name' => $model->label() ]) }}
                     </a>
                 @endif
             </div>
@@ -208,7 +208,7 @@
 
                 <div>
                     <em>
-                        {{ cms_trans('models.no-records-found', [ 'name' => $model->verbose_name_plural ]) }}
+                        {{ cms_trans('models.no-records-found', [ 'name' => $model->labelPlural() ]) }}
                     </em>
                 </div>
 

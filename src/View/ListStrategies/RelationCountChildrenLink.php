@@ -140,7 +140,7 @@ class RelationCountChildrenLink extends RelationCount
             return cms_trans('models.list-parents.models');
         }
 
-        return $info->verbose_name_plural;
+        return $info->labelPlural();
     }
 
     /**

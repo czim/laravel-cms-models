@@ -8,7 +8,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <h4 class="modal-title delete-modal-title">
-                    {{ ucfirst(cms_trans('common.action.delete')) }} {{ $model->verbose_name }}
+                    {{ ucfirst(cms_trans('common.action.delete')) }} {{ $model->label() }}
                 </h4>
             </div>
 

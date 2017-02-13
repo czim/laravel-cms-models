@@ -22,15 +22,15 @@
                     @if ($previousListParent)
 
                         {{ cms_trans('models.list-parents.children-for-parent-with-id', [
-                            'children' => ucfirst($listParent->information->verbose_name_plural),
-                            'parent'   => $previousListParent->information->verbose_name,
+                            'children' => ucfirst($listParent->information->labelPlural()),
+                            'parent'   => $previousListParent->information->label(),
                             'id'       => $previousListParent->model->incrementing
                                             ?   '#' . $previousListParent->model->getKey()
                                             :   "'" . $previousListParent->model->getKey() . "'",
                         ]) }}
 
                     @else
-                        {{ ucfirst($listParent->information->verbose_name_plural) }}
+                        {{ ucfirst($listParent->information->labelPlural()) }}
                     @endif
 
                 @if (cms_auth()->can($listParent->permission_prefix . 'show'))
@@ -49,8 +49,8 @@
         <li>
             <a href="{{ cms_route("{$routePrefix}.index") }}">
                 {{ cms_trans('models.list-parents.children-for-parent-with-id', [
-                    'children' => ucfirst($model->verbose_name_plural),
-                    'parent'   => $listParent->information->verbose_name,
+                    'children' => ucfirst($model->labelPlural()),
+                    'parent'   => $listParent->information->label(),
                     'id'       => $listParent->model->incrementing
                                     ?   '#' . $listParent->model->getKey()
                                     :   "'" . $listParent->model->getKey() . "'",
@@ -62,7 +62,7 @@
 
         <li>
             <a href="{{ cms_route("{$routePrefix}.index") }}">
-                {{ ucfirst($model->verbose_name_plural) }}
+                {{ ucfirst($model->labelPlural()) }}
             </a>
         </li>
 

@@ -1,7 +1,7 @@
 @extends(cms_config('views.layout'))
 
 <?php
-    $title = ucfirst($model->verbose_name)
+    $title = ucfirst($model->label())
            . ' ' . ($record->incrementing ? '#' . $record->getKey() : "'" . $record->getKey() .  "'");
 ?>
 
