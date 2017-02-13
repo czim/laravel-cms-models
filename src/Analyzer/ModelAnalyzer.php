@@ -109,8 +109,10 @@ class ModelAnalyzer
         $this->info['model']          = $this->class;
         $this->info['original_model'] = $this->class;
 
-        $this->info['verbose_name']        = strtolower(snake_case(class_basename($this->model), ' '));
-        $this->info['verbose_name_plural'] = str_plural($this->info['verbose_name']);
+        $this->info['verbose_name']           = strtolower(snake_case(class_basename($this->model), ' '));
+        $this->info['verbose_name_plural']    = str_plural($this->info['verbose_name']);
+        $this->info['translated_name']        = 'models.name.' . $this->info['verbose_name'];
+        $this->info['translated_name_plural'] = 'models.name.' . $this->info['verbose_name_plural'];
 
         $this->info['incrementing']      = $this->model->getIncrementing();
         $this->info['timestamps']        = $this->model->usesTimestamps();

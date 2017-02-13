@@ -345,10 +345,11 @@ class ModelModule implements ModuleInterface
 
         return [
             [
-                'id'          => 'models.' . $this->getRouteSlug(),
-                'label'       => ucfirst($this->getInformation()->labelPlural()),
-                'type'        => AclPresenceType::GROUP,
-                'permissions' => [
+                'id'               => 'models.' . $this->getRouteSlug(),
+                'label'            => ucfirst($this->getInformation()->labelPlural(false)),
+                'label_translated' => $this->getInformation()->labelPluralTranslationKey(),
+                'type'             => AclPresenceType::GROUP,
+                'permissions'      => [
                     "models.{$slug}.show",
                     "models.{$slug}.create",
                     "models.{$slug}.edit",
@@ -367,14 +368,15 @@ class ModelModule implements ModuleInterface
     public function getMenuPresence()
     {
         return [
-            'id'         => 'models.' . $this->getRouteSlug(),
-            'label'      => ucfirst($this->getInformation()->labelPlural()),
-            'type'       => MenuPresenceType::ACTION,
-            'action'     => $this->routeHelper->getRouteNameForModelClass($this->class, true) . '.index',
-            'parameters' => [
-                'home' => true
+            'id'               => 'models.' . $this->getRouteSlug(),
+            'label'            => ucfirst($this->getInformation()->labelPlural(false)),
+            'label_translated' => $this->getInformation()->labelPluralTranslationKey(),
+            'type'             => MenuPresenceType::ACTION,
+            'action'           => $this->routeHelper->getRouteNameForModelClass($this->class, true) . '.index',
+            'parameters'       => [
+                'home' => true,
             ],
-            'permissions' => [
+            'permissions'      => [
                 "models.{$this->getRouteSlug()}.*",
             ],
         ];
