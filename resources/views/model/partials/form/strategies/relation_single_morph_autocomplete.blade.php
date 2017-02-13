@@ -66,7 +66,7 @@
                         };
                     },
 
-                    processResults: function (data, params) {
+                    processResults: function (data) {
                         // Convert the key/reference pairs from the model meta controller
                         // to the id/text pairs expected by select2.
 
