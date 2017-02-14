@@ -8,6 +8,7 @@ use Czim\CmsCore\Support\Data\AbstractDataObject;
  *
  * Information about a model's relation (method).
  *
+ * @property string $name
  * @property string $method
  * @property string $type
  * @property string $relationClass
@@ -24,6 +25,9 @@ class ModelRelationData extends AbstractDataObject
 {
 
     protected $attributes = [
+
+        // Relation name (key for form fields, for instance)
+        'name' => '',
 
         // Relation method name
         'method' => '',
