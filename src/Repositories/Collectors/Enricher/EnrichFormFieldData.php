@@ -288,7 +288,7 @@ class EnrichFormFieldData extends AbstractEnricherStep
         ]);
 
         return new ModelFormFieldData([
-            'key'              => $relation->method,
+            'key'              => $relation->name,
             'update'           => $show,
             'create'           => $show,
             'source'           => $relation->method,
