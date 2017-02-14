@@ -62,9 +62,13 @@ class EnrichShowFieldData extends EnrichListColumnData
 
         foreach ($this->info->show->fields as $key => $field) {
 
-            // Check if we can enrich, if we must.
-            if ( ! isset($this->info->attributes[ $key ]) && ! isset($this->info->relations[ $key ])) {
+            $normalizedRelationKey = $this->normalizeRelationKey($key);
 
+            // Check if we can enrich, if we must.
+            if (    ! isset($this->info->attributes[ $key ])
+                &&  ! isset($this->info->relations[ $normalizedRelationKey ])
+                &&  ! isset($this->info->relations[ $key ])
+            ) {
                 // if the field data is fully set, no need to enrich
                 if ($this->isShowFieldDataComplete($field)) {
                     $fields[ $key ] = $field;
@@ -81,7 +85,12 @@ class EnrichShowFieldData extends EnrichListColumnData
                 $attributeFieldInfo = $this->makeModelShowFieldDataForAttributeData($this->info->attributes[ $key ], $this->info);
             } else {
                 // get from relation data
-                $attributeFieldInfo = $this->makeModelShowFieldDataForRelationData($this->info->relations[ $key ], $this->info);
+
+                $relationData = array_key_exists($normalizedRelationKey, $this->info->relations)
+                    ?   $this->info->relations[ $normalizedRelationKey ]
+                    :   $this->info->relations[ $key ];
+
+                $attributeFieldInfo = $this->makeModelShowFieldDataForRelationData($relationData, $this->info);
             }
 
             $attributeFieldInfo->merge($field);

@@ -96,9 +96,13 @@ class EnrichFormFieldData extends AbstractEnricherStep
 
         foreach ($this->info->form->fields as $key => $field) {
 
-            // Check if we can enrich, if we must.
-            if ( ! isset($this->info->attributes[ $key ]) && ! isset($this->info->relations[ $key ])) {
+            $normalizedRelationKey = $this->normalizeRelationKey($key);
 
+            // Check if we can enrich, if we must.
+            if (    ! isset($this->info->attributes[ $key ])
+                &&  ! isset($this->info->relations[ $normalizedRelationKey ])
+                &&  ! isset($this->info->relations[ $key ])
+            ) {
                 // if the data is fully set, no need to enrich
                 if ( ! $this->isFormFieldDataComplete($field)) {
                     throw new UnexpectedValueException(
@@ -120,7 +124,12 @@ class EnrichFormFieldData extends AbstractEnricherStep
                 $enrichFieldInfo = $this->makeModelFormFieldDataForAttributeData($this->info->attributes[ $key ], $this->info);
             } else {
                 // get from relation data
-                $enrichFieldInfo = $this->makeModelFormFieldDataForRelationData($this->info->relations[ $key ], $this->info);
+
+                $relationData = array_key_exists($normalizedRelationKey, $this->info->relations)
+                    ?   $this->info->relations[ $normalizedRelationKey ]
+                    :   $this->info->relations[ $key ];
+
+                $enrichFieldInfo = $this->makeModelFormFieldDataForRelationData($relationData, $this->info);
             }
 
             // Detect whether update/create were not explicitly defined
