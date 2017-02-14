@@ -119,4 +119,15 @@ abstract class AbstractEnricherStep implements EnricherStepInterface
         return snake_case($key);
     }
 
+    /**
+     * Normalizes a string representation for a relation method to an expected method name.
+     *
+     * @param string $key   key or relation method name
+     * @return string
+     */
+    protected function normalizeRelationMethod($key)
+    {
+        return camel_case($key);
+    }
+
 }
