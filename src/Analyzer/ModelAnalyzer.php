@@ -493,7 +493,7 @@ class ModelAnalyzer
             }
 
             $relations[ $method->name ] = new ModelRelationData([
-                'name'          => snake_case($method->name),
+                'name'          => $method->name,
                 'method'        => $method->name,
                 'type'          => $type,
                 'relationClass' => get_class($relation),

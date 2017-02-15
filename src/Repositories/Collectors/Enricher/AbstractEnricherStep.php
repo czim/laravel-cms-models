@@ -109,23 +109,12 @@ abstract class AbstractEnricherStep implements EnricherStepInterface
     }
 
     /**
-     * Normalizes a string representation for a relation method to an expected form field key.
+     * Normalizes a string representation for a relation method to the expected key name.
      *
-     * @param string $key   key or relation method name
+     * @param string $key   key or relation method
      * @return string
      */
-    protected function normalizeRelationKey($key)
-    {
-        return snake_case($key);
-    }
-
-    /**
-     * Normalizes a string representation for a relation method to an expected method name.
-     *
-     * @param string $key   key or relation method name
-     * @return string
-     */
-    protected function normalizeRelationMethod($key)
+    protected function normalizeRelationName($key)
     {
         return camel_case($key);
     }

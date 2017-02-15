@@ -91,13 +91,11 @@ class EnrichListColumnData extends AbstractEnricherStep
 
         foreach ($this->info->list->columns as $key => $column) {
 
-            $normalizedRelationMethod = $this->normalizeRelationMethod($key);
-            $normalizedRelationKey    = $this->normalizeRelationKey($key);
+            $normalizedRelationName = $this->normalizeRelationName($key);
 
             // Check if we can enrich, if we must.
             if (    ! isset($this->info->attributes[ $key ])
-                &&  ! isset($this->info->relations[ $normalizedRelationKey ])
-                &&  ! isset($this->info->relations[ $normalizedRelationMethod ])
+                &&  ! isset($this->info->relations[ $normalizedRelationName ])
             ) {
                 // if the column data is fully set, no need to enrich
                 if ($this->isListColumnDataComplete($column)) {
@@ -115,12 +113,10 @@ class EnrichListColumnData extends AbstractEnricherStep
                 $attributeColumnInfo = $this->makeModelListColumnDataForAttributeData($this->info->attributes[ $key ], $this->info);
             } else {
                 // get from relation data
-
-                $relationData = array_key_exists($normalizedRelationMethod, $this->info->relations)
-                    ?   $this->info->relations[ $normalizedRelationMethod ]
-                    :   $this->info->relations[ $normalizedRelationKey ];
-
-                $attributeColumnInfo = $this->makeModelListColumnDataForRelationData($relationData, $this->info);
+                $attributeColumnInfo = $this->makeModelListColumnDataForRelationData(
+                    $this->info->relations[ $normalizedRelationName ],
+                    $this->info
+                );
             }
 
             $attributeColumnInfo->merge($column);
