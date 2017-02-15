@@ -125,7 +125,8 @@ class EnrichFormFieldData extends AbstractEnricherStep
                 // get from relation data
                 $enrichFieldInfo = $this->makeModelFormFieldDataForRelationData(
                     $this->info->relations[ $normalizedRelationName ],
-                    $this->info
+                    $this->info,
+                    $key
                 );
             }
 
@@ -272,9 +273,10 @@ class EnrichFormFieldData extends AbstractEnricherStep
      *
      * @param ModelRelationData                          $relation
      * @param ModelInformationInterface|ModelInformation $info
+     * @param string|null                                $key
      * @return ModelFormFieldData
      */
-    protected function makeModelFormFieldDataForRelationData(ModelRelationData $relation, ModelInformationInterface $info)
+    protected function makeModelFormFieldDataForRelationData(ModelRelationData $relation, ModelInformationInterface $info, $key = null)
     {
         $required = (   in_array($relation->type, [
                             RelationType::BELONGS_TO,
@@ -294,7 +296,7 @@ class EnrichFormFieldData extends AbstractEnricherStep
         ]);
 
         return new ModelFormFieldData([
-            'key'              => $relation->name,
+            'key'              => $key ?: $relation->name,
             'update'           => $show,
             'create'           => $show,
             'source'           => $relation->method,
