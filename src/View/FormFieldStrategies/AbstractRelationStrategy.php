@@ -115,6 +115,10 @@ abstract class AbstractRelationStrategy extends AbstractDefaultStrategy
             $referenceData = $this->getReferenceDataProvider()
                 ->getForInformationByType($info, 'form.field', $this->field->key());
 
+            if (false === $referenceData) {
+                return 1;
+            }
+
             $total = $this->getCountForModel($referenceData->model());
         }
 
