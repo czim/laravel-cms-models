@@ -42,6 +42,10 @@ To register models with the CMS module, you can either:
 For more details about customizing how models are configured, see [the documentation on Model Configuration](documentation/ModelConfiguration.md).
 
 
+## Troubleshooting
+
+If you run into problems, please consult the [CMS core troubleshooting section](https://github.com/czim/laravel-cms-core/blob/master/documentation/Troubleshooting.md).
+
 ## Further information
 
 - [General information](documentation/General.md) about the CMS
