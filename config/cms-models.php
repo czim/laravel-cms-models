@@ -54,6 +54,23 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Defaults
+    |--------------------------------------------------------------------------
+    |
+    | Some defaults that the CMS will fall back to if no specific
+    | value is set in a model configuration.
+    |
+    */
+
+    'defaults' => [
+
+        // Whether to ask a user to provide extra confirmation before deleting models.
+        'confirm_delete' => false,
+
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Repository
     |--------------------------------------------------------------------------
     |

@@ -361,7 +361,7 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
     public function confirmDelete()
     {
         if (null === $this->confirm_delete) {
-            return true;
+            return (bool) config('cms-models.defaults.confirm_delete', false);
         }
 
         return (bool) $this->confirm_delete;
