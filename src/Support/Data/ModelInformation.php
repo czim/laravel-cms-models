@@ -392,6 +392,7 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
             'allow_delete',
             'delete_condition',
             'delete_strategy',
+            'confirm_delete',
             'list',
             'form',
             'show',
