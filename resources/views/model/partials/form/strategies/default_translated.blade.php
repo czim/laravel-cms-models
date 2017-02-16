@@ -22,13 +22,7 @@
 
 
     {{-- locale switcher --}}
-    @if (count($translationLocales) < 2)
-        <div class="dropdown translated-form-field-locale-select">
-            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" disabled="disabled">
-                <img src="{{ asset("_cms/img/flags/{$currentLocale}.png") }}" title="{{ $currentLocale }}">
-            </button>
-        </div>
-    @else
+    @if (count($translationLocales) > 1)
         <div class="dropdown translated-form-field-locale-select">
             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
                 <img src="{{ asset("_cms/img/flags/{$currentLocale}.png") }}" title="{{ $currentLocale }}">
