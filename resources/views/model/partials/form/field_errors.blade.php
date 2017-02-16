@@ -6,7 +6,14 @@
 
         @if ($errors && count($errors))
             @foreach ($errors as $error)
-                {{ $error }}<br>
+                {{--TODO: Refactor--}}
+                @if (is_array($error))
+                    @foreach ($error as $_error)
+                        {{ $_error }}<br>
+                    @endforeach
+                @else
+                    {{ $error }}<br>
+                @endif
             @endforeach
         @endif
     </span>
