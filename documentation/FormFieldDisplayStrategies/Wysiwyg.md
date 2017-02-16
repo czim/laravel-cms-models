@@ -9,7 +9,7 @@ By default, the `cms-models.ckeditor` settings are used for CKEditor fields.
 The config may be overridden using the following options: 
 
 - `config` (string)  
-    Path to a custom CKEditor configuration file, relative to `public/_cms/ckeditor/`. The `.js` extension may be omitted.  
+    Path to a custom CKEditor configuration file, relative to `public/_cms/ckeditor/config/`. The `.js` extension may be omitted.  
     Available configurations: `default`, `small`, `minimal`.
 
 - `collapse_toolbar` (boolean)  

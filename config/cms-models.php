@@ -494,7 +494,7 @@ return [
     'ckeditor' => [
 
         // Base path for configuration files, relative to the public/ path.
-        'path' => '_cms/js/ckeditor',
+        'path' => '_cms/js/ckeditor/config',
 
         // Default configuration file to use, relative to the base path
         'config' => 'default.js',
@@ -530,6 +530,9 @@ return [
                 'location'  => '2312 HZ Leiden, Netherlands',
                 'latitude'  => 52.1601144,
                 'longitude' => 4.497009700000035,
+                //'location'  => '2011 KB Haarlem, Netherlands',
+                //'latitude'  => 52.386670046334565,
+                //'longitude' => 4.643226265907288,
             ]
         ],
 
