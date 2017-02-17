@@ -25,9 +25,8 @@
                     },
                     'method'      : 'PUT',
                     'data'        : JSON.stringify(data),
-                    'contentType' : 'application/json'
-                })
-                    .success(function (data) {
+                    'contentType' : 'application/json',
+                    success: function (data) {
 
                         var active = data.active;
 
@@ -49,8 +48,8 @@
                         }
                         parent.find('.loading').addClass('hidden');
 
-                    })
-                    .error(function (xhr, status, error) {
+                    },
+                    error: function (xhr, status, error) {
                         console.log('activate error: ' + error);
 
                         if (state) {
@@ -63,7 +62,8 @@
                             parent.closest('tr').addClass('inactive');
                         }
                         parent.find('.loading').addClass('hidden');
-                    });
+                    }
+                });
             });
         @endif
 
