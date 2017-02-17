@@ -51,23 +51,23 @@
                 },
                 'method'     : 'PUT',
                 'data'       : JSON.stringify(data),
-                'contentType': 'application/json'
-            })
-                    .success(function (data) {
-                        var position = data.position;
+                'contentType': 'application/json',
+                success: function (data) {
+                    var position = data.position;
 
-                        if (!data.success) {
-                            console.log('Failed to update orderable position...');
-                            position = null;
-                        }
+                    if (!data.success) {
+                        console.log('Failed to update orderable position...');
+                        position = null;
+                    }
 
-                        location.reload();
-                    })
-                    .error(function (xhr, status, error) {
-                        console.log('orderable position error: ' + error);
-                        parent.find('.orderable-drag-drop .loading').addClass('hidden');
-                        parent.find('.orderable-drag-drop .move').removeClass('hidden');
-                    });
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    console.log('orderable position error: ' + error);
+                    parent.find('.orderable-drag-drop .loading').addClass('hidden');
+                    parent.find('.orderable-drag-drop .move').removeClass('hidden');
+                }
+            });
         };
 
         $('.orderable-action-up').click(function (event) {
