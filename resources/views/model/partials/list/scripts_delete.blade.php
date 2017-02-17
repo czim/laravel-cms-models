@@ -18,9 +18,8 @@
             $.ajax(url, {
                 'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            })
-                .success(function (data) {
+                },
+                success: function (data) {
 
                     var error = null;
                     if (data.hasOwnProperty('error')) {
@@ -28,11 +27,12 @@
                     }
 
                     callback(data.success, error);
-                })
-                .error(function (xhr, status, error) {
+                },
+                error: function (xhr, status, error) {
                     console.log('deletable check error: ' + error);
                     callback(false);
-                });
+                }
+            });
         };
 
         // Button that opens modal
