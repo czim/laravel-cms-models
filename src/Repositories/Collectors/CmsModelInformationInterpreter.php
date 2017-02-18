@@ -68,7 +68,9 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
             );
 
             $this->raw['list']['columns'] = $this->normalizeStandardArrayProperty(
-                array_get($this->raw['list'], 'columns', []),
+                array_has($this->raw['list'], 'columns')
+                    ?   array_get($this->raw['list'], 'columns', [])
+                    :   array_get($this->raw['list'], 'fields', []),
                 'strategy',
                 ModelListColumnData::class
             );
@@ -160,7 +162,9 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
         if (array_has($this->raw, 'export') && is_array($this->raw['export'])) {
 
             $this->raw['export']['columns'] = $this->normalizeStandardArrayProperty(
-                array_get($this->raw['export'], 'columns', []),
+                array_has($this->raw['export'], 'columns')
+                    ?   array_get($this->raw['export'], 'columns', [])
+                    :   array_get($this->raw['export'], 'fields', []),
                 'strategy',
                 ModelExportColumnData::class
             );
@@ -178,7 +182,9 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
             foreach ($this->raw['export']['strategies'] as $key => $strategy) {
 
                 $this->raw['export']['strategies'][ $key ]['columns'] = $this->normalizeStandardArrayProperty(
-                    array_get($strategy, 'columns', []),
+                    array_has($strategy, 'columns')
+                        ?   array_get($strategy, 'columns', [])
+                        :   array_get($strategy, 'fields', []),
                     'strategy',
                     ModelExportColumnData::class
                 );
