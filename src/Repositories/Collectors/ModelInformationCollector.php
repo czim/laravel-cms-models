@@ -9,6 +9,7 @@ use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationCollectorIn
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationInterpreterInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
+use Czim\CmsModels\Exceptions\ModelInformationCollectionException;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
@@ -108,6 +109,7 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
      * Collects information about config-defined app model classes.
      *
      * @return $this
+     * @throws ModelInformationCollectionException
      */
     protected function collectRawModels()
     {
@@ -115,7 +117,19 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
 
             $key = $this->moduleHelper->modelInformationKeyForModel($class);
 
-            $this->information->put($key, $this->modelAnalyzer->analyze($class));
+            try {
+                $this->information->put($key, $this->modelAnalyzer->analyze($class));
+
+            } catch (\Exception $e) {
+
+                // Wrap and decorate exceptions so it is easier to track the problem source
+                throw (new ModelInformationCollectionException(
+                    "Issue analyzing model {$class}: \n{$e->getMessage()}",
+                    $e->getCode(),
+                    $e
+                ))
+                    ->setModelClass($class);
+            }
         }
 
         return $this;
@@ -125,40 +139,63 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
      * Collects information from dedicated CMS model information classes.
      *
      * @return $this
+     * @throws ModelInformationCollectionException
      */
     protected function collectCmsModels()
     {
         foreach ($this->cmsModelFiles as $file) {
 
-            $info = require $file->getRealPath();
+            try {
+                $this->collectSingleCmsModelFromFile($file);
 
-            if ( ! is_array($info)) {
-                throw new UnexpectedValueException(
-                    "Incorrect data from CMS model information file: '{$file->getRelativePath()}'"
-                );
+            } catch (\Exception $e) {
+
+                // Wrap and decorate exceptions so it is easier to track the problem source
+                throw (new ModelInformationCollectionException(
+                    "Issue reading/interpreting model configuration file {$file->getRealPath()}: \n{$e->getMessage()}",
+                    $e->getCode(),
+                    $e
+                ))
+                    ->setConfigurationFile($file->getRealPath());
             }
-
-            $info = $this->informationInterpreter->interpret($info);
-
-            $modelClass = $this->makeModelFqnFromCmsModelPath(
-                $file->getRelativePathname()
-            );
-
-            $key = $this->moduleHelper->modelInformationKeyForModel($modelClass);
-
-            if ( ! $this->information->has($key)) {
-                $this->getCore()->log('debug', "CMS model data for unset model information key '{$key}'");
-                continue;
-            }
-
-            /** @var ModelInformationInterface $originalInfo */
-            $originalInfo = $this->information->get($key);
-            $originalInfo->merge($info);
-
-            $this->information->put($key, $originalInfo);
         }
 
         return $this;
+    }
+
+    /**
+     * Collects CMS configuration information from a given Spl file.
+     *
+     * @param SplFileInfo $file
+     */
+    protected function collectSingleCmsModelFromFile(SplFileInfo $file)
+    {
+        $info = require $file->getRealPath();
+
+        if ( ! is_array($info)) {
+            throw new UnexpectedValueException(
+                "Incorrect data from CMS model information file: '{$file->getRelativePath()}'"
+            );
+        }
+
+        $info = $this->informationInterpreter->interpret($info);
+
+        $modelClass = $this->makeModelFqnFromCmsModelPath(
+            $file->getRelativePathname()
+        );
+
+        $key = $this->moduleHelper->modelInformationKeyForModel($modelClass);
+
+        if ( ! $this->information->has($key)) {
+            $this->getCore()->log('debug', "CMS model data for unset model information key '{$key}'");
+            return;
+        }
+
+        /** @var ModelInformationInterface $originalInfo */
+        $originalInfo = $this->information->get($key);
+        $originalInfo->merge($info);
+
+        $this->information->put($key, $originalInfo);
     }
 
     /**

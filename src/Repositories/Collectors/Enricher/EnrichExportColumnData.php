@@ -6,6 +6,7 @@ use Czim\CmsModels\Analyzer\RelationStrategyResolver;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Data\ModelExportColumnDataInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
+use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelExportColumnData;
@@ -114,6 +115,7 @@ class EnrichExportColumnData extends AbstractEnricherStep
      * Enriches existing user configured data.
      *
      * @param string|null $strategy
+     * @throws ModelInformationEnrichmentException
      */
     protected function enrichCustomData($strategy = null)
     {
@@ -130,27 +132,22 @@ class EnrichExportColumnData extends AbstractEnricherStep
 
         foreach ($columnsOrigin as $key => $column) {
 
-            // Check if we can enrich, if we must.
-            if ( ! isset($this->info->attributes[ $key ])) {
+            try {
+                $this->enrichColumn($key, $column, $columns);
 
-                // if the column data is fully set, no need to enrich
-                if ($this->isExportColumnDataComplete($column)) {
-                    $columns[ $key ] = $column;
-                    continue;
-                }
+            } catch (\Exception $e) {
 
-                throw new UnexpectedValueException(
-                    "Unenriched export column set with non-attribute key; "
-                    . "make sure full column data is provided"
-                );
+                $section = 'export' . ($strategy ? ".{$strategy}" : null) . '.columns';
+
+                $decoratedMessage = "Issue with export column '{$key}' "
+                                  . ($strategy ? " for strategy '{$strategy}' " : null)
+                                  . "({$section}.{$key}): \n{$e->getMessage()}";
+
+                // Wrap and decorate exceptions so it is easier to track the problem source
+                throw (new ModelInformationEnrichmentException($decoratedMessage, $e->getCode(), $e))
+                    ->setSection($section)
+                    ->setKey($key);
             }
-
-
-            $attributeColumnInfo = $this->makeModelExportColumnDataForAttributeData($this->info->attributes[ $key ], $this->info);
-
-            $attributeColumnInfo->merge($column);
-
-            $columns[ $key ] = $attributeColumnInfo;
         }
 
 
@@ -159,6 +156,38 @@ class EnrichExportColumnData extends AbstractEnricherStep
         } else {
             $this->info->export->strategies[ $strategy ]->columns = $columns;
         }
+    }
+
+    /**
+     * Enriches a single export column and saves the data.
+     *
+     * @param ModelExportColumnDataInterface $column
+     * @param string                       $key
+     * @param array                        $columns     by reference, data array to build, updated with enriched data
+     */
+    protected function enrichColumn($key, ModelExportColumnDataInterface $column, array &$columns)
+    {
+        // Check if we can enrich, if we must.
+        if ( ! isset($this->info->attributes[ $key ])) {
+
+            // if the column data is fully set, no need to enrich
+            if ($this->isExportColumnDataComplete($column)) {
+                $columns[ $key ] = $column;
+                return;
+            }
+
+            throw new UnexpectedValueException(
+                "Incomplete data for for export column key that does not match known model attribute or relation method. "
+                . "Requires at least 'source' value."
+            );
+        }
+
+
+        $attributeColumnInfo = $this->makeModelExportColumnDataForAttributeData($this->info->attributes[ $key ], $this->info);
+
+        $attributeColumnInfo->merge($column);
+
+        $columns[ $key ] = $attributeColumnInfo;
     }
 
     /**

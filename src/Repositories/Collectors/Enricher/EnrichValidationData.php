@@ -1,7 +1,10 @@
 <?php
 namespace Czim\CmsModels\Repositories\Collectors\Enricher;
 
+use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
+use Czim\CmsModels\Support\Data\ModelFormFieldData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesFormStoreStrategies;
 use Illuminate\Support\Arr;
@@ -181,6 +184,7 @@ class EnrichValidationData extends AbstractEnricherStep
      *
      * @param bool $forCreate
      * @return array
+     * @throws ModelInformationEnrichmentException
      */
     protected function getFormFieldBaseRules($forCreate = true)
     {
@@ -190,40 +194,72 @@ class EnrichValidationData extends AbstractEnricherStep
 
         foreach ($this->info->form->fields as $field) {
 
-            $this->generatedRulesMap[ $field->key() ] = [];
+            try {
+                $this->getFormFieldBaseRule($field, $forCreate, $rules);
 
-            // Leave out fields that are not relevant (or not in the layout)
-            if (    $forCreate && ! $field->create() || ! $forCreate && ! $field->update()
-                ||  ! in_array($field->key(), $this->layoutFields)
-            ) {
-                continue;
+            } catch (\Exception $e) {
+
+                $section = 'form.validation.' . ($forCreate ? 'create' : 'update');
+
+                // Wrap and decorate exceptions so it is easier to track the problem source
+                throw (new ModelInformationEnrichmentException(
+                    "Issue with validation fules for form field '{$field->key()}' ({$section}): \n{$e->getMessage()}",
+                    $e->getCode(),
+                    $e
+                ))
+                    ->setSection($section)
+                    ->setKey($field->key());
             }
 
-            $instance = $this->getFormFieldStoreStrategyInstanceForField($field);
-
-            $instance->setFormFieldData($field);
-            $instance->setParameters(
-                $this->getFormFieldStoreStrategyParametersForField($field)
-            );
-
-            $fieldRules = $instance->validationRules($field, $this->info);
-
-            if (false === $fieldRules) {
-                continue;
-            }
-
-            if (Arr::isAssoc($fieldRules)) {
-                foreach ($fieldRules as $key => $nestedFieldRules) {
-                    $rules[ $key ] = $nestedFieldRules;
-                    $this->generatedRulesMap[ $field->key() ][] = $key;
-                }
-            } else {
-                $rules[ $field->key() ] = $fieldRules;
-                $this->generatedRulesMap[ $field->key() ][] = $field->key();
-            }
         }
 
         return $rules;
+    }
+
+    /**
+     * Updates collected rules array with rules based on form field data.
+     *
+     * @param ModelFormFieldDataInterface|ModelFormFieldData $field
+     * @param bool                                           $forCreate
+     * @param array                                          $rules     by reference
+     */
+    protected function getFormFieldBaseRule(ModelFormFieldDataInterface $field, $forCreate, array &$rules)
+    {
+        $this->generatedRulesMap[ $field->key() ] = [];
+
+        // Leave out fields that are not relevant (or not in the layout)
+        if (    $forCreate && ! $field->create()
+            ||  ! $forCreate && ! $field->update()
+            ||  ! in_array($field->key(), $this->layoutFields)
+        ) {
+            return;
+        }
+
+        $instance = $this->getFormFieldStoreStrategyInstanceForField($field);
+
+        $instance->setFormFieldData($field);
+        $instance->setParameters(
+            $this->getFormFieldStoreStrategyParametersForField($field)
+        );
+
+        $fieldRules = $instance->validationRules($field, $this->info);
+
+        if (false === $fieldRules) {
+            return;
+        }
+
+        if (Arr::isAssoc($fieldRules)) {
+
+            foreach ($fieldRules as $key => $nestedFieldRules) {
+                $rules[ $key ] = $nestedFieldRules;
+                $this->generatedRulesMap[ $field->key() ][] = $key;
+            }
+
+        } else {
+
+            $rules[ $field->key() ] = $fieldRules;
+            $this->generatedRulesMap[ $field->key() ][] = $field->key();
+        }
     }
 
     /**

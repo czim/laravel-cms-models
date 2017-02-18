@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Repositories\Collectors\Enricher;
 
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Data\ModelShowFieldDataInterface;
+use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelShowFieldData;
@@ -62,40 +63,65 @@ class EnrichShowFieldData extends EnrichListColumnData
 
         foreach ($this->info->show->fields as $key => $field) {
 
-            $normalizedRelationName = $this->normalizeRelationName($key);
+            try {
+                $this->enrichField($key, $field, $fields);
 
-            // Check if we can enrich, if we must.
-            if (    ! isset($this->info->attributes[ $key ])
-                &&  ! isset($this->info->relations[ $normalizedRelationName ])
-            ) {
-                // if the field data is fully set, no need to enrich
-                if ($this->isShowFieldDataComplete($field)) {
-                    $fields[ $key ] = $field;
-                    continue;
-                }
+            } catch (\Exception $e) {
 
-                throw new UnexpectedValueException(
-                    "Unenriched show field set with non-attribute/non-relation-name key; "
-                    . "make sure full field data is provided"
-                );
+                // Wrap and decorate exceptions so it is easier to track the problem source
+                throw (new ModelInformationEnrichmentException(
+                    "Issue with show field '{$key}' (show.fields.{$key}): \n{$e->getMessage()}",
+                    $e->getCode(),
+                    $e
+                ))
+                    ->setSection('show.fields')
+                    ->setKey($key);
             }
-
-            if (isset($this->info->attributes[ $key ])) {
-                $attributeFieldInfo = $this->makeModelShowFieldDataForAttributeData($this->info->attributes[ $key ], $this->info);
-            } else {
-                // get from relation data
-                $attributeFieldInfo = $this->makeModelShowFieldDataForRelationData(
-                    $this->info->relations[ $normalizedRelationName ],
-                    $this->info
-                );
-            }
-
-            $attributeFieldInfo->merge($field);
-
-            $fields[ $key ] = $attributeFieldInfo;
         }
 
         $this->info->show->fields = $fields;
+    }
+
+    /**
+     * Enriches a single show field and saves the data.
+     *
+     * @param ModelShowFieldDataInterface $field
+     * @param string                      $key
+     * @param array                       $fields       by reference, data array to build, updated with enriched data
+     */
+    protected function enrichField($key, ModelShowFieldDataInterface $field, array &$fields)
+    {
+        $normalizedRelationName = $this->normalizeRelationName($key);
+
+        // Check if we can enrich, if we must.
+        if (    ! isset($this->info->attributes[ $key ])
+            &&  ! isset($this->info->relations[ $normalizedRelationName ])
+        ) {
+            // If the field data is fully set, no need to enrich
+            if ($this->isShowFieldDataComplete($field)) {
+                $fields[ $key ] = $field;
+                return;
+            }
+
+            throw new UnexpectedValueException(
+                "Incomplete data for for show field key that does not match known model attribute or relation method. "
+                . "Requires at least 'source' and 'strategy' values."
+            );
+        }
+
+        if (isset($this->info->attributes[ $key ])) {
+            $attributeFieldInfo = $this->makeModelShowFieldDataForAttributeData($this->info->attributes[ $key ], $this->info);
+        } else {
+            // get from relation data
+            $attributeFieldInfo = $this->makeModelShowFieldDataForRelationData(
+                $this->info->relations[ $normalizedRelationName ],
+                $this->info
+            );
+        }
+
+        $attributeFieldInfo->merge($field);
+
+        $fields[ $key ] = $attributeFieldInfo;
     }
 
     /**

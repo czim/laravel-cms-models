@@ -4,6 +4,7 @@ namespace Czim\CmsModels\Repositories\Collectors;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\EnricherStepInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
+use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
 use Czim\CmsModels\Repositories\Collectors\Enricher;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Illuminate\Support\Collection;
@@ -82,16 +83,39 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
      *
      * @param ModelInformationInterface|ModelInformation $information
      * @return ModelInformationInterface|ModelInformation
+     * @throws ModelInformationEnrichmentException
      */
     public function enrich(ModelInformationInterface $information)
     {
         $this->info = $information;
 
-        foreach ($this->steps as $step) {
-            /** @var EnricherStepInterface $instance */
-            $instance = app($step, [ $this ]);
+        try {
+            foreach ($this->steps as $step) {
+                /** @var EnricherStepInterface $instance */
+                $instance = app($step, [ $this ]);
 
-            $this->info = $instance->enrich($this->info);
+                $this->info = $instance->enrich($this->info);
+            }
+
+        } catch (\Exception $e) {
+
+            $key     = null;
+            $section = null;
+
+            if ($e instanceof ModelInformationEnrichmentException) {
+                $key     = $e->getKey();
+                $section = $e->getSection();
+            }
+
+            // Wrap and decorate exceptions so it is easier to track the problem source
+            throw (new ModelInformationEnrichmentException(
+                "{$information->modelClass()} model configuration issue: \n{$e->getMessage()}",
+                $e->getCode(),
+                $e
+            ))
+                ->setModelClass($information->modelClass())
+                ->setSection($section)
+                ->setKey($key);
         }
 
         return $information;

@@ -6,6 +6,7 @@ use Czim\CmsModels\Analyzer\RelationStrategyResolver;
 use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
+use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelFormFieldData;
 use Czim\CmsModels\Support\Data\ModelInformation;
@@ -86,6 +87,8 @@ class EnrichFormFieldData extends AbstractEnricherStep
 
     /**
      * Enriches existing user configured data.
+     *
+     * @throws ModelInformationEnrichmentException
      */
     protected function enrichCustomData()
     {
@@ -96,54 +99,79 @@ class EnrichFormFieldData extends AbstractEnricherStep
 
         foreach ($this->info->form->fields as $key => $field) {
 
-            $normalizedRelationName = $this->normalizeRelationName($key);
+            try {
+                $this->enrichField($key, $field, $fields);
 
-            // Check if we can enrich, if we must.
-            if (    ! isset($this->info->attributes[ $key ])
-                &&  ! isset($this->info->relations[ $normalizedRelationName ])
-            ) {
-                // if the data is fully set, no need to enrich
-                if ( ! $this->isFormFieldDataComplete($field)) {
-                    throw new UnexpectedValueException(
-                        "Unenriched form field set with non-attribute/non-relation-name key; "
-                        . "make sure full field data is provided"
-                    );
-                }
+            } catch (\Exception $e) {
 
-                // Make sure to set the key if it isn't
-                if ( ! $field->key) {
-                    $field->key = $key;
-                }
-
-                $fields[ $key ] = $field;
-                continue;
+                // Wrap and decorate exceptions so it is easier to track the problem source
+                throw (new ModelInformationEnrichmentException(
+                    "Issue with form field '{$key}' (form.fields.{$key}): \n{$e->getMessage()}",
+                    $e->getCode(),
+                    $e
+                ))
+                    ->setSection('form.fields')
+                    ->setKey($key);
             }
-
-            if (isset($this->info->attributes[ $key ])) {
-                $enrichFieldInfo = $this->makeModelFormFieldDataForAttributeData($this->info->attributes[ $key ], $this->info);
-            } else {
-                // get from relation data
-                $enrichFieldInfo = $this->makeModelFormFieldDataForRelationData(
-                    $this->info->relations[ $normalizedRelationName ],
-                    $this->info,
-                    $key
-                );
-            }
-
-            // Detect whether update/create were not explicitly defined
-            // If they were not, assume that they should be shown,
-            // since they were explicitly included in the config.
-            if (null === $field->update && null === $field->create) {
-                $field->update = true;
-                $field->create = true;
-            }
-
-            $enrichFieldInfo->merge($field);
-
-            $fields[ $key ] = $enrichFieldInfo;
         }
 
         $this->info->form->fields = $fields;
+    }
+
+    /**
+     * Enriches a single form field and saves the data.
+     *
+     * @param ModelFormFieldDataInterface|ModelFormFieldData $field
+     * @param string                                         $key
+     * @param array                                          $fields by reference, data array to build, updated with enriched data
+     */
+    protected function enrichField($key, ModelFormFieldDataInterface $field, array &$fields)
+    {
+        $normalizedRelationName = $this->normalizeRelationName($key);
+
+        // Check if we can enrich, if we must.
+        if (    ! isset($this->info->attributes[ $key ])
+            &&  ! isset($this->info->relations[ $normalizedRelationName ])
+        ) {
+            // If the data is fully set, no need to enrich
+            if ( ! $this->isFormFieldDataComplete($field)) {
+                throw new UnexpectedValueException(
+                    "Unenriched form field set with non-attribute/non-relation-name key; "
+                    . "make sure full field data is provided"
+                );
+            }
+
+            // Make sure to set the key if it isn't
+            if ( ! $field->key()) {
+                $field->key = $key;
+            }
+
+            $fields[ $key ] = $field;
+            return;
+        }
+
+        if (isset($this->info->attributes[ $key ])) {
+            $enrichFieldInfo = $this->makeModelFormFieldDataForAttributeData($this->info->attributes[ $key ], $this->info);
+        } else {
+            // get from relation data
+            $enrichFieldInfo = $this->makeModelFormFieldDataForRelationData(
+                $this->info->relations[ $normalizedRelationName ],
+                $this->info,
+                $key
+            );
+        }
+
+        // Detect whether update/create were not explicitly defined
+        // If they were not, assume that they should be shown,
+        // since they were explicitly included in the config.
+        if (null === $field->update && null === $field->create) {
+            $field->update = true;
+            $field->create = true;
+        }
+
+        $enrichFieldInfo->merge($field);
+
+        $fields[ $key ] = $enrichFieldInfo;
     }
 
     /**

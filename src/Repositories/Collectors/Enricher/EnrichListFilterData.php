@@ -4,6 +4,7 @@ namespace Czim\CmsModels\Repositories\Collectors\Enricher;
 use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelListFilterData;
@@ -92,34 +93,61 @@ class EnrichListFilterData extends AbstractEnricherStep
 
         foreach ($this->info->list->filters as $key => $filter) {
 
-            // If the filter information is fully provided, do not try to enrich
-            if ($this->isListFilterDataComplete($filter)) {
-                $filters[ $key ] = $filter;
-                continue;
+            try {
+                $this->enrichFilter($key, $filter, $filters);
+
+            } catch (\Exception $e) {
+
+                // Wrap and decorate exceptions so it is easier to track the problem source
+                throw (new ModelInformationEnrichmentException(
+                    "Issue with list filter '{$key}' (list.filters.{$key}): \n{$e->getMessage()}",
+                    $e->getCode(),
+                    $e
+                ))
+                    ->setSection('list.filters')
+                    ->setKey($key);
             }
-
-            if ( ! isset($this->info->attributes[ $key ])) {
-                throw new UnexpectedValueException(
-                    "Unenriched list filter set with non-attribute key; make sure full filter data is provided ({$key})"
-                    . " (Requies at least strategy & target)"
-                );
-            }
-
-            $attributeFilterInfo = $this->makeModelListFilterDataForAttributeData($this->info->attributes[ $key ], $this->info);
-
-            if (false === $attributeFilterInfo) {
-                throw new UnexpectedValueException(
-                    "Unenriched list filter set for uninterpretable attribute for filter data;"
-                    . " make sure full filter data is provided ({$key}) (Requies at least strategy & target)"
-                );
-            }
-
-            $attributeFilterInfo->merge($filter);
-
-            $filters[ $key ] = $attributeFilterInfo;
         }
 
         $this->info->list->filters = $filters;
+    }
+
+    /**
+     * Enriches a single list column and saves the data.
+     *
+     * @param ModelFilterDataInterface $filter
+     * @param string                   $key
+     * @param array                    $filters     by reference, data array to build, updated with enriched data
+     */
+    protected function enrichFilter($key, ModelFilterDataInterface $filter, array &$filters)
+    {
+        // If the filter information is fully provided, do not try to enrich
+        if ($this->isListFilterDataComplete($filter)) {
+            $filters[ $key ] = $filter;
+            return;
+        }
+
+        if ( ! isset($this->info->attributes[ $key ])) {
+
+            throw new UnexpectedValueException(
+                "Incomplete data for for list filter key that does not match known model attribute or relation method. "
+                . "Requires at least 'strategy' and 'target' values."
+            );
+        }
+
+        $attributeFilterInfo = $this->makeModelListFilterDataForAttributeData($this->info->attributes[ $key ], $this->info);
+
+        if (false === $attributeFilterInfo) {
+
+            throw new UnexpectedValueException(
+                "Uninterpretable data for for list filter key, cannot determine defaults based on model attribute or relation method name. "
+                . "Requires at least 'strategy' and 'target' values."
+            );
+        }
+
+        $attributeFilterInfo->merge($filter);
+
+        $filters[ $key ] = $attributeFilterInfo;
     }
 
     /**
