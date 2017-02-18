@@ -1,30 +1,59 @@
 <?php
 namespace Czim\CmsModels\Http\Controllers\Traits;
 
-use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\Support\Factories\FormFieldStrategyFactoryInterface;
-use Czim\CmsModels\Contracts\View\FormFieldDisplayInterface;
-use Czim\CmsModels\Support\Data\ModelFormFieldData;
+use Czim\CmsModels\Exceptions\StrategyRenderException;
+use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Model;
 
 trait HandlesFormFieldStrategies
 {
 
     /**
-     * Returns instances of form field strategies.
+     * Renders HTML for form field strategies.
      *
-     * @param ModelFormFieldData[]|ModelFormFieldDataInterface[] $fields    the form field keys to get
-     * @return FormFieldDisplayInterface[]
+     * @param Model $model
+     * @param array $fields
+     * @param array $values
+     * @param array $errors
+     * @return View[]|\string[]
+     * @throws StrategyRenderException
      */
-    protected function getFormFieldStrategyInstances(array $fields)
+    protected function renderedFormFieldStrategies(Model $model, array $fields, array $values, array $errors = [])
     {
-        $instances = [];
+        $views = [];
 
-        foreach ($fields as $key => $data) {
+        foreach ($fields as $key => $field) {
 
-            $instances[ $key ] = $this->getFormFieldStrategyFactory()->make($data->display_strategy);
+            try {
+                $instance = $this->getFormFieldStrategyFactory()->make($field->display_strategy);
+
+            } catch (\Exception $e) {
+
+                $message = "Failed to make form field strategy for '{$key}': \n{$e->getMessage()}";
+
+                throw new StrategyRenderException($message, $e->getCode(), $e);
+            }
+
+            try {
+                $views[ $key ] = $instance->render(
+                    $model,
+                    $fields[ $key ],
+                    old() ? old($key) : array_get($values, $key),
+                    array_get($values, $key),
+                    array_get($errors, $key, [])
+                );
+
+            } catch (\Exception $e) {
+
+                $message = "Failed to render form field '{$key}' for strategy " . get_class($instance)
+                         . ": \n{$e->getMessage()}";
+
+                throw new StrategyRenderException($message, $e->getCode(), $e);
+            }
         }
 
-        return $instances;
+        return $views;
     }
 
     /**

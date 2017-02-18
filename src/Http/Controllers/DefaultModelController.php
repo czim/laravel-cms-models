@@ -181,6 +181,9 @@ class DefaultModelController extends BaseModelController
         $this->checkListParents(false);
 
         $values = $this->getFormFieldValuesFromModel($record, array_keys($fields));
+        $errors = $this->getNormalizedFormFieldErrors();
+
+        $renderedFields = $this->renderedFormFieldStrategies($record, $fields, $values, $errors);
 
         return view($this->getCreateView(), [
             'moduleKey'           => $this->moduleKey,
@@ -190,9 +193,9 @@ class DefaultModelController extends BaseModelController
             'record'              => $record,
             'creating'            => true,
             'fields'              => $fields,
-            'fieldStrategies'     => $this->getFormFieldStrategyInstances($fields),
+            'fieldStrategies'     => $renderedFields,
             'values'              => $values,
-            'fieldErrors'         => $this->getNormalizedFormFieldErrors(),
+            'fieldErrors'         => $errors,
             'activeTab'           => $this->getActiveTab(),
             'errorsPerTab'        => $this->getErrorCountsPerTabPane(),
             'hasActiveListParent' => (bool) $this->listParentRelation,
@@ -260,6 +263,9 @@ class DefaultModelController extends BaseModelController
         $this->checkListParents(false);
 
         $values = $this->getFormFieldValuesFromModel($record, array_keys($fields));
+        $errors = $this->getNormalizedFormFieldErrors();
+
+        $renderedFields = $this->renderedFormFieldStrategies($record, $fields, $values, $errors);
 
         return view($this->getEditView(), [
             'moduleKey'           => $this->moduleKey,
@@ -269,9 +275,9 @@ class DefaultModelController extends BaseModelController
             'record'              => $record,
             'creating'            => false,
             'fields'              => $fields,
-            'fieldStrategies'     => $this->getFormFieldStrategyInstances($fields),
+            'fieldStrategies'     => $renderedFields,
             'values'              => $values,
-            'fieldErrors'         => $this->getNormalizedFormFieldErrors(),
+            'fieldErrors'         => $errors,
             'activeTab'           => $this->getActiveTab(),
             'errorsPerTab'        => $this->getErrorCountsPerTabPane(),
             'hasActiveListParent' => (bool) $this->listParentRelation,

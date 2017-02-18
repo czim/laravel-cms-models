@@ -8,20 +8,11 @@
 @endif
 
     <div class="col-sm-{{ isset($columnWidth) ? $columnWidth : 10 }}">
-
-        <?php
-            /** @var \Czim\CmsModels\Contracts\View\FormFieldDisplayInterface $strategy */
-
-            $value = old() ? old($key) : array_get($values, $key);
-        ?>
-
-        {!! $strategy->render(
-            $record,
-            $field,
-            $value,
-            array_get($values, $key),
-            array_get($errors, $key, [])
-        ) !!}
+        @if ($strategy instanceof \Illuminate\Contracts\Support\Renderable)
+            {!! $strategy->render() !!}
+        @else
+            {!! $strategy !!}
+        @endif
     </div>
 
 @if ( ! ($parent instanceof \Czim\CmsModels\Support\Data\ModelFormFieldGroupData))
