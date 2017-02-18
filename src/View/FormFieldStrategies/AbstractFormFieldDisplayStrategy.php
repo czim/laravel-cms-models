@@ -77,7 +77,7 @@ abstract class AbstractFormFieldDisplayStrategy implements FormFieldDisplayInter
      * @param mixed $value
      * @param mixed $originalValue
      * @param array $errors
-     * @return string
+     * @return string|View
      */
     protected function renderTranslatedFields(array $locales, $value, $originalValue, array $errors)
     {
@@ -86,15 +86,12 @@ abstract class AbstractFormFieldDisplayStrategy implements FormFieldDisplayInter
 
         foreach ($locales as $locale) {
 
-            /** @var View $view */
-            $view = $this->renderField(
+            $rendered[ $locale ] = $this->renderField(
                 $this->getValueForLocale($locale, $value),
                 $this->getValueForLocale($locale, $originalValue),
                 $this->getErrorsForLocale($locale, $errors),
                 $locale
             );
-
-            $rendered[ $locale ] = $view->render();
         }
 
         return view(static::FORM_FIELD_TRANSLATED_VIEW, [
