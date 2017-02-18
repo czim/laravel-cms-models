@@ -285,20 +285,11 @@ class EnrichFormFieldData extends AbstractEnricherStep
                         ])
                     &&  ! $relation->nullable_key);
 
-        // Only show the fields if they are not of a to-many type, to prevent automatically including
-        // relations with huge datasets, while still keeping the information enrichment going.
-        $show = in_array($relation->type, [
-            RelationType::BELONGS_TO,
-            RelationType::BELONGS_TO_THROUGH,
-            RelationType::HAS_ONE,
-            RelationType::MORPH_ONE,
-            RelationType::MORPH_TO,
-        ]);
+        // Shows any relation, regardless of type. Note that this is not optimal for
+        // records with a large number of to-many related items, for instance.
 
         return new ModelFormFieldData([
             'key'              => $key ?: $relation->name,
-            'update'           => $show,
-            'create'           => $show,
             'source'           => $relation->method,
             'required'         => $required,
             'translated'       => $relation->translated,
