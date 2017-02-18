@@ -5,6 +5,8 @@ use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelFormTabDataInterface;
 use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
+use Czim\CmsModels\Exceptions\StrategyApplicationException;
+use Czim\CmsModels\Exceptions\StrategyRetrievalException;
 use Czim\CmsModels\Support\Data\ModelFormFieldData;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesFormStoreStrategies;
 use Illuminate\Database\Eloquent\Model;
@@ -59,6 +61,7 @@ trait HandlesFormFields
      * @param Model    $model
      * @param string[] $keys
      * @return array
+     * @throws StrategyRetrievalException
      */
     protected function getFormFieldValuesFromModel(Model $model, array $keys)
     {
@@ -77,11 +80,30 @@ trait HandlesFormFields
             // If we're creating a new model, pre-select the form field for the active list parent
             if ( ! $model->exists && $this->isFieldValueBeDerivableFromListParent($field->key)) {
 
-                $values[ $key ] = $instance->valueForListParentKey($this->getListParentRecordKey());
+                try {
+                    $values[ $key ] = $instance->valueForListParentKey($this->getListParentRecordKey());
+
+                } catch (\Exception $e) {
+
+                    $message = "Failed retrieving value for form field '{$key}' (using " . get_class($instance)
+                             . " (valueForListParentKey)): \n{$e->getMessage()}";
+
+                    throw new StrategyRetrievalException($message, $e->getCode(), $e);
+                }
+
                 continue;
             }
 
-            $values[ $key ] = $instance->retrieve($model, $field->source ?: $field->key);
+            try {
+                $values[ $key ] = $instance->retrieve($model, $field->source ?: $field->key);
+
+            } catch (\Exception $e) {
+
+                $message = "Failed retrieving value for form field '{$key}' (using " . get_class($instance)
+                         . "): \n{$e->getMessage()}";
+
+                throw new StrategyRetrievalException($message, $e->getCode(), $e);
+            }
         }
 
         return $values;
@@ -94,6 +116,7 @@ trait HandlesFormFields
      * @param Model $model
      * @param array $values     associative array with form data, should only include actual field data
      * @return bool
+     * @throws StrategyApplicationException
      */
     protected function storeFormFieldValuesForModel(Model $model, array $values)
     {
@@ -121,7 +144,18 @@ trait HandlesFormFields
         // First store values (such as necessary belongsTo-related instances),
         // before storing the model
         foreach ($values as $key => $value) {
-            $strategies[ $key ]->store($model, $fields[ $key ]->source(), $value);
+
+            try {
+                $strategies[ $key ]->store($model, $fields[ $key ]->source(), $value);
+
+            } catch (\Exception $e) {
+
+                $class   = get_class($strategies[ $key ]);
+                $message = "Failed storing value for form field '{$key}' (using $class): \n{$e->getMessage()}";
+
+                throw new StrategyApplicationException($message, $e->getCode(), $e);
+            }
+
         }
 
         // Save the model itself
@@ -134,7 +168,17 @@ trait HandlesFormFields
         // Then store values that can only be stored after the model exists
         // and is succesfully saved
         foreach ($values as $key => $value) {
-            $strategies[ $key ]->storeAfter($model, $fields[ $key ]->source(), $value);
+
+            try {
+                $strategies[ $key ]->storeAfter($model, $fields[ $key ]->source(), $value);
+
+            } catch (\Exception $e) {
+
+                $class   = get_class($strategies[ $key ]);
+                $message = "Failed storing value for form field '{$key}' (using $class (after)): \n{$e->getMessage()}";
+
+                throw new StrategyApplicationException($message, $e->getCode(), $e);
+            }
         }
 
         // If the model is still dirty after this, save it again
