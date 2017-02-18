@@ -173,13 +173,26 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
                 $this->raw['export']['strategies'] = [];
             }
 
-            $this->raw['export']['strategies'] = $this->normalizeStandardArrayProperty(
-                $this->raw['export']['strategies'],
-                'strategy',
-                ModelExportStrategyData::class
-            );
-
+            // Nested strategy interpretation must be done first, because once the parent data object
+            // is created, getting children will trigger the internal data object lazy loading on
+            // uninterpreted (and thus potentially invalid) data.
             foreach ($this->raw['export']['strategies'] as $key => $strategy) {
+
+                if ( ! $strategy) {
+                    continue;
+                }
+
+                if (true === $strategy) {
+                    $strategy = [
+                        'strategy' => $key,
+                    ];
+                }
+
+                if ( ! is_array($this->raw['export']['strategies'][ $key ])) {
+                    $this->raw['export']['strategies'][ $key ] = [
+                        'strategy' => $key,
+                    ];
+                }
 
                 $this->raw['export']['strategies'][ $key ]['columns'] = $this->normalizeStandardArrayProperty(
                     array_has($strategy, 'columns')
@@ -189,6 +202,13 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
                     ModelExportColumnData::class
                 );
             }
+
+
+            $this->raw['export']['strategies'] = $this->normalizeStandardArrayProperty(
+                $this->raw['export']['strategies'],
+                'strategy',
+                ModelExportStrategyData::class
+            );
         }
 
         return $this;
