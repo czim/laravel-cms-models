@@ -10,12 +10,29 @@
     ];
 
     $attributes = array_merge($attributes, $strategy->attributes($record, $column->source));
+    $attributes = implode(
+        ' ',
+        array_map(
+            function ($key, $value) { return e($key) . '="' . e($value) . '"'; },
+            array_keys($attributes),
+            array_values($attributes)
+        )
+    );
 ?>
 
-<td
-        @foreach ($attributes as $attributeKey => $attributeValue)
-            {{ $attributeKey }}="{{ $attributeValue }}"
-        @endforeach
->
-    {!! $strategy->render($record, $column->source) !!}
+<td {!! $attributes !!}>
+    <?php
+        try {
+            echo $strategy->render($record, $column->source);
+
+        } catch (\Exception $e) {
+
+            throw new \Czim\CmsModels\Exceptions\StrategyRenderException(
+                "Issue rendering list column '{$key}' (list.columns.{$key}, using "
+                . get_class($strategy) . "): \n{$e->getMessage()}",
+                $e->getCode(),
+                $e
+            );
+        }
+    ?>
 </td>
