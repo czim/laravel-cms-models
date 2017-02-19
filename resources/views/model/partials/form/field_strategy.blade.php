@@ -8,11 +8,7 @@
 @endif
 
     <div class="col-sm-{{ isset($columnWidth) ? $columnWidth : 10 }}">
-        @if ($strategy instanceof \Illuminate\Contracts\Support\Renderable)
-            {!! $strategy->render() !!}
-        @else
-            {!! $strategy !!}
-        @endif
+        {!! $strategy !!}
     </div>
 
 @if ( ! ($parent instanceof \Czim\CmsModels\Support\Data\ModelFormFieldGroupData))
