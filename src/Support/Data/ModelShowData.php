@@ -1,7 +1,6 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelShowDataInterface;
 
 /**
@@ -14,7 +13,7 @@ use Czim\CmsModels\Contracts\Data\ModelShowDataInterface;
  * @property array|ModelViewReferenceData $before
  * @property array|ModelViewReferenceData $after
  */
-class ModelShowData extends AbstractDataObject implements ModelShowDataInterface
+class ModelShowData extends AbstractModelInformationDataObject implements ModelShowDataInterface
 {
 
     protected $objects = [

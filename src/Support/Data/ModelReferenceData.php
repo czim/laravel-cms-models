@@ -1,7 +1,6 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelReferenceDataInterface;
 
 /**
@@ -13,7 +12,7 @@ use Czim\CmsModels\Contracts\Data\ModelReferenceDataInterface;
  * @property string $source
  * @property string $search
  */
-class ModelReferenceData extends AbstractDataObject implements ModelReferenceDataInterface
+class ModelReferenceData extends AbstractModelInformationDataObject implements ModelReferenceDataInterface
 {
 
     protected $attributes = [

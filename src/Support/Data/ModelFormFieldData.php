@@ -1,7 +1,6 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
 
 /**
@@ -25,7 +24,7 @@ use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
  * @property bool $admin_only
  * @property string|string[] $permissions
  */
-class ModelFormFieldData extends AbstractDataObject implements ModelFormFieldDataInterface
+class ModelFormFieldData extends AbstractModelInformationDataObject implements ModelFormFieldDataInterface
 {
 
     protected $attributes = [

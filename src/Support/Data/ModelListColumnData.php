@@ -1,7 +1,6 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelListColumnDataInterface;
 
 /**
@@ -22,7 +21,7 @@ use Czim\CmsModels\Contracts\Data\ModelListColumnDataInterface;
  * @property array $options
  * @property bool $disable_default_action
  */
-class ModelListColumnData extends AbstractDataObject implements ModelListColumnDataInterface
+class ModelListColumnData extends AbstractModelInformationDataObject implements ModelListColumnDataInterface
 {
 
     protected $attributes = [

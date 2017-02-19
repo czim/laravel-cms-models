@@ -1,7 +1,6 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelFormDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelFormLayoutNodeInterface;
 use Czim\CmsModels\Contracts\Data\ModelFormTabDataInterface;
@@ -21,7 +20,7 @@ use UnexpectedValueException;
  * @property array|ModelViewReferenceData  $after_form
  * @property array|ModelFormValidationData $validation
  */
-class ModelFormData extends AbstractDataObject implements ModelFormDataInterface
+class ModelFormData extends AbstractModelInformationDataObject implements ModelFormDataInterface
 {
 
     protected $objects = [

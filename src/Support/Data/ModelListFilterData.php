@@ -1,7 +1,6 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
 
 /**
@@ -16,7 +15,7 @@ use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
  * @property string $strategy
  * @property array  $options
  */
-class ModelListFilterData extends AbstractDataObject implements ModelFilterDataInterface
+class ModelListFilterData extends AbstractModelInformationDataObject implements ModelFilterDataInterface
 {
 
     protected $attributes = [

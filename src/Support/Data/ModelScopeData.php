@@ -1,7 +1,6 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelScopeDataInterface;
 
 /**
@@ -14,7 +13,7 @@ use Czim\CmsModels\Contracts\Data\ModelScopeDataInterface;
  * @property string $label_translated
  * @property string $strategy
  */
-class ModelScopeData extends AbstractDataObject implements ModelScopeDataInterface
+class ModelScopeData extends AbstractModelInformationDataObject implements ModelScopeDataInterface
 {
 
     protected $attributes = [

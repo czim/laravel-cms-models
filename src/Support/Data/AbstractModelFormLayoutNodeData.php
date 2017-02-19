@@ -1,7 +1,6 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelFormLayoutNodeInterface;
 use Czim\CmsModels\Support\Enums\LayoutNodeType;
 use Czim\DataObject\Contracts\DataObjectInterface;
@@ -17,7 +16,7 @@ use UnexpectedValueException;
  * @property array|string[] $children
  * @property null|string    $label_for
  */
-class AbstractModelFormLayoutNodeData extends AbstractDataObject implements ModelFormLayoutNodeInterface
+class AbstractModelFormLayoutNodeData extends AbstractModelInformationDataObject implements ModelFormLayoutNodeInterface
 {
 
     /**

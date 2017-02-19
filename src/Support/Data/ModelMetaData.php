@@ -1,7 +1,6 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelMetaDataInterface;
 
 /**
@@ -19,7 +18,7 @@ use Czim\CmsModels\Contracts\Data\ModelMetaDataInterface;
  * @property string[]    $views
  * @property string      $transformer
  */
-class ModelMetaData extends AbstractDataObject implements ModelMetaDataInterface
+class ModelMetaData extends AbstractModelInformationDataObject implements ModelMetaDataInterface
 {
 
     protected $attributes = [

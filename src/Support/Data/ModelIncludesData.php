@@ -1,8 +1,6 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\CmsCore\Support\Data\AbstractDataObject;
-
 /**
  * Class ModelIncludesData
  *
@@ -14,7 +12,7 @@ use Czim\CmsCore\Support\Data\AbstractDataObject;
  * @property string[] $views
  * @property string $transformer
  */
-class ModelIncludesData extends AbstractDataObject
+class ModelIncludesData extends AbstractModelInformationDataObject
 {
 
     protected $attributes = [

@@ -1,7 +1,6 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelExportColumnDataInterface;
 
 /**
@@ -16,7 +15,7 @@ use Czim\CmsModels\Contracts\Data\ModelExportColumnDataInterface;
  * @property string $header_translated
  * @property array $options
  */
-class ModelExportColumnData extends AbstractDataObject implements ModelExportColumnDataInterface
+class ModelExportColumnData extends AbstractModelInformationDataObject implements ModelExportColumnDataInterface
 {
 
     protected $attributes = [

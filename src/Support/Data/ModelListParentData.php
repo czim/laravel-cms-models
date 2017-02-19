@@ -1,7 +1,6 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelListParentDataInterface;
 
 /**
@@ -12,7 +11,7 @@ use Czim\CmsModels\Contracts\Data\ModelListParentDataInterface;
  * @property string $relation
  * @property string $field
  */
-class ModelListParentData extends AbstractDataObject implements ModelListParentDataInterface
+class ModelListParentData extends AbstractModelInformationDataObject implements ModelListParentDataInterface
 {
 
     protected $attributes = [

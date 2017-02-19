@@ -1,7 +1,6 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelExportDataInterface;
 
 /**
@@ -13,7 +12,7 @@ use Czim\CmsModels\Contracts\Data\ModelExportDataInterface;
  * @property array|ModelExportColumnData[] $columns
  * @property array|ModelExportStrategyData[] $strategies
  */
-class ModelExportData extends AbstractDataObject implements ModelExportDataInterface
+class ModelExportData extends AbstractModelInformationDataObject implements ModelExportDataInterface
 {
 
     protected $objects = [

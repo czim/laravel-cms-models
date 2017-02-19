@@ -2,7 +2,6 @@
 namespace Czim\CmsModels\Support\Data;
 
 use Czim\CmsCore\Contracts\Core\CoreInterface;
-use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelActionReferenceDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelListDataInterface;
 
@@ -31,7 +30,7 @@ use Czim\CmsModels\Contracts\Data\ModelListDataInterface;
  * @property bool $default_top_relation
  * @property array|ModelListParentData[] $parents
  */
-class ModelListData extends AbstractDataObject implements ModelListDataInterface
+class ModelListData extends AbstractModelInformationDataObject implements ModelListDataInterface
 {
 
     protected $objects = [

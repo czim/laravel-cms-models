@@ -15,7 +15,7 @@ use Czim\CmsModels\Support\Enums\LayoutNodeType;
  * @property bool   $required
  * @property array  $children
  */
-class ModelFormFieldsetData extends AbstractModelFormLayoutNodeData  implements ModelFormFieldsetDataInterface
+class ModelFormFieldsetData extends AbstractModelFormLayoutNodeData implements ModelFormFieldsetDataInterface
 {
 
     protected $attributes = [

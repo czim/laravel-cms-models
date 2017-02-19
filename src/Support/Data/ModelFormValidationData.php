@@ -1,7 +1,6 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelFormValidationDataInterface;
 
 /**
@@ -14,7 +13,7 @@ use Czim\CmsModels\Contracts\Data\ModelFormValidationDataInterface;
  * @property bool  $create_replace
  * @property bool  $update_replace
  */
-class ModelFormValidationData extends AbstractDataObject implements ModelFormValidationDataInterface
+class ModelFormValidationData extends AbstractModelInformationDataObject implements ModelFormValidationDataInterface
 {
 
     protected $attributes = [

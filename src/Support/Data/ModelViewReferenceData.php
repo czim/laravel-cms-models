@@ -1,7 +1,6 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelViewReferenceDataInterface;
 
 /**
@@ -12,7 +11,7 @@ use Czim\CmsModels\Contracts\Data\ModelViewReferenceDataInterface;
  * @property string   $view
  * @property string[] $variables
  */
-class ModelViewReferenceData extends AbstractDataObject implements ModelViewReferenceDataInterface
+class ModelViewReferenceData extends AbstractModelInformationDataObject implements ModelViewReferenceDataInterface
 {
 
     protected $attributes = [

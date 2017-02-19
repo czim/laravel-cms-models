@@ -1,7 +1,6 @@
 <?php
 namespace Czim\CmsModels\Support\Data;
 
-use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 
 /**
@@ -36,7 +35,7 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
  * @property array|ModelShowData $show
  * @property array|ModelExportData $export
  */
-class ModelInformation extends AbstractDataObject implements ModelInformationInterface
+class ModelInformation extends AbstractModelInformationDataObject implements ModelInformationInterface
 {
 
     protected $objects = [
@@ -245,7 +244,35 @@ class ModelInformation extends AbstractDataObject implements ModelInformationInt
             // Strategies for exporting: csv, excel, xml
             'strategies' => [],
         ],
+    ];
 
+    protected $known = [
+        'model',
+        'original_model',
+        'meta',
+        'includes',
+        'reference',
+        'list',
+        'form',
+        'show',
+        'export',
+        'attributes',
+        'relations',
+        'verbose_name',
+        'translated_name',
+        'verbose_name_plural',
+        'translated_name_plural',
+        'single',
+        'allow_delete',
+        'delete_condition',
+        'delete_strategy',
+        'confirm_delete',
+        'incrementing',
+        'timestamps',
+        'timestamp_created',
+        'timestamp_updated',
+        'translated',
+        'translation_strategy',
     ];
 
 
