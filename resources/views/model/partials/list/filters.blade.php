@@ -13,10 +13,7 @@
         <input id="input-filters-clear" type="hidden" name="_clear" value="">
 
         @foreach ($filterData as $key => $filter)
-
-            <?php /** @var \Czim\CmsModels\Contracts\View\FilterStrategyInterface[] $filterStrategies */ ?>
-            {!! $filterStrategies[ $key ]->render($key, array_get($filters, $key)) !!}
-
+            {!! $filterStrategies[ $key ] !!}
         @endforeach
 
         <div class="btn-group">
