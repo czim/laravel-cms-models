@@ -10,7 +10,7 @@ trait HandlesFormFieldStrategies
 {
 
     /**
-     * Renders HTML for form field strategies.
+     * Renders Vies or HTML for form field strategies.
      *
      * @param Model $model
      * @param array $fields
