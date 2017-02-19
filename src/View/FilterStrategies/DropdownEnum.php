@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\View\FilterStrategies;
 
 use Czim\CmsModels\Contracts\View\DropdownStrategyInterface;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use MyCLabs\Enum\Enum;
 
@@ -13,7 +14,7 @@ class DropdownEnum extends AbstractFilterStrategy
      *
      * @param string  $key
      * @param mixed   $value
-     * @return string
+     * @return string|View
      */
     public function render($key, $value)
     {
@@ -25,7 +26,7 @@ class DropdownEnum extends AbstractFilterStrategy
                 'selected' => $value,
                 'options'  => $this->getDropdownOptions(),
             ]
-        )->render();
+        );
     }
 
     /**

@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Contracts\View;
 
 use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 
 interface FilterStrategyInterface
@@ -20,7 +21,7 @@ interface FilterStrategyInterface
      *
      * @param string  $key
      * @param mixed   $value
-     * @return string
+     * @return string|View
      */
     public function render($key, $value);
 

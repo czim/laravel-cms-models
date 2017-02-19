@@ -4,6 +4,7 @@ namespace Czim\CmsModels\View\ListStrategies;
 use Czim\CmsCore\Contracts\Modules\ModuleManagerInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -23,7 +24,7 @@ class RelationCountChildrenLink extends RelationCount
      *
      * @param Model $model
      * @param mixed $source     source column, method name or value
-     * @return string
+     * @return string|View
      */
     public function render(Model $model, $source)
     {
@@ -51,7 +52,7 @@ class RelationCountChildrenLink extends RelationCount
             'count'        => $count,
             'link'         => $this->getChildrenLink($parentIndicator, $relationMethod, $modelClass),
             'childrenName' => $childrenName,
-        ])->render();
+        ]);
     }
 
     /**

@@ -32,7 +32,7 @@ class Date extends AbstractListDisplayStrategy
             return '';
         }
 
-        return $date->format($this->getFormat());
+        return e($date->format($this->getFormat()));
     }
 
     /**

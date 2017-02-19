@@ -16,7 +16,7 @@ class TagList extends AbstractListDisplayStrategy
      */
     public function render(Model $model, $source)
     {
-        return implode($this->getSeparator(), $model->tagNames());
+        return implode($this->getSeparator(), array_map('e', $model->tagNames()));
     }
 
     /**

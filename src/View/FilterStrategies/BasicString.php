@@ -3,6 +3,7 @@ namespace Czim\CmsModels\View\FilterStrategies;
 
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 
 class BasicString extends AbstractFilterStrategy
@@ -35,7 +36,7 @@ class BasicString extends AbstractFilterStrategy
      *
      * @param string  $key
      * @param mixed   $value
-     * @return string
+     * @return string|View
      */
     public function render($key, $value)
     {
@@ -46,7 +47,7 @@ class BasicString extends AbstractFilterStrategy
                 'key'   => $key,
                 'value' => $value,
             ]
-        )->render();
+        );
     }
 
     /**

@@ -3,6 +3,7 @@ namespace Czim\CmsModels\View\FilterStrategies;
 
 use Carbon\Carbon;
 use Czim\CmsModels\Support\Strategies\Traits\NormalizesDateValue;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 
 class Datepicker extends AbstractFilterStrategy
@@ -14,7 +15,7 @@ class Datepicker extends AbstractFilterStrategy
      *
      * @param string  $key
      * @param mixed   $value
-     * @return string
+     * @return string|View
      */
     public function render($key, $value)
     {
@@ -26,7 +27,7 @@ class Datepicker extends AbstractFilterStrategy
                 'value'   => $value,
                 'options' => $this->filterData ? $this->filterData->options() : [],
             ]
-        )->render();
+        );
     }
 
     /**

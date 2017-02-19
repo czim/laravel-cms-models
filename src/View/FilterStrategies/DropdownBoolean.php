@@ -1,6 +1,7 @@
 <?php
 namespace Czim\CmsModels\View\FilterStrategies;
 
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 
 class DropdownBoolean extends AbstractFilterStrategy
@@ -11,7 +12,7 @@ class DropdownBoolean extends AbstractFilterStrategy
      *
      * @param string  $key
      * @param mixed   $value
-     * @return string
+     * @return string|View
      */
     public function render($key, $value)
     {
@@ -34,7 +35,7 @@ class DropdownBoolean extends AbstractFilterStrategy
                     '0' => $this->getFalseLabel(),
                 ],
             ]
-        )->render();
+        );
     }
 
     /**

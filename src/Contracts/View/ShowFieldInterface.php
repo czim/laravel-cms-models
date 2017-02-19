@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Contracts\View;
 
 use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 
 interface ShowFieldInterface
@@ -12,7 +13,7 @@ interface ShowFieldInterface
      *
      * @param Model  $model
      * @param mixed  $source    source value, relation instance, etc.
-     * @return string
+     * @return string|View
      */
     public function render(Model $model, $source);
 

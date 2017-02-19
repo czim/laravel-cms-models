@@ -8,6 +8,7 @@ use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelListColumnData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesSourceStrategies;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class AbstractListDisplayStrategy implements ListDisplayInterface
@@ -35,7 +36,7 @@ abstract class AbstractListDisplayStrategy implements ListDisplayInterface
      *
      * @param Model  $model
      * @param string $source    source column, method name or value
-     * @return string
+     * @return string|View
      */
     abstract public function render(Model $model, $source);
 

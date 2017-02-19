@@ -21,7 +21,7 @@ class DefaultStrategy extends AbstractListDisplayStrategy
      */
     public function render(Model $model, $source)
     {
-        return $this->resolveModelSource($model, $source);
+        return e($this->resolveModelSource($model, $source));
     }
 
 

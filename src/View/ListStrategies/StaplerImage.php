@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\View\ListStrategies;
 
 use Codesleeve\Stapler\Interfaces\Attachment;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use UnexpectedValueException;
 
@@ -14,7 +15,7 @@ class StaplerImage extends AbstractListDisplayStrategy
      *
      * @param Model $model
      * @param mixed|Attachment $source     source column, method name or value
-     * @return string
+     * @return string|View
      */
     public function render(Model $model, $source)
     {
@@ -32,7 +33,7 @@ class StaplerImage extends AbstractListDisplayStrategy
             'urlOriginal' => $source->url(),
             'width'       => 64,
             'height'      => 64,
-        ])->render();
+        ]);
     }
 
     /**

@@ -19,10 +19,10 @@ class Check extends AbstractListDisplayStrategy
         $source = $this->resolveModelSource($model, $source);
 
         if ($this->interpretAsBoolean($source)) {
-            return '<i class="fa fa-check text-success" title="' . cms_trans('common.boolean.true') . '"></i>';
+            return '<i class="fa fa-check text-success" title="' . e(cms_trans('common.boolean.true')) . '"></i>';
         }
 
-        return '<i class="fa fa-times text-danger" title="' . cms_trans('common.boolean.false') . '"></i>';
+        return '<i class="fa fa-times text-danger" title="' . e(cms_trans('common.boolean.false')) . '"></i>';
     }
 
     /**
