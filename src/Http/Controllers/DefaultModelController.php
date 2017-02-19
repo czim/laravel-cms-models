@@ -157,7 +157,7 @@ class DefaultModelController extends BaseModelController
             'permissionPrefix'    => $this->permissionPrefix,
             'model'               => $this->modelInformation,
             'record'              => $record,
-            'fieldStrategies'     => $this->getShowFieldStrategyInstances(),
+            'fieldStrategies'     => $this->renderedShowFieldStrategies($record),
             'hasActiveListParent' => (bool) $this->listParentRelation,
             'topListParentOnly'   => $this->showsTopParentsOnly(),
             'listParents'         => $this->listParents,
@@ -326,7 +326,6 @@ class DefaultModelController extends BaseModelController
         }
 
         return redirect()->route("{$this->routePrefix}.edit", [ $record->getKey() ]);
-
     }
 
     /**

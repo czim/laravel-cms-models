@@ -5,20 +5,24 @@ use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Data\ModelShowFieldDataInterface;
 use Czim\CmsModels\Contracts\Support\Factories\ShowFieldStrategyFactoryInterface;
-use Czim\CmsModels\Contracts\View\ShowFieldInterface;
+use Czim\CmsModels\Exceptions\StrategyRenderException;
 use Czim\CmsModels\Support\Data\ModelInformation;
+use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Model;
 
 trait HandlesShowFieldStrategies
 {
 
     /**
-     * Collects and returns strategy instances for show fields.
+     * Renders Vies or HTML for show field strategies.
      *
-     * @return ShowFieldInterface[]
+     * @param Model $model
+     * @return View[]|\string[]
+     * @throws StrategyRenderException
      */
-    protected function getShowFieldStrategyInstances()
+    protected function renderedShowFieldStrategies(Model $model)
     {
-        $instances = [];
+        $views = [];
 
         foreach ($this->getModelInformation()->show->fields as $key => $data) {
 
@@ -26,23 +30,40 @@ trait HandlesShowFieldStrategies
                 continue;
             }
 
-            $instance = $this->getShowFieldFactory()->make($data->strategy);
+            try {
+                $instance = $this->getShowFieldFactory()->make($data->strategy);
 
-            // Feed any extra information we can gather to the instance
-            $instance->setOptions($data->options());
+                // Feed any extra information we can gather to the instance
+                $instance->setOptions($data->options());
 
-            if ($data->source) {
-                if (isset($this->getModelInformation()->attributes[ $data->source ])) {
-                    $instance->setAttributeInformation(
-                        $this->getModelInformation()->attributes[ $data->source ]
-                    );
+                if ($data->source) {
+                    if (isset($this->getModelInformation()->attributes[ $data->source ])) {
+                        $instance->setAttributeInformation(
+                            $this->getModelInformation()->attributes[ $data->source ]
+                        );
+                    }
                 }
+
+            } catch (\Exception $e) {
+
+                $message = "Failed to make show field strategy for '{$key}': \n{$e->getMessage()}";
+
+                throw new StrategyRenderException($message, $e->getCode(), $e);
             }
 
-            $instances[ $key ] = $instance;
+            try {
+                $views[ $key ] = $instance->render($model, $data->source);
+
+            } catch (\Exception $e) {
+
+                $message = "Failed to render show field '{$key}' for strategy " . get_class($instance)
+                         . ": \n{$e->getMessage()}";
+
+                throw new StrategyRenderException($message, $e->getCode(), $e);
+            }
         }
 
-        return $instances;
+        return $views;
     }
 
     /**

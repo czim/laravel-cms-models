@@ -6,7 +6,7 @@
     </label>
 
     <div class="col-sm-10">
-        {!! $strategy->render($record, $field->source) !!}
+        {!! $strategy !!}
     </div>
 
 </div>
