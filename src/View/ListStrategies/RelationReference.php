@@ -85,7 +85,7 @@ class RelationReference extends AbstractListDisplayStrategy
      */
     protected function implodeReferences(array $references)
     {
-        return implode('; ', array_map('e', $references));
+        return implode('; ', $references);
     }
 
     /**
@@ -106,7 +106,7 @@ class RelationReference extends AbstractListDisplayStrategy
      */
     protected function wrapReference($reference)
     {
-        return '<span class="relation-reference">' . $reference . '</span>';
+        return '<span class="relation-reference">' . e($reference) . '</span>';
     }
 
     /**
