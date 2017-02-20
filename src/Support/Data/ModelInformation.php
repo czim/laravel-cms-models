@@ -174,7 +174,7 @@ class ModelInformation extends AbstractModelInformationDataObject implements Mod
             'order_strategy' => 'listify',
 
             // Whether the model may be activated/deactived through the listing; ie. whether it has a manipulable 'active' flag.
-            'activated' => false,
+            'activatable' => false,
             // The column that should be toggled when toggling 'active' status for the model.
             'active_column' => 'active',
 
