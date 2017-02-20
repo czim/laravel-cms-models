@@ -140,7 +140,8 @@
                                 $defaultActionUrl = $defaultRowAction ? $defaultRowAction->link($record) : false;
                             ?>
 
-                            <tr class="records-row {{ $style }}" @if ($defaultActionUrl) default-action-url="{{ $defaultActionUrl }}" @endif>
+                            <tr class="records-row {{ $style }}" data-id="{{ $record->getKey() }}" data-reference="{{ $recordReferences[ $record->getKey() ] }}"
+                                @if ($defaultActionUrl) data-default-action-url="{{ $defaultActionUrl }}" @endif>
 
                                 @if ($model->list->activatable)
                                     @include('cms-models::model.partials.list.column_activate', compact('model', 'record', 'permissionPrefix'))
@@ -270,7 +271,7 @@
         <script>
             $(function() {
                 $('tr.records-row td.default-action').click(function () {
-                    window.location.href = $(this).closest('tr').attr('default-action-url');
+                    window.location.href = $(this).closest('tr').attr('data-default-action-url');
                 });
             });
         </script>

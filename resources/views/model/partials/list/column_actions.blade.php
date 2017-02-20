@@ -14,7 +14,6 @@
 
         @if ($model->allowDelete() && cms_auth()->can("{$permissionPrefix}delete"))
             <a class="btn btn-danger delete-record-action" href="#" role="button"
-               data-id="{{ $record->getKey() }}"
                data-toggle="modal" data-target="#delete-record-modal"
                title="{{ ucfirst(cms_trans('common.action.delete')) }}"
             ><i class="fa fa-trash-o"></i></a>

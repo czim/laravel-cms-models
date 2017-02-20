@@ -38,14 +38,23 @@
         // Button that opens modal
         $('.delete-record-action').click(function () {
 
-            var form = $('.delete-modal-form');
+            var row       = $(this).closest('tr'),
+                form      = $('.delete-modal-form');
+
+            var id        = row.attr('data-id'),
+                reference = row.attr('data-reference').trim();
+
+            if ( ! reference || ! reference.length) {
+                reference = '#' + id;
+            }
+
             form.attr(
                 'action',
-                form.attr('data-url').replace('IDHERE', $(this).attr('data-id'))
+                form.attr('data-url').replace('IDHERE', id)
             );
+
             $('.delete-modal-title').text(
-                '{{ ucfirst(cms_trans('common.action.delete')) }} {{ $model->label() }} #' +
-                $(this).attr('data-id')
+                '{{ ucfirst(cms_trans('common.action.delete')) }} {{ $model->label() }}: ' + reference
             );
         });
 
@@ -53,7 +62,7 @@
         $('#delete-record-modal').on('show.bs.modal', function (event) {
 
             var trigger  = $(event.relatedTarget);
-            var id       = trigger.attr('data-id');
+            var id       = trigger.closest('tr').attr('data-id');
             var modal    = $(this);
 
             var button            = modal.find('.delete-modal-button');
