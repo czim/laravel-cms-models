@@ -9,6 +9,7 @@ use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationCollectorIn
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationInterpreterInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
+use Czim\CmsModels\Exceptions\ModelConfigurationDataException;
 use Czim\CmsModels\Exceptions\ModelInformationCollectionException;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Illuminate\Filesystem\Filesystem;
@@ -150,9 +151,15 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
 
             } catch (\Exception $e) {
 
+                $message = $e->getMessage();
+
+                if ($e instanceof ModelConfigurationDataException) {
+                    $message = "{$e->getMessage()} ({$e->getDotKey()})";
+                }
+
                 // Wrap and decorate exceptions so it is easier to track the problem source
                 throw (new ModelInformationCollectionException(
-                    "Issue reading/interpreting model configuration file {$file->getRealPath()}: \n{$e->getMessage()}",
+                    "Issue reading/interpreting model configuration file {$file->getRealPath()}: \n{$message}",
                     $e->getCode(),
                     $e
                 ))

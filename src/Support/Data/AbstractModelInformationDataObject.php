@@ -44,8 +44,30 @@ abstract class AbstractModelInformationDataObject extends AbstractDataObject
         }
 
         if ( ! in_array($attribute, $this->known)) {
-            throw (new ModelConfigurationDataException("Unknown model configuration data key: '{$attribute}'"))
+            throw (new ModelConfigurationDataException(
+                "Unknown model configuration data key: '{$attribute}' in " . get_class($this)
+            ))
                 ->setDotKey($attribute);
+        }
+    }
+
+    /**
+     * @param string $class
+     * @param mixed  $data
+     * @param string $key
+     * @return mixed
+     * @throws ModelConfigurationDataException
+     */
+    protected function makeNestedDataObject($class, $data, $key)
+    {
+        try {
+            return parent::makeNestedDataObject($class, $data, $key);
+
+        } catch (ModelConfigurationDataException $e) {
+
+            throw $e->setDotKey(
+                $key . ($e->getDotKey() ? '.' . $e->getDotKey() : null)
+            );
         }
     }
 

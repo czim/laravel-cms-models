@@ -4,6 +4,7 @@ namespace Czim\CmsModels\Repositories\Collectors;
 use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationInterpreterInterface;
+use Czim\CmsModels\Exceptions\ModelConfigurationDataException;
 use Czim\CmsModels\Support\Data\ModelActionReferenceData;
 use Czim\CmsModels\Support\Data\ModelExportColumnData;
 use Czim\CmsModels\Support\Data\ModelExportStrategyData;
@@ -64,7 +65,8 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
             $this->raw['list']['default_action'] = $this->normalizeStandardArrayProperty(
                 array_get($this->raw['list'], 'default_action', []),
                 'type',
-                ModelActionReferenceData::class
+                ModelActionReferenceData::class,
+                'list.default_action'
             );
 
             $this->raw['list']['columns'] = $this->normalizeStandardArrayProperty(
@@ -72,8 +74,10 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
                     ?   array_get($this->raw['list'], 'columns', [])
                     :   array_get($this->raw['list'], 'fields', []),
                 'strategy',
-                ModelListColumnData::class
+                ModelListColumnData::class,
+                'list.columns'
             );
+            unset($this->raw['list']['fields']);
 
 
             $filters = array_get($this->raw['list'], 'filters', []);
@@ -83,7 +87,8 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
                 $this->raw['list']['filters'] = $this->normalizeStandardArrayProperty(
                     $filters,
                     'strategy',
-                    ModelListFilterData::class
+                    ModelListFilterData::class,
+                    'list.filters'
                 );
             }
 
@@ -120,7 +125,8 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
             $this->raw['form']['fields'] = $this->normalizeStandardArrayProperty(
                 array_get($this->raw['form'], 'fields', []),
                 'display_strategy',
-                ModelFormFieldData::class
+                ModelFormFieldData::class,
+                'form.fields'
             );
 
 
@@ -147,7 +153,8 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
             $this->raw['show']['fields'] = $this->normalizeStandardArrayProperty(
                 array_get($this->raw['show'], 'fields', []),
                 'strategy',
-                ModelShowFieldData::class
+                ModelShowFieldData::class,
+                'show.fields'
             );
         }
 
@@ -166,7 +173,8 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
                     ?   array_get($this->raw['export'], 'columns', [])
                     :   array_get($this->raw['export'], 'fields', []),
                 'strategy',
-                ModelExportColumnData::class
+                ModelExportColumnData::class,
+                'export.columns'
             );
 
             if ( ! array_has($this->raw['export'], 'strategies') || ! is_array($this->raw['export']['strategies'])) {
@@ -199,7 +207,8 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
                         ?   array_get($strategy, 'columns', [])
                         :   array_get($strategy, 'fields', []),
                     'strategy',
-                    ModelExportColumnData::class
+                    ModelExportColumnData::class,
+                    "export.strategies.{$key}.columns"
                 );
             }
 
@@ -207,7 +216,8 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
             $this->raw['export']['strategies'] = $this->normalizeStandardArrayProperty(
                 $this->raw['export']['strategies'],
                 'strategy',
-                ModelExportStrategyData::class
+                ModelExportStrategyData::class,
+                'export.strategies'
             );
         }
 
@@ -217,15 +227,17 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
     /**
      * Normalizes an array with scope data.
      *
-     * @param array $scopes
+     * @param array  $scopes
+     * @param string $parentKey
      * @return array
      */
-    protected function normalizeScopeArray(array $scopes)
+    protected function normalizeScopeArray(array $scopes, $parentKey = 'list.scopes')
     {
         $scopes = $this->normalizeStandardArrayProperty(
             $scopes,
             'strategy',
-            ModelScopeData::class
+            ModelScopeData::class,
+            $parentKey
         );
 
         // Make sure that each scope entry has at least a method or a strategy
@@ -244,12 +256,17 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
      * Normalizes a standard array property.
      *
      * @param array       $source
-     * @param string      $standardProperty     property to set for string values in normalized array
-     * @param null|string $objectClass          dataobject FQN to interpret as
+     * @param string      $standardProperty property to set for string values in normalized array
+     * @param null|string $objectClass      dataobject FQN to interpret as
+     * @param null|string $parentKey
      * @return array
      */
-    protected function normalizeStandardArrayProperty(array $source, $standardProperty, $objectClass = null)
-    {
+    protected function normalizeStandardArrayProperty(
+        array $source,
+        $standardProperty,
+        $objectClass = null,
+        $parentKey = null
+    ) {
         $normalized = [];
 
         foreach ($source as $key => $value) {
@@ -279,7 +296,7 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
                     $value = [];
                 }
 
-                $value = $this->makeClearedDataObject($objectClass, $value);
+                $value = $this->makeClearedDataObject($objectClass, $value, $parentKey ? $parentKey . ".{$key}" : null);
             }
 
             $normalized[ $key ] = $value;
@@ -291,17 +308,27 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
     /**
      * Makes a fresh dataobject with its defaults cleared before filling it with data.
      *
-     * @param string $objectClass
-     * @param array  $data
+     * @param string      $objectClass
+     * @param array       $data
+     * @param null|string $parentKey
      * @return AbstractDataObject
+     * @throws ModelConfigurationDataException
      */
-    protected function makeClearedDataObject($objectClass, array $data)
+    protected function makeClearedDataObject($objectClass, array $data, $parentKey = null)
     {
         /** @var AbstractDataObject $object */
         $object = new $objectClass();
         $object->clear();
 
-        $object->setAttributes($data);
+        try {
+            $object->setAttributes($data);
+
+        } catch (ModelConfigurationDataException $e) {
+
+            throw $e->setDotKey(
+                $parentKey . ($e->getDotKey() ? '.' . $e->getDotKey() : null)
+            );
+        }
 
         return $object;
     }
