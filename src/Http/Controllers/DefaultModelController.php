@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Http\Controllers;
 
 use Czim\CmsCore\Support\Enums\FlashLevel;
+use Czim\CmsModels\Contracts\Repositories\ModelReferenceRepositoryInterface;
 use Czim\CmsModels\Contracts\Support\Session\ModelListMemoryInterface;
 use Czim\CmsModels\Events;
 use Czim\CmsModels\Http\Requests\ActivateRequest;
@@ -118,6 +119,7 @@ class DefaultModelController extends BaseModelController
             'permissionPrefix'    => $this->permissionPrefix,
             'model'               => $this->modelInformation,
             'records'             => $records,
+            'recordReferences'    => $this->getReferenceRepository()->getReferencesForModels($records->items()),
             'totalCount'          => $totalCount,
             'currentCount'        => $currentCount,
             'listStrategies'      => $this->getListColumnStrategyInstances(),
@@ -829,6 +831,14 @@ class DefaultModelController extends BaseModelController
 
 
         return $this;
+    }
+
+    /**
+     * @return ModelReferenceRepositoryInterface
+     */
+    protected function getReferenceRepository()
+    {
+        return app(ModelReferenceRepositoryInterface::class);
     }
 
 }
