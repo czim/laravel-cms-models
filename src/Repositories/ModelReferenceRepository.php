@@ -44,12 +44,12 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
     /**
      * Returns reference for a given model instance.
      *
-     * @param Model  $model
-     * @param string $strategy
-     * @param string $source
+     * @param Model       $model
+     * @param string|null $strategy
+     * @param string|null $source
      * @return string
      */
-    public function getReferenceForModel(Model $model, $strategy, $source)
+    public function getReferenceForModel(Model $model, $strategy = null, $source = null)
     {
         return $this->getReferenceValue($model, $strategy, $source);
     }
