@@ -2,7 +2,7 @@
 
 <?php
     $title = ucfirst($model->label())
-           . ' ' . ($record->incrementing ? '#' . $record->getKey() : "'" . $record->getKey() .  "'");
+           . ' ' . (trim($recordReference) ?: ($record->incrementing ? '#' . $record->getKey() : "'" . $record->getKey() .  "'"));
 ?>
 
 @section('title', $title)

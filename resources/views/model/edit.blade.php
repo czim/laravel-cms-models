@@ -2,11 +2,11 @@
 
 <?php
     if ($creating) {
-        $title = ucfirst($model->label()) . ' - ' . cms_trans('common.action.create');
+        $title = ucfirst(cms_trans('common.action.create')) . ' ' . $model->label();
     } else {
-        $title = ucfirst($model->label())
-               . ' ' . ($record->incrementing ? '#' . $record->getKey() : "'" . $record->getKey() .  "'")
-               . ' - ' . cms_trans('common.action.edit');
+        $title = ucfirst(cms_trans('common.action.edit'))
+               . ' ' . $model->label()
+               . ' ' . (trim($recordReference) ?: ($record->incrementing ? '#' . $record->getKey() : "'" . $record->getKey() .  "'"));
     }
 ?>
 
