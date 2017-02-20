@@ -14,8 +14,8 @@ use Czim\CmsModels\Support\Strategies\Traits\ModifiesQueryForContext;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesModelReference;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesSourceStrategies;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use UnexpectedValueException;
 
@@ -52,6 +52,46 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
     public function getReferenceForModel(Model $model, $strategy, $source)
     {
         return $this->getReferenceValue($model, $strategy, $source);
+    }
+
+    /**
+     * Returns list of references for a collection of model instances.
+     *
+     * Note: all models must be the same class!
+     *
+     * @param \ArrayAccess|Model[] $models
+     * @param string|null          $strategy
+     * @param string|null          $source
+     * @return Collection|string[]  reference values, keyed by model key
+     */
+    public function getReferencesForModels($models, $strategy = null, $source = null)
+    {
+        $references = new Collection;
+
+        if ( ! count($models)) {
+            return $references;
+        }
+
+        /** @var Model $firstModel */
+        $firstModel = head($models);
+
+        $strategy = $this->determineModelReferenceStrategy($firstModel, $strategy);
+
+        if ( ! $source) {
+            $source = $this->determineModelReferenceSource($firstModel);
+        }
+
+        foreach ($models as $model) {
+
+            if ( ! $strategy) {
+                $references->put($model->getKey(), $this->getReferenceFallback($model));
+                continue;
+            }
+
+            $references->put($model->getKey(), $strategy->render($model, $source));
+        }
+
+        return $references;
     }
 
     /**

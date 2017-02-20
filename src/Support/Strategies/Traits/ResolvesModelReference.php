@@ -18,6 +18,29 @@ trait ResolvesModelReference
      */
     protected function getReferenceValue(Model $model, $strategy = null, $source = null)
     {
+        $strategy = $this->determineModelReferenceStrategy($model, $strategy);
+
+        // If we have no strategy at all to fall back on, use a hard-coded reference
+        if ( ! $strategy) {
+            return $this->getReferenceFallback($model);
+        }
+
+        if ( ! $source) {
+            $source = $this->determineModelReferenceSource($model);
+        }
+
+        return $strategy->render($model, $source);
+    }
+
+    /**
+     * Returns the strategy reference instance for a model.
+     *
+     * @param Model       $model
+     * @param string|null $strategy
+     * @return ReferenceStrategyInterface|null
+     */
+    protected function determineModelReferenceStrategy(Model $model, $strategy = null)
+    {
         if (null !== $strategy) {
             $strategy = $this->makeReferenceStrategyInstance($strategy);
         }
@@ -30,21 +53,25 @@ trait ResolvesModelReference
             $strategy = $this->getDefaultReferenceStrategyInstance();
         }
 
-        // If we have no strategy at all to fall back on, use a hard-coded reference
-        if ( ! $strategy) {
-            $this->getReferenceFallback($model);
-        }
+        return $strategy;
+    }
 
-        if ( ! $source) {
-            $source = $this->getReferenceSource($model, $source);
-        }
+    /**
+     * Returns the reference source string.
+     *
+     * @param Model $model
+     * @return null|string
+     */
+    protected function determineModelReferenceSource(Model $model)
+    {
+        $source = $this->getReferenceSource($model);
 
         // If we have no source to fall back on at all, use the model key
         if ( ! $source) {
             $source = $model->getKeyName();
         }
 
-        return $strategy->render($model, $source);
+        return $source;
     }
 
     /**
