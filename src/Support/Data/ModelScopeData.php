@@ -27,7 +27,13 @@ class ModelScopeData extends AbstractModelInformationDataObject implements Model
 
         // General strategy for handling scope
         'strategy' => null,
+    ];
 
+    protected $known = [
+        'method',
+        'label',
+        'label_translated',
+        'strategy',
     ];
 
 

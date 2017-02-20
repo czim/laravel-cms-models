@@ -27,6 +27,13 @@ class ModelReferenceData extends AbstractModelInformationDataObject implements M
         'search'   => null,
     ];
 
+    protected $known = [
+        'strategy',
+        'source',
+        'search',
+    ];
+
+
     /**
      * @param ModelReferenceDataInterface|ModelReferenceData $with
      */

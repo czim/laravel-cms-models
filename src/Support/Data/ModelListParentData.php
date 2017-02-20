@@ -24,6 +24,11 @@ class ModelListParentData extends AbstractModelInformationDataObject implements 
         'field' => null,
     ];
 
+    protected $known = [
+        'relation',
+        'field',
+    ];
+
 
     /**
      * Returns the relation method name.

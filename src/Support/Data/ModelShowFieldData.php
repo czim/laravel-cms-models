@@ -45,6 +45,18 @@ class ModelShowFieldData extends AbstractModelInformationDataObject implements M
         'permissions' => null,
     ];
 
+    protected $known = [
+        'label',
+        'label_translated',
+        'source',
+        'strategy',
+        'translated',
+        'options',
+        'admin_only',
+        'permissions',
+        'style',
+    ];
+
 
     /**
      * Returns display label for show field.

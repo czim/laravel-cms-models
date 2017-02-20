@@ -25,4 +25,9 @@ class ModelIncludesData extends AbstractModelInformationDataObject
 
     ];
 
+    protected $known = [
+        'default',
+        'available',
+    ];
+
 }

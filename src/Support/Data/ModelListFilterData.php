@@ -35,8 +35,17 @@ class ModelListFilterData extends AbstractModelInformationDataObject implements 
 
         // Custom options for the strategy
         'options' => [],
-
     ];
+
+    protected $known = [
+        'label',
+        'label_translated',
+        'source',
+        'target',
+        'strategy',
+        'options',
+    ];
+
 
     /**
      * Returns friendly display label for the model.

@@ -11,7 +11,9 @@ use Czim\CmsModels\Support\Enums\LayoutNodeType;
  * @property string $type
  * @property string $label
  * @property string $label_translated
+ * @property string $label_for
  * @property bool   $required
+ * @property int[]  $columns
  * @property array|string[] $children
  */
 class ModelFormFieldGroupData extends AbstractModelFormLayoutNodeData
@@ -26,6 +28,9 @@ class ModelFormFieldGroupData extends AbstractModelFormLayoutNodeData
         'label'            => null,
         'label_translated' => null,
 
+        // The ID of the field label
+        'label_for' => null,
+
         // Whether the fields belonging to this are required (affects display only)
         'required' => null,
 
@@ -39,6 +44,22 @@ class ModelFormFieldGroupData extends AbstractModelFormLayoutNodeData
         'columns' => [],
     ];
 
+    protected $known = [
+        'type',
+        'label',
+        'label_translated',
+        'label_for',
+        'required',
+        'children',
+        'columns',
+    ];
+
+
+    /**
+     * Returns grid column layout as list of twelfths.
+     *
+     * @return int[]
+     */
     public function columns()
     {
         $columns = $this->columns ?: [];

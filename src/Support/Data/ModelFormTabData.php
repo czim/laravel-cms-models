@@ -33,6 +33,15 @@ class ModelFormTabData extends AbstractModelFormLayoutNodeData implements ModelF
         'children' => [],
     ];
 
+    protected $known = [
+        'type',
+        'label',
+        'label_translated',
+        'required',
+        'children',
+    ];
+
+
     /**
      * @param ModelFormTabDataInterface|ModelFormTabData $with
      */

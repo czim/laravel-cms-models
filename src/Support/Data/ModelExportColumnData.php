@@ -37,6 +37,16 @@ class ModelExportColumnData extends AbstractModelInformationDataObject implement
         'options' => [],
     ];
 
+    protected $known = [
+        'hide',
+        'source',
+        'strategy',
+        'header',
+        'header_translated',
+        'options',
+    ];
+
+
     /**
      * Returns display header label for the column.
      *

@@ -31,6 +31,13 @@ class ModelFormValidationData extends AbstractModelInformationDataObject impleme
         'update_replace' => null,
     ];
 
+    protected $known = [
+        'create',
+        'update',
+        'create_replace',
+        'update_replace',
+    ];
+
 
     /**
      * Returns default or create specific rules.

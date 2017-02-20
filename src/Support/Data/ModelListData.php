@@ -104,6 +104,28 @@ class ModelListData extends AbstractModelInformationDataObject implements ModelL
         'parents' => [],
     ];
 
+    protected $known = [
+        'columns',
+        'disable_filters',
+        'filters',
+        'default_sort',
+        'page_size',
+        'orderable',
+        'order_strategy',
+        'order_column',
+        'order_scope_relation',
+        'activatable',
+        'active_column',
+        'disable_scopes',
+        'scopes',
+        'default_action',
+        'before',
+        'after',
+        'default_top_relation',
+        'parents',
+    ];
+
+
     /**
      * Returns the orderable (listify) column that should be used.
      *

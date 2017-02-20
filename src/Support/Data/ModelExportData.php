@@ -34,6 +34,13 @@ class ModelExportData extends AbstractModelInformationDataObject implements Mode
         'strategies' => [],
     ];
 
+    protected $known = [
+        'enable',
+        'columns',
+        'strategies',
+    ];
+
+
     /**
      * @param ModelExportDataInterface|ModelExportData $with
      * @return $this

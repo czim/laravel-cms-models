@@ -50,6 +50,18 @@ class ModelMetaData extends AbstractModelInformationDataObject implements ModelM
         'transformer' => null,
     ];
 
+    protected $known = [
+        'controller',
+        'default_controller_method',
+        'controller_api',
+        'repository_strategy',
+        'repository_strategy_parameters',
+        'disable_global_scopes',
+        'form_requests',
+        'views',
+        'transformer',
+    ];
+
 
     /**
      * @param ModelMetaDataInterface|ModelMetaData $with

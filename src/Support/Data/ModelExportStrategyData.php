@@ -56,6 +56,19 @@ class ModelExportStrategyData extends AbstractModelInformationDataObject impleme
         'options' => [],
     ];
 
+    protected $known = [
+        'strategy',
+        'label',
+        'label_translated',
+        'icon',
+        'permissions',
+        'repository_strategy',
+        'repository_strategy_parameters',
+        'columns',
+        'options',
+    ];
+
+
     /**
      * Returns display label for the export link/button.
      *

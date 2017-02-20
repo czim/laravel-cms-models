@@ -62,6 +62,22 @@ class ModelListColumnData extends AbstractModelInformationDataObject implements 
         'disable_default_action' => null,
     ];
 
+    protected $known = [
+        'hide',
+        'source',
+        'strategy',
+        'label',
+        'label_translated',
+        'style',
+        'editable',
+        'sortable',
+        'sort_strategy',
+        'sort_direction',
+        'options',
+        'disable_default_action',
+    ];
+
+
     /**
      * Returns display header label for the column.
      *

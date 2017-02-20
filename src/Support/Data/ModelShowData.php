@@ -33,6 +33,12 @@ class ModelShowData extends AbstractModelInformationDataObject implements ModelS
         'fields' => [],
     ];
 
+    protected $known = [
+        'before',
+        'after',
+        'fields',
+    ];
+
 
     /**
      * @param ModelShowDataInterface|ModelShowData $with

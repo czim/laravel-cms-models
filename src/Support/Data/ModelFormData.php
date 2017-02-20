@@ -66,6 +66,16 @@ class ModelFormData extends AbstractModelInformationDataObject implements ModelF
         ],
     ];
 
+    protected $known = [
+        'before',
+        'after',
+        'before_form',
+        'after_form',
+        'layout',
+        'fields',
+        'validation',
+    ];
+
 
     /**
      * Returns whether a layout with tabs is set.

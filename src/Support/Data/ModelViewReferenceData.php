@@ -23,6 +23,10 @@ class ModelViewReferenceData extends AbstractModelInformationDataObject implemen
         'variables' => [],
     ];
 
+    protected $known = [
+        'view',
+        'variables',
+    ];
 
     /**
      * Returns the view identifier.

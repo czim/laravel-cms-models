@@ -33,6 +33,15 @@ class ModelFormFieldsetData extends AbstractModelFormLayoutNodeData implements M
         'chilren' => [],
     ];
 
+    protected $known = [
+        'type',
+        'label',
+        'label_translated',
+        'required',
+        'children',
+    ];
+
+
     /**
      * @param ModelFormFieldsetDataInterface|ModelFormFieldsetData $with
      */

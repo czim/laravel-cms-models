@@ -74,6 +74,25 @@ class ModelFormFieldData extends AbstractModelInformationDataObject implements M
         'permissions' => null,
     ];
 
+    protected $known = [
+        'key',
+        'create',
+        'update',
+        'label',
+        'label_translated',
+        'source',
+        'required',
+        'display_strategy',
+        'store_strategy',
+        'type',
+        'translated',
+        'style',
+        'options',
+        'admin_only',
+        'permissions',
+    ];
+
+
     /**
      * Returns the field key.
      *
