@@ -273,7 +273,7 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
 
             // list column may just set for order, defaults need to be filled in
             if (is_numeric($key) && ! is_array($value)) {
-                $key    = $value;
+                $key   = $value;
                 $value = [];
             }
 
