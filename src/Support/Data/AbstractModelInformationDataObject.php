@@ -43,7 +43,7 @@ abstract class AbstractModelInformationDataObject extends AbstractDataObject
             return;
         }
 
-        if ( ! in_array($attribute, $this->known)) {
+        if ( ! in_array($attribute, $this->known, true)) {
             throw (new ModelConfigurationDataException(
                 "Unknown model configuration data key: '{$attribute}' in " . get_class($this)
             ))
