@@ -4,6 +4,7 @@ namespace Czim\CmsModels\Repositories\Collectors;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\EnricherStepInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
+use Czim\CmsModels\Exceptions\ModelConfigurationDataException;
 use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
 use Czim\CmsModels\Repositories\Collectors\Enricher;
 use Czim\CmsModels\Support\Data\ModelInformation;
@@ -101,15 +102,18 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
 
             $key     = null;
             $section = null;
+            $message = $e->getMessage();
 
             if ($e instanceof ModelInformationEnrichmentException) {
                 $key     = $e->getKey();
                 $section = $e->getSection();
+            } elseif ($e instanceof ModelConfigurationDataException) {
+                $message .= " ({$e->getDotKey()})";
             }
 
             // Wrap and decorate exceptions so it is easier to track the problem source
             throw (new ModelInformationEnrichmentException(
-                "{$information->modelClass()} model configuration issue: \n{$e->getMessage()}",
+                "{$information->modelClass()} model configuration issue: \n{$message}",
                 $e->getCode(),
                 $e
             ))

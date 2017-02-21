@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Repositories\Collectors\Enricher;
 
 use Czim\CmsModels\Contracts\Data\ModelFormLayoutNodeInterface;
+use Czim\CmsModels\Exceptions\ModelConfigurationDataException;
 use Czim\CmsModels\Support\Data\ModelFormFieldGroupData;
 use Czim\CmsModels\Support\Data\ModelFormFieldLabelData;
 use Czim\CmsModels\Support\Data\ModelFormFieldsetData;
@@ -16,17 +17,19 @@ class EnrichFormLayoutData extends AbstractEnricherStep
     protected function performEnrichment()
     {
         if ($this->info->form->layout && count($this->info->form->layout)) {
-            $this->markRequiredForNestedLayoutChildren();
+            $this->markRequiredForNestedLayoutChildren(null, 'layout');
         }
     }
 
     /**
      * Enriches existing layout data with required state for parent nodes.
      *
-     * @param mixed $nodes  an array, layout node or string field key
-     * @return bool|null    true if any children are required, null if unknown
+     * @param mixed       $nodes        an array, layout node or string field key
+     * @param string|null $parentKey
+     * @return bool|null true if any children are required, null if unknown
+     * @throws ModelConfigurationDataException
      */
-    protected function markRequiredForNestedLayoutChildren($nodes = null)
+    protected function markRequiredForNestedLayoutChildren($nodes = null, $parentKey = null)
     {
         if (null === $nodes) {
             $nodes = $this->info->form->layout();
@@ -39,7 +42,15 @@ class EnrichFormLayoutData extends AbstractEnricherStep
 
             foreach ($nodes as $key => $value) {
 
-                $oneRequired = $this->markRequiredForNestedLayoutChildren($value);
+                try {
+                    $oneRequired = $this->markRequiredForNestedLayoutChildren($value, 'children.' . $key);
+
+                } catch (ModelConfigurationDataException $e) {
+
+                    throw $e->setDotKey(
+                        $parentKey . ($e->getDotKey() ? '.' . $e->getDotKey() : null)
+                    );
+                }
 
                 if ( ! $required && $oneRequired) {
                     $required = true;
@@ -57,7 +68,7 @@ class EnrichFormLayoutData extends AbstractEnricherStep
 
             /** @var ModelFormTabData|ModelFormFieldsetData|ModelFormFieldGroupData $nodes */
 
-            $required = $this->markRequiredForNestedLayoutChildren($nodes->children());
+            $required = $this->markRequiredForNestedLayoutChildren($nodes->children(), $parentKey);
 
             // Only set the required status if not explicitly set in configuration
             if (null === $nodes->required) {

@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Support\Data;
 
 use Czim\CmsModels\Contracts\Data\ModelFormLayoutNodeInterface;
+use Czim\CmsModels\Exceptions\ModelConfigurationDataException;
 use Czim\CmsModels\Support\Enums\LayoutNodeType;
 use Czim\DataObject\Contracts\DataObjectInterface;
 use UnexpectedValueException;
@@ -78,32 +79,45 @@ class AbstractModelFormLayoutNodeData extends AbstractModelInformationDataObject
 
     /**
      * @param string $topKey
+     * @throws ModelConfigurationDataException
      */
     protected function decorateChildrenAttribute($topKey = 'children')
     {
         foreach ($this->attributes[$topKey] as $key => &$value) {
 
-            if (is_array($value)) {
+            // If the child is not an array, then this is a field being assigned to this layout node
+            if ( ! is_array($value)) {
+                continue;
+            }
 
-                $type = strtolower(array_get($value, 'type', ''));
+            $type = strtolower(array_get($value, 'type', ''));
 
-                switch ($type) {
+            switch ($type) {
 
-                    case LayoutNodeType::FIELDSET:
-                        $value = new ModelFormFieldsetData($value);
-                        break;
+                case LayoutNodeType::FIELDSET:
+                    $objectClass = ModelFormFieldsetData::class;
+                    break;
 
-                    case LayoutNodeType::GROUP:
-                        $value = new ModelFormFieldGroupData($value);
-                        break;
+                case LayoutNodeType::GROUP:
+                    $objectClass = ModelFormFieldGroupData::class;
+                    break;
 
-                    case LayoutNodeType::LABEL:
-                        $value = new ModelFormFieldLabelData($value);
-                        break;
+                case LayoutNodeType::LABEL:
+                    $objectClass = ModelFormFieldLabelData::class;
+                    break;
 
-                    default:
-                        throw new UnexpectedValueException("Unknown or unacceptable layout node type '{$type}'");
-                }
+                default:
+                    throw new UnexpectedValueException("Unknown or unacceptable layout node type '{$type}'");
+            }
+
+            try {
+                $value = new $objectClass($value);
+
+            } catch (ModelConfigurationDataException $e) {
+
+                throw $e->setDotKey(
+                    $topKey . '.' . $key . ($e->getDotKey() ? '.' . $e->getDotKey() : null)
+                );
             }
         }
 
