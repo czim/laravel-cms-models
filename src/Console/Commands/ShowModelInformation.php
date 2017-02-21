@@ -3,12 +3,14 @@ namespace Czim\CmsModels\Console\Commands;
 
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Illuminate\Console\Command;
+use Illuminate\Support\Debug\Dumper;
 
 class ShowModelInformation extends Command
 {
 
-    protected $signature = 'cms:models:show {model? : Model information key or class name} 
-        {--keys : Show only a list of model keys}';
+    protected $signature = 'cms:models:show {model? : Model information key or class name}
+        {--pluck= : Only shows data for this dot-notation key (f.e. form.fields)}
+        {--keys : Show only a list of model keys, or when plucking, only the keys at the plucked level}';
 
     protected $description = 'Shows model information (for debugging purposes)';
 
@@ -22,14 +24,14 @@ class ShowModelInformation extends Command
     {
         $model = $this->argument('model');
 
-        if ($this->option('keys')) {
+        if ($this->option('keys') && ! $this->option('pluck')) {
             $this->displayKeys($repository->getAll()->keys());
             return;
         }
 
         if ( ! $model) {
             // Show all models
-            $this->display($repository->getAll()->toArray());
+            $this->displayAll($repository->getAll()->toArray());
             return;
         }
 
@@ -37,7 +39,7 @@ class ShowModelInformation extends Command
         $info = $repository->getByKey($model);
 
         if ($info) {
-            $this->display($info->toArray());
+            $this->display($model, $info->toArray());
             return;
         }
 
@@ -45,7 +47,7 @@ class ShowModelInformation extends Command
         $info = $repository->getByModelClass($model);
 
         if ($info) {
-            $this->display($info->toArray());
+            $this->display($model, $info->toArray());
             return;
         }
 
@@ -62,18 +64,53 @@ class ShowModelInformation extends Command
         $this->info('Model keys:');
 
         foreach ($keys as $key) {
+
             $this->comment('  ' . $key);
+        }
+
+        $this->info('');
+    }
+
+    /**
+     * Displays data in console for a list of model information arrays.
+     *
+     * @param array $data
+     */
+    protected function displayAll(array $data)
+    {
+        foreach ($data as $key => $single) {
+
+            $this->display($key, $single);
         }
     }
 
     /**
-     * Displays data in the console for debugging.
+     * Displays data in the console for a single information array.
      *
-     * @param mixed $data
+     * @param string $key   model key or class for display only
+     * @param array  $data
      */
-    protected function display($data)
+    protected function display($key, array $data)
     {
-        dd($data);
+        if ($pluck = $this->option('pluck')) {
+
+            if ( ! array_has($data, $pluck)) {
+                $this->warn("Nothing to pluck for '{$pluck}'.");
+                return;
+            }
+
+            $data = array_get($data, $pluck);
+        }
+
+        $this->comment($key);
+        
+        if ($this->option('keys') && is_array($data)) {
+            $data = array_keys($data);
+        }
+
+        (new Dumper)->dump($data);
+
+        $this->info('');
     }
 
 }
