@@ -58,12 +58,14 @@
               method="post"
               action="{{ cms_route("{$routePrefix}.store") }}"
               enctype="multipart/form-data"
+              novalidate
         >
     @else
         <form class="model-form"
               method="post"
               action="{{ cms_route("{$routePrefix}.update", [ $record->getKey() ]) }}"
               enctype="multipart/form-data"
+              novalidate
         >
             {{ method_field('put') }}
     @endif
