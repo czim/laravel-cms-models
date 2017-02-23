@@ -23,9 +23,16 @@ use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
  * @property string $style
  * @property bool $admin_only
  * @property string|string[] $permissions
+ * @property ModelViewReferenceData $before
+ * @property ModelViewReferenceData $after
  */
 class ModelFormFieldData extends AbstractModelInformationDataObject implements ModelFormFieldDataInterface
 {
+
+    protected $objects = [
+        'before' => ModelViewReferenceData::class,
+        'after'  => ModelViewReferenceData::class,
+    ];
 
     protected $attributes = [
 
@@ -90,6 +97,8 @@ class ModelFormFieldData extends AbstractModelInformationDataObject implements M
         'options',
         'admin_only',
         'permissions',
+        'before',
+        'after',
     ];
 
 

@@ -8,7 +8,18 @@
 @endif
 
     <div class="col-sm-{{ isset($columnWidth) ? $columnWidth : 10 }}">
+
+        {{-- Before view --}}
+        @if ($field->before && $field->before->view)
+            @include($field->before->view, $field->before->variables())
+        @endif
+
         {!! $strategy !!}
+
+        {{-- After view --}}
+        @if ($field->after && $field->after->view)
+            @include($field->after->view, $field->after->variables())
+        @endif
     </div>
 
 @if ( ! ($parent instanceof \Czim\CmsModels\Support\Data\ModelFormFieldGroupData))
