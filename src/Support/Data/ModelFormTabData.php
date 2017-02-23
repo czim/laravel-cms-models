@@ -14,9 +14,16 @@ use Czim\CmsModels\Support\Enums\LayoutNodeType;
  * @property string $label_translated
  * @property bool   $required
  * @property array  $children
+ * @property ModelViewReferenceData $before
+ * @property ModelViewReferenceData $after
  */
 class ModelFormTabData extends AbstractModelFormLayoutNodeData implements ModelFormTabDataInterface
 {
+
+    protected $objects = [
+        'before' => ModelViewReferenceData::class,
+        'after'  => ModelViewReferenceData::class,
+    ];
 
     protected $attributes = [
 
@@ -31,6 +38,10 @@ class ModelFormTabData extends AbstractModelFormLayoutNodeData implements ModelF
 
         // Nested layout children (field keys or fieldsets/groups)
         'children' => [],
+
+        // Views to show before and/or after the form field. Instance of ModelViewReferenceData.
+        'before' => null,
+        'after'  => null,
     ];
 
     protected $known = [
@@ -39,6 +50,8 @@ class ModelFormTabData extends AbstractModelFormLayoutNodeData implements ModelF
         'label_translated',
         'required',
         'children',
+        'before',
+        'after',
     ];
 
 
