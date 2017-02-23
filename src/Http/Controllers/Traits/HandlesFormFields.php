@@ -287,15 +287,11 @@ trait HandlesFormFields
 
         $user = $this->getCore()->auth()->user();
 
-        if ( ! $user) {
+        if ( ! $user || $field->adminOnly() && ! $user->isAdmin()) {
             return false;
         }
 
-        if ($field->adminOnly() && ! $user->isAdmin()) {
-            return false;
-        }
-
-        if ( ! count($field->permissions())) {
+        if ($user->isAdmin() || ! count($field->permissions())) {
             return true;
         }
 
