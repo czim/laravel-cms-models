@@ -224,12 +224,7 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
      */
     protected function getModelsToCollect()
     {
-        $configDefined = config('cms-models.models', []);
-        $cmsModels     = $this->getCmsModelClasses();
-
-        return array_unique(
-            array_merge($configDefined, $cmsModels)
-        );
+        return config('cms-models.models', []);
     }
 
     /**
