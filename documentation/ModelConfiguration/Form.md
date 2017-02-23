@@ -69,6 +69,20 @@ Keys that may be set:
 - `options` (array, associative)  
     Options pertaining to either or both of the strategies used.
 
+- `before` (array)  
+    A view reference for including a custom view partial before the form field.  
+    Example:  
+```php
+<?php
+  'before' => [
+      'view'      => 'partials.some.path.index',
+      'variables' => [ 'field', 'record' ]
+  ]
+```
+  
+- `after` (array)
+    A view reference for including a custom view partial after the form field.
+
 
 Any field included in the configuration will be displayed for both the create and update forms, unless explicitly defined otherwise.
  
@@ -125,6 +139,24 @@ Otherwise, any non-tab top level entries will be ignored.
 
 Tabs contents are part of the same form and will be submitted simultaneously.
 
+Tab panes may also have arrays set for `before` and `after` keys, to set custom view partials.
+This works similarly to the before/after keys [for the form itself](#custom-before-or-after-views).
+
+Example:
+
+```php
+<?php
+    'tab-1' => [
+        'type'  => 'tab',
+        'label' => 'Main Fields',
+        'children' => [
+            // ...
+        ],
+        'before' => [
+            'view' => 'some.custom.view'            
+        ]
+    ],
+```
 
 ### Fieldsets
 
