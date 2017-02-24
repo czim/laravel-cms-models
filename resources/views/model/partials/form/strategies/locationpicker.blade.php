@@ -109,7 +109,7 @@
 @endpush
 
 @push('javascript-head')
-    <script src="//maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&sensor=false&libraries=places"></script>
+    <script src="//maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&libraries=places"></script>
 @endpush
 
 @push('javascript-end')
