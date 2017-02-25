@@ -79,6 +79,10 @@ class ModelFormFieldData extends AbstractModelInformationDataObject implements M
 
         // A permission key or an array of permission keys that is required to see & use this field
         'permissions' => null,
+
+        // Views to show before and/or after the form field. Instance of ModelViewReferenceData.
+        'before' => null,
+        'after'  => null,
     ];
 
     protected $known = [
