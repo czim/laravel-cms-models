@@ -332,14 +332,21 @@ class ModelAnalyzer
     {
         switch ($cast) {
 
+            case 'bool':
             case 'boolean':
                 $cast = AttributeCast::BOOLEAN;
                 break;
 
             case 'decimal':
             case 'double':
+            case 'float':
+            case 'real':
                 $cast = AttributeCast::FLOAT;
                 break;
+
+            case 'int':
+            case 'integer':
+                $cast = AttributeCast::INTEGER;
         }
 
         return $cast;
