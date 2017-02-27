@@ -7,6 +7,7 @@ use Czim\CmsModels\Analyzer\ModelAnalyzer;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationCollectorInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
+use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationFileReaderInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationInterpreterInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Exceptions\ModelConfigurationDataException;
@@ -31,6 +32,26 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
     protected $modelAnalyzer;
 
     /**
+     * @var ModelInformationFileReaderInterface
+     */
+    protected $informationReader;
+
+    /**
+     * @var ModelInformationEnricherInterface
+     */
+    protected $informationEnricher;
+
+    /**
+     * @var ModelInformationInterpreterInterface
+     */
+    protected $informationInterpreter;
+
+    /**
+     * @var \Illuminate\Filesystem\Filesystem
+     */
+    protected $files;
+
+    /**
      * @var Collection|ModelInformationInterface[]|ModelInformation[]
      */
     protected $information;
@@ -49,25 +70,11 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
      */
     protected $cmsModelFiles = [];
 
-    /**
-     * @var ModelInformationEnricherInterface
-     */
-    protected $informationEnricher;
-
-    /**
-     * @var ModelInformationInterpreterInterface
-     */
-    protected $informationInterpreter;
-
-    /**
-     * @var \Illuminate\Filesystem\Filesystem
-     */
-    protected $files;
-
 
     /**
      * @param ModuleHelperInterface                $moduleHelper
      * @param ModelAnalyzer                        $modelAnalyzer
+     * @param ModelInformationFileReaderInterface  $informationReader
      * @param ModelInformationEnricherInterface    $informationEnricher
      * @param ModelInformationInterpreterInterface $informationInterpreter
      * @param Filesystem                           $files
@@ -75,12 +82,14 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
     public function __construct(
         ModuleHelperInterface $moduleHelper,
         ModelAnalyzer $modelAnalyzer,
+        ModelInformationFileReaderInterface $informationReader,
         ModelInformationEnricherInterface $informationEnricher,
         ModelInformationInterpreterInterface $informationInterpreter,
         Filesystem $files
     ) {
         $this->moduleHelper           = $moduleHelper;
         $this->modelAnalyzer          = $modelAnalyzer;
+        $this->informationReader      = $informationReader;
         $this->informationEnricher    = $informationEnricher;
         $this->informationInterpreter = $informationInterpreter;
         $this->files                  = $files;
@@ -177,7 +186,7 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
      */
     protected function collectSingleCmsModelFromFile(SplFileInfo $file)
     {
-        $info = require $file->getRealPath();
+        $info = $this->informationReader->read($file->getRealPath());
 
         if ( ! is_array($info)) {
             throw new UnexpectedValueException(

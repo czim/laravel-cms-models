@@ -8,6 +8,7 @@ use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
 use Czim\CmsModels\Contracts\Repositories\ActivateStrategyResolverInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationCollectorInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
+use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationFileReaderInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationInterpreterInterface;
 use Czim\CmsModels\Contracts\Repositories\CurrentModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
@@ -30,6 +31,7 @@ use Czim\CmsModels\Events;
 use Czim\CmsModels\Listeners\ModelLogListener;
 use Czim\CmsModels\Repositories\Collectors\CmsModelInformationInterpreter;
 use Czim\CmsModels\Repositories\Collectors\ModelInformationEnricher;
+use Czim\CmsModels\Repositories\Collectors\ModelInformationFileReader;
 use Czim\CmsModels\Repositories\CurrentModelInformation;
 use Czim\CmsModels\Repositories\ModelInformationRepository;
 use Czim\CmsModels\Repositories\ModelReferenceRepository;
@@ -184,6 +186,7 @@ class CmsModelsServiceProvider extends ServiceProvider
     protected function registerModelInformationInterfaceBindings()
     {
         $this->app->singleton(ModelInformationRepositoryInterface::class, ModelInformationRepository::class);
+        $this->app->singleton(ModelInformationFileReaderInterface::class, ModelInformationFileReader::class);
         $this->app->singleton(ModelInformationEnricherInterface::class, ModelInformationEnricher::class);
         $this->app->singleton(ModelInformationInterpreterInterface::class, CmsModelInformationInterpreter::class);
         $this->app->singleton(DatabaseAnalyzerInterface::class, DatabaseAnalyzer::class);
