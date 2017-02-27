@@ -170,6 +170,8 @@ return [
                 // taggable
                 'withAllTags',
                 'withAnyTag',
+                // sluggable
+                'findSimilarSlugs',
             ],
         ],
 
