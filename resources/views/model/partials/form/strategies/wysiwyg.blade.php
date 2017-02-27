@@ -7,7 +7,6 @@
     @if ($required && ! $translated) required="required" @endif
 >{{ $value }}</textarea>
 
-
 @include('cms-models::model.partials.form.field_errors', [
     'key'        => isset($baseKey) ? $baseKey : $key,
     'errors'     => $errors,
@@ -35,8 +34,18 @@
                         $configPath .= '.js';
                     }
 
-                    $configPath = '/' . trim(config('cms-models.ckeditor.path'), '/')
-                                . '/' . ltrim($configPath, '/');
+                    $configPath = ltrim($configPath, '/');
+
+                    // Check whether config file exists, otherwise we're going to try and look it up in the default
+                    // ckeditor config directory
+                    if ( ! File::exists(public_path($configPath))) {
+                        $configPath = '/' . trim(config('cms-models.ckeditor.path'), '/') . '/' . $configPath;
+                    } else {
+                        // Set the config path to the absolute url, because otherwise CKEditor will still try to
+                        // load the file relatively from the CKEditor directory
+                        $configPath = url($configPath);
+                    }
+
                     $settings['customConfig'] = $configPath;
                 }
 
