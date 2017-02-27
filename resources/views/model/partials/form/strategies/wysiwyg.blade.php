@@ -53,6 +53,11 @@
                 if (array_get($options, 'collapse_toolbar')) {
                     $settings['toolbarStartupExpanded'] = false;
                 }
+
+                // Set specific custom options
+                if (is_array(array_get($options, 'editor_options'))) {
+                    $settings = array_merge($settings, array_get($options, 'editor_options'));
+                }
             ?>
 
             @if ( ! count($settings))
