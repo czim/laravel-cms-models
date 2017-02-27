@@ -38,7 +38,7 @@
 
                     // Check whether config file exists, otherwise we're going to try and look it up in the default
                     // ckeditor config directory
-                    if ( ! file_exists(public_path($configPath))) {
+                    if ( ! File::exists(public_path($configPath))) {
                         $configPath = '/' . trim(config('cms-models.ckeditor.path'), '/') . '/' . $configPath;
                     } else {
                         // Set the config path to the absolute url, because otherwise CKEditor will still try to
