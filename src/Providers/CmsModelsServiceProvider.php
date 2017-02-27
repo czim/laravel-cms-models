@@ -5,46 +5,17 @@ use Czim\CmsModels\Analyzer\DatabaseAnalyzer;
 use Czim\CmsModels\Console\Commands\ClearModelInformationCache;
 use Czim\CmsModels\Console\Commands\ShowModelInformation;
 use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
-use Czim\CmsModels\Contracts\Repositories\ActivateStrategyResolverInterface;
-use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationCollectorInterface;
-use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
-use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationFileReaderInterface;
-use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationInterpreterInterface;
-use Czim\CmsModels\Contracts\Repositories\CurrentModelInformationInterface;
-use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
-use Czim\CmsModels\Contracts\Repositories\ModelReferenceRepositoryInterface;
-use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
-use Czim\CmsModels\Contracts\Repositories\OrderableStrategyResolverInterface;
+use Czim\CmsModels\Contracts\Repositories as RepositoriesContracts;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
-use Czim\CmsModels\Contracts\Support\Factories\ActionStrategyFactoryInterface;
-use Czim\CmsModels\Contracts\Support\Factories\ExportColumnStrategyFactoryInterface;
-use Czim\CmsModels\Contracts\Support\Factories\ExportStrategyFactoryInterface;
-use Czim\CmsModels\Contracts\Support\Factories\FilterStrategyFactoryInterface;
-use Czim\CmsModels\Contracts\Support\Factories\FormFieldStrategyFactoryInterface;
-use Czim\CmsModels\Contracts\Support\Factories\ListDisplayStrategyFactoryInterface;
-use Czim\CmsModels\Contracts\Support\Factories\ShowFieldStrategyFactoryInterface;
+use Czim\CmsModels\Contracts\Support\Factories as FactoriesContracts;
 use Czim\CmsModels\Contracts\Support\MetaReferenceDataProviderInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Contracts\Support\Session\ModelListMemoryInterface;
 use Czim\CmsModels\Contracts\Support\Translation\TranslationLocaleHelperInterface;
 use Czim\CmsModels\Events;
 use Czim\CmsModels\Listeners\ModelLogListener;
-use Czim\CmsModels\Repositories\Collectors\CmsModelInformationInterpreter;
-use Czim\CmsModels\Repositories\Collectors\ModelInformationEnricher;
-use Czim\CmsModels\Repositories\Collectors\ModelInformationFileReader;
-use Czim\CmsModels\Repositories\CurrentModelInformation;
-use Czim\CmsModels\Repositories\ModelInformationRepository;
-use Czim\CmsModels\Repositories\ModelReferenceRepository;
-use Czim\CmsModels\Repositories\ModelRepository;
-use Czim\CmsModels\Repositories\ActivateStrategies\ActivateStrategyResolver;
-use Czim\CmsModels\Repositories\OrderableStrategies\OrderableStrategyResolver;
-use Czim\CmsModels\Support\Factories\ActionStrategyFactory;
-use Czim\CmsModels\Support\Factories\ExportColumnStrategyFactory;
-use Czim\CmsModels\Support\Factories\ExportStrategyFactory;
-use Czim\CmsModels\Support\Factories\FilterStrategyFactory;
-use Czim\CmsModels\Support\Factories\FormFieldStrategyFactory;
-use Czim\CmsModels\Support\Factories\ListDisplayStrategyFactory;
-use Czim\CmsModels\Support\Factories\ShowFieldStrategyFactory;
+use Czim\CmsModels\Repositories;
+use Czim\CmsModels\Support\Factories;
 use Czim\CmsModels\Support\ModuleHelper;
 use Czim\CmsModels\Support\Routing\RouteHelper;
 use Czim\CmsModels\Support\Session\ModelListMemory;
@@ -52,6 +23,7 @@ use Czim\CmsModels\Support\Strategies\MetaReferenceDataProvider;
 use Czim\CmsModels\Support\Translation\TranslationLocaleHelper;
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsCore\Support\Enums\Component;
+use Event;
 use Illuminate\Support\ServiceProvider;
 
 class CmsModelsServiceProvider extends ServiceProvider
@@ -150,9 +122,9 @@ class CmsModelsServiceProvider extends ServiceProvider
      */
     protected function registerInterfaceBindings()
     {
-        $this->app->bind(ModelRepositoryInterface::class, ModelRepository::class);
+        $this->app->bind(RepositoriesContracts\ModelRepositoryInterface::class, Repositories\ModelRepository::class);
 
-        $this->app->singleton(ModelReferenceRepositoryInterface::class, ModelReferenceRepository::class);
+        $this->app->singleton(RepositoriesContracts\ModelReferenceRepositoryInterface::class, Repositories\ModelReferenceRepository::class);
 
         $this->registerHelperInterfaceBindings()
              ->registerModelInformationInterfaceBindings()
@@ -185,13 +157,13 @@ class CmsModelsServiceProvider extends ServiceProvider
      */
     protected function registerModelInformationInterfaceBindings()
     {
-        $this->app->singleton(ModelInformationRepositoryInterface::class, ModelInformationRepository::class);
-        $this->app->singleton(ModelInformationFileReaderInterface::class, ModelInformationFileReader::class);
-        $this->app->singleton(ModelInformationEnricherInterface::class, ModelInformationEnricher::class);
-        $this->app->singleton(ModelInformationInterpreterInterface::class, CmsModelInformationInterpreter::class);
+        $this->app->singleton(RepositoriesContracts\ModelInformationRepositoryInterface::class, Repositories\ModelInformationRepository::class);
+        $this->app->singleton(RepositoriesContracts\Collectors\ModelInformationFileReaderInterface::class, Repositories\Collectors\ModelInformationFileReader::class);
+        $this->app->singleton(RepositoriesContracts\Collectors\ModelInformationEnricherInterface::class, Repositories\Collectors\ModelInformationEnricher::class);
+        $this->app->singleton(RepositoriesContracts\Collectors\ModelInformationInterpreterInterface::class, Repositories\Collectors\CmsModelInformationInterpreter::class);
         $this->app->singleton(DatabaseAnalyzerInterface::class, DatabaseAnalyzer::class);
 
-        $this->app->singleton(CurrentModelInformationInterface::class, CurrentModelInformation::class);
+        $this->app->singleton(RepositoriesContracts\CurrentModelInformationInterface::class, Repositories\CurrentModelInformation::class);
 
         return $this;
     }
@@ -203,15 +175,15 @@ class CmsModelsServiceProvider extends ServiceProvider
      */
     protected function registerStrategyInterfaceBindings()
     {
-        $this->app->singleton(FilterStrategyFactoryInterface::class, FilterStrategyFactory::class);
-        $this->app->singleton(ActivateStrategyResolverInterface::class, ActivateStrategyResolver::class);
-        $this->app->singleton(OrderableStrategyResolverInterface::class, OrderableStrategyResolver::class);
-        $this->app->singleton(ListDisplayStrategyFactoryInterface::class, ListDisplayStrategyFactory::class);
-        $this->app->singleton(ShowFieldStrategyFactoryInterface::class, ShowFieldStrategyFactory::class);
-        $this->app->singleton(FormFieldStrategyFactoryInterface::class, FormFieldStrategyFactory::class);
-        $this->app->singleton(ActionStrategyFactoryInterface::class, ActionStrategyFactory::class);
-        $this->app->singleton(ExportColumnStrategyFactoryInterface::class, ExportColumnStrategyFactory::class);
-        $this->app->singleton(ExportStrategyFactoryInterface::class, ExportStrategyFactory::class);
+        $this->app->singleton(RepositoriesContracts\ActivateStrategyResolverInterface::class, Repositories\ActivateStrategies\ActivateStrategyResolver::class);
+        $this->app->singleton(RepositoriesContracts\OrderableStrategyResolverInterface::class, Repositories\OrderableStrategies\OrderableStrategyResolver::class);
+        $this->app->singleton(FactoriesContracts\FilterStrategyFactoryInterface::class, Factories\FilterStrategyFactory::class);
+        $this->app->singleton(FactoriesContracts\ListDisplayStrategyFactoryInterface::class, Factories\ListDisplayStrategyFactory::class);
+        $this->app->singleton(FactoriesContracts\ShowFieldStrategyFactoryInterface::class, Factories\ShowFieldStrategyFactory::class);
+        $this->app->singleton(FactoriesContracts\FormFieldStrategyFactoryInterface::class, Factories\FormFieldStrategyFactory::class);
+        $this->app->singleton(FactoriesContracts\ActionStrategyFactoryInterface::class, Factories\ActionStrategyFactory::class);
+        $this->app->singleton(FactoriesContracts\ExportColumnStrategyFactoryInterface::class, Factories\ExportColumnStrategyFactory::class);
+        $this->app->singleton(FactoriesContracts\ExportStrategyFactoryInterface::class, Factories\ExportStrategyFactory::class);
 
         return $this;
     }
@@ -223,7 +195,7 @@ class CmsModelsServiceProvider extends ServiceProvider
      */
     protected function registerFacadeBindings()
     {
-        $this->app->bind('cms-models-modelinfo', CurrentModelInformationInterface::class);
+        $this->app->bind('cms-models-modelinfo', RepositoriesContracts\CurrentModelInformationInterface::class);
         $this->app->bind('cms-translation-locale-helper', TranslationLocaleHelperInterface::class);
 
         return $this;
@@ -236,7 +208,7 @@ class CmsModelsServiceProvider extends ServiceProvider
      */
     protected function registerConfiguredCollector()
     {
-        $this->app->singleton(ModelInformationCollectorInterface::class, config('cms-models.collector.class'));
+        $this->app->singleton(RepositoriesContracts\Collectors\ModelInformationCollectorInterface::class, config('cms-models.collector.class'));
 
         return $this;
     }
@@ -249,7 +221,7 @@ class CmsModelsServiceProvider extends ServiceProvider
     protected function registerEventListeners()
     {
         foreach ($this->events as $event => $listener) {
-            \Event::listen($event, $listener);
+            Event::listen($event, $listener);
         }
 
         return $this;
