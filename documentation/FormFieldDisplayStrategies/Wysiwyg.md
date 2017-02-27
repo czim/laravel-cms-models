@@ -15,6 +15,9 @@ The config may be overridden using the following options:
 - `collapse_toolbar` (boolean)  
     If set to `true`, starts with the toolbar collapsed, overriding the current config file.
 
+- `editor_options` (array)  
+    A set of key-value pairs to set specific CKEditor configuration options. For possible options, 
+    check out the [http://docs.ckeditor.com/#!/api/CKEDITOR.config](CKEDITOR.config documentation).
  
  
  ```php
@@ -26,6 +29,10 @@ The config may be overridden using the following options:
          // Whether the toolbar should start collapsed
          'collapse_toolbar' => true,
          
+         // Specific CKEditor options
+         'editor_options' => [
+            'height' => '200px',
+         ],
      ]
  ```
 
