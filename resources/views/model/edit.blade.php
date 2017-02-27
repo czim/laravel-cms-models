@@ -35,6 +35,19 @@
                 <p>{{ $err }}</p>
             @endforeach
 
+            @if (cms_auth()->admin())
+                <div id="form-field-general-errors-full-toggle" class="show text-small">
+                    <small>
+                        <a href="#" class="text-danger">
+                            {{ cms_trans('common.errors.form.show-all-errors') }}
+                            <span class="full-toggle-closed caret"></span>
+                        </a>
+                    </small>
+                </div>
+                <div id="form-field-general-errors-full" style="display: none">
+                    @include('cms-models::model.partials.form.general_errors', compact('$errors'))
+                </div>
+            @endif
         </div>
     @endif
 
@@ -164,6 +177,14 @@
 
     <script>
         $(function () {
+
+            // Toggle showing full errors in the error alert
+            $('#form-field-general-errors-full-toggle').click(function () {
+                $('#form-field-general-errors-full').toggle();
+                $(this).find('.full-toggle-closed').toggle();
+            });
+
+            // Switch locales for translations
             $('.translated-form-field-locale-option > a').click(function () {
 
                 var locale = $(this).attr('data-locale');
