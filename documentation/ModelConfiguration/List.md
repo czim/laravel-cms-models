@@ -102,14 +102,27 @@ This section works very much like the `list.columns`.
 
 If the only filter needed is a text input for any textual column, loosely matching split terms, use this:
 
-```
-'filters' => [
-    'any' => [
-        'strategy'         => 'string-split',
-        'label_translated' => 'models.filter.anything-label',
-        'target'           => '*',
-    ]   
-]
+```php
+<?php
+return [
+    // ...
+    
+    'list' => [
+        // ...
+        
+        'filters' => [
+            'any' => [
+                'strategy'         => 'string-split',
+                'label_translated' => 'models.filter.anything-label',
+                'target'           => '*',
+            ]   
+        ],
+        
+        // ...
+    ]
+    
+    // ...
+];
 ```
 
 This will take a an input like 'blue shoes' and search for it as `like '%blue%' OR like '%shoes%'`, in any char or text based field, included in translations for the model.
@@ -167,16 +180,28 @@ If this is set, the default scopes will be overruled.
  
  Example:
  
- ```
- 'scopes' => [
-     'some_scope_key' => [
-         `method`   => null,
-         'label'    => 'Scope Label',
-         `label_translated' => 'cms::your.trans.key',
-         'strategy' => '\Your\Scope\Strategy',
-     ]   
- ]
- ```
+```php
+<?php
+return [
+    // ...
+    
+    'list' => [
+        // ...
+        'scopes' => [
+            'some_scope_key' => [
+                'method'           => null,
+                'label'            => 'Scope Label',
+                'label_translated' => 'cms::your.trans.key',
+                'strategy'         => \Your\Scope\Strategy::class,
+            ]   
+        ],
+        
+        // ...
+    ],
+    
+    // ...
+];
+```
 
 Accepted values for each array item:
  
@@ -240,6 +265,9 @@ Example:
 
 ```php
 <?php
+return [
+    // ...
+    
     'list' => [
         
         'default_action' => [
@@ -262,6 +290,9 @@ Example:
         
         // ...
     ],
+    
+    // ...
+];
 ```
 
 ## Custom Before or After Views
@@ -272,6 +303,9 @@ Example:
 
 ```php
 <?php
+return [
+    // ...
+    
     'list' => [
         
         'before' => [
@@ -280,4 +314,8 @@ Example:
         ],
     
         // ...
+    ],
+    
+    // ...
+];
 ```

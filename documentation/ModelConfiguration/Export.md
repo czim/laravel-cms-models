@@ -22,7 +22,9 @@ Set the configuration as described here to enable this option for users.
     The permission(s) required to be able to see use this export strategy.
     If more than one, users must have all permissions in order to use it.  
     If `false` or left unset, will default to the model's own '.export' permission.  
-    Note that any *custom* permissions added here will not automatically be known by the CMS (or ACL module). For that, they must be added to the CMS configuration. For more information, check the documentation for your chosen [ACL module](https://github.com/czim/laravel-cms-acl-module).
+    Note that any *custom* permissions added here will not automatically be known by the CMS (or ACL module). For that, 
+    they must be added to the CMS configuration. 
+    For more information, check the documentation for your chosen [ACL module](https://github.com/czim/laravel-cms-acl-module).
     
 - `options` (array, associative)  
     Options pertaining to the export strategy used.
@@ -42,11 +44,13 @@ Strategies for exporting data that are included in the CMS:
     Excel file export.
     
   
-See [the export strategy documentation](../ExportStrategyReference.md#export-strategies) for more information about export strategies and package installations required for them to work.
+See [the export strategy documentation](../ExportStrategyReference.md#export-strategies) for more information about 
+export strategies and package installations required for them to work.
 
 ## Columns
 
-Export columns (or whatever the model attribute values are rendered for a given export strategy) may be included or overridden in the `export.columns` array.
+Export columns (or whatever the model attribute values are rendered for a given export strategy) may be included or 
+overridden in the `export.columns` array.
 
 In addition, each export strategy may have its own column configuration, overriding these defaults. 
 This may be done by setting the `export.strategies.<strategy key>.columns` array.
@@ -99,4 +103,5 @@ Keys that may be set:
 
 Each column definition may have an `options` associative array value.
 What keys may be set is determined by the strategies (`strategy`) for the export column.
-More information on this may be found in the documentation of the [export column strategies](../ExportStrategyReference.md#export-column-strategies).
+More information on this may be found in the documentation of the 
+[export column strategies](../ExportStrategyReference.md#export-column-strategies).

@@ -12,13 +12,22 @@ The CMS will generate sensible default field data in most cases, and is set to d
 To use the defaults for a specific set of fields to include at the exclusion of others, add them as string values in the fields array:
  
  ```php
-    'fields' => [
-        'title',
-        'body',
-        'genre',
-        'tags',
-    ]
- ```
+ <?php
+ return [
+    // ...
+    
+    'form' => [
+        'fields' => [
+            'title',
+            'body',
+            'genre',
+            'tags',
+        ]
+    ],
+    
+    // ...
+];
+```
 
 If fields are defined, only the ones included in the configuration will be displayed.
  
@@ -108,15 +117,27 @@ For custom fields, there are no defaults the CMS can fall back on, so the form f
 ### Example Fields
 
 ```php
-    'fields' => [
-        
-        'title' => [
-        ],
-        
-        'body' => [
-            'create' => false,
-        ],
+<?php
+return [
+    // ...
+    
+    'form' => [
+        'fields' => [
+            
+            'title' => [
+                'source'           => 'title_text',
+                'display_strategy' => 'wysiwyg',
+            ],
+            
+            'body' => [
+                'create'      => false,
+                'permissions' => 'must.have.this.permission',
+            ],
+        ]
     ]
+    
+    // ...
+];
 ```
 
 
@@ -195,57 +216,71 @@ It should have a `label` or a `label_translated`.
 
 Additionally, the following property may be set:
 
-- `label_for` (string)    
+- `label_for` (string)  
     The field key for which this is a label. This will set a `for` attribute on the label tag, pointing to the correct input.
 
 
 ### Example layout
 
 ```php
-    'layout' => [
-        'tab-1' => [
-            'type'  => 'tab',
-            'label' => 'Main Fields',
-            'children' => [
-                'title'
-                'subtitle',
-                'genre',
-                [
-                    'type'  => 'group',
-                    'label' => 'Author',
-                    'label_for' => 'author_first_name',
-                    'columns' => [ 3, 2, 5 ],
-                    'children' => [
-                        'author_first_name',
-                        [
-                            'type' => 'label',
-                            'label' => 'Last Name',
-                            'label_for' => 'author_last_name',
-                        ],
-                        'author_last_name',
+<?php
+return [
+    // ...
+    
+    'form' => [
+        
+        'layout' => [
+            'tab-1' => [
+                'type'  => 'tab',
+                'label' => 'Main Fields',
+                'children' => [
+                    'title',
+                    'subtitle',
+                    'genre',
+                    [
+                        'type'  => 'group',
+                        'label' => 'Author',
+                        'label_for' => 'author_first_name',
+                        'columns' => [ 3, 2, 5 ],
+                        'children' => [
+                            'author_first_name',
+                            [
+                                'type' => 'label',
+                                'label' => 'Last Name',
+                                'label_for' => 'author_last_name',
+                            ],
+                            'author_last_name',
+                        ]
+                    ]
+                ]
+            ],
+            'tab-2' => [
+                'type'  => 'tab',
+                'label' => 'Extra Tab Pane',
+                'children' => [
+                    'category',
+                    'type',
+                    'fieldset-content' => [
+                        'type'  => 'fieldset',
+                        'label' => 'Content',
+                        'children' => [
+                            'introduction',
+                            'body',
+                            'footer',
+                            'summary',
+                        ]
                     ]
                 ]
             ]
         ],
-        'tab-2' => [
-            'type'  => 'tab',
-            'label' => 'Extra Tab Pane',
-            'children' => [
-                'category'
-                'type',
-                'fieldset-content' => [
-                    'type'  => 'fieldset',
-                    'label' => 'Content',
-                    'children' => [
-                        'introduction',
-                        'body',
-                        'footer',
-                        'summary',
-                    ]
-                ]
-            ]
+        
+        'fields' => [
+            // ...            
         ]
-    ]
+    ],
+    
+    // ...
+];
 ```
 
 ## Validation Rules
@@ -265,6 +300,10 @@ As long as the `update` section is left empty, create rules will be used in any 
 
 Example:
 ```php
+<?php
+return [
+    // ...
+    
     'form' => [
         // ...
         
@@ -276,6 +315,7 @@ Example:
             ]
         ]
     ]
+];
 ```
 
 It is possible to make different rules for the create and update forms, by defining rules for each section separately.\
@@ -285,17 +325,26 @@ In case only the `update` section rules are set, create rules are left default.
 Example:
 
 ```php
-    'validation' => [
+<?php
+return [
+    // ...
     
-        // Only require the 'name' field to be filled when creating.
-        'create' => [
-            'name' => 'required|string',
-        ],
+    'form' => [
+        // ...
         
-        'update' => [
-            'name' => 'string',
+        'validation' => [
+        
+            // Only require the 'name' field to be filled when creating.
+            'create' => [
+                'name' => 'required|string',
+            ],
+            
+            'update' => [
+                'name' => 'string',
+            ]
         ]
     ]
+];
 ```
 
 ### Overriding vs. Enriching Rules
@@ -308,19 +357,28 @@ If this is used, any key not present in the relevant rule section will *not* hav
 
 Example:
 ```php
-    'validation' => [
+<?php
+return [
+    // ...
     
-        // Put the update rule section in 'replace' mode. 
-        `update_replace` => true,
+    'form' => [
+        // ...
         
-        // Now the *only* validation rule for the update form 
-        // will be for the 'name' form field.
-        'update' => [
-            'name' => 'required|string',
+        'validation' => [
+        
+            // Put the update rule section in 'replace' mode. 
+            'update_replace' => true,
+            
+            // Now the *only* validation rule for the update form 
+            // will be for the 'name' form field.
+            'update' => [
+                'name' => 'required|string',
+            ]
+            
+            // The create rules are unaffected by this.
         ]
-        
-        // The create rules are unaffected by this.
     ]
+];
 ```
 
 Regardless of whether rules are replaced or enriched, any rule configured with a value of `false` or `null` will be disabled.
@@ -338,6 +396,8 @@ Example:
 
 ```php
 <?php
+return [
+    // ...
     
     'form' => [
         
@@ -351,4 +411,8 @@ Example:
         ],
     
         // ...
+    ],
+    
+    // ...
+];
 ```
