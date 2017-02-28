@@ -18,7 +18,8 @@ class ListDisplayStrategy extends Enum
 
     // Relations
 
-    const RELATION_COUNT      = 'relation-count';
-    const RELATION_REFERENCE  = 'relation-reference';
-    const RELATION_COUNT_LINK = 'relation-count-link';
+    const RELATION_COUNT          = 'relation-count';
+    const RELATION_REFERENCE      = 'relation-reference';
+    const RELATION_REFERENCE_LINK = 'relation-reference-link';
+    const RELATION_COUNT_LINK     = 'relation-count-link';
 }

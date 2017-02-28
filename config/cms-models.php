@@ -273,17 +273,18 @@ return [
 
             // Aliases for list display strategy classes
             'aliases' => [
-                Enums\ListDisplayStrategy::CHECK               => 'Check',
-                Enums\ListDisplayStrategy::CHECK_NULLABLE      => 'CheckNullable',
-                Enums\ListDisplayStrategy::DATE                => 'Date',
-                Enums\ListDisplayStrategy::TIME                => 'Time',
-                Enums\ListDisplayStrategy::DATETIME            => 'DateTime',
-                Enums\ListDisplayStrategy::STAPLER_THUMBNAIL   => 'StaplerImage',
-                Enums\ListDisplayStrategy::STAPLER_FILENAME    => 'StaplerFile',
-                Enums\ListDisplayStrategy::RELATION_COUNT      => 'RelationCount',
-                Enums\ListDisplayStrategy::RELATION_REFERENCE  => 'RelationReference',
-                Enums\ListDisplayStrategy::RELATION_COUNT_LINK => 'RelationCountChildrenLink',
-                Enums\ListDisplayStrategy::TAGS                => 'TagList',
+                Enums\ListDisplayStrategy::CHECK                   => 'Check',
+                Enums\ListDisplayStrategy::CHECK_NULLABLE          => 'CheckNullable',
+                Enums\ListDisplayStrategy::DATE                    => 'Date',
+                Enums\ListDisplayStrategy::TIME                    => 'Time',
+                Enums\ListDisplayStrategy::DATETIME                => 'DateTime',
+                Enums\ListDisplayStrategy::STAPLER_THUMBNAIL       => 'StaplerImage',
+                Enums\ListDisplayStrategy::STAPLER_FILENAME        => 'StaplerFile',
+                Enums\ListDisplayStrategy::RELATION_COUNT          => 'RelationCount',
+                Enums\ListDisplayStrategy::RELATION_REFERENCE      => 'RelationReference',
+                Enums\ListDisplayStrategy::RELATION_REFERENCE_LINK => 'RelationReferenceLink',
+                Enums\ListDisplayStrategy::RELATION_COUNT_LINK     => 'RelationCountChildrenLink',
+                Enums\ListDisplayStrategy::TAGS                    => 'TagList',
             ],
 
             // Aliases for sort strategy classes
