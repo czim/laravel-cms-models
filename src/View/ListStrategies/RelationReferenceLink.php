@@ -1,5 +1,4 @@
 <?php
-
 namespace Czim\CmsModels\View\ListStrategies;
 
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
@@ -7,22 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class RelationReferenceLink extends RelationReference
 {
+
     /**
      * @var RouteHelperInterface
      */
     protected $routeHelper;
 
     /**
-     * RelationEditLink constructor.
-     *
-     * @param RouteHelperInterface|null $routeHelper
+     * @param RouteHelperInterface $routeHelper
      */
-    public function __construct(RouteHelperInterface $routeHelper = null)
+    public function __construct(RouteHelperInterface $routeHelper)
     {
-        if (null === $routeHelper) {
-            $routeHelper = app(RouteHelperInterface::class);
-        }
-
         $this->routeHelper = $routeHelper;
     }
 
@@ -40,7 +34,7 @@ class RelationReferenceLink extends RelationReference
     }
 
     /**
-     * Wraps given reference string with hyperlink to given url
+     * Wraps given reference string with hyperlink to given url.
      *
      * @param string $reference
      * @param string $url
@@ -48,21 +42,18 @@ class RelationReferenceLink extends RelationReference
      */
     protected function wrapWithLink($reference, $url)
     {
-        return '<a href="' . $url . '">' . $this->wrapReference($reference) . '</a>';
+        return '<a href="' . e($url) . '">' . $this->wrapReference($reference) . '</a>';
     }
 
     /**
-     * Generates edit link for given model
+     * Returns action link for given model.
      *
      * @param Model $model
      * @return string
      */
     protected function getLinkForReferenceModel(Model $model)
     {
-        $routeName = $this->routeHelper->getRouteNameForModelClass(
-            get_class($model),
-            true
-        );
+        $routeName = $this->routeHelper->getRouteNameForModelClass(get_class($model), true);
 
         $action = $this->determineRouteAction($model);
 
@@ -70,27 +61,25 @@ class RelationReferenceLink extends RelationReference
     }
 
     /**
-     * Determines route action for given model. We will always try for the edit action, but if
-     * the permission check fails we will fall back to the show action.
+     * Returns route action for given model.
+     *
+     * The edit action is default, with a fallback to show if no permission is granted.
      *
      * @param Model $model
      * @return string
      */
     protected function determineRouteAction(Model $model)
     {
-        // Check the permissions to determine whether we're creating an
-        // edit link or a show link
-        $action = 'edit';
         $permissionPrefix = $this->routeHelper->getPermissionPrefixForModelSlug(
             $this->routeHelper->getRouteSlugForModelClass(get_class($model))
         );
 
         // Change the action to show if we don't have edit permissions
-        if ( ! cms_auth()->can($permissionPrefix . $action)) {
-            $action = 'show';
+        if ( ! cms_auth()->can($permissionPrefix . 'edit')) {
+            return 'show';
         }
 
-        return $action;
+        return 'edit';
     }
 
 }
