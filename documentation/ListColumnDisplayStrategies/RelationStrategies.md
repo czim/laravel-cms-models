@@ -22,3 +22,11 @@ The reference is drawn according to the configured [model reference strategy](..
 Not usable for plural relationship methods.
 
 The source should be a relationship method name.
+
+## RelationReferenceLink
+
+This displays a reference for the model related through a singular relationship, as a link to the edit or show page (depending on user permissions).  
+
+Not usable for plural relationship methods.
+
+The source should be a relationship method name.
