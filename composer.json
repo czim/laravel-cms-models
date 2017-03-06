@@ -16,12 +16,10 @@
         "phpdocumentor/reflection-docblock": "^3.1"
     },
     "require-dev": {
-        "czim/laravel-cms-core": "dev-laravel-5.4",
         "phpunit/phpunit": "~5.7",
         "mockery/mockery": "0.9.*",
         "scrutinizer/ocular": "~1.1",
         "orchestra/testbench": "~3.4",
-        "orchestra/database": "~3.4",
         "dimsav/laravel-translatable": "^5.6",
         "czim/laravel-listify": "^1.0",
         "codesleeve/laravel-stapler": "^1.0",
