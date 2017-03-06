@@ -511,11 +511,15 @@ class ModelAnalyzer
 
             } elseif ($type == RelationType::BELONGS_TO_MANY) {
                 /** @var BelongsToMany $relation */
-                $foreignKeys = [$relation->getForeignKey(), $relation->getOtherKey()];
+                $foreignKeys = [ $relation->getQualifiedForeignKeyName(), $relation->getQualifiedRelatedKeyName() ];
 
             } elseif ($type == RelationType::MORPH_TO_MANY) {
                 /** @var MorphToMany $relation */
-                $foreignKeys = [ $relation->getForeignKey(), $relation->getMorphType(), $relation->getOtherKey() ];
+                $foreignKeys = [
+                    $relation->getQualifiedForeignKeyName(),
+                    $relation->getMorphType(),
+                    $relation->getQualifiedRelatedKeyName()
+                ];
 
                 // The relation is inverse if the MorphClass is not this model
                 if (get_class($this->model) !== $relation->getMorphClass()) {

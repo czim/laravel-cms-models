@@ -105,7 +105,7 @@ class ModelListMemory implements ModelListMemoryInterface
             return $this->clearFilters();
         }
 
-        session()->set($this->getSessionKey(static::TYPE_FILTERS), $filters);
+        session()->put($this->getSessionKey(static::TYPE_FILTERS), $filters);
 
         return $this;
     }
@@ -155,7 +155,7 @@ class ModelListMemory implements ModelListMemoryInterface
             return $this->clearSortData();
         }
 
-        session()->set($this->getSessionKey(static::TYPE_SORT), [
+        session()->put($this->getSessionKey(static::TYPE_SORT), [
             'column'    => $column,
             'direction' => $direction,
         ]);
@@ -207,7 +207,7 @@ class ModelListMemory implements ModelListMemoryInterface
             return $this->clearPage();
         }
 
-        session()->set($this->getSessionKey(static::TYPE_PAGE), $page);
+        session()->put($this->getSessionKey(static::TYPE_PAGE), $page);
 
         return $this;
     }
@@ -256,7 +256,7 @@ class ModelListMemory implements ModelListMemoryInterface
             return $this->clearPageSize();
         }
 
-        session()->set($this->getSessionKey(static::TYPE_PAGESIZE), $size);
+        session()->put($this->getSessionKey(static::TYPE_PAGESIZE), $size);
 
         return $this;
     }
@@ -305,7 +305,7 @@ class ModelListMemory implements ModelListMemoryInterface
             return $this->clearScope();
         }
 
-        session()->set($this->getSessionKey(static::TYPE_SCOPE), $scope);
+        session()->put($this->getSessionKey(static::TYPE_SCOPE), $scope);
 
         return $this;
     }
@@ -368,9 +368,9 @@ class ModelListMemory implements ModelListMemoryInterface
         }
 
         if (false === $relation) {
-            session()->set($this->getSessionKey(static::TYPE_PARENT), static::PARENT_DISABLE);
+            session()->put($this->getSessionKey(static::TYPE_PARENT), static::PARENT_DISABLE);
         } else {
-            session()->set($this->getSessionKey(static::TYPE_PARENT), $relation . ':' . $recordKey);
+            session()->put($this->getSessionKey(static::TYPE_PARENT), $relation . ':' . $recordKey);
         }
 
         return $this;
