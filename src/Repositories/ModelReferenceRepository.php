@@ -7,6 +7,7 @@ use Czim\CmsModels\Contracts\Repositories\ModelReferenceRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
 use Czim\CmsModels\Contracts\Strategies\SortStrategyInterface;
 use Czim\CmsModels\Contracts\Support\Factories\FilterStrategyFactoryInterface;
+use Czim\CmsModels\Contracts\Support\Factories\ModelRepositoryFactoryInterface;
 use Czim\CmsModels\Http\Controllers\Traits\AppliesRepositoryContext;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Contracts\Data\Strategies\ModelMetaReferenceInterface;
@@ -334,7 +335,10 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
      */
     protected function getModelRepositoryForInformation(ModelInformationInterface $information)
     {
-        $modelRepository = app(ModelRepositoryInterface::class, [ $information->modelClass() ]);
+        /** @var ModelRepositoryFactoryInterface $factory */
+        $factory = app(ModelRepositoryFactoryInterface::class);
+
+        $modelRepository = $factory->make($information->modelClass());
 
         $this->applyRepositoryContext($modelRepository, $information);
 
