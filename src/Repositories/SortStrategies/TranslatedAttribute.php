@@ -5,6 +5,7 @@ use DB;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\JoinClause;
 use RuntimeException;
 
 /**
@@ -58,6 +59,7 @@ class TranslatedAttribute extends AbstractSortStrategy
                 "{$translationTable}.{$column}",
             ])
             ->where(function ($query) use ($locale, $localeKey) {
+                /** @var \Illuminate\Database\Query\Builder $query */
 
                 // Check if we need to work with a fallback locale
                 $fallback = $this->getFallbackLocale();
@@ -86,6 +88,7 @@ class TranslatedAttribute extends AbstractSortStrategy
                     $modelTable,
                     $modelKey
                 ) {
+                    /** @var JoinClause $join */
                     $join->on("{$subQueryAlias}.{$keyAlias}", '=', "{$modelTable}.{$modelKey}");
                 }
             )
@@ -93,7 +96,9 @@ class TranslatedAttribute extends AbstractSortStrategy
 
         /** @var Builder $query */
         if ($this->nullLast && $supportsIf) {
-            $query->orderBy(DB::raw("IF(`{$subQueryAlias}`.`{$column}` IS NULL OR `{$subQueryAlias}`.`{$column}` = '',1,0)"));
+            $query->orderBy(
+                DB::raw("IF(`{$subQueryAlias}`.`{$column}` IS NULL OR `{$subQueryAlias}`.`{$column}` = '',1,0)")
+            );
         }
 
         $query->orderBy("{$subQueryAlias}.{$column}", $direction);
