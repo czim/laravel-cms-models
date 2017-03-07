@@ -6,6 +6,7 @@ use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
+use Czim\CmsModels\Contracts\Support\Factories\ModelRepositoryFactoryInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Http\Controllers\Traits\AppliesRepositoryContext;
 use Czim\CmsModels\Support\ModuleHelper;
@@ -92,9 +93,10 @@ abstract class BaseModelController extends Controller
      */
     protected function initializeModelRepository()
     {
-        $this->modelRepository = app(ModelRepositoryInterface::class, [
-            $this->modelInformation->modelClass()
-        ]);
+        /** @var ModelRepositoryFactoryInterface $factory */
+        $factory = app(ModelRepositoryFactoryInterface::class);
+
+        $this->modelRepository = $factory->make($this->modelInformation->modelClass());
 
         $this->applyRepositoryContext();
 
