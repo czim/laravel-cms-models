@@ -41,7 +41,7 @@ class TranslatedAttribute extends AbstractSortStrategy
         $translationRelation = $this->getTranslationsRelation($query);
 
         $translationTable   = $translationRelation->getRelated()->getTable();
-        $translationForeign = $translationRelation->getForeignKey();
+        $translationForeign = $translationRelation->getQualifiedForeignKeyName();
 
         $locale    = app()->getLocale();
         $localeKey = $this->getLocaleKey();
