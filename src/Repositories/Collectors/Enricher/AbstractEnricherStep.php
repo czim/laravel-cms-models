@@ -16,7 +16,7 @@ abstract class AbstractEnricherStep implements EnricherStepInterface
     /**
      * Parent enricher for this step.
      *
-     * @var ModelInformationEnricherInterface
+     * @var null|ModelInformationEnricherInterface
      */
     protected $enricher;
 
@@ -38,11 +38,19 @@ abstract class AbstractEnricherStep implements EnricherStepInterface
     protected $model;
 
     /**
+     * Sets parent enricher model.
+     *
+     * This cannot be part of the constructor since Laravel 5.4's removal
+     * of container make parameters.
+     *
      * @param ModelInformationEnricherInterface $enricher
+     * @return $this
      */
-    public function __construct(ModelInformationEnricherInterface $enricher)
+    public function setEnricher(ModelInformationEnricherInterface $enricher)
     {
         $this->enricher = $enricher;
+
+        return $this;
     }
 
     /**
