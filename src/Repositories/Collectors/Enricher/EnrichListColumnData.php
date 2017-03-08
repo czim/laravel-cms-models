@@ -5,7 +5,6 @@ use Czim\CmsModels\Analyzer\AttributeStrategyResolver;
 use Czim\CmsModels\Analyzer\RelationStrategyResolver;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Data\ModelListColumnDataInterface;
-use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
 use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
@@ -28,17 +27,13 @@ class EnrichListColumnData extends AbstractEnricherStep
     protected $relationStrategyResolver;
 
     /**
-     * @param ModelInformationEnricherInterface $enricher
      * @param AttributeStrategyResolver         $attributeStrategyResolver
      * @param RelationStrategyResolver          $relationStrategyResolver
      */
     public function __construct(
-        ModelInformationEnricherInterface $enricher,
         AttributeStrategyResolver $attributeStrategyResolver,
         RelationStrategyResolver $relationStrategyResolver
     ) {
-        parent::__construct($enricher);
-
         $this->attributeStrategyResolver = $attributeStrategyResolver;
         $this->relationStrategyResolver  = $relationStrategyResolver;
     }

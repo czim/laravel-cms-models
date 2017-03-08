@@ -19,4 +19,12 @@ interface EnricherStepInterface
      */
     public function enrich(ModelInformationInterface $info, $allInformation = null);
 
+    /**
+     * Sets parent enricher model.
+     *
+     * @param ModelInformationEnricherInterface $enricher
+     * @return $this
+     */
+    public function setEnricher(ModelInformationEnricherInterface $enricher);
+
 }
