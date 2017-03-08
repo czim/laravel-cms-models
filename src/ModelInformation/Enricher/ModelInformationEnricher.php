@@ -97,9 +97,9 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
         try {
             foreach ($this->steps as $step) {
                 /** @var EnricherStepInterface $instance */
-                $instance = app($step, [ $this ]);
+                $instance = app($step);
 
-                $this->info = $instance->enrich($this->info);
+                $this->info = $instance->setEnricher($this)->enrich($this->info);
             }
 
         } catch (Exception $e) {
