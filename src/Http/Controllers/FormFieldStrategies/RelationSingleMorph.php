@@ -89,7 +89,7 @@ class RelationSingleMorph extends AbstractRelationStrategy
      */
     protected function getModelClassFromValue($value)
     {
-        if (null === $value) return null;
+        if (empty($value)) return null;
 
         $parts = explode(static::CLASS_AND_KEY_SEPARATOR, $value, 2);
 
@@ -104,7 +104,7 @@ class RelationSingleMorph extends AbstractRelationStrategy
      */
     protected function getModelKeyFromValue($value)
     {
-        if (null === $value) return null;
+        if (empty($value)) return null;
 
         $parts = explode(static::CLASS_AND_KEY_SEPARATOR, $value, 2);
 
@@ -132,7 +132,6 @@ class RelationSingleMorph extends AbstractRelationStrategy
         if ( ! $this->model->{$typeName} || ! $this->model->{$keyName}) {
             return null;
         }
-
 
         $query = $this->prepareRelationQuery($query);
 
