@@ -36,6 +36,7 @@
     <script>
         $(function() {
             $('#field-{{ $key }}').select2({
+                width              : '100%',
                 tags               : true,
                 placeholder        : '--',
                 data               : {!! json_encode($tagData) !!},
