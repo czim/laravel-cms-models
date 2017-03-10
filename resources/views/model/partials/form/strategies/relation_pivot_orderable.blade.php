@@ -69,6 +69,7 @@
                 currentRows = $('#field-{{ $key }}__current__');
 
             addSelect.select2({
+                width       : '100%',
                 placeholder : '--',
                 allowClear  : {{ $required ? 'false' : 'true' }},
                 ajax        : {
