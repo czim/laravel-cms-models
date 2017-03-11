@@ -23,7 +23,7 @@ abstract class AbstractSeededTestCase extends TestCase
         ]);
 
         TestAuthor::create([
-            'name' => 'Tosti Von Testering',
+            'name' => 'Tosti Tortellini Von Testering',
         ]);
 
         return $this;
@@ -50,7 +50,7 @@ abstract class AbstractSeededTestCase extends TestCase
 
         $post = new TestPost([
             'title' => 'Elaborate Alternative Title',
-            'body'  => 'Donec nec metus urna. Pancake frying pan Fusce ex massa, commodo ut rhoncus eu, iaculis sed quam. Nam eget magna quis arcu consectetur pellentesque. In dapibus massa vel enim pharetra, tristique malesuada dolor eleifend. Suspendisse eu nisl in sem vulputate aliquam. In eleifend leo eget neque mattis, vitae auctor odio consectetur. Donec metus enim, pellentesque semper scelerisque sit amet, maximus congue neque. Proin lobortis magna pretium egestas lacinia. Suspendisse consequat quis libero vitae tempor. Pellentesque ut semper orci, vitae condimentum lorem. Praesent in mollis nunc, vitae imperdiet nibh. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            'body'  => 'Donec nec metus urna. Tosti pancake frying pan tortellini Fusce ex massa, commodo ut rhoncus eu, iaculis sed quam. Nam eget magna quis arcu consectetur pellentesque. In dapibus massa vel enim pharetra, tristique malesuada dolor eleifend. Suspendisse eu nisl in sem vulputate aliquam. In eleifend leo eget neque mattis, vitae auctor odio consectetur. Donec metus enim, pellentesque semper scelerisque sit amet, maximus congue neque. Proin lobortis magna pretium egestas lacinia. Suspendisse consequat quis libero vitae tempor. Pellentesque ut semper orci, vitae condimentum lorem. Praesent in mollis nunc, vitae imperdiet nibh. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
             'type' => 'news',
             'checked' => false,
             'description' => 'some alternative testing post',

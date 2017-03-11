@@ -21,18 +21,18 @@ class BasicStringTest extends AbstractFilterStrategyTestCase
 
         $strategy->apply($query, 'description', 'best');
 
-        $this->assertEquals(1, $query->count());
-        $this->assertEquals(1, $query->first()->id);
+        static::assertEquals(1, $query->count());
+        static::assertEquals(1, $query->first()['id']);
 
         // Make sure we get no hits when we shouldn't
         $query = $this->getPostQuery();
         $strategy->apply($query, 'description', 'doesnotmatchanythingatall');
-        $this->assertEquals(0, $query->count());
+        static::assertEquals(0, $query->count());
 
         // Make sure we get all hits when we should
         $query = $this->getPostQuery();
         $strategy->apply($query, 'description', 'e');
-        $this->assertEquals(3, $query->count());
+        static::assertEquals(3, $query->count());
     }
 
     /**
@@ -45,13 +45,13 @@ class BasicStringTest extends AbstractFilterStrategyTestCase
 
         $strategy->apply($query, 'title', 'basic');
 
-        $this->assertEquals(1, $query->count());
-        $this->assertEquals(1, $query->first()->id);
+        static::assertEquals(1, $query->count());
+        static::assertEquals(1, $query->first()['id']);
 
         // Make sure we get all hits when we should
         $query = $this->getPostQuery();
         $strategy->apply($query, 'title', 'title');
-        $this->assertEquals(3, $query->count());
+        static::assertEquals(3, $query->count());
     }
 
     /**
@@ -66,20 +66,20 @@ class BasicStringTest extends AbstractFilterStrategyTestCase
 
         $strategy->apply($query, 'title', 'nederland');
 
-        $this->assertEquals(1, $query->count());
-        $this->assertEquals(1, $query->first()->id);
+        static::assertEquals(1, $query->count());
+        static::assertEquals(1, $query->first()['id']);
 
         // For translated attribute on related model
         $query = $this->getPostQuery();
         $strategy->apply($query, 'comments.title', 'nederland');
 
-        $this->assertEquals(1, $query->count());
-        $this->assertEquals(1, $query->first()->id);
+        static::assertEquals(1, $query->count());
+        static::assertEquals(1, $query->first()['id']);
 
         // Make sure we get no hits for a non-matching term
         $query = $this->getPostQuery();
         $strategy->apply($query, 'title', 'doesnotexistatall');
-        $this->assertEquals(0, $query->count());
+        static::assertEquals(0, $query->count());
     }
 
     /**
@@ -94,15 +94,15 @@ class BasicStringTest extends AbstractFilterStrategyTestCase
 
         $strategy->apply($query, 'title', 'some basic title');
 
-        $this->assertEquals(1, $query->count());
-        $this->assertEquals(1, $query->first()->id);
+        static::assertEquals(1, $query->count());
+        static::assertEquals(1, $query->first()['id']);
 
         // For translated attribute on related model
         $query = $this->getPostQuery();
         $strategy->apply($query, 'comments.title', 'Comment Title A');
 
-        $this->assertEquals(1, $query->count());
-        $this->assertEquals(1, $query->first()->id);
+        static::assertEquals(1, $query->count());
+        static::assertEquals(1, $query->first()['id']);
     }
 
 
@@ -116,13 +116,13 @@ class BasicStringTest extends AbstractFilterStrategyTestCase
 
         $strategy->apply($query, 'author.name', 'tosti');
 
-        $this->assertEquals(1, $query->count());
-        $this->assertEquals(3, $query->first()->id);
+        static::assertEquals(1, $query->count());
+        static::assertEquals(3, $query->first()['id']);
 
         // Make sure we get no hits on a nonexisting value
         $query = $this->getPostQuery();
         $strategy->apply($query, 'author.name', 'doesnotexistatall');
-        $this->assertEquals(0, $query->count());
+        static::assertEquals(0, $query->count());
     }
 
     /**
@@ -135,13 +135,13 @@ class BasicStringTest extends AbstractFilterStrategyTestCase
 
         $strategy->apply($query, 'comments.description', 'comment one');
 
-        $this->assertEquals(1, $query->count());
-        $this->assertEquals(1, $query->first()->id);
+        static::assertEquals(1, $query->count());
+        static::assertEquals(1, $query->first()['id']);
 
         // Make sure we get no hits on a nonexisting value
         $query = $this->getPostQuery();
         $strategy->apply($query, 'comments.description', 'doesnotexistatall');
-        $this->assertEquals(0, $query->count());
+        static::assertEquals(0, $query->count());
     }
 
     /**
@@ -154,13 +154,13 @@ class BasicStringTest extends AbstractFilterStrategyTestCase
 
         $strategy->apply($query, 'comments.title', 'title b');
 
-        $this->assertEquals(1, $query->count());
-        $this->assertEquals(2, $query->first()->id);
+        static::assertEquals(1, $query->count());
+        static::assertEquals(2, $query->first()['id']);
 
         // Make sure we get no hits on a nonexisting value
         $query = $this->getPostQuery();
         $strategy->apply($query, 'comments.title', 'doesnotexistatall');
-        $this->assertEquals(0, $query->count());
+        static::assertEquals(0, $query->count());
     }
 
 
@@ -178,19 +178,19 @@ class BasicStringTest extends AbstractFilterStrategyTestCase
         // Check for title
         $query = $this->getPostQuery();
         $strategy->apply($query, '*', 'title');
-        $this->assertEquals(3, $query->count());
+        static::assertEquals(3, $query->count());
 
         // Check for body
         $query = $this->getPostQuery();
         $strategy->apply($query, '*', 'pancake');
-        $this->assertEquals(2, $query->count());
-        $this->assertEquals([2, 3], $query->pluck('id')->toArray());
+        static::assertEquals(2, $query->count());
+        static::assertEquals([2, 3], $query->pluck('id')->toArray());
 
         // Check for description
         $query = $this->getPostQuery();
         $strategy->apply($query, '*', 'alternative');
-        $this->assertEquals(1, $query->count());
-        $this->assertEquals(2, $query->first()->id);
+        static::assertEquals(1, $query->count());
+        static::assertEquals(2, $query->first()['id']);
     }
 
     /**
@@ -202,17 +202,17 @@ class BasicStringTest extends AbstractFilterStrategyTestCase
 
         $query = $this->getPostQuery();
         $strategy->apply($query, 'description,title', 'title');
-        $this->assertEquals(3, $query->count());
+        static::assertEquals(3, $query->count());
 
         $query = $this->getPostQuery();
         $strategy->apply($query, 'body,description', 'testing');
-        $this->assertEquals(2, $query->count());
-        $this->assertEquals([1, 2], $query->pluck('id')->toArray());
+        static::assertEquals(2, $query->count());
+        static::assertEquals([1, 2], $query->pluck('id')->toArray());
 
         $query = $this->getPostQuery();
         $strategy->apply($query, 'body,author.name,description', 'tosti');
-        $this->assertEquals(1, $query->count());
-        $this->assertEquals(3, $query->first()->id);
+        static::assertEquals(2, $query->count());
+        static::assertEquals([2, 3], $query->pluck('id')->toArray());
     }
 
 
@@ -250,7 +250,7 @@ class BasicStringTest extends AbstractFilterStrategyTestCase
         $mock = $this->getMockBuilder(ModelInformationRepositoryInterface::class)->getMock();
 
         $mock->method('getByModel')
-            ->with($this->isInstanceOf(TestPost::class))
+            ->with(static::isInstanceOf(TestPost::class))
             ->willReturn(
                 new ModelInformation([
                     'attributes' => [

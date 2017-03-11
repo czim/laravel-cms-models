@@ -18,18 +18,18 @@ class BasicSplitStringTest extends AbstractFilterStrategyTestCase
 
         $strategy->apply($query, 'description', 'possible best');
 
-        $this->assertEquals(1, $query->count());
-        $this->assertEquals(1, $query->first()->id);
+        static::assertEquals(1, $query->count());
+        static::assertEquals(1, $query->first()['id']);
 
         // Make sure we get no hits when we shouldn't
         $query = $this->getPostQuery();
         $strategy->apply($query, 'description', 'doesnotmatchanythingatall andthisdoesnteither');
-        $this->assertEquals(0, $query->count());
+        static::assertEquals(0, $query->count());
 
         // Make sure we get all hits when we should
         $query = $this->getPostQuery();
         $strategy->apply($query, 'description', 'e testing');
-        $this->assertEquals(3, $query->count());
+        static::assertEquals(2, $query->count());
     }
     
     /**
@@ -42,13 +42,13 @@ class BasicSplitStringTest extends AbstractFilterStrategyTestCase
 
         $strategy->apply($query, 'title', 'alternative elaborate');
 
-        $this->assertEquals(1, $query->count());
-        $this->assertEquals(2, $query->first()->id);
+        static::assertEquals(1, $query->count());
+        static::assertEquals(2, $query->first()['id']);
 
         // Make sure we get all hits when we should
         $query = $this->getPostQuery();
         $strategy->apply($query, 'title', 'title e');
-        $this->assertEquals(3, $query->count());
+        static::assertEquals(3, $query->count());
     }
 
     /**
@@ -59,18 +59,18 @@ class BasicSplitStringTest extends AbstractFilterStrategyTestCase
         $strategy = $this->makeFilterStrategy();
 
         $query = $this->getPostQuery();
-        $strategy->apply($query, 'description,title', 'hopscotch title');
-        $this->assertEquals(3, $query->count());
+        $strategy->apply($query, 'description,title', 'hopscotch title testing');
+        static::assertEquals(0, $query->count());
 
         $query = $this->getPostQuery();
-        $strategy->apply($query, 'body,description', 'testing party-tent');
-        $this->assertEquals(2, $query->count());
-        $this->assertEquals([1, 2], $query->pluck('id')->toArray());
+        $strategy->apply($query, 'body,description', 'testing post');
+        static::assertEquals(2, $query->count());
+        static::assertEquals([1, 2], $query->pluck('id')->toArray());
 
         $query = $this->getPostQuery();
         $strategy->apply($query, 'body,author.name,description', 'tortellini tosti');
-        $this->assertEquals(1, $query->count());
-        $this->assertEquals(3, $query->first()->id);
+        static::assertEquals(2, $query->count());
+        static::assertEquals([2, 3], $query->pluck('id')->toArray());
     }
 
 
