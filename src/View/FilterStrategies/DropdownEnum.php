@@ -36,17 +36,19 @@ class DropdownEnum extends AbstractFilterStrategy
      * @param string    $target
      * @param mixed     $value
      * @param null|bool $combineOr    overrides global value if non-null
+     * @param bool      $isFirst      whether this is the first expression (between brackets)
      * @return mixed
      */
-    protected function applyValue($query, $target, $value, $combineOr = null)
+    protected function applyValue($query, $target, $value, $combineOr = null, $isFirst = false)
     {
-        $combineOr = $combineOr === null ? $this->combineOr : $combineOr;
+        $combineOr = ! $isFirst && ($combineOr === null ? $this->combineOr : $combineOr);
+        $combine   = $combineOr ? 'or' : 'and';
 
         if (is_array($value)) {
-            return $query->whereIn($target, $value, $combineOr ? 'or' : 'and');
+            return $query->whereIn($target, $value, $combine);
         }
 
-        return $query->where($target, '=', $value, $combineOr ? 'or' : 'and');
+        return $query->where($target, '=', $value, $combine);
     }
 
 

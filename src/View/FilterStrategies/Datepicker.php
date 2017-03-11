@@ -33,13 +33,14 @@ class Datepicker extends AbstractFilterStrategy
     /**
      * Applies a value directly to a builder object.
      *
-     * @param Builder $query
-     * @param string  $target
-     * @param mixed   $value
+     * @param Builder   $query
+     * @param string    $target
+     * @param mixed     $value
      * @param null|bool $combineOr    overrides global value if non-null
+     * @param bool      $isFirst      whether this is the first expression (between brackets)
      * @return mixed
      */
-    protected function applyValue($query, $target, $value, $combineOr = null)
+    protected function applyValue($query, $target, $value, $combineOr = null, $isFirst = false)
     {
         // Normalize the value according to the expected format
         // If the column is not date-only, do a between start/end time for the date set

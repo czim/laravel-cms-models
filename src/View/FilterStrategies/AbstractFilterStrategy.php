@@ -89,7 +89,7 @@ abstract class AbstractFilterStrategy implements FilterStrategyInterface
         // If there is only a single target, do not group the condition.
         if (count($targets) == 1) {
 
-            $this->applyForSingleTarget($query, head($targets), $value);
+            $this->applyForSingleTarget($query, head($targets), $value, true);
 
             return;
         }
@@ -101,9 +101,9 @@ abstract class AbstractFilterStrategy implements FilterStrategyInterface
 
             $this->combineOr = true;
 
-            foreach ($targets as $singleTarget) {
+            foreach ($targets as $index => $singleTarget) {
 
-                $this->applyForSingleTarget($query, $singleTarget, $value);
+                $this->applyForSingleTarget($query, $singleTarget, $value, $index < 1);
             }
         });
     }
@@ -114,12 +114,13 @@ abstract class AbstractFilterStrategy implements FilterStrategyInterface
      * @param Builder $query
      * @param array   $targetParts
      * @param mixed   $value
+     * @param bool    $isFirst      whether this is the first expression (between brackets)
      */
-    protected function applyForSingleTarget($query, array $targetParts, $value)
+    protected function applyForSingleTarget($query, array $targetParts, $value, $isFirst = false)
     {
         $this->translated = $this->isTranslatedTargetAttribute($targetParts, $query->getModel());
 
-        $this->applyRecursive($query, $targetParts, $value);
+        $this->applyRecursive($query, $targetParts, $value, $isFirst);
     }
 
     /**
@@ -155,27 +156,28 @@ abstract class AbstractFilterStrategy implements FilterStrategyInterface
      * @param Builder  $query
      * @param string[] $targetParts
      * @param mixed    $value
+     * @param bool     $isFirst      whether this is the first expression (between brackets)
      * @return mixed
      */
-    protected function applyRecursive($query, array $targetParts, $value)
+    protected function applyRecursive($query, array $targetParts, $value, $isFirst = false)
     {
         if (count($targetParts) < 2) {
 
             if ($this->translated) {
-                return $this->applyTranslatedValue($query, head($targetParts), $value);
+                return $this->applyTranslatedValue($query, head($targetParts), $value, $isFirst);
             }
 
-            return $this->applyValue($query, head($targetParts), $value);
+            return $this->applyValue($query, head($targetParts), $value, null, $isFirst);
         }
 
         $relation = array_shift($targetParts);
 
-        $whereHasMethod = $this->combineOr ? 'orWhereHas' : 'whereHas';
+        $whereHasMethod = ! $isFirst && $this->combineOr ? 'orWhereHas' : 'whereHas';
 
         return $query->{$whereHasMethod}(
             $relation,
             function ($query) use ($targetParts, $value) {
-                return $this->applyRecursive($query, $targetParts, $value);
+                return $this->applyRecursive($query, $targetParts, $value, true);
             }
         );
     }
@@ -187,9 +189,10 @@ abstract class AbstractFilterStrategy implements FilterStrategyInterface
      * @param string    $target
      * @param mixed     $value
      * @param null|bool $combineOr    overrides global value if non-null
+     * @param bool      $isFirst      whether this is the first expression (between brackets)
      * @return mixed
      */
-    abstract protected function applyValue($query, $target, $value, $combineOr = null);
+    abstract protected function applyValue($query, $target, $value, $combineOr = null, $isFirst = false);
 
     /**
      * Applies a value directly to a builder object.
@@ -197,17 +200,18 @@ abstract class AbstractFilterStrategy implements FilterStrategyInterface
      * @param Builder $query
      * @param string  $target
      * @param mixed   $value
+     * @param bool    $isFirst      whether this is the first expression (between brackets)
      * @return mixed
      */
-    protected function applyTranslatedValue($query, $target, $value)
+    protected function applyTranslatedValue($query, $target, $value, $isFirst = false)
     {
-        $whereHasMethod = $this->combineOr ? 'orWhereHas' : 'whereHas';
+        $whereHasMethod = ! $isFirst && $this->combineOr ? 'orWhereHas' : 'whereHas';
 
         return $query->{$whereHasMethod}('translations', function ($query) use ($target, $value) {
 
             $this->applyLocaleRestriction($query);
 
-            return $this->applyValue($query, $target, $value, false);
+            return $this->applyValue($query, $target, $value, false, true);
         });
     }
 

@@ -53,19 +53,20 @@ class BasicString extends AbstractFilterStrategy
     /**
      * Applies a value directly to a builder object.
      *
-     * @param Builder $query
-     * @param string  $target
-     * @param mixed   $value
+     * @param Builder   $query
+     * @param string    $target
+     * @param mixed     $value
      * @param null|bool $combineOr    overrides global value if non-null
+     * @param bool      $isFirst      whether this is the first expression (between brackets)
      * @return mixed
      */
-    protected function applyValue($query, $target, $value, $combineOr = null)
+    protected function applyValue($query, $target, $value, $combineOr = null, $isFirst = false)
     {
         // If we're splitting terms, the terms will first be split by whitespace
         // otherwise the whole search value will treated at a single string.
         // Array values will always be treated as split string search terms.
 
-        $combineOr = $combineOr === null ? $this->combineOr : $combineOr;
+        $combineOr = ! $isFirst && ($combineOr === null ? $this->combineOr : $combineOr);
 
         if ( ! $this->splitTerms && ! is_array($value)) {
             return $this->applyTerm($query, $target, $value, $combineOr);
@@ -75,12 +76,12 @@ class BasicString extends AbstractFilterStrategy
             $value = $this->splitTerms($value);
         }
 
-        $whereMethod = $combineOr ? 'orWhere' : 'where';
+        $whereMethod = ! $isFirst && $combineOr ? 'orWhere' : 'where';
 
         $query->{$whereMethod}(function ($query) use ($value, $target) {
 
-            foreach ($value as $term) {
-                $this->applyTerm($query, $target, $term);
+            foreach ($value as $index => $term) {
+                $this->applyTerm($query, $target, $term, $index < 1);
             }
 
         });
@@ -106,11 +107,12 @@ class BasicString extends AbstractFilterStrategy
      * @param string    $target
      * @param mixed     $value
      * @param null|bool $combineOr
+     * @param bool      $isFirst      whether this is the first expression (between brackets)
      * @return mixed
      */
-    protected function applyTerm($query, $target, $value, $combineOr = null)
+    protected function applyTerm($query, $target, $value, $combineOr = null, $isFirst = false)
     {
-        $combineOr = $combineOr === null ? $this->combineSplitTermsOr : $combineOr;
+        $combineOr = ! $isFirst && ($combineOr === null ? $this->combineSplitTermsOr : $combineOr);
         $combine   = $combineOr ? 'or' : 'and';
 
         if (is_array($value)) {
