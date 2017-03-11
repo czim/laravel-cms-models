@@ -4,6 +4,7 @@ namespace Czim\CmsModels\Support\Strategies\Traits;
 use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
+use Czim\CmsModels\Exceptions\StrategyResolutionException;
 use Czim\CmsModels\Support\Data\ModelFormFieldData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 
@@ -61,6 +62,7 @@ trait ResolvesFormStoreStrategies
      *
      * @param string $strategy
      * @return string           returns full class namespace if it was resolved succesfully
+     * @throws StrategyResolutionException
      */
     protected function resolveFormFieldStoreStrategyClass($strategy)
     {
@@ -76,6 +78,10 @@ trait ResolvesFormStoreStrategies
 
         if (class_exists($strategy) && is_a($strategy, FormFieldStoreStrategyInterface::class, true)) {
             return $strategy;
+        }
+
+        if ($strategy) {
+            throw new StrategyResolutionException("Could not find form store class for strategy '{$strategy}'");
         }
 
         return config('cms-models.strategies.form.default-store-strategy');

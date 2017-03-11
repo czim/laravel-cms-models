@@ -1,6 +1,7 @@
 <?php
 namespace Czim\CmsModels\Support\Strategies\Traits;
 
+use Czim\CmsModels\Exceptions\StrategyResolutionException;
 use Czim\CmsModels\Support\Data\Strategies\InstantiableClassStrategy;
 use Illuminate\Database\Eloquent\Model;
 use RuntimeException;
@@ -43,6 +44,7 @@ trait ResolvesSourceStrategies
      * @param string $strategy
      * @param object $class     the object the method would be called on
      * @return false|string
+     * @throws StrategyResolutionException
      */
     protected function parseAsModelMethodStrategyString($strategy, $class)
     {
@@ -53,7 +55,7 @@ trait ResolvesSourceStrategies
         $method = substr($strategy, 1);
 
         if ( ! method_exists($class, $method)) {
-            throw new RuntimeException(
+            throw new StrategyResolutionException(
                 "Could not find strategy defined method '{$method}' on object '" . get_class($class) . "'"
             );
         }
