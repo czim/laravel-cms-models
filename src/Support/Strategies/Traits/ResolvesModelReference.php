@@ -171,18 +171,21 @@ trait ResolvesModelReference
      */
     protected function resolveReferenceStrategyClass($strategy)
     {
-        if ( ! str_contains($strategy, '.')) {
-            $strategy = config('cms-models.strategies.reference.aliases.' . $strategy, $strategy);
-        }
+        if ( ! empty($strategy)) {
 
-        if (class_exists($strategy) && is_a($strategy, ReferenceStrategyInterface::class, true)) {
-            return $strategy;
-        }
+            if ( ! str_contains($strategy, '.')) {
+                $strategy = config('cms-models.strategies.reference.aliases.' . $strategy, $strategy);
+            }
 
-        $strategy = $this->prefixReferenceStrategyNamespace($strategy);
+            if (class_exists($strategy) && is_a($strategy, ReferenceStrategyInterface::class, true)) {
+                return $strategy;
+            }
 
-        if (class_exists($strategy) && is_a($strategy, ReferenceStrategyInterface::class, true)) {
-            return $strategy;
+            $strategy = $this->prefixReferenceStrategyNamespace($strategy);
+
+            if (class_exists($strategy) && is_a($strategy, ReferenceStrategyInterface::class, true)) {
+                return $strategy;
+            }
         }
 
         return false;

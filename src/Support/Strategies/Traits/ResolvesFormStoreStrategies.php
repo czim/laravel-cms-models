@@ -66,22 +66,25 @@ trait ResolvesFormStoreStrategies
      */
     protected function resolveFormFieldStoreStrategyClass($strategy)
     {
-        if ( ! str_contains($strategy, '.')) {
-            $strategy = config('cms-models.strategies.form.store-aliases.' . $strategy, $strategy);
-        }
+        if ( ! empty($strategy)) {
 
-        if (class_exists($strategy) && is_a($strategy, FormFieldStoreStrategyInterface::class, true)) {
-            return $strategy;
-        }
+            if ( ! str_contains($strategy, '.')) {
+                $strategy = config('cms-models.strategies.form.store-aliases.' . $strategy, $strategy);
+            }
 
-        $strategy = $this->prefixFormFieldStoreStrategyNamespace($strategy);
+            if (class_exists($strategy) && is_a($strategy, FormFieldStoreStrategyInterface::class, true)) {
+                return $strategy;
+            }
 
-        if (class_exists($strategy) && is_a($strategy, FormFieldStoreStrategyInterface::class, true)) {
-            return $strategy;
-        }
+            $strategy = $this->prefixFormFieldStoreStrategyNamespace($strategy);
 
-        if ($strategy) {
-            throw new StrategyResolutionException("Could not find form store class for strategy '{$strategy}'");
+            if (class_exists($strategy) && is_a($strategy, FormFieldStoreStrategyInterface::class, true)) {
+                return $strategy;
+            }
+
+            if ($strategy) {
+                throw new StrategyResolutionException("Could not find form store class for strategy '{$strategy}'");
+            }
         }
 
         return config('cms-models.strategies.form.default-store-strategy');

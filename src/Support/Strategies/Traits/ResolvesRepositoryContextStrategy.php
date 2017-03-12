@@ -34,18 +34,21 @@ trait ResolvesRepositoryContextStrategy
      */
     protected function resolveContextStrategyClass($strategy)
     {
-        if ( ! str_contains($strategy, '.')) {
-            $strategy = config('cms-models.strategies.repository.aliases.' . $strategy, $strategy);
-        }
+        if ( ! empty($strategy)) {
 
-        if (class_exists($strategy) && is_a($strategy, ContextStrategyInterface::class, true)) {
-            return $strategy;
-        }
+            if ( ! str_contains($strategy, '.')) {
+                $strategy = config('cms-models.strategies.repository.aliases.' . $strategy, $strategy);
+            }
 
-        $strategy = $this->prefixContextStrategyNamespace($strategy);
+            if (class_exists($strategy) && is_a($strategy, ContextStrategyInterface::class, true)) {
+                return $strategy;
+            }
 
-        if (class_exists($strategy) && is_a($strategy, ContextStrategyInterface::class, true)) {
-            return $strategy;
+            $strategy = $this->prefixContextStrategyNamespace($strategy);
+
+            if (class_exists($strategy) && is_a($strategy, ContextStrategyInterface::class, true)) {
+                return $strategy;
+            }
         }
 
         return false;
