@@ -40,4 +40,12 @@ class TestPost extends Model
         return $this->morphOne(TestSeo::class, 'seoable');
     }
 
+    /**
+     * @return string
+     */
+    public function testMethod()
+    {
+        return 'testing method value';
+    }
+
 }
