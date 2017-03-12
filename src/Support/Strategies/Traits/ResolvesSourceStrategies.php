@@ -20,7 +20,7 @@ trait ResolvesSourceStrategies
     {
         // If the strategy indicates a method to be called on the model itself, do so
         if ($method = $this->parseAsModelMethodStrategyString($source, $model)) {
-            return $model->{$method}($source);
+            return $model->{$method}();
         }
 
         // If the strategy indicates an instantiable/callable 'class@method' combination
@@ -29,7 +29,7 @@ trait ResolvesSourceStrategies
             $method   = $data['method'];
             $instance = $data['instance'];
 
-            return $instance->{$method}($model->{$source});
+            return $instance->{$method}($model);
         }
 
         // If the name matches a method name on the model, call it
@@ -79,13 +79,13 @@ trait ResolvesSourceStrategies
         $data->method = $matches['method'];
 
         if ( ! class_exists($data->class)) {
-            throw new RuntimeException("Could not find strategy class '{$data->class}'");
+            throw new StrategyResolutionException("Could not find strategy class '{$data->class}'");
         }
 
         $instance = app($data->class);
 
         if ( ! is_object($instance) || ! method_exists($instance, $data->method)) {
-            throw new RuntimeException(
+            throw new StrategyResolutionException(
                 "Could not find strategy method '{$data->method}' on object '{$data->class}'"
             );
         }
