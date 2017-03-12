@@ -203,7 +203,7 @@ class EnrichValidationData extends AbstractEnricherStep
 
                 // Wrap and decorate exceptions so it is easier to track the problem source
                 throw (new ModelInformationEnrichmentException(
-                    "Issue with validation fules for form field '{$field->key()}' ({$section}): \n{$e->getMessage()}",
+                    "Issue with validation rules for form field '{$field->key()}' ({$section}): \n{$e->getMessage()}",
                     $e->getCode(),
                     $e
                 ))
