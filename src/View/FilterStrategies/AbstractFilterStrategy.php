@@ -253,7 +253,9 @@ abstract class AbstractFilterStrategy implements FilterStrategyInterface
         $modelInfo = $this->getModelInformation();
 
         if ( ! $modelInfo) {
+            // @codeCoverageIgnoreStart
             return [];
+            // @codeCoverageIgnoreEnd
         }
 
         $targets = [];
@@ -287,7 +289,9 @@ abstract class AbstractFilterStrategy implements FilterStrategyInterface
     protected function getModelInformation()
     {
         if (null === $this->model) {
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         return $this->getModelInformationRepository()->getByModel($this->model);

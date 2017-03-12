@@ -123,7 +123,9 @@ class BasicString extends AbstractFilterStrategy
             return $query->where($target, 'like', '%' . $value . '%', $combine);
         }
 
+        // @codeCoverageIgnoreStart
         return $query->where($target, '=', $value, $combine);
+        // @codeCoverageIgnoreEnd
     }
 
     /**

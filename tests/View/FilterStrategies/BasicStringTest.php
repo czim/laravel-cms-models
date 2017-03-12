@@ -7,9 +7,31 @@ use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Czim\CmsModels\View\FilterStrategies\BasicString;
+use Illuminate\Contracts\View\View;
 
 class BasicStringTest extends AbstractFilterStrategyTestCase
 {
+
+    /**
+     * @test
+     */
+    function it_renders_an_input_field()
+    {
+        $strategy = $this->makeFilterStrategy();
+
+        $view = $strategy->render('test', 'some input');
+
+        static::assertInstanceOf(View::class, $view);
+
+        $render = $view->render();
+        static::assertRegExp('#name="filter\[test\]"#', $render);
+        static::assertRegExp('#value="some input"#', $render);
+    }
+
+
+    // ------------------------------------------------------------------------------
+    //      Apply
+    // ------------------------------------------------------------------------------
 
     /**
      * @test
@@ -213,6 +235,20 @@ class BasicStringTest extends AbstractFilterStrategyTestCase
         $strategy->apply($query, 'body,author.name,description', 'tosti');
         static::assertEquals(2, $query->count());
         static::assertEquals([2, 3], $query->pluck('id')->toArray());
+    }
+
+    /**
+     * @test
+     */
+    function it_filters_an_array_as_wherein()
+    {
+        $strategy = $this->makeFilterStrategy();
+        $query = $this->getPostQuery();
+
+        $strategy->apply($query, 'description', [['some alternative testing post', 'the best possible post for testing']]);
+
+        static::assertEquals(2, $query->count());
+        static::assertEquals([1, 2], $query->pluck('id')->toArray());
     }
 
 

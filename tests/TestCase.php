@@ -24,6 +24,8 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         $app['config']->set('translatable.locales', [ 'en', 'nl' ]);
         $app['config']->set('translatable.use_fallback', true);
         $app['config']->set('translatable.fallback_locale', 'en');
+
+        $app['view']->addNamespace('cms-models', realpath(dirname(__DIR__) . '/resources/views'));
     }
 
     public function setUp()
