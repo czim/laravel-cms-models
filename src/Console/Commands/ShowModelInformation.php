@@ -108,9 +108,17 @@ class ShowModelInformation extends Command
             $data = array_keys($data);
         }
 
-        (new Dumper)->dump($data);
+        $this->getDumper()->dump($data);
 
         $this->info('');
+    }
+
+    /**
+     * @return Dumper
+     */
+    protected function getDumper()
+    {
+        return app(Dumper::class);
     }
 
 }
