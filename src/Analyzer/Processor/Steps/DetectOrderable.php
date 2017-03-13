@@ -26,7 +26,9 @@ class DetectOrderable extends AbstractTraitAnalyzerStep
 
         // Determine whether an (interpretable) scope is configured
         if ( ! method_exists($model, 'getScopeName')) {
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
         $scope = $model->getScopeName();
 
