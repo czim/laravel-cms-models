@@ -1,6 +1,7 @@
 <?php
 namespace Czim\CmsModels\Analyzer;
 
+use Czim\CmsModels\Contracts\Analyzer\ModelAnalyzerInterface;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +10,7 @@ class TranslationAnalyzer
 {
 
     /**
-     * @var ModelAnalyzer
+     * @var ModelAnalyzerInterface
      */
     protected $analyzer;
 
@@ -25,10 +26,10 @@ class TranslationAnalyzer
 
 
     /**
-     * @param ModelAnalyzer $analyzer
+     * @param ModelAnalyzerInterface $analyzer
      * @return $this
      */
-    public function setModelAnalyzer(ModelAnalyzer $analyzer)
+    public function setModelAnalyzer(ModelAnalyzerInterface $analyzer)
     {
         $this->analyzer = $analyzer;
 

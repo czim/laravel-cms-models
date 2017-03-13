@@ -3,7 +3,7 @@ namespace Czim\CmsModels\Repositories\Collectors;
 
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsCore\Support\Enums\Component;
-use Czim\CmsModels\Analyzer\ModelAnalyzer;
+use Czim\CmsModels\Contracts\Analyzer\ModelAnalyzerInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationCollectorInterface;
 use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
@@ -27,7 +27,7 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
     protected $moduleHelper;
 
     /**
-     * @var ModelAnalyzer
+     * @var ModelAnalyzerInterface
      */
     protected $modelAnalyzer;
 
@@ -73,7 +73,7 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
 
     /**
      * @param ModuleHelperInterface                $moduleHelper
-     * @param ModelAnalyzer                        $modelAnalyzer
+     * @param ModelAnalyzerInterface               $modelAnalyzer
      * @param ModelInformationFileReaderInterface  $informationReader
      * @param ModelInformationEnricherInterface    $informationEnricher
      * @param ModelInformationInterpreterInterface $informationInterpreter
@@ -81,7 +81,7 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
      */
     public function __construct(
         ModuleHelperInterface $moduleHelper,
-        ModelAnalyzer $modelAnalyzer,
+        ModelAnalyzerInterface $modelAnalyzer,
         ModelInformationFileReaderInterface $informationReader,
         ModelInformationEnricherInterface $informationEnricher,
         ModelInformationInterpreterInterface $informationInterpreter,

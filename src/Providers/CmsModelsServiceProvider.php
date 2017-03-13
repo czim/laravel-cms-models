@@ -2,9 +2,11 @@
 namespace Czim\CmsModels\Providers;
 
 use Czim\CmsModels\Analyzer\DatabaseAnalyzer;
+use Czim\CmsModels\Analyzer\Processor\ModelAnalyzer;
 use Czim\CmsModels\Console\Commands\ClearModelInformationCache;
 use Czim\CmsModels\Console\Commands\ShowModelInformation;
 use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
+use Czim\CmsModels\Contracts\Analyzer\ModelAnalyzerInterface;
 use Czim\CmsModels\Contracts\Repositories as RepositoriesContracts;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
 use Czim\CmsModels\Contracts\Support\Factories as FactoriesContracts;
@@ -161,6 +163,8 @@ class CmsModelsServiceProvider extends ServiceProvider
         $this->app->singleton(RepositoriesContracts\Collectors\ModelInformationFileReaderInterface::class, Repositories\Collectors\ModelInformationFileReader::class);
         $this->app->singleton(RepositoriesContracts\Collectors\ModelInformationEnricherInterface::class, Repositories\Collectors\ModelInformationEnricher::class);
         $this->app->singleton(RepositoriesContracts\Collectors\ModelInformationInterpreterInterface::class, Repositories\Collectors\CmsModelInformationInterpreter::class);
+
+        $this->app->singleton(ModelAnalyzerInterface::class, ModelAnalyzer::class);
         $this->app->singleton(DatabaseAnalyzerInterface::class, DatabaseAnalyzer::class);
 
         $this->app->singleton(RepositoriesContracts\CurrentModelInformationInterface::class, Repositories\CurrentModelInformation::class);
