@@ -13,6 +13,7 @@
         "php": ">=5.6.4",
         "czim/laravel-filter": "^1.0",
         "czim/laravel-repository": "~1.4",
+	"doctrine/dbal": "^2.5",
         "phpdocumentor/reflection-docblock": "^3.1"
     },
     "require-dev": {
