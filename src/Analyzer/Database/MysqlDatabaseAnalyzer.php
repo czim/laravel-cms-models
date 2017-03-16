@@ -1,10 +1,10 @@
 <?php
-namespace Czim\CmsModels\Analyzer;
+namespace Czim\CmsModels\Analyzer\Database;
 
 use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
 use DB;
 
-class DatabaseAnalyzer implements DatabaseAnalyzerInterface
+class MysqlDatabaseAnalyzer implements DatabaseAnalyzerInterface
 {
 
     /**
@@ -16,7 +16,7 @@ class DatabaseAnalyzer implements DatabaseAnalyzerInterface
     public function getColumns($table)
     {
         $columns = DB::select(
-            DB::raw('show columns from ' . $table)
+            DB::raw("show columns from  {$table}")
         );
 
         $columnData = [];

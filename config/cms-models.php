@@ -123,6 +123,11 @@ return [
 
     'analyzer' => [
 
+        'database' => [
+            // The analyzer class to use for database tables and columns
+            'class' => \Czim\CmsModels\Analyzer\Database\MysqlDatabaseAnalyzer::class,
+        ],
+
         'reference' => [
 
             // Default attributes to look for when automatically picking a reference source for a model.
