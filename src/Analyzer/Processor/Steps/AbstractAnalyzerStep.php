@@ -83,11 +83,15 @@ abstract class AbstractAnalyzerStep implements AnalyzerStepInterface
     }
 
     /**
+     * Returns configured or bound database analyzer.
+     *
      * @return DatabaseAnalyzerInterface
      */
     protected function databaseAnalyzer()
     {
-        return app(DatabaseAnalyzerInterface::class);
+        return app(
+            config('cms-models.analyzer.database.class', DatabaseAnalyzerInterface::class)
+        );
     }
 
 
