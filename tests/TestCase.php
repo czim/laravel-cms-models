@@ -1,6 +1,8 @@
 <?php
 namespace Czim\CmsModels\Test;
 
+use Czim\CmsModels\Analyzer\Database\DatabaseAnalyzer;
+use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
 use Illuminate\Support\Facades\Schema;
 
 abstract class TestCase extends \Orchestra\Testbench\TestCase
@@ -30,6 +32,8 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         ]);
 
         $app['view']->addNamespace('cms-models', realpath(dirname(__DIR__) . '/resources/views'));
+
+        $app->bind(DatabaseAnalyzerInterface::class, DatabaseAnalyzer::class);
     }
 
     public function setUp()
