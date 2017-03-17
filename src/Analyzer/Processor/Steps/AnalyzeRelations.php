@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Relations;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use ReflectionMethod;
+use RuntimeException;
 
 class AnalyzeRelations extends AbstractAnalyzerStep
 {
@@ -59,14 +60,18 @@ class AnalyzeRelations extends AbstractAnalyzerStep
             if ($type == RelationType::BELONGS_TO || $type == RelationType::BELONGS_TO_THROUGH) {
                 /** @var $relation Relations\BelongsTo */
                 $foreignKeys = [ $relation->getForeignKey() ];
-                $nullableKey = $this->info->attributes[ $relation->getForeignKey() ]->nullable;
+                $nullableKey = $this->isNullableKey($relation->getForeignKey());
 
             } elseif ($type == RelationType::MORPH_TO) {
                 /** @var Relations\MorphTo $relation */
                 $foreignKeys = [$relation->getForeignKey(), $relation->getMorphType()];
-                $nullableKey = $this->info->attributes[ $relation->getForeignKey() ]->nullable;
+                $nullableKey = $this->isNullableKey($relation->getForeignKey());
 
                 $morphModels = $this->getMorphedModelsFromMorphToReflectionMethod($method);
+
+            } elseif ($type == RelationType::HAS_ONE || $type == RelationType::HAS_MANY) {
+                /** @var $relation Relations\HasMany */
+                $foreignKeys = [ $relation->getForeignKey() ];
 
             } elseif ($type == RelationType::BELONGS_TO_MANY) {
                 /** @var Relations\BelongsToMany $relation */
@@ -105,6 +110,23 @@ class AnalyzeRelations extends AbstractAnalyzerStep
     protected function getIgnoredRelationNames()
     {
         return config('cms-models.analyzer.relations.ignore', []);
+    }
+
+    /**
+     * Returns whether attribute with key is known to be nullable.
+     *
+     * @param string $key
+     * @return bool
+     */
+    protected function isNullableKey($key)
+    {
+        if ( ! array_key_exists($key, $this->info->attributes)) {
+            throw new RuntimeException(
+                "Foreign key '{$key}' defined for relation does not exist on model " . get_class($this->model())
+            );
+        }
+
+        return (bool) $this->info->attributes[ $key ]->nullable;
     }
 
     /**
