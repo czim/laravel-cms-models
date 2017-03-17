@@ -7,6 +7,7 @@ use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
+use Illuminate\Database\Eloquent\Model;
 use Mockery;
 
 class AnalyzeAttributesTest extends AbstractStepCase
@@ -447,6 +448,154 @@ class AnalyzeAttributesTest extends AbstractStepCase
         static::assertEquals(AttributeCast::DATE, $info['attributes']['timestamp']->cast);
     }
 
+    /**
+     * @test
+     */
+    function it_keeps_the_database_type_as_cast_when_it_cannot_normalize()
+    {
+        // Setup
+        $model    = new TestPost;
+        $analyzer = $this->prepareAnalyzerSetup($model);
+
+        $dbMock = $this->prepareMockDatabaseAnalyzer();
+        $dbMock->shouldReceive('getColumns')->andReturn([
+            [
+                'name'     => 'mystery',
+                'type'     => 'unknown',
+                'length'   => null,
+                'values'   => [],
+                'unsigned' => false,
+                'nullable' => false,
+            ],
+        ]);
+
+        $this->app->instance(DatabaseAnalyzerInterface::class, $dbMock);
+
+        $info = new ModelInformation;
+        $info->model          = get_class($model);
+        $info->original_model = $info->model;
+
+        // Test
+        $step = new AnalyzeAttributes;
+        $step->setAnalyzer($analyzer);
+
+        $info = $step->analyze($info);
+
+        static::assertEquals('unknown', $info['attributes']['mystery']->cast);
+    }
+
+    /**
+     * @test
+     */
+    function it_overwrites_database_analyzed_casts_with_model_defined_casts()
+    {
+        // Setup
+        /** @var Model|Mockery\Mock $model */
+        $model = Mockery::mock(TestPost::class . '[getCasts]');
+        $model->shouldReceive('getCasts')->andReturn([
+            'mystery' => 'float',
+        ]);
+
+        $analyzer = $this->prepareAnalyzerSetup($model);
+
+        $dbMock = $this->prepareMockDatabaseAnalyzer();
+        $dbMock->shouldReceive('getColumns')->andReturn([
+            [
+                'name'     => 'mystery',
+                'type'     => 'unknown',
+                'length'   => null,
+                'values'   => [],
+                'unsigned' => false,
+                'nullable' => false,
+            ],
+        ]);
+
+        $this->app->instance(DatabaseAnalyzerInterface::class, $dbMock);
+
+        $info = new ModelInformation;
+        $info->model          = get_class($model);
+        $info->original_model = $info->model;
+
+        // Test
+        $step = new AnalyzeAttributes;
+        $step->setAnalyzer($analyzer);
+
+        $info = $step->analyze($info);
+
+        static::assertEquals(AttributeCast::FLOAT, $info['attributes']['mystery']->cast);
+    }
+
+    /**
+     * @test
+     */
+    function it_normalizes_model_defined_casts()
+    {
+        // Setup
+        /** @var Model|Mockery\Mock $model */
+        $model = Mockery::mock(TestPost::class . '[getCasts]');
+        $model->shouldReceive('getCasts')->andReturn([
+            'a' => 'boolean',
+            'b' => 'integer',
+            'c' => 'decimal',
+            'd' => 'datetime',
+        ]);
+
+        $analyzer = $this->prepareAnalyzerSetup($model);
+
+        $dbMock = $this->prepareMockDatabaseAnalyzer();
+        $dbMock->shouldReceive('getColumns')->andReturn([
+            [
+                'name'     => 'a',
+                'type'     => 'unknown',
+                'length'   => null,
+                'values'   => [],
+                'unsigned' => false,
+                'nullable' => false,
+            ],
+            [
+                'name'     => 'b',
+                'type'     => 'unknown',
+                'length'   => null,
+                'values'   => [],
+                'unsigned' => false,
+                'nullable' => false,
+            ],
+            [
+                'name'     => 'c',
+                'type'     => 'unknown',
+                'length'   => null,
+                'values'   => [],
+                'unsigned' => false,
+                'nullable' => false,
+            ],
+            [
+                'name'     => 'd',
+                'type'     => 'unknown',
+                'length'   => null,
+                'values'   => [],
+                'unsigned' => false,
+                'nullable' => false,
+            ],
+        ]);
+
+        $this->app->instance(DatabaseAnalyzerInterface::class, $dbMock);
+
+        $info = new ModelInformation;
+        $info->model          = get_class($model);
+        $info->original_model = $info->model;
+
+        // Test
+        $step = new AnalyzeAttributes;
+        $step->setAnalyzer($analyzer);
+
+        $info = $step->analyze($info);
+
+        static::assertEquals(AttributeCast::BOOLEAN, $info['attributes']['a']->cast);
+        static::assertEquals(AttributeCast::INTEGER, $info['attributes']['b']->cast);
+        static::assertEquals(AttributeCast::FLOAT, $info['attributes']['c']->cast);
+        static::assertEquals(AttributeCast::DATE, $info['attributes']['d']->cast);
+    }
+    
 
     /**
      * @return DatabaseAnalyzerInterface|Mockery\MockInterface|Mockery\Mock
