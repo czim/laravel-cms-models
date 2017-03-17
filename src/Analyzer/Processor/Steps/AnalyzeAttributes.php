@@ -90,6 +90,7 @@ class AnalyzeAttributes extends AbstractAnalyzerStep
             case 'decimal':
             case 'double':
             case 'float':
+            case 'real':
                 return AttributeCast::FLOAT;
 
             case 'varchar':
@@ -143,6 +144,12 @@ class AnalyzeAttributes extends AbstractAnalyzerStep
             case 'int':
             case 'integer':
                 $cast = AttributeCast::INTEGER;
+                break;
+
+            case 'date':
+            case 'datetime':
+                $cast = AttributeCast::DATE;
+                break;
         }
 
         return $cast;
