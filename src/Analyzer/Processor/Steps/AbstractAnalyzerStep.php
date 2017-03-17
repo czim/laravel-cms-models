@@ -139,7 +139,15 @@ abstract class AbstractAnalyzerStep implements AnalyzerStepInterface
                 continue;
             }
 
-            list($firstWord, $parameters) = preg_split('#\s+#', trim($tag->getDescription()), 2);
+            $description = trim($tag->getDescription());
+
+            if (preg_match('#\s+#', $description)) {
+                list($firstWord, $parameters) = preg_split('#\s+#', $description, 2);
+            } else {
+                $firstWord  = $description;
+                $parameters = '';
+            }
+
             $firstWord = strtolower($firstWord);
 
             if ($firstWord == 'relation') {
