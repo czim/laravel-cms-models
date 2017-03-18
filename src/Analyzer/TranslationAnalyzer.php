@@ -57,7 +57,9 @@ class TranslationAnalyzer
                 break;
 
             default:
+                // @codeCoverageIgnoreStart
                 throw new \UnexpectedValueException("Cannot handle translation strategy '{$strategy}");
+                // @codeCoverageIgnoreEnd
         }
 
         return $this->info;
