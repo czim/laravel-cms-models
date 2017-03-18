@@ -1,6 +1,12 @@
 {
     "name": "czim/laravel-cms-models",
     "description": "Laravel CMS: Main Models Module Generator",
+    "authors": [
+        {
+            "name": "Coen Zimmerman",
+            "email": "coen@pixelindustries.com"
+        }
+    ],
     "keywords": [ "cms", "laravel" ],
     "homepage": "https://github.com/czim",
     "require": {
