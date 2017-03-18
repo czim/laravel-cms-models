@@ -26,7 +26,7 @@ class SqliteDatabaseAnalyzer extends AbstractDatabaseAnalyzer
                 'name'     => $name,
                 'type'     => $type,
                 'length'   => $length,
-                'values'   => [],
+                'values'   => false,
                 'unsigned' => false,
                 'nullable' => ! (bool) array_get($column, 'notnull', false),
             ];
