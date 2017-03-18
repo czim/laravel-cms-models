@@ -13,24 +13,38 @@ class AnalyzeRelations extends AbstractAnalyzerStep
 {
 
     /**
+     * Regular expressions that must not match a class FQN.
+     *
+     * If the method is in a matching class, it will not be parsed as a relation.
+     *
+     * @var string[]
+     */
+    protected $mustNotMatchClass = [
+        '#^Illuminate\\\\#',
+    ];
+
+    /**
+     * Regular expressions that must not match a file path.
+     *
+     * If the method is in a matching file, it will not be parsed as a relation.
+     *
+     * @var string[]
+     */
+    protected $mustNotMatchFile = [
+        '#vendor/dimsav/laravel-translatable#',
+    ];
+
+
+    /**
      * Performs the analyzer step on the stored model information instance.
      */
     protected function performStep()
     {
         $relations = [];
 
-        $class = $this->info->modelClass();
-
         foreach ($this->reflection()->getMethods() as $method) {
 
-            if (
-                // Relations should only be expected on the model itself
-                $method->getDeclaringClass()->name !== $class
-                // Check if we should ignore the method always
-                ||  in_array($method->name, $this->getIgnoredRelationNames())
-                // If the method has required parameters, we cannot call or use it
-                ||  $method->getNumberOfRequiredParameters()
-                // Skip anything that is not detected as a relation method
+            if (    ! $this->isPotentialRelationMethod($method)
                 ||  ! $this->isReflectionMethodEloquentRelation($method)
             ) {
                 continue;
@@ -100,6 +114,42 @@ class AnalyzeRelations extends AbstractAnalyzerStep
         }
 
         $this->info['relations'] = $relations;
+    }
+
+    /**
+     * Returns whether a reflected method may be an Eloquent relation.
+     *
+     * @param ReflectionMethod $method
+     * @return bool
+     */
+    protected function isPotentialRelationMethod(ReflectionMethod $method)
+    {
+        if (
+                ! $method->isPublic()
+            // Check if we should ignore the method always
+            ||  in_array($method->name, $this->getIgnoredRelationNames())
+            // If the method has required parameters, we cannot call or use it
+            ||  $method->getNumberOfRequiredParameters()
+        ) {
+            return false;
+        }
+
+        // Don't examine methods defined in certain namespaces
+        foreach ($this->mustNotMatchClass as $regEx) {
+            if (preg_match($regEx, $method->class)) {
+                return false;
+            }
+        }
+
+        // Don't examine methods defined in certain files
+        $file = $method->getFileName();
+        foreach ($this->mustNotMatchFile as $regEx) {
+            if (preg_match($regEx, $file)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
