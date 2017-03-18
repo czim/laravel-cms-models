@@ -1,0 +1,100 @@
+<?php
+namespace Czim\CmsModels\Analyzer\Database;
+
+use DB;
+
+class SqliteDatabaseAnalyzer extends AbstractDatabaseAnalyzer
+{
+
+    /**
+     * Returns column information for a given table.
+     *
+     * @param string $table
+     * @return array
+     */
+    public function getColumns($table)
+    {
+        $columns = $this->getParsedColumnTable($table);
+
+        $columnData = [];
+
+        foreach ($columns as $name => $column) {
+
+            list($type, $length) = $this->normalizeTypeAndLength(array_get($column, 'type'));
+
+            $columnData[] = [
+                'name'     => $name,
+                'type'     => $type,
+                'length'   => $length,
+                'values'   => [],
+                'unsigned' => false,
+                'nullable' => (bool) array_get($column, 'notnull', true),
+            ];
+        }
+
+        return $columnData;
+    }
+
+    /**
+     * Returns a parsed set of columns for a table.
+     *
+     * @param string $table
+     * @return array    associative, keyed by column name
+     */
+    protected function getParsedColumnTable($table)
+    {
+        $this->validateTableName($table);
+
+        $table = DB::select(
+            DB::raw("PRAGMA table_info({$table});")
+        );
+
+        $columns = [];
+
+        foreach ($table as $columnData) {
+            $columns[ $columnData->name ] = (array) $columnData;
+        }
+
+        return $columns;
+    }
+
+    /**
+     * Returns clean type string and length value.
+     *
+     * @param string $type  sqlite type
+     * @return array    [ type, length (int) ]
+     */
+    protected function normalizeTypeAndLength($type)
+    {
+        if (empty($type)) {
+            return [null, null];
+        }
+
+        if (preg_match('#^(?<type>.*)\((?<length>\d+)\)$#', $type, $matches)) {
+            return [ $matches['type'], (int) $matches['length'] ];
+        }
+
+        return [ $type, $this->getDefaultLengthForType($type) ];
+    }
+
+    /**
+     * Returns sensible default length for column type.
+     *
+     * @param string $type  sqlite type (without length)
+     * @return int|null
+     */
+    protected function getDefaultLengthForType($type)
+    {
+        switch ($type) {
+
+            case 'integer':
+                return 8;
+
+            case 'varchar':
+                return 255;
+        }
+
+        return null;
+    }
+
+}
