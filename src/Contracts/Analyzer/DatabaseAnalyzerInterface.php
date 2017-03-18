@@ -12,13 +12,4 @@ interface DatabaseAnalyzerInterface
      */
     public function getColumns($table);
 
-    /**
-     * Returns column type.
-     *
-     * @param string $table
-     * @param string $column
-     * @return string
-     */
-    public function getColumnType($table, $column);
-
 }
