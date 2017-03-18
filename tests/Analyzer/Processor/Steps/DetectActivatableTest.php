@@ -7,6 +7,11 @@ use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 
+/**
+ * Class DetectActivatableTest
+ *
+ * @group analysis
+ */
 class DetectActivatableTest extends AbstractStepCase
 {
 

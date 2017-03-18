@@ -10,6 +10,11 @@ use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Illuminate\Database\Eloquent\Model;
 use Mockery;
 
+/**
+ * Class AnalyzeAttributesTest
+ *
+ * @group analysis
+ */
 class AnalyzeAttributesTest extends AbstractStepCase
 {
 

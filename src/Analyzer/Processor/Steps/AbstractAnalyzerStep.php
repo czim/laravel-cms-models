@@ -136,7 +136,9 @@ abstract class AbstractAnalyzerStep implements AnalyzerStepInterface
         foreach ($tags as $tag) {
 
             if ( ! method_exists($tag, 'getDescription')) {
+                // @codeCoverageIgnoreStart
                 continue;
+                // @codeCoverageIgnoreEnd
             }
 
             $description = trim($tag->getDescription());
@@ -222,7 +224,9 @@ abstract class AbstractAnalyzerStep implements AnalyzerStepInterface
             }
         }
 
+        // @codeCoverageIgnoreStart
         return null;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
