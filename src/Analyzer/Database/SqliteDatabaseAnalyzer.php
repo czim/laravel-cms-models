@@ -28,7 +28,7 @@ class SqliteDatabaseAnalyzer extends AbstractDatabaseAnalyzer
                 'length'   => $length,
                 'values'   => [],
                 'unsigned' => false,
-                'nullable' => (bool) array_get($column, 'notnull', true),
+                'nullable' => ! (bool) array_get($column, 'notnull', false),
             ];
         }
 
@@ -67,14 +67,16 @@ class SqliteDatabaseAnalyzer extends AbstractDatabaseAnalyzer
     protected function normalizeTypeAndLength($type)
     {
         if (empty($type)) {
+            // @codeCoverageIgnoreStart
             return [null, null];
+            // @codeCoverageIgnoreEnd
         }
 
         if (preg_match('#^(?<type>.*)\((?<length>\d+)\)$#', $type, $matches)) {
-            return [ $matches['type'], (int) $matches['length'] ];
+            return [ $this->normalizeType($matches['type']), (int) $matches['length'] ];
         }
 
-        return [ $type, $this->getDefaultLengthForType($type) ];
+        return [ $this->normalizeType($type), $this->getDefaultLengthForType($type) ];
     }
 
     /**
@@ -95,6 +97,21 @@ class SqliteDatabaseAnalyzer extends AbstractDatabaseAnalyzer
         }
 
         return null;
+    }
+
+    /**
+     * @param string $type
+     * @return string
+     */
+    protected function normalizeType($type)
+    {
+        switch ($type) {
+
+            case 'numeric':
+                return 'decimal';
+        }
+
+        return $type;
     }
 
 }
