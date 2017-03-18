@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Providers;
 
-use Czim\CmsModels\Analyzer\DatabaseAnalyzer;
+use Czim\CmsModels\Analyzer\Database\SimpleDatabaseAnalyzer;
 use Czim\CmsModels\Analyzer\Processor\ModelAnalyzer;
 use Czim\CmsModels\Console\Commands\ClearModelInformationCache;
 use Czim\CmsModels\Console\Commands\ShowModelInformation;
@@ -166,7 +166,7 @@ class CmsModelsServiceProvider extends ServiceProvider
         $this->app->singleton(RepositoriesContracts\Collectors\ModelInformationInterpreterInterface::class, Repositories\Collectors\CmsModelInformationInterpreter::class);
 
         $this->app->singleton(ModelAnalyzerInterface::class, ModelAnalyzer::class);
-        $this->app->singleton(DatabaseAnalyzerInterface::class, DatabaseAnalyzer::class);
+        $this->app->singleton(DatabaseAnalyzerInterface::class, SimpleDatabaseAnalyzer::class);
 
         $this->app->singleton(RepositoriesContracts\CurrentModelInformationInterface::class, Repositories\CurrentModelInformation::class);
 
