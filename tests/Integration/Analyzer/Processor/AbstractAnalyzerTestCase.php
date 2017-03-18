@@ -17,6 +17,12 @@ abstract class AbstractAnalyzerTestCase extends CmsBootTestCase
 
     protected function migrateDatabase()
     {
+        Schema::dropIfExists('test_authors');
+        Schema::dropIfExists('test_posts');
+        Schema::dropIfExists('test_post_translations');
+        Schema::dropIfExists('test_comments');
+        Schema::dropIfExists('test_comment_translations');
+
         Schema::create('test_authors', function($table) {
             $table->increments('id');
             $table->string('name', 255);
