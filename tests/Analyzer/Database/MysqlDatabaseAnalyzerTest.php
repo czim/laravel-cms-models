@@ -11,7 +11,6 @@ class MysqlDatabaseAnalyzerTest extends AbstractDatabaseAnalyzerTestCase
      */
     protected function setDatabaseConnectionConfig($app)
     {
-        // Setup default database to use sqlite :memory:
         $app['config']->set('database.connections.testbench', [
             'driver'    => 'mysql',
             'host'      => 'localhost',
