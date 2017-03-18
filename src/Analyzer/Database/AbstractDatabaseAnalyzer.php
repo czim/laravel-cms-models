@@ -67,6 +67,7 @@ class AbstractDatabaseAnalyzer implements DatabaseAnalyzerInterface
      * Checks and throws exception if column name is unsafe to inject.
      *
      * @param string $column
+     * @codeCoverageIgnore
      */
     protected function validateColumnName($column)
     {

@@ -46,7 +46,9 @@ class MysqlDatabaseAnalyzer extends AbstractDatabaseAnalyzer
     protected function getColumnBaseTypeFromType($type)
     {
         if ( ! preg_match('#(?<type>[^(]+)#', $type, $matches)) {
+            // @codeCoverageIgnoreStart
             return null;
+            // @codeCoverageIgnoreEnd
         }
 
         return strtolower($matches['type']);
