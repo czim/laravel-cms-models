@@ -1,7 +1,6 @@
 <?php
 namespace Czim\CmsModels\Analyzer\Processor;
 
-use Czim\CmsModels\Analyzer\Processor\Steps;
 use Czim\CmsModels\Contracts\Analyzer\AnalyzerStepInterface;
 use Czim\CmsModels\Contracts\Analyzer\ModelAnalyzerInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
@@ -12,22 +11,6 @@ use UnexpectedValueException;
 
 class ModelAnalyzer implements ModelAnalyzerInterface
 {
-    /**
-     * FQNs of analyze steps to perform.
-     *
-     * @var string[]
-     */
-    protected $steps = [
-        Steps\SetBasicInformation::class,
-        Steps\CheckGlobalScopes::class,
-        Steps\AnalyzeAttributes::class,
-        Steps\AnalyzeRelations::class,
-        Steps\AnalyzeScopes::class,
-        Steps\DetectActivatable::class,
-        Steps\DetectOrderable::class,
-        Steps\DetectStaplerAttributes::class,
-        Steps\AnalyzeTranslation::class,
-    ];
 
     /**
      * An instance of the model being analyzed.
@@ -58,7 +41,7 @@ class ModelAnalyzer implements ModelAnalyzerInterface
 
         $this->makeModelInstance($modelClass);
 
-        foreach ($this->steps as $stepClass) {
+        foreach ($this->getSteps() as $stepClass) {
 
             /** @var AnalyzerStepInterface $step */
             $step = app($stepClass);
@@ -92,6 +75,16 @@ class ModelAnalyzer implements ModelAnalyzerInterface
         $this->modelReflection = new ReflectionClass($class);
 
         return $this;
+    }
+
+    /**
+     * Returns a list of FQNs for analysis steps to be performed.
+     *
+     * @return string[]
+     */
+    protected function getSteps()
+    {
+        return config('cms-models.analyzer.steps', []);
     }
 
     /**
