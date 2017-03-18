@@ -96,7 +96,9 @@ class DropdownBoolean extends AbstractFilterStrategy
         $combine   = $combineOr ? 'or' : 'and';
 
         if (is_array($value)) {
+            // @codeCoverageIgnoreStart
             return $query->whereIn($target, $value, $combine);
+            // @codeCoverageIgnoreEnd
         }
 
         return $query->where($target, '=', $value, $combine);
