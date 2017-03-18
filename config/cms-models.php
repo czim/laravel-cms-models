@@ -1,5 +1,6 @@
 <?php
 
+use Czim\CmsModels\Analyzer\Processor\Steps as AnalyzerSteps;
 use Czim\CmsModels\Support\Enums;
 use Czim\CmsModels\Http\Controllers\FormFieldStrategies as FormFieldStoreStrategies;
 use Czim\CmsModels\Repositories\SortStrategies;
@@ -122,6 +123,19 @@ return [
     */
 
     'analyzer' => [
+
+        // Analyzer step classes in the order in which they should be performed
+        'steps' => [
+            AnalyzerSteps\SetBasicInformation::class,
+            AnalyzerSteps\CheckGlobalScopes::class,
+            AnalyzerSteps\AnalyzeAttributes::class,
+            AnalyzerSteps\AnalyzeRelations::class,
+            AnalyzerSteps\AnalyzeScopes::class,
+            AnalyzerSteps\DetectActivatable::class,
+            AnalyzerSteps\DetectOrderable::class,
+            AnalyzerSteps\DetectStaplerAttributes::class,
+            AnalyzerSteps\AnalyzeTranslation::class,
+        ],
 
         'database' => [
             // The analyzer class to use for database tables and columns
