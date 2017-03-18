@@ -1,12 +1,12 @@
 <?php
 namespace Czim\CmsModels\Test\Support\Strategies\Traits;
 
-use Czim\CmsModels\Test\AbstractSeededTestCase;
+use Czim\CmsModels\Test\AbstractPostCommentSeededTestCase;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Czim\CmsModels\Test\Helpers\Support\SourceMethodTestHelper;
 use Czim\CmsModels\Test\Helpers\Support\UsesResolvesSourceStrategies;
 
-class ResolvesSourceStrategiesTest extends AbstractSeededTestCase
+class ResolvesSourceStrategiesTest extends AbstractPostCommentSeededTestCase
 {
 
     /**
