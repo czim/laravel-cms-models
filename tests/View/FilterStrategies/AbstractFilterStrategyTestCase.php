@@ -1,8 +1,8 @@
 <?php
 namespace Czim\CmsModels\Test\View\FilterStrategies;
 
-use Czim\CmsModels\Test\AbstractSeededTestCase;
+use Czim\CmsModels\Test\AbstractPostCommentSeededTestCase;
 
-abstract class AbstractFilterStrategyTestCase extends AbstractSeededTestCase
+abstract class AbstractFilterStrategyTestCase extends AbstractPostCommentSeededTestCase
 {
 }

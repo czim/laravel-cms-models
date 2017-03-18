@@ -2,10 +2,10 @@
 namespace Czim\CmsModels\Test\Repositories\SortStrategies;
 
 use Czim\CmsModels\Repositories\SortStrategies\TranslatedAttribute;
-use Czim\CmsModels\Test\AbstractSeededTestCase;
+use Czim\CmsModels\Test\AbstractPostCommentSeededTestCase;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 
-class TranslatedAttributeTest extends AbstractSeededTestCase
+class TranslatedAttributeTest extends AbstractPostCommentSeededTestCase
 {
 
     /**
