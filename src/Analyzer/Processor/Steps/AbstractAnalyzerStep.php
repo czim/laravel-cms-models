@@ -157,11 +157,6 @@ abstract class AbstractAnalyzerStep implements AnalyzerStepInterface
                 continue;
             }
 
-            if ($firstWord == 'scope') {
-                $cmsTags['scope'] = true;
-                continue;
-            }
-
             if ($firstWord == 'ignore') {
                 $cmsTags['ignore'] = true;
                 continue;

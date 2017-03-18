@@ -46,9 +46,11 @@ class AnalyzeScopes extends AbstractAnalyzerStep
             return false;
         }
 
-        // If the required parameter is not the first, don't use it
+        // If the required parameter is not the first, don't use it (safeguard)
         if ( ! ($firstParameter = head($method->getParameters())) || $firstParameter->isOptional()) {
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $scopeName = camel_case(substr($method->name, 5));
