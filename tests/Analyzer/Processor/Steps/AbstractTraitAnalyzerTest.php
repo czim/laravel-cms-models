@@ -61,4 +61,30 @@ class AbstractTraitAnalyzerTest extends AbstractStepCase
         static::assertTrue($step->publicModelHasTrait(['Czim\Listify\Listify']));
     }
 
+    /**
+     * @test
+     */
+    function it_can_add_default_includes()
+    {
+        // Setup
+        $model    = new TestOrderable;
+        $analyzer = $this->prepareAnalyzerSetup($model);
+        $info     = new ModelInformation;
+
+        $step = new UsesAbstractTraitAnalyzerStep;
+        $step->setAnalyzer($analyzer);
+        $step->analyze($info);
+
+
+        static::assertEmpty($step->getTestInformation()['includes']['default']);
+
+        $step->publicAddIncludesDefault('testing');
+
+        static::assertEquals(['testing'], $step->getTestInformation()['includes']['default']);
+
+        $step->publicAddIncludesDefault('withValue', 'value');
+
+        static::assertEquals(['testing', 'withValue' => 'value'], $step->getTestInformation()['includes']['default']);
+    }
+
 }

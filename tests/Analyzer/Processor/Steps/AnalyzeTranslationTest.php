@@ -91,6 +91,7 @@ class AnalyzeTranslationTest extends AbstractStepCase
         static::assertEquals('translatable', $info['translation_strategy']);
         static::assertInternalType('array', $info['attributes']);
         static::assertEquals(['title', 'description'], array_keys($info['attributes']));
+        static::assertArraySubset(['translations'], $info['includes']['default'], 'Default include not set');
     }
 
 
