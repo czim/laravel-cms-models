@@ -14,3 +14,9 @@ after_script:
 notifications:
   email:
     on_success: never
+
+services:
+  - mysql
+
+before_install:
+  - mysql -e 'CREATE DATABASE testing;'
