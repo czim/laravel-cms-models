@@ -38,25 +38,6 @@ class MysqlDatabaseAnalyzer extends AbstractDatabaseAnalyzer
     }
 
     /**
-     * Returns enum values for a given enum column
-     *
-     * @param string $table
-     * @param string $column
-     * @return array|false  false if not an ENUM
-     */
-    protected function getEnumValues($table, $column)
-    {
-        $this->validateTableName($table);
-        $this->validateColumnName($column);
-
-        $type = DB::select(
-            DB::raw("show columns from `{$table}` where `field` = '{$column}'")
-        )[0]->Type;
-
-        return $this->getEnumValuesFromType($type);
-    }
-
-    /**
      * Returns base type for the column.
      *
      * @param string $type
@@ -65,7 +46,7 @@ class MysqlDatabaseAnalyzer extends AbstractDatabaseAnalyzer
     protected function getColumnBaseTypeFromType($type)
     {
         if ( ! preg_match('#(?<type>[^(]+)#', $type, $matches)) {
-            return false;
+            return null;
         }
 
         return strtolower($matches['type']);
@@ -91,7 +72,7 @@ class MysqlDatabaseAnalyzer extends AbstractDatabaseAnalyzer
     protected function getColumnLengthFromType($type)
     {
         if ( ! preg_match('#\((?<length>\d+)\)#', $type, $matches)) {
-            return false;
+            return null;
         }
 
         return (int) $matches['length'];

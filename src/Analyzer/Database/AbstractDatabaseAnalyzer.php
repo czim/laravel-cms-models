@@ -42,7 +42,7 @@ class AbstractDatabaseAnalyzer implements DatabaseAnalyzerInterface
                 'name'     => $column->getName(),
                 'type'     => $column->getType()->getName(),
                 'length'   => $column->getLength(),
-                'values'   => [],
+                'values'   => false,
                 'unsigned' => $column->getUnsigned(),
                 'nullable' => ! $column->getNotnull(),
             ];
