@@ -6,6 +6,11 @@ use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Test\Helpers\Models\Analyzer\TestActivatable;
 use Czim\CmsModels\Test\Helpers\Models\Analyzer\TestGlobalScope;
 
+/**
+ * Class CheckGlobalScopesTest
+ *
+ * @group analysis
+ */
 class CheckGlobalScopesTest extends AbstractStepCase
 {
 

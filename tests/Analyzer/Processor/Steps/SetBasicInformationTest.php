@@ -5,6 +5,11 @@ use Czim\CmsModels\Analyzer\Processor\Steps\SetBasicInformation;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 
+/**
+ * Class SetBasicInformationTest
+ *
+ * @group analysis
+ */
 class SetBasicInformationTest extends AbstractStepCase
 {
 

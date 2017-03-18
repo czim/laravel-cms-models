@@ -5,6 +5,11 @@ use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Test\Helpers\Analyzer\UsesAbstractTraitAnalyzerStep;
 use Czim\CmsModels\Test\Helpers\Models\Analyzer\TestOrderable;
 
+/**
+ * Class AbstractTraitAnalyzerTest
+ *
+ * @group analysis
+ */
 class AbstractTraitAnalyzerTest extends AbstractStepCase
 {
 

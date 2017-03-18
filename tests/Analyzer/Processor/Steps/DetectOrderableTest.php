@@ -9,6 +9,11 @@ use Czim\CmsModels\Test\Helpers\Models\Analyzer\TestActivatable;
 use Czim\CmsModels\Test\Helpers\Models\Analyzer\TestOrderable;
 use Czim\CmsModels\Test\Helpers\Models\Analyzer\TestOrderableBelongsToScoped;
 
+/**
+ * Class DetectOrderableTest
+ *
+ * @group analysis
+ */
 class DetectOrderableTest extends AbstractStepCase
 {
 
