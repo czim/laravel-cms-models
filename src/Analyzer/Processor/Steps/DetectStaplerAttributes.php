@@ -107,9 +107,12 @@ class DetectStaplerAttributes extends AbstractAnalyzerStep
         // Find the position of the array
         $position = array_search($beforeKey, array_keys($array));
 
+        // Safeguard: silently append if injected position could not be found
         if (false === $position) {
+            // @codeCoverageIgnoreStart
             $array[ $key ] = $value;
             return $array;
+            // @codeCoverageIgnoreEnd
         }
 
         if (0 === $position) {

@@ -35,4 +35,26 @@ class UsesAbstractTraitAnalyzerStep extends AbstractTraitAnalyzerStep
         return parent::getTraitNames();
     }
 
+    /**
+     * Passthru for testing abstract.
+     *
+     * @param string     $relation
+     * @param null|mixed $value
+     * @return AbstractTraitAnalyzerStep
+     */
+    public function publicAddIncludesDefault($relation, $value = null)
+    {
+        return parent::addIncludesDefault($relation, $value);
+    }
+
+    /**
+     * Helper method to test abstract class.
+     *
+     * @return \Czim\CmsModels\Contracts\Data\ModelInformationInterface|\Czim\CmsModels\Support\Data\ModelInformation
+     */
+    public function getTestInformation()
+    {
+        return $this->info;
+    }
+
 }
