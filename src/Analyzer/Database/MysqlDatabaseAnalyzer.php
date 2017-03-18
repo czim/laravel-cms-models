@@ -1,22 +1,23 @@
 <?php
 namespace Czim\CmsModels\Analyzer\Database;
 
-use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
 use DB;
 
-class MysqlDatabaseAnalyzer implements DatabaseAnalyzerInterface
+class MysqlDatabaseAnalyzer extends AbstractDatabaseAnalyzer
 {
 
     /**
      * Returns column information for a given table.
      *
-     * @param $table
+     * @param string $table
      * @return array
      */
     public function getColumns($table)
     {
+        $this->validateTableName($table);
+
         $columns = DB::select(
-            DB::raw("show columns from  {$table}")
+            DB::raw("show columns from `{$table}`")
         );
 
         $columnData = [];
@@ -37,40 +38,19 @@ class MysqlDatabaseAnalyzer implements DatabaseAnalyzerInterface
     }
 
     /**
-     * Returns column type.
-     *
-     * @param string $table
-     * @param string $column
-     * @return string
-     */
-    public function getColumnType($table, $column)
-    {
-        $type = DB::select(
-            DB::raw('show columns from ' . $table . ' where `field` = "' . $column . '"')
-        )[0]->Type;
-
-        $type = $this->getColumnBaseTypeFromType($type);
-
-        if (false === $type) {
-            throw new \UnexpectedValueException(
-                "Could not determine column type from '{$type}' for column {$table}.{$column}"
-            );
-        }
-
-        return $type;
-    }
-
-    /**
      * Returns enum values for a given enum column
      *
      * @param string $table
      * @param string $column
      * @return array|false  false if not an ENUM
      */
-    public function getEnumValues($table, $column)
+    protected function getEnumValues($table, $column)
     {
+        $this->validateTableName($table);
+        $this->validateColumnName($column);
+
         $type = DB::select(
-            DB::raw('show columns from ' . $table . ' where `field` = "' . $column . '"')
+            DB::raw("show columns from `{$table}` where `field` = '{$column}'")
         )[0]->Type;
 
         return $this->getEnumValuesFromType($type);
