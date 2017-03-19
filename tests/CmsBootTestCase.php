@@ -4,7 +4,6 @@ namespace Czim\CmsModels\Test;
 use Czim\CmsCore\Contracts\Auth\AuthenticatorInterface;
 use Czim\CmsCore\Providers\CmsCoreServiceProvider;
 use Czim\CmsCore\Support\Enums\Component;
-use Czim\CmsModels\Analyzer\Processor\Steps as AnalyzerSteps;
 use Czim\CmsModels\Providers\CmsModelsServiceProvider;
 use Illuminate\Contracts\Foundation\Application;
 
@@ -53,18 +52,6 @@ abstract class CmsBootTestCase extends DatabaseTestCase
             Component::ACL         => \Czim\CmsCore\Auth\AclRepository::class,
             Component::MENU        => \Czim\CmsCore\Menu\MenuRepository::class,
             Component::AUTH        => 'mock-cms-auth',
-        ]);
-
-        $app['config']->set('cms-models.analyzer.steps', [
-            AnalyzerSteps\SetBasicInformation::class,
-            AnalyzerSteps\CheckGlobalScopes::class,
-            AnalyzerSteps\AnalyzeAttributes::class,
-            AnalyzerSteps\AnalyzeRelations::class,
-            AnalyzerSteps\AnalyzeScopes::class,
-            AnalyzerSteps\DetectActivatable::class,
-            AnalyzerSteps\DetectOrderable::class,
-            AnalyzerSteps\DetectStaplerAttributes::class,
-            AnalyzerSteps\AnalyzeTranslation::class,
         ]);
 
         $this->mockBoundCoreExternalComponents($app);
