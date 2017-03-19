@@ -3,7 +3,7 @@ namespace Czim\CmsModels\Http\Controllers\Traits;
 
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Support\Factories\ListDisplayStrategyFactoryInterface;
-use Czim\CmsModels\Contracts\View\ListDisplayInterface;
+use Czim\CmsModels\Contracts\Strategies\ListDisplayInterface;
 use Czim\CmsModels\Http\Controllers\BaseModelController;
 use Czim\CmsModels\Support\Data\ModelInformation;
 

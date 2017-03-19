@@ -3,7 +3,7 @@ namespace Czim\CmsModels\Http\Controllers\Traits;
 
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Support\Factories\ActionStrategyFactoryInterface;
-use Czim\CmsModels\Contracts\View\ActionStrategyInterface;
+use Czim\CmsModels\Contracts\Strategies\ActionStrategyInterface;
 use Czim\CmsModels\Http\Controllers\BaseModelController;
 use Czim\CmsModels\Support\Data\ModelInformation;
 

@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Support\Strategies\Traits;
 
-use Czim\CmsModels\Contracts\Repositories\ContextStrategyInterface;
+use Czim\CmsModels\Contracts\Strategies\ContextStrategyInterface;
 
 trait ResolvesRepositoryContextStrategy
 {

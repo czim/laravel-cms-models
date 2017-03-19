@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\Support\Factories;
 
 use Czim\CmsModels\Contracts\Support\Factories\ListDisplayStrategyFactoryInterface;
-use Czim\CmsModels\Contracts\View\ListDisplayInterface;
+use Czim\CmsModels\Contracts\Strategies\ListDisplayInterface;
 
 class ListDisplayStrategyFactory extends AbstractStrategyFactory implements ListDisplayStrategyFactoryInterface
 {

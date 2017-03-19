@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Contracts\Support\Factories;
 
-use Czim\CmsModels\Contracts\Support\Exporting\ExportColumnInterface;
+use Czim\CmsModels\Contracts\Strategies\Export\ExportColumnInterface;
 
 interface ExportColumnStrategyFactoryInterface
 {

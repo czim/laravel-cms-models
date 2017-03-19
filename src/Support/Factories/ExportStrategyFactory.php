@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\Support\Factories;
 
 use Czim\CmsModels\Contracts\Support\Factories\ExportStrategyFactoryInterface;
-use Czim\CmsModels\Contracts\Support\Exporting\ModelExporterInterface;
+use Czim\CmsModels\Contracts\Strategies\Export\ModelExporterInterface;
 use UnexpectedValueException;
 
 class ExportStrategyFactory extends AbstractStrategyFactory implements ExportStrategyFactoryInterface

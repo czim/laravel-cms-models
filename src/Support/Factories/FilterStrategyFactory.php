@@ -3,7 +3,7 @@ namespace Czim\CmsModels\Support\Factories;
 
 use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
 use Czim\CmsModels\Contracts\Support\Factories\FilterStrategyFactoryInterface;
-use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
+use Czim\CmsModels\Contracts\Strategies\FilterStrategyInterface;
 use RuntimeException;
 
 class FilterStrategyFactory implements FilterStrategyFactoryInterface

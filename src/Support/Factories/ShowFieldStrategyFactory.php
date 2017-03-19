@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\Support\Factories;
 
 use Czim\CmsModels\Contracts\Support\Factories\ShowFieldStrategyFactoryInterface;
-use Czim\CmsModels\Contracts\View\ShowFieldInterface;
+use Czim\CmsModels\Contracts\Strategies\ShowFieldInterface;
 
 class ShowFieldStrategyFactory implements ShowFieldStrategyFactoryInterface
 {

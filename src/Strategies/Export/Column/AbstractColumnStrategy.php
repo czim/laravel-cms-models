@@ -3,7 +3,7 @@ namespace Czim\CmsModels\Strategies\Export\Column;
 
 use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelExportColumnDataInterface;
-use Czim\CmsModels\Contracts\Support\Exporting\ExportColumnInterface;
+use Czim\CmsModels\Contracts\Strategies\Export\ExportColumnInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelExportColumnData;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesSourceStrategies;

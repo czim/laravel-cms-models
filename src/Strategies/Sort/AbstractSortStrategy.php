@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Strategies\Sort;
 
-use Czim\CmsModels\Contracts\Repositories\SortStrategyInterface;
+use Czim\CmsModels\Contracts\Strategies\SortStrategyInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\MySqlConnection;
 

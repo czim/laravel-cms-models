@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Contracts\View;
+namespace Czim\CmsModels\Contracts\Strategies;
 
 interface DropdownStrategyInterface
 {

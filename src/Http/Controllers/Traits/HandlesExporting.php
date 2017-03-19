@@ -4,7 +4,7 @@ namespace Czim\CmsModels\Http\Controllers\Traits;
 use Carbon\Carbon;
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
-use Czim\CmsModels\Contracts\Support\Exporting\ModelExporterInterface;
+use Czim\CmsModels\Contracts\Strategies\Export\ModelExporterInterface;
 use Czim\CmsModels\Contracts\Support\Factories\ExportStrategyFactoryInterface;
 use Czim\CmsModels\Http\Controllers\BaseModelController;
 use Czim\CmsModels\Support\Data\ModelExportStrategyData;

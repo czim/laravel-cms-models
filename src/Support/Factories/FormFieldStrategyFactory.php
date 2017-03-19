@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\Support\Factories;
 
 use Czim\CmsModels\Contracts\Support\Factories\FormFieldStrategyFactoryInterface;
-use Czim\CmsModels\Contracts\View\FormFieldDisplayInterface;
+use Czim\CmsModels\Contracts\Strategies\FormFieldDisplayInterface;
 
 class FormFieldStrategyFactory extends AbstractStrategyFactory implements FormFieldStrategyFactoryInterface
 {

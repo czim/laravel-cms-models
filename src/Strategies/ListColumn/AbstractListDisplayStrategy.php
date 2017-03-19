@@ -3,7 +3,7 @@ namespace Czim\CmsModels\Strategies\ListColumn;
 
 use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelListColumnDataInterface;
-use Czim\CmsModels\Contracts\View\ListDisplayInterface;
+use Czim\CmsModels\Contracts\Strategies\ListDisplayInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelListColumnData;
 use Czim\CmsModels\Support\Enums\AttributeCast;

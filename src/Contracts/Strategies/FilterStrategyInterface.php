@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Contracts\View;
+namespace Czim\CmsModels\Contracts\Strategies;
 
 use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
 use Illuminate\Contracts\View\View;

@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\Strategies\Filter;
 
-use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
+use Czim\CmsModels\Contracts\Strategies\FilterStrategyInterface;
 use Czim\CmsModels\Strategies\Filter\BasicSplitString;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 

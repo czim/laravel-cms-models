@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Contracts\Support\Exporting;
+namespace Czim\CmsModels\Contracts\Strategies\Export;
 
 use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelExportColumnDataInterface;

@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\Support\Strategies\Traits;
 
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
-use Czim\CmsModels\Contracts\View\ReferenceStrategyInterface;
+use Czim\CmsModels\Contracts\Strategies\ReferenceStrategyInterface;
 use Illuminate\Database\Eloquent\Model;
 
 trait ResolvesModelReference
