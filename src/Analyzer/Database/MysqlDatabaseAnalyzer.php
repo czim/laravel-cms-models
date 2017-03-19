@@ -9,15 +9,18 @@ class MysqlDatabaseAnalyzer extends AbstractDatabaseAnalyzer
     /**
      * Returns column information for a given table.
      *
-     * @param string $table
+     * @param string      $table
+     * @param string|null $connection   optional connection name
      * @return array
      */
-    public function getColumns($table)
+    public function getColumns($table, $connection = null)
     {
+        $this->updateConnection($connection)->setUpDoctrineSchema();
+
         $this->validateTableName($table);
 
-        $columns = DB::select(
-            DB::raw("show columns from `{$table}`")
+        $columns = DB::connection($this->connection)->select(
+            DB::connection($this->connection)->raw("show columns from `{$table}`")
         );
 
         $columnData = [];

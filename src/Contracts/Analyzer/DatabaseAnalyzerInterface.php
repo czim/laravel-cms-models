@@ -7,9 +7,10 @@ interface DatabaseAnalyzerInterface
     /**
      * Returns column information for a given table.
      *
-     * @param $table
-     * @return array    associative, with column information
+     * @param string      $table
+     * @param string|null $connection   optional connection name
+     * @return array
      */
-    public function getColumns($table);
+    public function getColumns($table, $connection = null);
 
 }
