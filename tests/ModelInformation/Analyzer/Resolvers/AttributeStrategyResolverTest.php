@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Test\ModelInformation\Analyzer;
+namespace Czim\CmsModels\Test\ModelInformation\Analyzer\Resolvers;
 
 use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\AttributeStrategyResolver;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
