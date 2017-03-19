@@ -1,5 +1,5 @@
 
-@if ( ! ($parent instanceof \Czim\CmsModels\Support\Data\ModelFormFieldGroupData))
+@if ( ! ($parent instanceof \Czim\CmsModels\ModelInformation\Data\Form\Layout\ModelFormFieldGroupData))
     <div class="form-group row @if (array_has($errors, $key)) has-error @endif">
 
         <label for="field-{{ $key }}" class="control-label col-sm-2 @if ($field->required()) required @endif">
@@ -22,6 +22,6 @@
         @endif
     </div>
 
-@if ( ! ($parent instanceof \Czim\CmsModels\Support\Data\ModelFormFieldGroupData))
+@if ( ! ($parent instanceof \Czim\CmsModels\ModelInformation\Data\Form\Layout\ModelFormFieldGroupData))
 </div>
 @endif

@@ -7,8 +7,8 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Strategies\Export\ModelExporterInterface;
 use Czim\CmsModels\Contracts\Support\Factories\ExportStrategyFactoryInterface;
 use Czim\CmsModels\Http\Controllers\BaseModelController;
-use Czim\CmsModels\Support\Data\ModelExportStrategyData;
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\Export\ModelExportStrategyData;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 
 trait HandlesExporting
 {

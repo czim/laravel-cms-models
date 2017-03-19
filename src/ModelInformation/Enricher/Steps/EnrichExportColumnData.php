@@ -7,9 +7,9 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Data\ModelExportColumnDataInterface;
 use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;
 use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
-use Czim\CmsModels\Support\Data\ModelAttributeData;
-use Czim\CmsModels\Support\Data\ModelInformation;
-use Czim\CmsModels\Support\Data\ModelExportColumnData;
+use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\Export\ModelExportColumnData;
 use Czim\CmsModels\Support\Enums\RelationType;
 use UnexpectedValueException;
 

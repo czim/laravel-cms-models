@@ -3,8 +3,8 @@ namespace Czim\CmsModels\Test\ModelInformation\Analyzer\Processor\Steps;
 
 use Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps\AnalyzeTranslation;
 use Czim\CmsModels\ModelInformation\Analyzer\Features\TranslationAnalyzer;
-use Czim\CmsModels\Support\Data\ModelAttributeData;
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Test\Helpers\Models\Analyzer\TestActivatable;
 use Czim\CmsModels\Test\Helpers\Models\Analyzer\TestTranslatedModel;
 use Dimsav\Translatable\Translatable;

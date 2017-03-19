@@ -3,8 +3,8 @@ namespace Czim\CmsModels\Filters;
 
 use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
-use Czim\CmsModels\Support\Data\ModelInformation;
-use Czim\CmsModels\Support\Data\ModelListFilterData;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\Listing\ModelListFilterData;
 use Czim\Filter\FilterData;
 use Illuminate\Contracts\Support\Arrayable;
 

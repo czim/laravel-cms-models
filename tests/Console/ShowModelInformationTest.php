@@ -3,7 +3,7 @@ namespace Czim\CmsModels\Test\Console;
 
 use Czim\CmsModels\Console\Commands\ShowModelInformation;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Test\Helpers\Models\TestAuthor;
 use Czim\CmsModels\Test\Helpers\Models\TestComment;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;

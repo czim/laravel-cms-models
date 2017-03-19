@@ -3,7 +3,7 @@ namespace Czim\CmsModels\Strategies\Form\Store;
 
 use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
 use Czim\CmsModels\Strategies\Form\Display as FormFieldDisplayStrategies;
-use Czim\CmsModels\Support\Data\ModelFormFieldData;
+use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\Support\Enums\FormDisplayStrategy;
 
 class DateStrategy extends DefaultStrategy

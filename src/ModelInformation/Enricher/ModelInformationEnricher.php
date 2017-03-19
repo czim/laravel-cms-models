@@ -6,7 +6,7 @@ use Czim\CmsModels\Contracts\ModelInformation\Enricher\EnricherStepInterface;
 use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;
 use Czim\CmsModels\Exceptions\ModelConfigurationDataException;
 use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Illuminate\Support\Collection;
 
 class ModelInformationEnricher implements ModelInformationEnricherInterface

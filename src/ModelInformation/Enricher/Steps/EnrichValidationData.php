@@ -4,8 +4,8 @@ namespace Czim\CmsModels\ModelInformation\Enricher\Steps;
 use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
-use Czim\CmsModels\Support\Data\ModelFormFieldData;
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesFormStoreStrategies;
 use Illuminate\Support\Arr;
 

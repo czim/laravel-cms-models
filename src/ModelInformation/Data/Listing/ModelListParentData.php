@@ -1,7 +1,8 @@
 <?php
-namespace Czim\CmsModels\Support\Data;
+namespace Czim\CmsModels\ModelInformation\Data\Listing;
 
 use Czim\CmsModels\Contracts\Data\ModelListParentDataInterface;
+use Czim\CmsModels\ModelInformation\Data\AbstractModelInformationDataObject;
 
 /**
  * Class ModelListParentData

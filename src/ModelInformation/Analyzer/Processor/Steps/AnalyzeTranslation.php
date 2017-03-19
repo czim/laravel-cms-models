@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps;
 
 use Czim\CmsModels\ModelInformation\Analyzer\Features\TranslationAnalyzer;
-use Czim\CmsModels\Support\Data\ModelAttributeData;
+use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 
 class AnalyzeTranslation extends AbstractTraitAnalyzerStep
 {

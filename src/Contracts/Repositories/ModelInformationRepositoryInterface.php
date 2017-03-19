@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Contracts\Repositories;
 
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 

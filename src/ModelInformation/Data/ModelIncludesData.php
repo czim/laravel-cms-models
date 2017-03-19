@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Support\Data;
+namespace Czim\CmsModels\ModelInformation\Data;
 
 /**
  * Class ModelIncludesData

@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps;
 
-use Czim\CmsModels\Support\Data\ModelRelationData;
+use Czim\CmsModels\ModelInformation\Data\ModelRelationData;
 use Czim\CmsModels\Support\Enums\RelationType;
 use Exception;
 use Illuminate\Database\Eloquent\Relations;

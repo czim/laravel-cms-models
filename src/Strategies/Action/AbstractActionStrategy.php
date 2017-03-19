@@ -3,7 +3,7 @@ namespace Czim\CmsModels\Strategies\Action;
 
 use Czim\CmsModels\Contracts\Data\ModelActionReferenceDataInterface;
 use Czim\CmsModels\Contracts\Strategies\ActionStrategyInterface;
-use Czim\CmsModels\Support\Data\ModelActionReferenceData;
+use Czim\CmsModels\ModelInformation\Data\ModelActionReferenceData;
 
 abstract class AbstractActionStrategy implements ActionStrategyInterface
 {

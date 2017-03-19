@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps;
 
-use Czim\CmsModels\Support\Data\ModelScopeData;
+use Czim\CmsModels\ModelInformation\Data\Listing\ModelScopeData;
 use ReflectionMethod;
 
 class AnalyzeScopes extends AbstractAnalyzerStep

@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\Test\ModelInformation\Analyzer\Resolvers;
 
 use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\AttributeStrategyResolver;
-use Czim\CmsModels\Support\Data\ModelAttributeData;
+use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 use Czim\CmsModels\Support\Enums\ExportColumnStrategy;
 use Czim\CmsModels\Support\Enums\FormDisplayStrategy;

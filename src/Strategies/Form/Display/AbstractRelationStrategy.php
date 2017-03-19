@@ -175,7 +175,7 @@ abstract class AbstractRelationStrategy extends AbstractDefaultStrategy
 
     /**
      * @param string $modelClass
-     * @return \Czim\CmsModels\Support\Data\ModelInformation|false
+     * @return \Czim\CmsModels\ModelInformation\Data\ModelInformation|false
      */
     protected function getModelInformation($modelClass)
     {

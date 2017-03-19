@@ -9,7 +9,7 @@ use Czim\CmsModels\Contracts\Strategies\SortStrategyInterface;
 use Czim\CmsModels\Contracts\Support\Factories\FilterStrategyFactoryInterface;
 use Czim\CmsModels\Contracts\Support\Factories\ModelRepositoryFactoryInterface;
 use Czim\CmsModels\Http\Controllers\Traits\AppliesRepositoryContext;
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Contracts\Data\Strategies\ModelMetaReferenceInterface;
 use Czim\CmsModels\Support\Strategies\Traits\ModifiesQueryForContext;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesModelReference;

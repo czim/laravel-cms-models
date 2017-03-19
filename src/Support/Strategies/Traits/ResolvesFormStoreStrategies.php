@@ -5,8 +5,8 @@ use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
 use Czim\CmsModels\Exceptions\StrategyResolutionException;
-use Czim\CmsModels\Support\Data\ModelFormFieldData;
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 
 trait ResolvesFormStoreStrategies
 {

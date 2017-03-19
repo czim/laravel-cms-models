@@ -10,7 +10,7 @@ use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
 use Czim\CmsModels\Contracts\Support\MetaReferenceDataProviderInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Http\Requests\ModelMetaReferenceRequest;
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\Strategies\ModelMetaReference;
 use Czim\CmsModels\Support\Strategies\Traits\GetsNestedRelations;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesSourceStrategies;

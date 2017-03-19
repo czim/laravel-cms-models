@@ -3,10 +3,10 @@ namespace Czim\CmsModels\ModelInformation\Enricher\Steps;
 
 use Czim\CmsModels\Contracts\Data\ModelFormLayoutNodeInterface;
 use Czim\CmsModels\Exceptions\ModelConfigurationDataException;
-use Czim\CmsModels\Support\Data\ModelFormFieldGroupData;
-use Czim\CmsModels\Support\Data\ModelFormFieldLabelData;
-use Czim\CmsModels\Support\Data\ModelFormFieldsetData;
-use Czim\CmsModels\Support\Data\ModelFormTabData;
+use Czim\CmsModels\ModelInformation\Data\Form\Layout\ModelFormFieldGroupData;
+use Czim\CmsModels\ModelInformation\Data\Form\Layout\ModelFormFieldLabelData;
+use Czim\CmsModels\ModelInformation\Data\Form\Layout\ModelFormFieldsetData;
+use Czim\CmsModels\ModelInformation\Data\Form\Layout\ModelFormTabData;
 
 class EnrichFormLayoutData extends AbstractEnricherStep
 {

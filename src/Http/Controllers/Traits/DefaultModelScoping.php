@@ -5,7 +5,7 @@ use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
 use Czim\CmsModels\Contracts\Support\Session\ModelListMemoryInterface;
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\Repository\Contracts\ExtendedRepositoryInterface;
 
 trait DefaultModelScoping

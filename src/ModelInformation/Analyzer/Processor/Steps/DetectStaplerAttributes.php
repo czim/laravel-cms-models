@@ -5,7 +5,7 @@ use Codesleeve\Stapler\Attachment;
 use Codesleeve\Stapler\AttachmentConfig;
 use Codesleeve\Stapler\ORM\StaplerableInterface;
 use Czim\CmsModels\Support\Data\Analysis\StaplerAttachment;
-use Czim\CmsModels\Support\Data\ModelAttributeData;
+use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 
 class DetectStaplerAttributes extends AbstractAnalyzerStep

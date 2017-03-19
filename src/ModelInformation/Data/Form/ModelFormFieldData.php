@@ -1,28 +1,30 @@
 <?php
-namespace Czim\CmsModels\Support\Data;
+namespace Czim\CmsModels\ModelInformation\Data\Form;
 
 use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
+use Czim\CmsModels\ModelInformation\Data\AbstractModelInformationDataObject;
+use Czim\CmsModels\ModelInformation\Data\ModelViewReferenceData;
 
 /**
  * Class ModelFormFieldData
  *
  * Data container that describes an editable field on a model's create/update form
  *
- * @property string $key
- * @property bool $create
- * @property bool $update
- * @property string $label
- * @property string $label_translated
- * @property string $source
- * @property bool $required
- * @property string $display_strategy
- * @property string $store_strategy
- * @property string $type
- * @property array $options
- * @property bool $translated
- * @property string $style
- * @property bool $admin_only
- * @property string|string[] $permissions
+ * @property string                 $key
+ * @property bool                   $create
+ * @property bool                   $update
+ * @property string                 $label
+ * @property string                 $label_translated
+ * @property string                 $source
+ * @property bool                   $required
+ * @property string                 $display_strategy
+ * @property string                 $store_strategy
+ * @property string                 $type
+ * @property array                  $options
+ * @property bool                   $translated
+ * @property string                 $style
+ * @property bool                   $admin_only
+ * @property string|string[]        $permissions
  * @property ModelViewReferenceData $before
  * @property ModelViewReferenceData $after
  */
@@ -79,7 +81,7 @@ class ModelFormFieldData extends AbstractModelInformationDataObject implements M
 
         // A permission key or an array of permission keys that is required to see & use this field
         'permissions' => null,
-
+        
         // Views to show before and/or after the form field. Instance of ModelViewReferenceData.
         'before' => null,
         'after'  => null,

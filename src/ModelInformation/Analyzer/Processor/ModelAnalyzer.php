@@ -4,7 +4,7 @@ namespace Czim\CmsModels\ModelInformation\Analyzer\Processor;
 use Czim\CmsModels\Contracts\ModelInformation\Analyzer\AnalyzerStepInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Analyzer\ModelAnalyzerInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Illuminate\Database\Eloquent\Model;
 use ReflectionClass;
 use UnexpectedValueException;

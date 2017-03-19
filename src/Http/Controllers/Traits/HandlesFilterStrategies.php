@@ -5,7 +5,7 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Support\Factories\FilterStrategyFactoryInterface;
 use Czim\CmsModels\Exceptions\StrategyRenderException;
 use Czim\CmsModels\Http\Controllers\BaseModelController;
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Illuminate\Contracts\View\View;
 
 trait HandlesFilterStrategies

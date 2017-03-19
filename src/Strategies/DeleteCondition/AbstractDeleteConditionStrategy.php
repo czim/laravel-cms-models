@@ -43,7 +43,7 @@ abstract class AbstractDeleteConditionStrategy implements DeleteConditionStrateg
 
     /**
      * @param Model|null $model
-     * @return \Czim\CmsModels\Support\Data\ModelInformation|false
+     * @return \Czim\CmsModels\ModelInformation\Data\ModelInformation|false
      */
     protected function getModelInformation(Model $model = null)
     {

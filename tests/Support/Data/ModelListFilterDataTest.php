@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\Support\Data;
 
-use Czim\CmsModels\Support\Data\ModelListFilterData;
+use Czim\CmsModels\ModelInformation\Data\Listing\ModelListFilterData;
 use Czim\CmsModels\Test\TestCase;
 
 class ModelListFilterDataTest extends TestCase

@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Support\Strategies\Traits;
 use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
-use Czim\CmsModels\Support\Data\ModelFormFieldData;
+use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 
 /**
  * Class HasMorphRelationStrategyOptions

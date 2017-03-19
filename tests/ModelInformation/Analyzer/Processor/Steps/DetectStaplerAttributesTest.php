@@ -2,8 +2,8 @@
 namespace Czim\CmsModels\Test\ModelInformation\Analyzer\Processor\Steps;
 
 use Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps\DetectStaplerAttributes;
-use Czim\CmsModels\Support\Data\ModelAttributeData;
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 use Czim\CmsModels\Test\Helpers\Models\Analyzer\TestActivatable;
 use Czim\CmsModels\Test\Helpers\Models\Analyzer\TestStapler;

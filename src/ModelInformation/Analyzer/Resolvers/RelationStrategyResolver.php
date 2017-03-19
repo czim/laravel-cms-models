@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Analyzer\Resolvers;
 
-use Czim\CmsModels\Support\Data\ModelRelationData;
+use Czim\CmsModels\ModelInformation\Data\ModelRelationData;
 use Czim\CmsModels\Support\Enums\FormDisplayStrategy;
 use Czim\CmsModels\Support\Enums\FormStoreStrategy;
 use Czim\CmsModels\Support\Enums\ListDisplayStrategy;

@@ -4,7 +4,7 @@ namespace Czim\CmsModels\Strategies\Form\Display;
 use Czim\CmsCore\Contracts\Support\Localization\LocaleRepositoryInterface;
 use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\Strategies\FormFieldDisplayInterface;
-use Czim\CmsModels\Support\Data\ModelFormFieldData;
+use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use UnexpectedValueException;
