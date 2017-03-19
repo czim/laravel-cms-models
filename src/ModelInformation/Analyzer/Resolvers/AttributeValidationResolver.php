@@ -2,8 +2,8 @@
 namespace Czim\CmsModels\ModelInformation\Analyzer\Resolvers;
 
 use Czim\CmsModels\Strategies\Form\Store\AbstractFormFieldStoreStrategy;
-use Czim\CmsModels\Support\Data\ModelAttributeData;
-use Czim\CmsModels\Support\Data\ModelFormFieldData;
+use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
+use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 
 class AttributeValidationResolver

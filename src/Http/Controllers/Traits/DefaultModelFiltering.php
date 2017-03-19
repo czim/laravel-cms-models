@@ -6,7 +6,7 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Support\Session\ModelListMemoryInterface;
 use Czim\CmsModels\Filters\ModelFilter;
 use Czim\CmsModels\Filters\ModelFilterData;
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Illuminate\Database\Eloquent\Builder;
 
 trait DefaultModelFiltering

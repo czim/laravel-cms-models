@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\Support\Data;
 
-use Czim\CmsModels\Support\Data\ModelAttributeData;
+use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 use Czim\CmsModels\Test\TestCase;
 
 class ModelAttributeDataTest extends TestCase

@@ -5,7 +5,7 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Data\Strategies\ModelMetaReferenceInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Support\MetaReferenceDataProviderInterface;
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\Strategies\ModelMetaReference;
 use Czim\CmsModels\Support\Strategies\Traits\GetsNestedRelations;
 use Czim\CmsModels\Support\Strategies\Traits\HasMorphRelationStrategyOptions;

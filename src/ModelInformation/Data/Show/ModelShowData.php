@@ -1,17 +1,19 @@
 <?php
-namespace Czim\CmsModels\Support\Data;
+namespace Czim\CmsModels\ModelInformation\Data\Show;
 
 use Czim\CmsModels\Contracts\Data\ModelShowDataInterface;
+use Czim\CmsModels\ModelInformation\Data\AbstractModelInformationDataObject;
+use Czim\CmsModels\ModelInformation\Data\ModelViewReferenceData;
 
 /**
  * Class ModelShowData
  *
  * Data container that represents show page for the model.
  *
- * @property array                        $layout
- * @property array|ModelShowFieldData[]   $fields
- * @property array|ModelViewReferenceData $before
- * @property array|ModelViewReferenceData $after
+ * @property array                                                              $layout
+ * @property array|ModelShowFieldData[]                                         $fields
+ * @property array|\Czim\CmsModels\ModelInformation\Data\ModelViewReferenceData $before
+ * @property array|ModelViewReferenceData                                       $after
  */
 class ModelShowData extends AbstractModelInformationDataObject implements ModelShowDataInterface
 {

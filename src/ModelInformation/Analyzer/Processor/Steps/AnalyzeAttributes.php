@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps;
 
-use Czim\CmsModels\Support\Data\ModelAttributeData;
+use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 
 class AnalyzeAttributes extends AbstractAnalyzerStep

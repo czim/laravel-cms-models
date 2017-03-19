@@ -50,7 +50,7 @@ class UsesAbstractTraitAnalyzerStep extends AbstractTraitAnalyzerStep
     /**
      * Helper method to test abstract class.
      *
-     * @return \Czim\CmsModels\Contracts\Data\ModelInformationInterface|\Czim\CmsModels\Support\Data\ModelInformation
+     * @return \Czim\CmsModels\Contracts\Data\ModelInformationInterface|\Czim\CmsModels\ModelInformation\Data\ModelInformation
      */
     public function getTestInformation()
     {

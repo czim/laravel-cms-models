@@ -1,7 +1,8 @@
 <?php
-namespace Czim\CmsModels\Support\Data;
+namespace Czim\CmsModels\ModelInformation\Data\Form\Layout;
 
 use Czim\CmsModels\Contracts\Data\ModelFormTabDataInterface;
+use Czim\CmsModels\ModelInformation\Data\ModelViewReferenceData;
 use Czim\CmsModels\Support\Enums\LayoutNodeType;
 
 /**
@@ -9,11 +10,11 @@ use Czim\CmsModels\Support\Enums\LayoutNodeType;
  *
  * Data container that describes a tab pane on a model's create/update form page
  *
- * @property string $type
- * @property string $label
- * @property string $label_translated
- * @property bool   $required
- * @property array  $children
+ * @property string                 $type
+ * @property string                 $label
+ * @property string                 $label_translated
+ * @property bool                   $required
+ * @property array                  $children
  * @property ModelViewReferenceData $before
  * @property ModelViewReferenceData $after
  */

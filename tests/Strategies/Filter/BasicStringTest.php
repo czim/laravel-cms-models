@@ -4,8 +4,8 @@ namespace Czim\CmsModels\Test\Strategies\Filter;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Strategies\FilterStrategyInterface;
 use Czim\CmsModels\Strategies\Filter\BasicString;
-use Czim\CmsModels\Support\Data\ModelAttributeData;
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Illuminate\Contracts\View\View;
 

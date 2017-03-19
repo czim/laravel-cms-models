@@ -7,7 +7,7 @@ use Czim\CmsModels\Contracts\Data\ModelFormTabDataInterface;
 use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
 use Czim\CmsModels\Exceptions\StrategyApplicationException;
 use Czim\CmsModels\Exceptions\StrategyRetrievalException;
-use Czim\CmsModels\Support\Data\ModelFormFieldData;
+use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesFormStoreStrategies;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\MessageBag;

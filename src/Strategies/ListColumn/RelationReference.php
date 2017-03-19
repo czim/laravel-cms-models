@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\Strategies\ListColumn;
 
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Support\Strategies\Traits\GetsNestedRelations;
 use Czim\CmsModels\Support\Strategies\Traits\ModifiesQueryForContext;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesModelReference;

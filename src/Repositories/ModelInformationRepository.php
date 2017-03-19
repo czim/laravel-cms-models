@@ -4,7 +4,7 @@ namespace Czim\CmsModels\Repositories;
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\ModelInformation\ModelInformationCollectorInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 

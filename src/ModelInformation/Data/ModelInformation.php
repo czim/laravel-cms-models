@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Support\Data;
+namespace Czim\CmsModels\ModelInformation\Data;
 
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 
@@ -30,10 +30,10 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
  * @property array|ModelIncludesData $includes
  * @property array|ModelAttributeData[] $attributes
  * @property array|ModelRelationData[] $relations
- * @property array|ModelListData $list
- * @property array|ModelFormData $form
- * @property array|ModelShowData $show
- * @property array|ModelExportData $export
+ * @property array|Listing\ModelListData $list
+ * @property array|Form\ModelFormData $form
+ * @property array|Show\ModelShowData $show
+ * @property array|Export\ModelExportData $export
  */
 class ModelInformation extends AbstractModelInformationDataObject implements ModelInformationInterface
 {
@@ -42,10 +42,10 @@ class ModelInformation extends AbstractModelInformationDataObject implements Mod
         'meta'       => ModelMetaData::class,
         'includes'   => ModelIncludesData::class,
         'reference'  => ModelReferenceData::class,
-        'list'       => ModelListData::class,
-        'form'       => ModelFormData::class,
-        'show'       => ModelShowData::class,
-        'export'     => ModelExportData::class,
+        'list'       => Listing\ModelListData::class,
+        'form'       => Form\ModelFormData::class,
+        'show'       => Show\ModelShowData::class,
+        'export'     => Export\ModelExportData::class,
         'attributes' => ModelAttributeData::class . '[]',
         'relations'  => ModelRelationData::class . '[]',
     ];

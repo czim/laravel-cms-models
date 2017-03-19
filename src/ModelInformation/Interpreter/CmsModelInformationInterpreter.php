@@ -5,16 +5,16 @@ use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\ModelInformation\ModelInformationInterpreterInterface;
 use Czim\CmsModels\Exceptions\ModelConfigurationDataException;
-use Czim\CmsModels\Support\Data\ModelActionReferenceData;
-use Czim\CmsModels\Support\Data\ModelExportColumnData;
-use Czim\CmsModels\Support\Data\ModelExportStrategyData;
-use Czim\CmsModels\Support\Data\ModelFormFieldData;
-use Czim\CmsModels\Support\Data\ModelInformation;
-use Czim\CmsModels\Support\Data\ModelListColumnData;
-use Czim\CmsModels\Support\Data\ModelListFilterData;
-use Czim\CmsModels\Support\Data\ModelListParentData;
-use Czim\CmsModels\Support\Data\ModelScopeData;
-use Czim\CmsModels\Support\Data\ModelShowFieldData;
+use Czim\CmsModels\ModelInformation\Data\ModelActionReferenceData;
+use Czim\CmsModels\ModelInformation\Data\Export\ModelExportColumnData;
+use Czim\CmsModels\ModelInformation\Data\Export\ModelExportStrategyData;
+use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\Listing\ModelListColumnData;
+use Czim\CmsModels\ModelInformation\Data\Listing\ModelListFilterData;
+use Czim\CmsModels\ModelInformation\Data\Listing\ModelListParentData;
+use Czim\CmsModels\ModelInformation\Data\Listing\ModelScopeData;
+use Czim\CmsModels\ModelInformation\Data\Show\ModelShowFieldData;
 
 class CmsModelInformationInterpreter implements ModelInformationInterpreterInterface
 {

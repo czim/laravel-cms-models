@@ -1,34 +1,38 @@
 <?php
-namespace Czim\CmsModels\Support\Data;
+namespace Czim\CmsModels\ModelInformation\Data\Listing;
 
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Data\ModelActionReferenceDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelListDataInterface;
+use Czim\CmsModels\ModelInformation\Data\AbstractModelInformationDataObject;
+use Czim\CmsModels\ModelInformation\Data\ModelIncludesData;
+use Czim\CmsModels\ModelInformation\Data\ModelActionReferenceData;
+use Czim\CmsModels\ModelInformation\Data\ModelViewReferenceData;
 
 /**
  * Class ModelListData
  *
  * Data container that represents list representation for the model.
  *
- * @property int|array $page_size
- * @property array|ModelListColumnData[] $columns
- * @property bool $disable_filters
- * @property array|ModelListFilterData[] $filters
- * @property array|ModelIncludesData $includes
- * @property bool $disable_scopes
- * @property array|ModelScopeData[] $scopes
- * @property string|array $default_sort
- * @property bool $orderable
- * @property string $order_strategy
- * @property string $order_column
- * @property string $order_scope_relation
- * @property bool $activatable
- * @property string $active_column
- * @property array|ModelActionReferenceData[] $default_action
- * @property array|ModelViewReferenceData $before
- * @property array|ModelViewReferenceData $after
- * @property bool $default_top_relation
- * @property array|ModelListParentData[] $parents
+ * @property int|array                                                          $page_size
+ * @property array|ModelListColumnData[]                                        $columns
+ * @property bool                                                               $disable_filters
+ * @property array|ModelListFilterData[]                                        $filters
+ * @property array|ModelIncludesData                                            $includes
+ * @property bool                                                               $disable_scopes
+ * @property array|ModelScopeData[]                                             $scopes
+ * @property string|array                                                       $default_sort
+ * @property bool                                                               $orderable
+ * @property string                                                             $order_strategy
+ * @property string                                                             $order_column
+ * @property string                                                             $order_scope_relation
+ * @property bool                                                               $activatable
+ * @property string                                                             $active_column
+ * @property array|ModelActionReferenceData[]                                   $default_action
+ * @property array|\Czim\CmsModels\ModelInformation\Data\ModelViewReferenceData $before
+ * @property array|\Czim\CmsModels\ModelInformation\Data\ModelViewReferenceData $after
+ * @property bool                                                               $default_top_relation
+ * @property array|ModelListParentData[]                                        $parents
  */
 class ModelListData extends AbstractModelInformationDataObject implements ModelListDataInterface
 {

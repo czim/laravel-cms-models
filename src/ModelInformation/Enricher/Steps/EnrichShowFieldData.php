@@ -4,10 +4,10 @@ namespace Czim\CmsModels\ModelInformation\Enricher\Steps;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Data\ModelShowFieldDataInterface;
 use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
-use Czim\CmsModels\Support\Data\ModelAttributeData;
-use Czim\CmsModels\Support\Data\ModelInformation;
-use Czim\CmsModels\Support\Data\ModelShowFieldData;
-use Czim\CmsModels\Support\Data\ModelRelationData;
+use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\Show\ModelShowFieldData;
+use Czim\CmsModels\ModelInformation\Data\ModelRelationData;
 use UnexpectedValueException;
 
 class EnrichShowFieldData extends EnrichListColumnData

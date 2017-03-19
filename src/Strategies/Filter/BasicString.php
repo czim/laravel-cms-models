@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Strategies\Filter;
 
-use Czim\CmsModels\Support\Data\ModelAttributeData;
+use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;

@@ -6,7 +6,7 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Data\ModelShowFieldDataInterface;
 use Czim\CmsModels\Contracts\Support\Factories\ShowFieldStrategyFactoryInterface;
 use Czim\CmsModels\Exceptions\StrategyRenderException;
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 

@@ -1,8 +1,9 @@
 <?php
-namespace Czim\CmsModels\Support\Data;
+namespace Czim\CmsModels\ModelInformation\Data\Form\Layout;
 
 use Czim\CmsModels\Contracts\Data\ModelFormLayoutNodeInterface;
 use Czim\CmsModels\Exceptions\ModelConfigurationDataException;
+use Czim\CmsModels\ModelInformation\Data\AbstractModelInformationDataObject;
 use Czim\CmsModels\Support\Enums\LayoutNodeType;
 use Czim\DataObject\Contracts\DataObjectInterface;
 use UnexpectedValueException;

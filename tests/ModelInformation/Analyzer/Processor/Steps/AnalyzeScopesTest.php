@@ -2,8 +2,8 @@
 namespace Czim\CmsModels\Test\ModelInformation\Analyzer\Processor\Steps;
 
 use Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps\AnalyzeScopes;
-use Czim\CmsModels\Support\Data\ModelInformation;
-use Czim\CmsModels\Support\Data\ModelScopeData;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\Listing\ModelScopeData;
 use Czim\CmsModels\Test\Helpers\Models\Analyzer\TestScopes;
 
 /**

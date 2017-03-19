@@ -7,7 +7,7 @@ use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
 use Czim\CmsModels\Contracts\Support\Session\ModelListMemoryInterface;
 use Czim\CmsModels\Repositories\Criteria\ModelOrderStrategy;
 use Czim\CmsModels\Strategies\Sort\NullLast;
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\Repository\Contracts\ExtendedRepositoryInterface;
 use Czim\Repository\Enums\CriteriaKey;
 

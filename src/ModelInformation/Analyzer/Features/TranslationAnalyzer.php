@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\ModelInformation\Analyzer\Features;
 
 use Czim\CmsModels\Contracts\ModelInformation\Analyzer\ModelAnalyzerInterface;
-use Czim\CmsModels\Support\Data\ModelInformation;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use UnexpectedValueException;
