@@ -36,7 +36,7 @@ You can define how models will be referred to within the CMS, by setting the `re
 return [
     'reference' => [
         'source'   => 'title',
-        'strategy' => \Czim\CmsModels\View\ReferenceStrategies\IdAndAttribute::class,
+        'strategy' => \Czim\CmsModels\Strategies\Reference\IdAndAttribute::class,
     ],
     
     // ...

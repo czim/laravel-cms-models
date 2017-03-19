@@ -2,16 +2,16 @@
 
 use Czim\CmsModels\ModelInformation\Analyzer\Database as DatabaseAnalyzers;
 use Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps as AnalyzerSteps;
-use Czim\CmsModels\Support\Enums;
-use Czim\CmsModels\Repositories\SortStrategies;
+use Czim\CmsModels\Strategies\Action as ActionStrategies;
+use Czim\CmsModels\Strategies\Export as ExportStrategies;
+use Czim\CmsModels\Strategies\Export\Column as ExportColumnStrategies;
+use Czim\CmsModels\Strategies\Filter as FilterStrategies;
 use Czim\CmsModels\Strategies\Form\Display as FormFieldDisplayStrategies;
 use Czim\CmsModels\Strategies\Form\Store as FormFieldStoreStrategies;
-use Czim\CmsModels\Support\Exporting\Strategies as ExportStrategies;
-use Czim\CmsModels\Support\Exporting\ColumnStrategies as ExportColumnStrategies;
-use Czim\CmsModels\View\ActionStrategies;
-use Czim\CmsModels\View\FilterStrategies;
-use Czim\CmsModels\View\ListStrategies;
-use Czim\CmsModels\View\ReferenceStrategies;
+use Czim\CmsModels\Strategies\ListColumn as ListStrategies;
+use Czim\CmsModels\Strategies\Reference as ReferenceStrategies;
+use Czim\CmsModels\Strategies\Sort as SortStrategies;
+use Czim\CmsModels\Support\Enums;
 
 return [
 
@@ -255,7 +255,7 @@ return [
         'repository' => [
 
             // The default namespace to prefix for relative strategy class names
-            'default-namespace' => 'Czim\\CmsModels\\Repositories\\ContextStrategies\\',
+            'default-namespace' => 'Czim\\CmsModels\\Strategies\\Context\\',
             'default-strategy'  => null,
 
             // Aliases for repository context strategy classes
@@ -267,7 +267,7 @@ return [
         'reference' => [
 
             // The default namespace to prefix for relative strategy class names
-            'default-namespace' => 'Czim\\CmsModels\\View\\ReferenceStrategies\\',
+            'default-namespace' => 'Czim\\CmsModels\\Strategies\\Reference\\',
             'default-strategy'  => ReferenceStrategies\IdAndAttribute::class,
 
             // Aliases for reference display strategy classes
@@ -284,15 +284,15 @@ return [
             'page-size-options' => [ 25, 50, 100 ],
 
             // The default namespace to prefix for relative strategy class names
-            'default-namespace' => 'Czim\\CmsModels\\View\\ListStrategies\\',
+            'default-namespace' => 'Czim\\CmsModels\\Strategies\\ListColumn\\',
             'default-strategy'  => ListStrategies\DefaultStrategy::class,
 
             // The default strategy for sorting columns
-            'default-sort-namespace' => 'Czim\\CmsModels\\Repositories\\SortStrategies\\',
+            'default-sort-namespace' => 'Czim\\CmsModels\\Strategies\\Sort\\',
             'default-sort-strategy'  => SortStrategies\NullLast::class,
 
             // The default strategy namespace for action links
-            'default-action-namespace' => 'Czim\\CmsModels\\View\\ActionStrategies\\',
+            'default-action-namespace' => 'Czim\\CmsModels\\Strategies\\Action\\',
 
             // Aliases for list display strategy classes
             'aliases' => [
@@ -327,7 +327,7 @@ return [
         'filter' => [
 
             // The default namespace to prefix for relative strategy class names
-            'default-namespace' => 'Czim\\CmsModels\\View\\FilterStrategies\\',
+            'default-namespace' => 'Czim\\CmsModels\\Strategies\\Filter\\',
 
             // Aliases for filter strategy classes
             'aliases' => [
@@ -400,7 +400,7 @@ return [
         'show' => [
 
             // The default namespace to prefix for relative strategy class names
-            'default-namespace' => 'Czim\\CmsModels\\View\\ListStrategies\\',
+            'default-namespace' => 'Czim\\CmsModels\\Strategies\\ListColumn\\',
             'default-strategy'  => ListStrategies\DefaultStrategy::class,
 
             // Aliases for show field display strategy classes
@@ -412,14 +412,14 @@ return [
         'delete' => [
 
             // The default namespace to prefix for relative strategy class names
-            'default-namespace' => 'Czim\\CmsModels\\Repositories\\DeleteStrategies\\',
+            'default-namespace' => 'Czim\\CmsModels\\Strategies\\Delete\\',
 
             // Aliases for delete strategy classes
             'aliases' => [
             ],
 
             // The default namespace to prefix for relative strategy class names
-            'default-condition-namespace' => 'Czim\\CmsModels\\Repositories\\DeleteConditionStrategies\\',
+            'default-condition-namespace' => 'Czim\\CmsModels\\Strategies\\DeleteCondition\\',
 
             // Aliases for delete condition strategy classes
             'condition-aliases' => [
@@ -429,10 +429,10 @@ return [
         'export' => [
 
             // The default namespace to prefix for relative strategy class names
-            'default-namespace' => 'Czim\\CmsModels\\Support\\Exporting\\Strategies\\',
+            'default-namespace' => 'Czim\\CmsModels\\Strategies\\Export\\',
 
             // The default namespace to prefix for relative strategy class names
-            'default-column-namespace' => 'Czim\\CmsModels\\Support\\Exporting\\ColumnStrategies\\',
+            'default-column-namespace' => 'Czim\\CmsModels\\Strategies\\Export\\Column\\',
             'default-column-strategy'  => ExportColumnStrategies\DefaultStrategy::class,
 
             // Aliases for exporter strategy classes
