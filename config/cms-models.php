@@ -1,5 +1,6 @@
 <?php
 
+use Czim\CmsModels\Analyzer\Database as DatabaseAnalyzers;
 use Czim\CmsModels\Analyzer\Processor\Steps as AnalyzerSteps;
 use Czim\CmsModels\Support\Enums;
 use Czim\CmsModels\Http\Controllers\FormFieldStrategies as FormFieldStoreStrategies;
@@ -138,8 +139,11 @@ return [
         ],
 
         'database' => [
-            // The analyzer class to use for database tables and columns
-            'class' => \Czim\CmsModels\Analyzer\Database\MysqlDatabaseAnalyzer::class,
+            // The analyzer class to use for database tables and columns, mapped by driver name
+            'driver' => [
+                'mysql'  => DatabaseAnalyzers\MysqlDatabaseAnalyzer::class,
+                'sqlite' => DatabaseAnalyzers\SqliteDatabaseAnalyzer::class,
+            ],
         ],
 
         'reference' => [

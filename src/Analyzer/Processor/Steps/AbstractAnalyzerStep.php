@@ -89,9 +89,14 @@ abstract class AbstractAnalyzerStep implements AnalyzerStepInterface
      */
     protected function databaseAnalyzer()
     {
-        return app(
-            config('cms-models.analyzer.database.class') ?: DatabaseAnalyzerInterface::class
-        );
+        $driver = $this->model()->getConnection()->getDriverName();
+        $class  = config("cms-models.analyzer.database.driver.{$driver}");
+
+        if ($class) {
+            return app($class);
+        }
+
+        return app(DatabaseAnalyzerInterface::class);
     }
 
 
