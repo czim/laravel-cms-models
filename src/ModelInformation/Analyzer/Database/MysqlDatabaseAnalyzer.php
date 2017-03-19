@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Analyzer\Database;
+namespace Czim\CmsModels\ModelInformation\Analyzer\Database;
 
 use DB;
 

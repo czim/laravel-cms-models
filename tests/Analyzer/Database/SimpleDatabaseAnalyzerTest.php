@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\Analyzer\Database;
 
-use Czim\CmsModels\Analyzer\Database\SimpleDatabaseAnalyzer;
+use Czim\CmsModels\ModelInformation\Analyzer\Database\SimpleDatabaseAnalyzer;
 
 class SimpleDatabaseAnalyzerTest extends AbstractDatabaseAnalyzerTestCase
 {
