@@ -138,7 +138,7 @@ configure its `options` section for the following keys:
 - `context_strategy` (string)  
     An extra optional context strategy FQN, classname or alias to modify the query for the references.
 
-For an example of a form field display strategy that makes use of this, see `Czim\CmsModels\View\FormFieldStrategies\ModelRelationSingleStrategy`.
+For an example of a form field display strategy that makes use of this, see `Czim\CmsModels\Strategies\Form\Display\ModelRelationSingleStrategy`.
 
 For more information on setting a `context_strategy`, see [Repository Context Strategies](STRATEGIES.md#repository-context-strategies).
      
