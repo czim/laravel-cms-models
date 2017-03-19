@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Analyzer\Processor\Steps;
+namespace Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps;
 
 abstract class AbstractTraitAnalyzerStep extends AbstractAnalyzerStep
 {

@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\Integration\Analyzer\Processor;
 
-use Czim\CmsModels\Analyzer\Processor\ModelAnalyzer;
+use Czim\CmsModels\ModelInformation\Analyzer\Processor\ModelAnalyzer;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Test\Helpers\Models\Analyzer\TestOnAlternativeConnection;
 use Czim\CmsModels\Test\Helpers\Models\TestComment;

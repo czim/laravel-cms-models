@@ -1,8 +1,8 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Enricher\Steps;
 
-use Czim\CmsModels\Analyzer\AttributeStrategyResolver;
-use Czim\CmsModels\Analyzer\RelationStrategyResolver;
+use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\AttributeStrategyResolver;
+use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\RelationStrategyResolver;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Data\ModelListColumnDataInterface;
 use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;
@@ -18,19 +18,19 @@ class EnrichListColumnData extends AbstractEnricherStep
 {
 
     /**
-     * @var AttributeStrategyResolver
+     * @var \Czim\CmsModels\ModelInformation\Analyzer\Resolvers\AttributeStrategyResolver
      */
     protected $attributeStrategyResolver;
 
     /**
-     * @var RelationStrategyResolver
+     * @var \Czim\CmsModels\ModelInformation\Analyzer\Resolvers\RelationStrategyResolver
      */
     protected $relationStrategyResolver;
 
     /**
-     * @param ModelInformationEnricherInterface $enricher
-     * @param AttributeStrategyResolver         $attributeStrategyResolver
-     * @param RelationStrategyResolver          $relationStrategyResolver
+     * @param ModelInformationEnricherInterface                                             $enricher
+     * @param \Czim\CmsModels\ModelInformation\Analyzer\Resolvers\AttributeStrategyResolver $attributeStrategyResolver
+     * @param \Czim\CmsModels\ModelInformation\Analyzer\Resolvers\RelationStrategyResolver  $relationStrategyResolver
      */
     public function __construct(
         ModelInformationEnricherInterface $enricher,

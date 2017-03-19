@@ -1,8 +1,8 @@
 <?php
 namespace Czim\CmsModels\Http\Controllers\FormFieldStrategies;
 
-use Czim\CmsModels\Analyzer\AttributeValidationResolver;
-use Czim\CmsModels\Analyzer\RelationValidationResolver;
+use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\AttributeValidationResolver;
+use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\RelationValidationResolver;
 use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;

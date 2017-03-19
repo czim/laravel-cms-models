@@ -1,7 +1,7 @@
 <?php
-namespace Czim\CmsModels\Analyzer\Processor\Steps;
+namespace Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps;
 
-use Czim\CmsModels\Analyzer\TranslationAnalyzer;
+use Czim\CmsModels\ModelInformation\Analyzer\Features\TranslationAnalyzer;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 
 class AnalyzeTranslation extends AbstractTraitAnalyzerStep

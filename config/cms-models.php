@@ -1,7 +1,7 @@
 <?php
 
 use Czim\CmsModels\Analyzer\Database as DatabaseAnalyzers;
-use Czim\CmsModels\Analyzer\Processor\Steps as AnalyzerSteps;
+use Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps as AnalyzerSteps;
 use Czim\CmsModels\Support\Enums;
 use Czim\CmsModels\Http\Controllers\FormFieldStrategies as FormFieldStoreStrategies;
 use Czim\CmsModels\Repositories\SortStrategies;

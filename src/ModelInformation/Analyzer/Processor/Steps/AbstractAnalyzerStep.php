@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Analyzer\Processor\Steps;
+namespace Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps;
 
 use Czim\CmsModels\Contracts\Analyzer\AnalyzerStepInterface;
 use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
