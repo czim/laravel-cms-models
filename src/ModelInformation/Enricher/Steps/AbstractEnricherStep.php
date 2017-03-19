@@ -1,9 +1,9 @@
 <?php
-namespace Czim\CmsModels\Repositories\Collectors\Enricher;
+namespace Czim\CmsModels\ModelInformation\Enricher\Steps;
 
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
-use Czim\CmsModels\Contracts\Repositories\Collectors\EnricherStepInterface;
-use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Enricher\EnricherStepInterface;
+use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Enums\AttributeCast;

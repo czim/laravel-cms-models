@@ -7,6 +7,7 @@ use Czim\CmsModels\Console\Commands\ClearModelInformationCache;
 use Czim\CmsModels\Console\Commands\ShowModelInformation;
 use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
 use Czim\CmsModels\Contracts\Analyzer\ModelAnalyzerInterface;
+use Czim\CmsModels\Contracts\ModelInformation as ModelInfoContracts;
 use Czim\CmsModels\Contracts\Repositories as RepositoriesContracts;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
 use Czim\CmsModels\Contracts\Support\Factories as FactoriesContracts;
@@ -16,6 +17,7 @@ use Czim\CmsModels\Contracts\Support\Session\ModelListMemoryInterface;
 use Czim\CmsModels\Contracts\Support\Translation\TranslationLocaleHelperInterface;
 use Czim\CmsModels\Events;
 use Czim\CmsModels\Listeners\ModelLogListener;
+use Czim\CmsModels\ModelInformation;
 use Czim\CmsModels\Repositories;
 use Czim\CmsModels\Support\Factories;
 use Czim\CmsModels\Support\ModuleHelper;
@@ -160,9 +162,9 @@ class CmsModelsServiceProvider extends ServiceProvider
     protected function registerModelInformationInterfaceBindings()
     {
         $this->app->singleton(RepositoriesContracts\ModelInformationRepositoryInterface::class, Repositories\ModelInformationRepository::class);
-        $this->app->singleton(RepositoriesContracts\Collectors\ModelInformationFileReaderInterface::class, Repositories\Collectors\ModelInformationFileReader::class);
-        $this->app->singleton(RepositoriesContracts\Collectors\ModelInformationEnricherInterface::class, Repositories\Collectors\ModelInformationEnricher::class);
-        $this->app->singleton(RepositoriesContracts\Collectors\ModelInformationInterpreterInterface::class, Repositories\Collectors\CmsModelInformationInterpreter::class);
+        $this->app->singleton(ModelInfoContracts\Collector\ModelInformationFileReaderInterface::class, ModelInformation\Collector\ModelInformationFileReader::class);
+        $this->app->singleton(ModelInfoContracts\ModelInformationEnricherInterface::class, ModelInformation\Enricher\ModelInformationEnricher::class);
+        $this->app->singleton(ModelInfoContracts\ModelInformationInterpreterInterface::class, ModelInformation\Interpreter\CmsModelInformationInterpreter::class);
 
         $this->app->singleton(ModelAnalyzerInterface::class, ModelAnalyzer::class);
         $this->app->singleton(DatabaseAnalyzerInterface::class, SimpleDatabaseAnalyzer::class);
@@ -212,7 +214,7 @@ class CmsModelsServiceProvider extends ServiceProvider
      */
     protected function registerConfiguredCollector()
     {
-        $this->app->singleton(RepositoriesContracts\Collectors\ModelInformationCollectorInterface::class, config('cms-models.collector.class'));
+        $this->app->singleton(ModelInfoContracts\ModelInformationCollectorInterface::class, config('cms-models.collector.class'));
 
         return $this;
     }

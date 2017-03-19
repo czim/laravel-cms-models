@@ -1,12 +1,11 @@
 <?php
-namespace Czim\CmsModels\Repositories\Collectors;
+namespace Czim\CmsModels\ModelInformation\Enricher;
 
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
-use Czim\CmsModels\Contracts\Repositories\Collectors\EnricherStepInterface;
-use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Enricher\EnricherStepInterface;
+use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;
 use Czim\CmsModels\Exceptions\ModelConfigurationDataException;
 use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
-use Czim\CmsModels\Repositories\Collectors\Enricher;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Illuminate\Support\Collection;
 
@@ -29,15 +28,15 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
      * @var string[]
      */
     protected $steps = [
-        Enricher\EnrichBasicListData::class,
-        Enricher\EnrichListColumnData::class,
-        Enricher\EnrichListFilterData::class,
-        Enricher\EnrichFormFieldData::class,
-        Enricher\EnrichFormLayoutData::class,
-        Enricher\EnrichShowFieldData::class,
-        Enricher\EnrichExportStrategyData::class,
-        Enricher\EnrichExportColumnData::class,
-        Enricher\EnrichValidationData::class,
+        Steps\EnrichBasicListData::class,
+        Steps\EnrichListColumnData::class,
+        Steps\EnrichListFilterData::class,
+        Steps\EnrichFormFieldData::class,
+        Steps\EnrichFormLayoutData::class,
+        Steps\EnrichShowFieldData::class,
+        Steps\EnrichExportStrategyData::class,
+        Steps\EnrichExportColumnData::class,
+        Steps\EnrichValidationData::class,
     ];
 
 

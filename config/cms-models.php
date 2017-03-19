@@ -99,7 +99,7 @@ return [
     'collector' => [
 
         // The main collector that will be bound to the collector interface
-        'class' => Czim\CmsModels\Repositories\Collectors\ModelInformationCollector::class,
+        'class' => \Czim\CmsModels\ModelInformation\Collector\ModelInformationCollector::class,
 
         'source' => [
 

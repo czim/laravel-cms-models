@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Repositories\Collectors\Enricher;
+namespace Czim\CmsModels\ModelInformation\Enricher\Steps;
 
 class EnrichBasicListData extends AbstractEnricherStep
 {
