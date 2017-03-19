@@ -38,13 +38,13 @@ class ModelListFilterDataTest extends TestCase
 
         $dataA->merge($dataB);
 
-        $this->assertEquals('some label new', $dataA['label']);
-        $this->assertEquals('column_c', $dataA['source']);
-        $this->assertEquals('column_d', $dataA['target']);
-        $this->assertEquals('overruledStrategy', $dataA['strategy']);
-        $this->assertCount(2, $dataA['options']);
-        $this->assertEquals('something', $dataA['options']['test']);
-        $this->assertEquals([ 'value_z' ], $dataA['options']['values']);
+        static::assertEquals('some label new', $dataA['label']);
+        static::assertEquals('column_c', $dataA['source']);
+        static::assertEquals('column_d', $dataA['target']);
+        static::assertEquals('overruledStrategy', $dataA['strategy']);
+        static::assertCount(2, $dataA['options']);
+        static::assertEquals('something', $dataA['options']['test']);
+        static::assertEquals([ 'value_z' ], $dataA['options']['values']);
     }
 
     /**
@@ -76,7 +76,7 @@ class ModelListFilterDataTest extends TestCase
 
         $dataA->merge($dataB);
 
-        $this->assertEquals([ 'value_z' ], $dataA['options']['values']);
+        static::assertEquals([ 'value_z' ], $dataA['options']['values']);
     }
 
 }
