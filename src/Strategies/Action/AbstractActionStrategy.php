@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Strategies\Action;
 
-use Czim\CmsModels\Contracts\Data\ModelActionReferenceDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelActionReferenceDataInterface;
 use Czim\CmsModels\Contracts\Strategies\ActionStrategyInterface;
 use Czim\CmsModels\ModelInformation\Data\ModelActionReferenceData;
 

@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Contracts\Support;
 
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Data\Strategies\ModelMetaReferenceInterface;
 
 interface MetaReferenceDataProviderInterface

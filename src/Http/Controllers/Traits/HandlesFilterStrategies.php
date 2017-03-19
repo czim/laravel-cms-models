@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Http\Controllers\Traits;
 
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Support\Factories\FilterStrategyFactoryInterface;
 use Czim\CmsModels\Exceptions\StrategyRenderException;
 use Czim\CmsModels\Http\Controllers\BaseModelController;

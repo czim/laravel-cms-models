@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\ModelInformation\Data;
 
 use Czim\CmsCore\Support\Data\AbstractDataObject;
-use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelAttributeDataInterface;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 
 /**

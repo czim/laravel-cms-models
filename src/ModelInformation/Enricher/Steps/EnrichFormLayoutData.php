@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Enricher\Steps;
 
-use Czim\CmsModels\Contracts\Data\ModelFormLayoutNodeInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Form\Layout\ModelFormLayoutNodeInterface;
 use Czim\CmsModels\Exceptions\ModelConfigurationDataException;
 use Czim\CmsModels\ModelInformation\Data\Form\Layout\ModelFormFieldGroupData;
 use Czim\CmsModels\ModelInformation\Data\Form\Layout\ModelFormFieldLabelData;

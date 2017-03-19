@@ -3,8 +3,8 @@ namespace Czim\CmsModels\ModelInformation\Enricher\Steps;
 
 use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\AttributeStrategyResolver;
 use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\RelationStrategyResolver;
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
-use Czim\CmsModels\Contracts\Data\ModelListColumnDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Listing\ModelListColumnDataInterface;
 use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;
 use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
 use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;

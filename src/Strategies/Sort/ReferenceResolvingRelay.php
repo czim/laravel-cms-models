@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Strategies\Sort;
 
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Strategies\SortStrategyInterface;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;

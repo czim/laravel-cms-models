@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Repositories\ActivateStrategies;
 
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ActivateStrategyInterface;
 use Czim\CmsModels\Contracts\Repositories\ActivateStrategyResolverInterface;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;

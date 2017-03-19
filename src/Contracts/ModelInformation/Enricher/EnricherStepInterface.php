@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Contracts\ModelInformation\Enricher;
 
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Illuminate\Support\Collection;
 

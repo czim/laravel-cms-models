@@ -3,9 +3,9 @@ namespace Czim\CmsModels\Strategies\Form\Store;
 
 use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\AttributeValidationResolver;
 use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\RelationValidationResolver;
-use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
-use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelAttributeDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;

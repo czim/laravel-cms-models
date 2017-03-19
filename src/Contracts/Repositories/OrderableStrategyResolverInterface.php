@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Contracts\Repositories;
 
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 
 interface OrderableStrategyResolverInterface
 {

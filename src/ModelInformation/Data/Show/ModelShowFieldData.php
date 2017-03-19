@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Data\Show;
 
-use Czim\CmsModels\Contracts\Data\ModelShowFieldDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Show\ModelShowFieldDataInterface;
 use Czim\CmsModels\ModelInformation\Data\AbstractModelInformationDataObject;
 
 /**

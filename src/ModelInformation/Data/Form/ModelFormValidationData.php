@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Data\Form;
 
-use Czim\CmsModels\Contracts\Data\ModelFormValidationDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormValidationDataInterface;
 use Czim\CmsModels\ModelInformation\Data\AbstractModelInformationDataObject;
 
 /**

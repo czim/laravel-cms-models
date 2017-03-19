@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Contracts\Strategies;
 
-use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelAttributeDataInterface;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 

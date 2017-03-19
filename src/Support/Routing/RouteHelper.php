@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Support\Routing;
 
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
 use Czim\CmsModels\Support\ModuleHelper;
 

@@ -1,8 +1,8 @@
 <?php
 namespace Czim\CmsModels\Support\Strategies\Traits;
 
-use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
 use Czim\CmsModels\Exceptions\StrategyResolutionException;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;

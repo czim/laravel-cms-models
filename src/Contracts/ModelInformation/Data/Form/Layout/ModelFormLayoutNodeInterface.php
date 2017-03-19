@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Contracts\Data;
+namespace Czim\CmsModels\Contracts\ModelInformation\Data\Form\Layout;
 
 use Czim\DataObject\Contracts\DataObjectInterface;
 

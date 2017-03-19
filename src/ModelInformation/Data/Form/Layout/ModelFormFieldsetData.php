@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Data\Form\Layout;
 
-use Czim\CmsModels\Contracts\Data\ModelFormFieldsetDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Form\Layout\ModelFormFieldsetDataInterface;
 use Czim\CmsModels\Support\Enums\LayoutNodeType;
 
 /**

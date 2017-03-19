@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Contracts\Strategies;
 
-use Czim\CmsModels\Contracts\Data\ModelActionReferenceDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelActionReferenceDataInterface;
 use Illuminate\Database\Eloquent\Model;
 
 interface ActionStrategyInterface

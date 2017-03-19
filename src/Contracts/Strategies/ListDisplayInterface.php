@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Contracts\Strategies;
 
-use Czim\CmsModels\Contracts\Data\ModelListColumnDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Listing\ModelListColumnDataInterface;
 
 interface ListDisplayInterface extends ShowFieldInterface
 {
