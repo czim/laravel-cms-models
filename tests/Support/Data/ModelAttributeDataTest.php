@@ -39,12 +39,12 @@ class ModelAttributeDataTest extends TestCase
 
         $dataA->merge($dataB);
 
-        $this->assertEquals('test', $dataA['name']);
-        $this->assertEquals('string', $dataA['cast']);
-        $this->assertEquals('varchar', $dataA['type']);
-        $this->assertEquals('testStrategy', $dataA['strategy']);
-        $this->assertEquals('testStrategy', $dataA['strategy_form']);
-        $this->assertEquals('listTestStrategy', $dataA['strategy_list']);
+        static::assertEquals('test', $dataA['name']);
+        static::assertEquals('string', $dataA['cast']);
+        static::assertEquals('varchar', $dataA['type']);
+        static::assertEquals('testStrategy', $dataA['strategy']);
+        static::assertEquals('testStrategy', $dataA['strategy_form']);
+        static::assertEquals('listTestStrategy', $dataA['strategy_list']);
     }
 
     /**
@@ -79,12 +79,12 @@ class ModelAttributeDataTest extends TestCase
 
         $dataA->mergeTranslation($dataB);
 
-        $this->assertEquals('test', $dataA['name']);
-        $this->assertEquals('string', $dataA['cast']);
-        $this->assertEquals('varchar', $dataA['type']);
-        $this->assertEquals('testStrategy', $dataA['strategy']);
-        $this->assertEquals('testStrategy', $dataA['strategy_form']);
-        $this->assertEquals('listTestStrategy', $dataA['strategy_list']);
+        static::assertEquals('test', $dataA['name']);
+        static::assertEquals('string', $dataA['cast']);
+        static::assertEquals('varchar', $dataA['type']);
+        static::assertEquals('testStrategy', $dataA['strategy']);
+        static::assertEquals('testStrategy', $dataA['strategy_form']);
+        static::assertEquals('listTestStrategy', $dataA['strategy_list']);
     }
 
 }

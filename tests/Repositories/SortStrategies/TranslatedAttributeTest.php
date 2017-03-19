@@ -19,13 +19,13 @@ class TranslatedAttributeTest extends AbstractPostCommentSeededTestCase
         $query = TestPost::query();
         $query = $strategy->apply($query, 'title');
         $results = $query->get();
-        $this->assertEquals([2,1,3], $results->pluck('id')->toArray(), "Incorrect models order for title");
+        static::assertEquals([2,1,3], $results->pluck('id')->toArray(), "Incorrect models order for title");
 
         // body sorted
         $query = TestPost::query();
         $query = $strategy->apply($query, 'body');
         $results = $query->get();
-        $this->assertEquals([3,2,1], $results->pluck('id')->toArray(), "Incorrect models order for body");
+        static::assertEquals([3,2,1], $results->pluck('id')->toArray(), "Incorrect models order for body");
     }
 
 }
