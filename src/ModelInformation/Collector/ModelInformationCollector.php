@@ -1,14 +1,14 @@
 <?php
-namespace Czim\CmsModels\Repositories\Collectors;
+namespace Czim\CmsModels\ModelInformation\Collector;
 
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsCore\Support\Enums\Component;
 use Czim\CmsModels\Contracts\Analyzer\ModelAnalyzerInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
-use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationCollectorInterface;
-use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationEnricherInterface;
-use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationFileReaderInterface;
-use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationInterpreterInterface;
+use Czim\CmsModels\Contracts\ModelInformation\ModelInformationCollectorInterface;
+use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Collector\ModelInformationFileReaderInterface;
+use Czim\CmsModels\Contracts\ModelInformation\ModelInformationInterpreterInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Exceptions\ModelConfigurationDataException;
 use Czim\CmsModels\Exceptions\ModelInformationCollectionException;

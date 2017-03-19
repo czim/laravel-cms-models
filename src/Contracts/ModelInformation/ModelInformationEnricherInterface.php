@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Contracts\Repositories\Collectors;
+namespace Czim\CmsModels\Contracts\ModelInformation;
 
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Support\Data\ModelInformation;

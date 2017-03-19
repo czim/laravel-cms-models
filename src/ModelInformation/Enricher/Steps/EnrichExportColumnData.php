@@ -1,10 +1,11 @@
 <?php
-namespace Czim\CmsModels\Repositories\Collectors\Enricher;
+namespace Czim\CmsModels\ModelInformation\Enricher\Steps;
 
 use Czim\CmsModels\Analyzer\AttributeStrategyResolver;
 use Czim\CmsModels\Analyzer\RelationStrategyResolver;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Data\ModelExportColumnDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;
 use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
@@ -25,13 +26,17 @@ class EnrichExportColumnData extends AbstractEnricherStep
     protected $relationStrategyResolver;
 
     /**
+     * @param ModelInformationEnricherInterface $enricher
      * @param AttributeStrategyResolver         $attributeStrategyResolver
      * @param RelationStrategyResolver          $relationStrategyResolver
      */
     public function __construct(
+        ModelInformationEnricherInterface $enricher,
         AttributeStrategyResolver $attributeStrategyResolver,
         RelationStrategyResolver $relationStrategyResolver
     ) {
+        parent::__construct($enricher);
+
         $this->attributeStrategyResolver = $attributeStrategyResolver;
         $this->relationStrategyResolver  = $relationStrategyResolver;
     }

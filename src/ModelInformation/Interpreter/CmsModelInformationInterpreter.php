@@ -1,9 +1,9 @@
 <?php
-namespace Czim\CmsModels\Repositories\Collectors;
+namespace Czim\CmsModels\ModelInformation\Interpreter;
 
 use Czim\CmsCore\Support\Data\AbstractDataObject;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
-use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationInterpreterInterface;
+use Czim\CmsModels\Contracts\ModelInformation\ModelInformationInterpreterInterface;
 use Czim\CmsModels\Exceptions\ModelConfigurationDataException;
 use Czim\CmsModels\Support\Data\ModelActionReferenceData;
 use Czim\CmsModels\Support\Data\ModelExportColumnData;

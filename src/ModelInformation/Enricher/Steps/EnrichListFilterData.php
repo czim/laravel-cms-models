@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Repositories\Collectors\Enricher;
+namespace Czim\CmsModels\ModelInformation\Enricher\Steps;
 
 use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;

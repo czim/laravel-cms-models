@@ -1,7 +1,7 @@
 <?php
-namespace Czim\CmsModels\Repositories\Collectors;
+namespace Czim\CmsModels\ModelInformation\Collector;
 
-use Czim\CmsModels\Contracts\Repositories\Collectors\ModelInformationFileReaderInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Collector\ModelInformationFileReaderInterface;
 use Czim\CmsModels\Exceptions\ModelConfigurationFileException;
 
 class ModelInformationFileReader implements ModelInformationFileReaderInterface
