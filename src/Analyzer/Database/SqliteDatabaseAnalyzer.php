@@ -9,11 +9,14 @@ class SqliteDatabaseAnalyzer extends AbstractDatabaseAnalyzer
     /**
      * Returns column information for a given table.
      *
-     * @param string $table
+     * @param string      $table
+     * @param string|null $connection   optional connection name
      * @return array
      */
-    public function getColumns($table)
+    public function getColumns($table, $connection = null)
     {
+        $this->updateConnection($connection)->setUpDoctrineSchema();
+
         $columns = $this->getParsedColumnTable($table);
 
         $columnData = [];
@@ -39,14 +42,14 @@ class SqliteDatabaseAnalyzer extends AbstractDatabaseAnalyzer
      * Returns a parsed set of columns for a table.
      *
      * @param string $table
-     * @return array    associative, keyed by column name
+     * @return array associative, keyed by column name
      */
     protected function getParsedColumnTable($table)
     {
         $this->validateTableName($table);
 
-        $table = DB::select(
-            DB::raw("PRAGMA table_info({$table});")
+        $table = DB::connection($this->connection)->select(
+            DB::connection($this->connection)->raw("PRAGMA table_info({$table});")
         );
 
         $columns = [];

@@ -16,7 +16,8 @@ class AnalyzeAttributes extends AbstractAnalyzerStep
 
         // Get the columns from the model's table
         $tableFields = $this->databaseAnalyzer()->getColumns(
-            $this->model()->getTable()
+            $this->model()->getTable(),
+            $this->model()->getConnectionName()
         );
 
         foreach ($tableFields as $field) {
