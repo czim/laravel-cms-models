@@ -1,6 +1,7 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Data\Form;
 
+use Czim\CmsModels\Contracts\Http\Requests\ValidationRulesInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormValidationDataInterface;
 use Czim\CmsModels\ModelInformation\Data\AbstractModelInformationDataObject;
 
@@ -9,39 +10,60 @@ use Czim\CmsModels\ModelInformation\Data\AbstractModelInformationDataObject;
  *
  * Information about validation rules for the model's forms.
  *
- * @property array $create
- * @property array $update
- * @property bool  $create_replace
- * @property bool  $update_replace
+ * @property array  $rules
+ * @property array  $create
+ * @property array  $update
+ * @property bool   $create_replace
+ * @property bool   $update_replace
+ * @property string $rules_class
  */
 class ModelFormValidationData extends AbstractModelInformationDataObject implements ModelFormValidationDataInterface
 {
 
     protected $attributes = [
 
+        // Validation rules, base rules shared for create/update.
+        'rules' => [],
+
         // Validation rules, when creating a record.
+        // This decorates the default rules, unless create_replace is true.
         'create' => [],
 
         // Validation rules, when updating a record.
-        // If null, will default to create validation rules.
-        'update' => null,
+        // This decorates the default rules, unless update_replace is true,
+        'update' => [],
 
-        // If true, will replace default create rules set under 'create' entirely.
+        // If true, will replace default create rules set under 'create' and 'update' entirely, respectively.
         'create_replace' => null,
-        // If true, will replace default update rules set under 'update' entirely.
         'update_replace' => null,
+
+        // Class to use for decorating (or providing) validation rules. Instance of ValidationRulesInterface.
+        /** @see ValidationRulesInterface */
+        'rules_class' => null,
     ];
 
     protected $known = [
+        'rules',
         'create',
         'update',
         'create_replace',
         'update_replace',
+        'rules_class',
     ];
 
 
     /**
-     * Returns default or create specific rules.
+     * Returns default/base rules shared by create and update.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return $this->getAttribute('rules') ?: [];
+    }
+
+    /**
+     * Returns create specific rules.
      *
      * @return array
      */
@@ -57,7 +79,17 @@ class ModelFormValidationData extends AbstractModelInformationDataObject impleme
      */
     public function update()
     {
-        return $this->getAttribute('update') ?: $this->create();
+        return $this->getAttribute('update') ?: [];
+    }
+
+    /**
+     * Returns optional FQN of rules decorator/generator class.
+     *
+     * @return string
+     */
+    public function rulesClass()
+    {
+        return $this->getAttribute('rules_class');
     }
 
     /**
