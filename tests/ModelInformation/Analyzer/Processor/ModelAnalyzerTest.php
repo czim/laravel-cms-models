@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Test\Analyzer\Processor;
+namespace Czim\CmsModels\Test\ModelInformation\Analyzer\Processor;
 
 use Czim\CmsModels\ModelInformation\Analyzer\Processor\ModelAnalyzer;
 use Czim\CmsModels\Test\TestCase;

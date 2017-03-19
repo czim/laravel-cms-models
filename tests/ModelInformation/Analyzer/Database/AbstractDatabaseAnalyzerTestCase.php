@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Test\Analyzer\Database;
+namespace Czim\CmsModels\Test\ModelInformation\Analyzer\Database;
 
 use Czim\CmsModels\Test\DatabaseTestCase;
 use Illuminate\Support\Facades\Schema;
