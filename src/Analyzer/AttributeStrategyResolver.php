@@ -240,7 +240,9 @@ class AttributeStrategyResolver
                 );
 
                 if ($options['max'] < 1) {
+                    // @codeCoverageIgnoreStart
                     array_forget($options, ['min','max']);
+                    // @codeCoverageIgnoreEnd
                 } else {
                     $options['size'] = strlen((string) round($options['max']));
                 }
@@ -326,7 +328,9 @@ class AttributeStrategyResolver
                 break;
 
             default:
+                // @codeCoverageIgnoreStart
                 return [0, 0];
+                // @codeCoverageIgnoreEnd
         }
 
         if ($unsigned) {
