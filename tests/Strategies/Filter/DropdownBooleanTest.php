@@ -1,15 +1,15 @@
 <?php
-namespace Czim\CmsModels\Test\View\FilterStrategies;
+namespace Czim\CmsModels\Test\Strategies\Filter;
 
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsCore\Support\Enums\Component;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
+use Czim\CmsModels\Strategies\Filter\DropdownBoolean;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelListFilterData;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
-use Czim\CmsModels\View\FilterStrategies\DropdownBoolean;
 use Illuminate\Contracts\View\View;
 use Mockery;
 

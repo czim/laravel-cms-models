@@ -1,12 +1,12 @@
 <?php
-namespace Czim\CmsModels\Test\View\FilterStrategies;
+namespace Czim\CmsModels\Test\Strategies\Filter;
 
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
+use Czim\CmsModels\Strategies\Filter\BasicString;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
-use Czim\CmsModels\View\FilterStrategies\BasicString;
 use Illuminate\Contracts\View\View;
 
 class BasicStringTest extends AbstractFilterStrategyTestCase
