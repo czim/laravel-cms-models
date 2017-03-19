@@ -1,9 +1,9 @@
 <?php
-namespace Czim\CmsModels\Test\View\FilterStrategies;
+namespace Czim\CmsModels\Test\Strategies\Filter;
 
 use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
+use Czim\CmsModels\Strategies\Filter\BasicSplitString;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
-use Czim\CmsModels\View\FilterStrategies\BasicSplitString;
 
 class BasicSplitStringTest extends AbstractFilterStrategyTestCase
 {

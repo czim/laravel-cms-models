@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Test\View\FilterStrategies;
+namespace Czim\CmsModels\Test\Strategies\Filter;
 
 use Czim\CmsModels\Test\AbstractPostCommentSeededTestCase;
 
