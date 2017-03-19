@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Test\Analyzer\Processor\Steps;
+namespace Czim\CmsModels\Test\ModelInformation\Analyzer\Processor\Steps;
 
 use Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps\AnalyzeAttributes;
 use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;

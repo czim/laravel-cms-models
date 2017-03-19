@@ -1,9 +1,9 @@
 <?php
-namespace Czim\CmsModels\Test\Analyzer\Database;
+namespace Czim\CmsModels\Test\ModelInformation\Analyzer\Database;
 
-use Czim\CmsModels\ModelInformation\Analyzer\Database\SimpleDatabaseAnalyzer;
+use Czim\CmsModels\ModelInformation\Analyzer\Database\SqliteDatabaseAnalyzer;
 
-class SimpleDatabaseAnalyzerTest extends AbstractDatabaseAnalyzerTestCase
+class SqliteDatabaseAnalyzerTest extends AbstractDatabaseAnalyzerTestCase
 {
 
     /**
@@ -11,7 +11,7 @@ class SimpleDatabaseAnalyzerTest extends AbstractDatabaseAnalyzerTestCase
      */
     function it_returns_column_information_for_a_table()
     {
-        $analyzer = new SimpleDatabaseAnalyzer;
+        $analyzer = new SqliteDatabaseAnalyzer;
         $columns  = $analyzer->getColumns('test_columns');
 
         static::assertInternalType('array', $columns);
@@ -31,7 +31,7 @@ class SimpleDatabaseAnalyzerTest extends AbstractDatabaseAnalyzerTestCase
             [
                 'name'     => 'id',
                 'type'     => 'integer',
-                'length'   => null,
+                'length'   => 8,
                 'values'   => false,
                 'unsigned' => false,
                 'nullable' => false,
@@ -41,8 +41,8 @@ class SimpleDatabaseAnalyzerTest extends AbstractDatabaseAnalyzerTestCase
         static::assertEquals(
             [
                 'name'     => 'enum',
-                'type'     => 'string',
-                'length'   => null,
+                'type'     => 'varchar',
+                'length'   => 255,
                 'values'   => false,
                 'unsigned' => false,
                 'nullable' => false,
@@ -52,8 +52,8 @@ class SimpleDatabaseAnalyzerTest extends AbstractDatabaseAnalyzerTestCase
         static::assertEquals(
             [
                 'name'     => 'string',
-                'type'     => 'string',
-                'length'   => null,
+                'type'     => 'varchar',
+                'length'   => 255,
                 'values'   => false,
                 'unsigned' => false,
                 'nullable' => false,
@@ -63,8 +63,8 @@ class SimpleDatabaseAnalyzerTest extends AbstractDatabaseAnalyzerTestCase
         static::assertEquals(
             [
                 'name'     => 'nullable_string',
-                'type'     => 'string',
-                'length'   => null,
+                'type'     => 'varchar',
+                'length'   => 255,
                 'values'   => false,
                 'unsigned' => false,
                 'nullable' => true,
@@ -85,7 +85,7 @@ class SimpleDatabaseAnalyzerTest extends AbstractDatabaseAnalyzerTestCase
         static::assertEquals(
             [
                 'name'     => 'bool',
-                'type'     => 'boolean',
+                'type'     => 'tinyint',
                 'length'   => 1,
                 'values'   => false,
                 'unsigned' => false,
@@ -97,7 +97,7 @@ class SimpleDatabaseAnalyzerTest extends AbstractDatabaseAnalyzerTestCase
             [
                 'name'     => 'integer',
                 'type'     => 'integer',
-                'length'   => null,
+                'length'   => 8,
                 'values'   => false,
                 'unsigned' => false,
                 'nullable' => true,
@@ -148,6 +148,16 @@ class SimpleDatabaseAnalyzerTest extends AbstractDatabaseAnalyzerTestCase
             ],
             $keyed['timestamp']
         );
+    }
+
+    /**
+     * @test
+     * @expectedException \InvalidArgumentException
+     */
+    function it_throws_an_exception_if_an_invalid_table_name_is_given()
+    {
+        $analyzer = new SqliteDatabaseAnalyzer;
+        $analyzer->getColumns('\'; little bobby --drop tables');
     }
 
 }
