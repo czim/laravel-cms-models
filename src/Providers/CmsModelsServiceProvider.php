@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\Providers;
 
 use Czim\CmsModels\Analyzer\Database\SimpleDatabaseAnalyzer;
-use Czim\CmsModels\Analyzer\Processor\ModelAnalyzer;
+use Czim\CmsModels\ModelInformation\Analyzer\Processor\ModelAnalyzer;
 use Czim\CmsModels\Console\Commands\ClearModelInformationCache;
 use Czim\CmsModels\Console\Commands\ShowModelInformation;
 use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;

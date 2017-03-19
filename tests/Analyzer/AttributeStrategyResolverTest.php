@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\Analyzer;
 
-use Czim\CmsModels\Analyzer\AttributeStrategyResolver;
+use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\AttributeStrategyResolver;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 use Czim\CmsModels\Support\Enums\ExportColumnStrategy;

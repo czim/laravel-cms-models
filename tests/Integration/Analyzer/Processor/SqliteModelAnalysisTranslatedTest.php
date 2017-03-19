@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\Test\Integration\Analyzer\Processor;
 
 use Czim\CmsModels\Analyzer\Database\SqliteDatabaseAnalyzer;
-use Czim\CmsModels\Analyzer\Processor\ModelAnalyzer;
+use Czim\CmsModels\ModelInformation\Analyzer\Processor\ModelAnalyzer;
 use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Enums\AttributeCast;

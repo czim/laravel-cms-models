@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\Analyzer\Processor\Steps;
 
-use Czim\CmsModels\Analyzer\Processor\Steps\AnalyzeScopes;
+use Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps\AnalyzeScopes;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelScopeData;
 use Czim\CmsModels\Test\Helpers\Models\Analyzer\TestScopes;

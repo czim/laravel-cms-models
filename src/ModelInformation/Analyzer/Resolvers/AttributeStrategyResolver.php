@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Analyzer;
+namespace Czim\CmsModels\ModelInformation\Analyzer\Resolvers;
 
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Enums\ExportColumnStrategy;

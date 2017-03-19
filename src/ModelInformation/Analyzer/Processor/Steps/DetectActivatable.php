@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Analyzer\Processor\Steps;
+namespace Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps;
 
 class DetectActivatable extends AbstractAnalyzerStep
 {

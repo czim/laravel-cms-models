@@ -1,8 +1,8 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Enricher\Steps;
 
-use Czim\CmsModels\Analyzer\AttributeStrategyResolver;
-use Czim\CmsModels\Analyzer\RelationStrategyResolver;
+use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\AttributeStrategyResolver;
+use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\RelationStrategyResolver;
 use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;

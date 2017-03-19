@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\Analyzer\Processor\Steps;
 
-use Czim\CmsModels\Analyzer\Processor\Steps\SetBasicInformation;
+use Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps\SetBasicInformation;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 

@@ -1,10 +1,11 @@
 <?php
-namespace Czim\CmsModels\Analyzer;
+namespace Czim\CmsModels\ModelInformation\Analyzer\Features;
 
 use Czim\CmsModels\Contracts\Analyzer\ModelAnalyzerInterface;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
+use UnexpectedValueException;
 
 class TranslationAnalyzer
 {
@@ -58,7 +59,7 @@ class TranslationAnalyzer
 
             default:
                 // @codeCoverageIgnoreStart
-                throw new \UnexpectedValueException("Cannot handle translation strategy '{$strategy}");
+                throw new UnexpectedValueException("Cannot handle translation strategy '{$strategy}");
                 // @codeCoverageIgnoreEnd
         }
 

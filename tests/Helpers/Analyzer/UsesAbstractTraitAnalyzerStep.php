@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\Helpers\Analyzer;
 
-use Czim\CmsModels\Analyzer\Processor\Steps\AbstractTraitAnalyzerStep;
+use Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps\AbstractTraitAnalyzerStep;
 
 class UsesAbstractTraitAnalyzerStep extends AbstractTraitAnalyzerStep
 {

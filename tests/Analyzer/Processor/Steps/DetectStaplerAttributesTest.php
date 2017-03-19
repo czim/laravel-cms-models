@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\Analyzer\Processor\Steps;
 
-use Czim\CmsModels\Analyzer\Processor\Steps\DetectStaplerAttributes;
+use Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps\DetectStaplerAttributes;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Enums\AttributeCast;

@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Analyzer;
+namespace Czim\CmsModels\ModelInformation\Analyzer\Resolvers;
 
 use Czim\CmsModels\Support\Data\ModelRelationData;
 use Czim\CmsModels\Support\Enums\FormDisplayStrategy;

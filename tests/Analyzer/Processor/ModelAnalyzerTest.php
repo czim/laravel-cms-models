@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\Analyzer\Processor;
 
-use Czim\CmsModels\Analyzer\Processor\ModelAnalyzer;
+use Czim\CmsModels\ModelInformation\Analyzer\Processor\ModelAnalyzer;
 use Czim\CmsModels\Test\TestCase;
 
 class ModelAnalyzerTest extends TestCase

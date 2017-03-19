@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\Analyzer\Processor\Steps;
 
-use Czim\CmsModels\Analyzer\Processor\Steps\DetectOrderable;
+use Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps\DetectOrderable;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Data\ModelRelationData;
 use Czim\CmsModels\Support\Enums\RelationType;
