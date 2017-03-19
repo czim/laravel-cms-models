@@ -3,13 +3,13 @@
 use Czim\CmsModels\ModelInformation\Analyzer\Database as DatabaseAnalyzers;
 use Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps as AnalyzerSteps;
 use Czim\CmsModels\Support\Enums;
-use Czim\CmsModels\Http\Controllers\FormFieldStrategies as FormFieldStoreStrategies;
 use Czim\CmsModels\Repositories\SortStrategies;
+use Czim\CmsModels\Strategies\Form\Display as FormFieldDisplayStrategies;
+use Czim\CmsModels\Strategies\Form\Store as FormFieldStoreStrategies;
 use Czim\CmsModels\Support\Exporting\Strategies as ExportStrategies;
 use Czim\CmsModels\Support\Exporting\ColumnStrategies as ExportColumnStrategies;
 use Czim\CmsModels\View\ActionStrategies;
 use Czim\CmsModels\View\FilterStrategies;
-use Czim\CmsModels\View\FormFieldStrategies;
 use Czim\CmsModels\View\ListStrategies;
 use Czim\CmsModels\View\ReferenceStrategies;
 
@@ -342,11 +342,11 @@ return [
         'form' => [
 
             // The default namespace to prefix for relative form field display strategy class names
-            'default-namespace' => 'Czim\\CmsModels\\View\\FormFieldStrategies\\',
-            'default-strategy'  => FormFieldStrategies\DefaultStrategy::class,
+            'default-namespace' => 'Czim\\CmsModels\\Strategies\\Form\\Display\\',
+            'default-strategy'  => FormFieldDisplayStrategies\DefaultStrategy::class,
 
             // The default strategy for storing/retrieving values from models
-            'default-store-namespace' => 'Czim\\CmsModels\\Http\\Controllers\\FormFieldStrategies\\',
+            'default-store-namespace' => 'Czim\\CmsModels\\Strategies\\Form\\Store\\',
             'default-store-strategy'  => FormFieldStoreStrategies\DefaultStrategy::class,
 
             // Aliases for field display strategy classes

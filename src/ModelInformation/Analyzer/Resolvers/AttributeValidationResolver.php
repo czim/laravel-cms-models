@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Analyzer\Resolvers;
 
-use Czim\CmsModels\Http\Controllers\FormFieldStrategies\AbstractFormFieldStoreStrategy;
+use Czim\CmsModels\Strategies\Form\Store\AbstractFormFieldStoreStrategy;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelFormFieldData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
