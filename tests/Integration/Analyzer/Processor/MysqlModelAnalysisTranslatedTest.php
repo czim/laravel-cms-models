@@ -3,7 +3,7 @@ namespace Czim\CmsModels\Test\Integration\Analyzer\Processor;
 
 use Czim\CmsModels\ModelInformation\Analyzer\Database\MysqlDatabaseAnalyzer;
 use Czim\CmsModels\ModelInformation\Analyzer\Processor\ModelAnalyzer;
-use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Analyzer\DatabaseAnalyzerInterface;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 use Czim\CmsModels\Support\Enums\RelationType;

@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\Test\ModelInformation\Analyzer\Processor\Steps;
 
 use Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps\AnalyzeAttributes;
-use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Analyzer\DatabaseAnalyzerInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Czim\CmsModels\Support\Enums\AttributeCast;

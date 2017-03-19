@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\ModelInformation\Analyzer\Processor\Steps;
 
-use Czim\CmsModels\Contracts\Analyzer\ModelAnalyzerInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Analyzer\ModelAnalyzerInterface;
 use Czim\CmsModels\Test\TestCase;
 use Illuminate\Database\Eloquent\Model;
 use Mockery;

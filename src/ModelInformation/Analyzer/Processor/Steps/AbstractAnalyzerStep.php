@@ -1,9 +1,9 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps;
 
-use Czim\CmsModels\Contracts\Analyzer\AnalyzerStepInterface;
-use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
-use Czim\CmsModels\Contracts\Analyzer\ModelAnalyzerInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Analyzer\AnalyzerStepInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Analyzer\DatabaseAnalyzerInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Analyzer\ModelAnalyzerInterface;
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Support\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Data\ModelInformation;
