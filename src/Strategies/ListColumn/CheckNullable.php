@@ -1,0 +1,28 @@
+<?php
+namespace Czim\CmsModels\Strategies\ListColumn;
+
+use Illuminate\Database\Eloquent\Model;
+
+class CheckNullable extends Check
+{
+
+    /**
+     * Renders a display value to print to the list view.
+     *
+     * @param Model $model
+     * @param mixed $source     source column, method name or value
+     * @return string
+     */
+    public function render(Model $model, $source)
+    {
+        $source = $this->resolveModelSource($model, $source);
+
+        if (null === $source) {
+            return '';
+        }
+
+        return parent::render($model, $source);
+    }
+
+
+}
