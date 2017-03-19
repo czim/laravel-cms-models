@@ -19,8 +19,6 @@ class SqliteModelAnalysisTranslatedTest extends AbstractAnalyzerTestCase
     {
         $analyzer = new ModelAnalyzer();
 
-        $this->app->bind(DatabaseAnalyzerInterface::class, SqliteDatabaseAnalyzer::class);
-
         $info = $analyzer->analyze(TestPost::class);
 
         static::assertInstanceOf(ModelInformation::class, $info);
