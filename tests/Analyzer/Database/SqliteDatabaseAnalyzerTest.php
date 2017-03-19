@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\Analyzer\Database;
 
-use Czim\CmsModels\Analyzer\Database\SqliteDatabaseAnalyzer;
+use Czim\CmsModels\ModelInformation\Analyzer\Database\SqliteDatabaseAnalyzer;
 
 class SqliteDatabaseAnalyzerTest extends AbstractDatabaseAnalyzerTestCase
 {

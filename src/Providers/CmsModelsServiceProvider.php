@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Providers;
 
-use Czim\CmsModels\Analyzer\Database\SimpleDatabaseAnalyzer;
+use Czim\CmsModels\ModelInformation\Analyzer\Database\SimpleDatabaseAnalyzer;
 use Czim\CmsModels\ModelInformation\Analyzer\Processor\ModelAnalyzer;
 use Czim\CmsModels\Console\Commands\ClearModelInformationCache;
 use Czim\CmsModels\Console\Commands\ShowModelInformation;

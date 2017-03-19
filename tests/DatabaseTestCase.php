@@ -1,8 +1,8 @@
 <?php
 namespace Czim\CmsModels\Test;
 
-use Czim\CmsModels\Analyzer\Database\AbstractDatabaseAnalyzer;
 use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
+use Czim\CmsModels\ModelInformation\Analyzer\Database\SimpleDatabaseAnalyzer;
 
 abstract class DatabaseTestCase extends TestCase
 {
@@ -38,7 +38,7 @@ abstract class DatabaseTestCase extends TestCase
      */
     protected function extraDatabaseSetup($app)
     {
-        $app->bind(DatabaseAnalyzerInterface::class, AbstractDatabaseAnalyzer::class);
+        $app->bind(DatabaseAnalyzerInterface::class, SimpleDatabaseAnalyzer::class);
     }
 
 
