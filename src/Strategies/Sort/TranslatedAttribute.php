@@ -114,7 +114,9 @@ class TranslatedAttribute extends AbstractSortStrategy
         $model = $query->getModel();
 
         if ( ! method_exists($model, 'translations')) {
+            // @codeCoverageIgnoreStart
             throw new RuntimeException('Model ' . get_class($model) . ' is not a translated model.');
+            // @codeCoverageIgnoreEnd
         }
 
         return $model->translations();
