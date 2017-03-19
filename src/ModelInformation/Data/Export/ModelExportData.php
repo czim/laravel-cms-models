@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Data\Export;
 
-use Czim\CmsModels\Contracts\Data\ModelExportDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Export\ModelExportDataInterface;
 use Czim\CmsModels\ModelInformation\Data\AbstractModelInformationDataObject;
 
 /**

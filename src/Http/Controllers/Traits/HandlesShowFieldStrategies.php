@@ -2,8 +2,8 @@
 namespace Czim\CmsModels\Http\Controllers\Traits;
 
 use Czim\CmsCore\Contracts\Core\CoreInterface;
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
-use Czim\CmsModels\Contracts\Data\ModelShowFieldDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Show\ModelShowFieldDataInterface;
 use Czim\CmsModels\Contracts\Support\Factories\ShowFieldStrategyFactoryInterface;
 use Czim\CmsModels\Exceptions\StrategyRenderException;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;

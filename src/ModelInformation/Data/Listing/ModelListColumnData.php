@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Data\Listing;
 
-use Czim\CmsModels\Contracts\Data\ModelListColumnDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Listing\ModelListColumnDataInterface;
 use Czim\CmsModels\ModelInformation\Data\AbstractModelInformationDataObject;
 
 /**

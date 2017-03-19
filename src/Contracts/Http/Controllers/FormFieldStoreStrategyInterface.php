@@ -1,8 +1,8 @@
 <?php
 namespace Czim\CmsModels\Contracts\Http\Controllers;
 
-use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Illuminate\Database\Eloquent\Model;
 
 interface FormFieldStoreStrategyInterface extends FormFieldListParentValueInterface

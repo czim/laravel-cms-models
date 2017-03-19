@@ -4,7 +4,7 @@ namespace Czim\CmsModels\ModelInformation\Collector;
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsCore\Support\Enums\Component;
 use Czim\CmsModels\Contracts\ModelInformation\Analyzer\ModelAnalyzerInterface;
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\ModelInformation\ModelInformationCollectorInterface;
 use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Collector\ModelInformationFileReaderInterface;

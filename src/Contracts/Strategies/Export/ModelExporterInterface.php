@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Contracts\Strategies\Export;
 
-use Czim\CmsModels\Contracts\Data\ModelExportStrategyDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Export\ModelExportStrategyDataInterface;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 

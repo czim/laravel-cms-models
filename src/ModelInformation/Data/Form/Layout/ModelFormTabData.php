@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Data\Form\Layout;
 
-use Czim\CmsModels\Contracts\Data\ModelFormTabDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Form\Layout\ModelFormTabDataInterface;
 use Czim\CmsModels\ModelInformation\Data\ModelViewReferenceData;
 use Czim\CmsModels\Support\Enums\LayoutNodeType;
 

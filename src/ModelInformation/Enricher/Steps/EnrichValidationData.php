@@ -1,8 +1,8 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Enricher\Steps;
 
-use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;

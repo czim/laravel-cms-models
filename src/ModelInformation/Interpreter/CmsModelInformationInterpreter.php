@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\ModelInformation\Interpreter;
 
 use Czim\CmsCore\Support\Data\AbstractDataObject;
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\ModelInformation\ModelInformationInterpreterInterface;
 use Czim\CmsModels\Exceptions\ModelConfigurationDataException;
 use Czim\CmsModels\ModelInformation\Data\ModelActionReferenceData;

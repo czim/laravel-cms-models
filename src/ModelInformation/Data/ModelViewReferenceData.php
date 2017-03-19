@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Data;
 
-use Czim\CmsModels\Contracts\Data\ModelViewReferenceDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelViewReferenceDataInterface;
 
 /**
  * Class ModelViewReferenceData

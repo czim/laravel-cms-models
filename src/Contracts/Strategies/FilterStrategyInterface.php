@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Contracts\Strategies;
 
-use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Listing\ModelFilterDataInterface;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 

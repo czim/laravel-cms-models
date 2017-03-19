@@ -1,9 +1,9 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Enricher\Steps;
 
-use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
-use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelAttributeDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Listing\ModelFilterDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
 use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;

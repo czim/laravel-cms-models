@@ -2,8 +2,8 @@
 namespace Czim\CmsModels\ModelInformation\Data\Listing;
 
 use Czim\CmsCore\Contracts\Core\CoreInterface;
-use Czim\CmsModels\Contracts\Data\ModelActionReferenceDataInterface;
-use Czim\CmsModels\Contracts\Data\ModelListDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelActionReferenceDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Listing\ModelListDataInterface;
 use Czim\CmsModels\ModelInformation\Data\AbstractModelInformationDataObject;
 use Czim\CmsModels\ModelInformation\Data\ModelIncludesData;
 use Czim\CmsModels\ModelInformation\Data\ModelActionReferenceData;

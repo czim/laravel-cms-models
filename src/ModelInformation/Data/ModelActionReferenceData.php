@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\ModelInformation\Data;
 
 use Czim\CmsCore\Support\Data\AbstractDataObject;
-use Czim\CmsModels\Contracts\Data\ModelActionReferenceDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelActionReferenceDataInterface;
 
 /**
  * Class ModelActionReferenceData

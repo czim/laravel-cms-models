@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Repositories\OrderableStrategies;
 
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\OrderableStrategyInterface;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 

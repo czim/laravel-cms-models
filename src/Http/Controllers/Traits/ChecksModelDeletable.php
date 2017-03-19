@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Http\Controllers\Traits;
 
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Strategies\DeleteConditionStrategyInterface;
 use Illuminate\Database\Eloquent\Model;
 use UnexpectedValueException;

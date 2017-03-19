@@ -1,8 +1,8 @@
 <?php
 namespace Czim\CmsModels\Contracts\Strategies\Export;
 
-use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
-use Czim\CmsModels\Contracts\Data\ModelExportColumnDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelAttributeDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Export\ModelExportColumnDataInterface;
 use Illuminate\Database\Eloquent\Model;
 
 interface ExportColumnInterface

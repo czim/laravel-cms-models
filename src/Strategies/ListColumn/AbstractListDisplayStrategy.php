@@ -1,8 +1,8 @@
 <?php
 namespace Czim\CmsModels\Strategies\ListColumn;
 
-use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
-use Czim\CmsModels\Contracts\Data\ModelListColumnDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelAttributeDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Listing\ModelListColumnDataInterface;
 use Czim\CmsModels\Contracts\Strategies\ListDisplayInterface;
 use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 use Czim\CmsModels\ModelInformation\Data\Listing\ModelListColumnData;

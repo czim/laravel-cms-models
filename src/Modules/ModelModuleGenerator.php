@@ -3,7 +3,7 @@ namespace Czim\CmsModels\Modules;
 
 use Czim\CmsCore\Contracts\Modules\ModuleGeneratorInterface;
 use Czim\CmsCore\Contracts\Modules\ModuleInterface;
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;

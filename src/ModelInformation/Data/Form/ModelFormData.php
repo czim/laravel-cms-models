@@ -1,9 +1,9 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Data\Form;
 
-use Czim\CmsModels\Contracts\Data\ModelFormDataInterface;
-use Czim\CmsModels\Contracts\Data\ModelFormLayoutNodeInterface;
-use Czim\CmsModels\Contracts\Data\ModelFormTabDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Form\Layout\ModelFormLayoutNodeInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Form\Layout\ModelFormTabDataInterface;
 use Czim\CmsModels\ModelInformation\Data\AbstractModelInformationDataObject;
 use Czim\CmsModels\ModelInformation\Data\Form\Layout\ModelFormFieldGroupData;
 use Czim\CmsModels\ModelInformation\Data\Form\Layout\ModelFormFieldsetData;

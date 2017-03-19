@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Data\Listing;
 
-use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Listing\ModelFilterDataInterface;
 use Czim\CmsModels\ModelInformation\Data\AbstractModelInformationDataObject;
 
 /**

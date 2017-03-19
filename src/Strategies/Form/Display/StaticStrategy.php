@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Strategies\Form\Display;
 
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Support\Factories\ListDisplayStrategyFactoryInterface;
 use Czim\CmsModels\Http\Controllers\Traits\HandlesListColumnStrategies;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;

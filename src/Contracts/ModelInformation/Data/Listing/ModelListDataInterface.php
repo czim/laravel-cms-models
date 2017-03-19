@@ -1,7 +1,8 @@
 <?php
-namespace Czim\CmsModels\Contracts\Data;
+namespace Czim\CmsModels\Contracts\ModelInformation\Data\Listing;
 
 use ArrayAccess;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelActionReferenceDataInterface;
 use Illuminate\Contracts\Support\Arrayable;
 
 interface ModelListDataInterface extends ArrayAccess, Arrayable

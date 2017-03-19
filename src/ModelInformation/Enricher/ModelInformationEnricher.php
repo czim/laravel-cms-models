@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Enricher;
 
-use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Enricher\EnricherStepInterface;
 use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;
 use Czim\CmsModels\Exceptions\ModelConfigurationDataException;

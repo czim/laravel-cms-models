@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Strategies\Form\Store;
 
-use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Illuminate\Database\Eloquent\Model;
 

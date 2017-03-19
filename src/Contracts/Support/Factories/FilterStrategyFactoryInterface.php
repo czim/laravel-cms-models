@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Contracts\Support\Factories;
 
-use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Listing\ModelFilterDataInterface;
 use Czim\CmsModels\Contracts\Strategies\FilterStrategyInterface;
 
 interface FilterStrategyFactoryInterface

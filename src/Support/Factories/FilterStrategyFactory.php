@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Support\Factories;
 
-use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Listing\ModelFilterDataInterface;
 use Czim\CmsModels\Contracts\Support\Factories\FilterStrategyFactoryInterface;
 use Czim\CmsModels\Contracts\Strategies\FilterStrategyInterface;
 use RuntimeException;

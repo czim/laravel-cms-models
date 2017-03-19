@@ -1,8 +1,8 @@
 <?php
 namespace Czim\CmsModels\Strategies\Export\Column;
 
-use Czim\CmsModels\Contracts\Data\ModelAttributeDataInterface;
-use Czim\CmsModels\Contracts\Data\ModelExportColumnDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelAttributeDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Export\ModelExportColumnDataInterface;
 use Czim\CmsModels\Contracts\Strategies\Export\ExportColumnInterface;
 use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 use Czim\CmsModels\ModelInformation\Data\Export\ModelExportColumnData;

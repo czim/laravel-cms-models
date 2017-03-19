@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Data;
 
-use Czim\CmsModels\Contracts\Data\ModelMetaDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelMetaDataInterface;
 
 /**
  * Class ModelMetaData
