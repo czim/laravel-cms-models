@@ -609,6 +609,9 @@ class AnalyzeAttributesTest extends AbstractStepCase
     {
         $mock = Mockery::mock(DatabaseAnalyzerInterface::class);
 
+        // Let driver-mapped analyzer instantiation fall back to the interface binding
+        $this->app['config']->set('cms-models.analyzer.database.driver', []);
+
         $this->app->instance(DatabaseAnalyzerInterface::class, $mock);
 
         return $mock;

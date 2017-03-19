@@ -39,8 +39,6 @@ class MysqlModelAnalysisTranslatedTest extends AbstractAnalyzerTestCase
     {
         $analyzer = new ModelAnalyzer();
 
-        $this->app->bind(DatabaseAnalyzerInterface::class, MysqlDatabaseAnalyzer::class);
-
         $info = $analyzer->analyze(TestPost::class);
 
         static::assertInstanceOf(ModelInformation::class, $info);
