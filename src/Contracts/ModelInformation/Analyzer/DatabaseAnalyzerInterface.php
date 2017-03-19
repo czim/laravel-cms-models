@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Contracts\Analyzer;
+namespace Czim\CmsModels\Contracts\ModelInformation\Analyzer;
 
 interface DatabaseAnalyzerInterface
 {

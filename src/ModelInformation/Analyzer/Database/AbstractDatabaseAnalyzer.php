@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Analyzer\Database;
 
-use Czim\CmsModels\Contracts\Analyzer\DatabaseAnalyzerInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Analyzer\DatabaseAnalyzerInterface;
 use DB;
 
 class AbstractDatabaseAnalyzer implements DatabaseAnalyzerInterface

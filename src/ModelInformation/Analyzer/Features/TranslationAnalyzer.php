@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Analyzer\Features;
 
-use Czim\CmsModels\Contracts\Analyzer\ModelAnalyzerInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Analyzer\ModelAnalyzerInterface;
 use Czim\CmsModels\Support\Data\ModelInformation;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;

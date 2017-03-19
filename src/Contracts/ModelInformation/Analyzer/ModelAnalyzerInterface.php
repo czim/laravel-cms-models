@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Contracts\Analyzer;
+namespace Czim\CmsModels\Contracts\ModelInformation\Analyzer;
 
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Illuminate\Database\Eloquent\Model;
