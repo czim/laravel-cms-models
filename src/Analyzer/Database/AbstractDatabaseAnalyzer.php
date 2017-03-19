@@ -110,7 +110,9 @@ class AbstractDatabaseAnalyzer implements DatabaseAnalyzerInterface
     protected function setUpDoctrineSchema()
     {
         if ($this->schemaSetUp) {
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         DB::connection($this->connection)
