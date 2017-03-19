@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\Http\Controllers\Traits;
 
 use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
-use Czim\CmsModels\Contracts\Repositories\DeleteStrategyInterface;
+use Czim\CmsModels\Contracts\Strategies\DeleteStrategyInterface;
 use Illuminate\Database\Eloquent\Model;
 use UnexpectedValueException;
 

@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Strategies\Filter;
 
-use Czim\CmsModels\Contracts\View\DropdownStrategyInterface;
+use Czim\CmsModels\Contracts\Strategies\DropdownStrategyInterface;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use MyCLabs\Enum\Enum;

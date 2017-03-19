@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\Support\Factories;
 
 use Czim\CmsModels\Contracts\Support\Factories\ExportColumnStrategyFactoryInterface;
-use Czim\CmsModels\Contracts\Support\Exporting\ExportColumnInterface;
+use Czim\CmsModels\Contracts\Strategies\Export\ExportColumnInterface;
 
 class ExportColumnStrategyFactory extends AbstractStrategyFactory implements ExportColumnStrategyFactoryInterface
 {

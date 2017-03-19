@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\Contracts\Support\Factories;
 
 use Czim\CmsModels\Contracts\Data\ModelFilterDataInterface;
-use Czim\CmsModels\Contracts\View\FilterStrategyInterface;
+use Czim\CmsModels\Contracts\Strategies\FilterStrategyInterface;
 
 interface FilterStrategyFactoryInterface
 {

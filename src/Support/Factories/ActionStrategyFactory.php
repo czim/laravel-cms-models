@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\Support\Factories;
 
 use Czim\CmsModels\Contracts\Support\Factories\ActionStrategyFactoryInterface;
-use Czim\CmsModels\Contracts\View\ActionStrategyInterface;
+use Czim\CmsModels\Contracts\Strategies\ActionStrategyInterface;
 use RuntimeException;
 
 class ActionStrategyFactory extends AbstractStrategyFactory implements ActionStrategyFactoryInterface

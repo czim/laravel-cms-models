@@ -5,7 +5,7 @@ use Czim\CmsModels\Contracts\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelReferenceRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
-use Czim\CmsModels\Contracts\Repositories\SortStrategyInterface;
+use Czim\CmsModels\Contracts\Strategies\SortStrategyInterface;
 use Czim\CmsModels\Contracts\Support\Factories\FilterStrategyFactoryInterface;
 use Czim\CmsModels\Http\Controllers\Traits\AppliesRepositoryContext;
 use Czim\CmsModels\Support\Data\ModelInformation;

@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\Strategies\Export;
 
 use Czim\CmsModels\Contracts\Data\ModelExportColumnDataInterface;
-use Czim\CmsModels\Contracts\Support\Exporting\ExportColumnInterface;
+use Czim\CmsModels\Contracts\Strategies\Export\ExportColumnInterface;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;

@@ -1,5 +1,5 @@
 <?php
-    /** @var \Czim\CmsModels\Contracts\View\ListDisplayInterface $strategy */
+    /** @var \Czim\CmsModels\Contracts\Strategies\ListDisplayInterface $strategy */
     /** @var \Czim\CmsModels\Support\Data\ModelListColumnData $column */
     /** @var \Illuminate\Database\Eloquent\Model $record */
     /** @var bool $hasDefaultAction */

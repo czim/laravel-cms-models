@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Strategies\Form\Display;
 
-use Czim\CmsModels\Contracts\View\DropdownStrategyInterface;
+use Czim\CmsModels\Contracts\Strategies\DropdownStrategyInterface;
 use MyCLabs\Enum\Enum;
 
 class DropdownStrategy extends AbstractDefaultStrategy

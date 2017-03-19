@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Contracts\Support\Factories;
 
-use Czim\CmsModels\Contracts\View\ShowFieldInterface;
+use Czim\CmsModels\Contracts\Strategies\ShowFieldInterface;
 
 interface ShowFieldStrategyFactoryInterface
 {

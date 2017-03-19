@@ -3,7 +3,7 @@ namespace Czim\CmsModels\Strategies\Form\Display;
 
 use Czim\CmsCore\Contracts\Support\Localization\LocaleRepositoryInterface;
 use Czim\CmsModels\Contracts\Data\ModelFormFieldDataInterface;
-use Czim\CmsModels\Contracts\View\FormFieldDisplayInterface;
+use Czim\CmsModels\Contracts\Strategies\FormFieldDisplayInterface;
 use Czim\CmsModels\Support\Data\ModelFormFieldData;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;

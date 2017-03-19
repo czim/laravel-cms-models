@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Strategies\DeleteCondition;
 
-use Czim\CmsModels\Contracts\Repositories\DeleteConditionStrategyInterface;
+use Czim\CmsModels\Contracts\Strategies\DeleteConditionStrategyInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 

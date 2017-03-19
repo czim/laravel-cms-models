@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Contracts\Repositories;
+namespace Czim\CmsModels\Contracts\Strategies;
 
 use Illuminate\Database\Eloquent\Model;
 

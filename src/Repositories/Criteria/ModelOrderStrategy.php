@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Repositories\Criteria;
 
-use Czim\CmsModels\Contracts\Repositories\SortStrategyInterface;
+use Czim\CmsModels\Contracts\Strategies\SortStrategyInterface;
 use Czim\Repository\Contracts\BaseRepositoryInterface;
 use Czim\Repository\Contracts\CriteriaInterface;
 use Czim\Repository\Contracts\ExtendedRepositoryInterface;
