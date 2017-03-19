@@ -83,6 +83,7 @@ class ChildrenStrategy extends AbstractActionStrategy
 
         // If the relation is morphTo, the key needs to be prepared with type:key identicator
         if ($this->isMorphTo) {
+            // todo: this needs to be fixed
             $parentIndicator = $this->getMorphTypeForModel($this->modelClass) . ':' . $model->getKey();
         } else {
             $parentIndicator = $model->getKey();
