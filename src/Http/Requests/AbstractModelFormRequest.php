@@ -7,6 +7,7 @@ use Czim\CmsModels\Http\Controllers\DefaultModelController;
 use Czim\CmsModels\Http\Controllers\Traits\HandlesFormFields;
 use Czim\CmsModels\Support\Translation\DecoratesTranslatedValidationRules;
 use Illuminate\Contracts\Validation\Validator;
+use InvalidArgumentException;
 
 class AbstractModelFormRequest extends AbstractModelRequest
 {
@@ -107,11 +108,11 @@ class AbstractModelFormRequest extends AbstractModelRequest
     protected function makeValidationRulesClassInstance($class)
     {
         if ( ! class_exists($class)) {
-            throw new \InvalidArgumentException("{$class} does not exist for validation rules instantiation");
+            throw new InvalidArgumentException("{$class} does not exist for validation rules instantiation");
         }
 
         if ( ! is_a($class, ValidationRulesInterface::class, true)) {
-            throw new \InvalidArgumentException("{$class} does not implement ValidationRulesInterface");
+            throw new InvalidArgumentException("{$class} does not implement ValidationRulesInterface");
         }
 
         return app($class);

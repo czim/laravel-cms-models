@@ -9,7 +9,6 @@ use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
 use Czim\CmsModels\Contracts\Support\Factories\ModelRepositoryFactoryInterface;
 use Czim\CmsModels\Contracts\Support\ModuleHelperInterface;
 use Czim\CmsModels\Http\Controllers\Traits\AppliesRepositoryContext;
-use Czim\CmsModels\Support\ModuleHelper;
 use Czim\Repository\Contracts\ExtendedRepositoryInterface;
 use RuntimeException;
 
