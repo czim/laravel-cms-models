@@ -100,6 +100,7 @@ class ModelFormValidationData extends AbstractModelInformationDataObject impleme
         $standardMergeKeys = [
             'create_replace',
             'update_replace',
+            'rules_class',
         ];
 
         foreach ($standardMergeKeys as $key) {
@@ -111,8 +112,13 @@ class ModelFormValidationData extends AbstractModelInformationDataObject impleme
         // Note that actual _replace logic and generation of validation rules based on
         // attributes/relations and model analysis is done during enrichment.
 
+        $withRules = $with->rules;
+        if (count($withRules)) {
+            $this->rules = $withRules;
+        }
+
         $withCreate = $with->create;
-        if (count($withCreate)) {
+        if ( ! empty($withCreate)) {
             $this->create = $withCreate;
         }
 

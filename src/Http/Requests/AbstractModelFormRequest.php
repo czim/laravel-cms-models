@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Http\Requests;
 
 use Czim\CmsCore\Contracts\Core\CoreInterface;
+use Czim\CmsModels\Contracts\Http\Requests\ValidationRulesInterface;
 use Czim\CmsModels\Http\Controllers\DefaultModelController;
 use Czim\CmsModels\Http\Controllers\Traits\HandlesFormFields;
 use Czim\CmsModels\Support\Translation\DecoratesTranslatedValidationRules;
@@ -96,4 +97,24 @@ class AbstractModelFormRequest extends AbstractModelRequest
     {
         return null;
     }
+
+    /**
+     * Checks a class and makes an instance of a validation rules decorator.
+     *
+     * @param string $class
+     * @return ValidationRulesInterface
+     */
+    protected function makeValidationRulesClassInstance($class)
+    {
+        if ( ! class_exists($class)) {
+            throw new \InvalidArgumentException("{$class} does not exist for validation rules instantiation");
+        }
+
+        if ( ! is_a($class, ValidationRulesInterface::class, true)) {
+            throw new \InvalidArgumentException("{$class} does not implement ValidationRulesInterface");
+        }
+
+        return app($class);
+    }
+
 }
