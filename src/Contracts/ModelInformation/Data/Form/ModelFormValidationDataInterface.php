@@ -12,7 +12,7 @@ interface ModelFormValidationDataInterface extends ArrayAccess, Arrayable
      *
      * @return array
      */
-    public function rules();
+    public function sharedRules();
 
     /**
      * Returns default or create specific rules.

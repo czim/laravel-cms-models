@@ -59,11 +59,13 @@ interface FormFieldStoreStrategyInterface extends FormFieldListParentValueInterf
      *
      * @param ModelFormFieldDataInterface|null $field
      * @param ModelInformationInterface|null   $modelInformation
-     * @return array|false      false if no validation should be performed.
+     * @param bool                             $create              whether the rules are for creating a new record
+     * @return array|false false if no validation should be performed.
      */
     public function validationRules(
         ModelFormFieldDataInterface $field = null,
-        ModelInformationInterface $modelInformation = null
+        ModelInformationInterface $modelInformation = null,
+        $create
     );
 
 }

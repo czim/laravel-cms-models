@@ -10,7 +10,7 @@ use Czim\CmsModels\ModelInformation\Data\AbstractModelInformationDataObject;
  *
  * Information about validation rules for the model's forms.
  *
- * @property array  $rules
+ * @property array  $shared
  * @property array  $create
  * @property array  $update
  * @property bool   $create_replace
@@ -23,7 +23,7 @@ class ModelFormValidationData extends AbstractModelInformationDataObject impleme
     protected $attributes = [
 
         // Validation rules, base rules shared for create/update.
-        'rules' => [],
+        'shared' => [],
 
         // Validation rules, when creating a record.
         // This decorates the default rules, unless create_replace is true.
@@ -43,7 +43,7 @@ class ModelFormValidationData extends AbstractModelInformationDataObject impleme
     ];
 
     protected $known = [
-        'rules',
+        'shared',
         'create',
         'update',
         'create_replace',
@@ -57,9 +57,9 @@ class ModelFormValidationData extends AbstractModelInformationDataObject impleme
      *
      * @return array
      */
-    public function rules()
+    public function sharedRules()
     {
-        return $this->getAttribute('rules') ?: [];
+        return $this->getAttribute('shared') ?: [];
     }
 
     /**
@@ -112,9 +112,9 @@ class ModelFormValidationData extends AbstractModelInformationDataObject impleme
         // Note that actual _replace logic and generation of validation rules based on
         // attributes/relations and model analysis is done during enrichment.
 
-        $withRules = $with->rules;
+        $withRules = $with->shared;
         if (count($withRules)) {
-            $this->rules = $withRules;
+            $this->shared = $withRules;
         }
 
         $withCreate = $with->create;
@@ -126,6 +126,7 @@ class ModelFormValidationData extends AbstractModelInformationDataObject impleme
         if ( ! empty($withUpdate)) {
             $this->update = $withUpdate;
         }
+
     }
 
 }
