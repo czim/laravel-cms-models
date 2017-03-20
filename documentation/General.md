@@ -47,12 +47,25 @@ So for the model `App\Models\Post` this would make, for instance:
 
 ## Caching Model Information
 
-The CMS analyzes the models and loads custom model configuration files for models it should include. Once this is done, the information is cached, unless the config option `cms-models.repository.cache` is set to `false`. The CMS cache driver is used.
+The CMS analyzes the models and loads custom model configuration files for models it should include. 
+This may take a considerable time if many models are included.
+
+The model information gathered may be cached in the same way as Laravel allows its configuration and routes to be cached.
+
+Caching is done using:
+
+```bash
+php artisan cms:models:cache
+```
   
-If the cache is used, model information is not rebuilt as long as the cache is set. This means that any model configuration changes made will not take effect until the cache is cleared manually (or by expiring naturally).
+When the cache is used, model information is not rebuilt as long as the cache is set. 
+This means that any model configuration changes made will not take effect until the cache is cleared manually.
 
 To clear the model information cache, use the following command:
 
 ```bash
 php artisan cms:models:clear
 ```
+
+If due to some error the clearing fails to work, manually delete the following file: `bootstrap/cache/cms_model_information.php`.
+This is safe to do at any time and will clear the cache instantaneously.
