@@ -81,10 +81,6 @@ return [
     */
 
     'repository' => [
-
-        // Whether the mode information should be cached
-        'cache' => false,
-
     ],
 
     /*

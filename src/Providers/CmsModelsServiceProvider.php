@@ -1,10 +1,9 @@
 <?php
 namespace Czim\CmsModels\Providers;
 
+use Czim\CmsModels\Console\Commands;
 use Czim\CmsModels\ModelInformation\Analyzer\Database\SimpleDatabaseAnalyzer;
 use Czim\CmsModels\ModelInformation\Analyzer\Processor\ModelAnalyzer;
-use Czim\CmsModels\Console\Commands\ClearModelInformationCache;
-use Czim\CmsModels\Console\Commands\ShowModelInformation;
 use Czim\CmsModels\Contracts\ModelInformation\Analyzer\DatabaseAnalyzerInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Analyzer\ModelAnalyzerInterface;
 use Czim\CmsModels\Contracts\ModelInformation as ModelInfoContracts;
@@ -93,10 +92,12 @@ class CmsModelsServiceProvider extends ServiceProvider
      */
     protected function registerCommands()
     {
-        $this->app->singleton('cms.commands.models.clear-information-cache', ClearModelInformationCache::class);
-        $this->app->singleton('cms.commands.models.show-information', ShowModelInformation::class);
+        $this->app->singleton('cms.commands.models.cache-information', Commands\CacheModelInformation::class);
+        $this->app->singleton('cms.commands.models.clear-information-cache', Commands\ClearModelInformationCache::class);
+        $this->app->singleton('cms.commands.models.show-information', Commands\ShowModelInformation::class);
 
         $this->commands([
+            'cms.commands.models.cache-information',
             'cms.commands.models.clear-information-cache',
             'cms.commands.models.show-information',
         ]);
