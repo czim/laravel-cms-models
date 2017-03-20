@@ -131,13 +131,6 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
 
 
             $this->raw['form']['layout'] = array_get($this->raw['form'], 'layout', []);
-
-
-            if (array_has($this->raw['form'], 'validation') && is_array($this->raw['form']['validation'])) {
-
-                $this->raw['form']['validation']['create'] = array_get($this->raw['form']['validation'], 'create');
-                $this->raw['form']['validation']['update'] = array_get($this->raw['form']['validation'], 'update');
-            }
         }
 
         return $this;
