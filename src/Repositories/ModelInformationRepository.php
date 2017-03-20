@@ -2,15 +2,16 @@
 namespace Czim\CmsModels\Repositories;
 
 use Czim\CmsCore\Contracts\Core\CoreInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\ModelInformation\ModelInformationCollectorInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class ModelInformationRepository implements ModelInformationRepositoryInterface
 {
-    const CACHE_KEY = 'models.information';
 
     /**
      * @var CoreInterface
@@ -69,8 +70,6 @@ class ModelInformationRepository implements ModelInformationRepositoryInterface
         } else {
 
             $this->information = $this->collector->collect();
-
-            $this->storeInformationInCache();
         }
 
         $this->fillModelClassIndex();
@@ -143,7 +142,19 @@ class ModelInformationRepository implements ModelInformationRepositoryInterface
      */
     public function clearCache()
     {
-        $this->core->cache()->forget(static::CACHE_KEY);
+        $this->getFileSystem()->delete($this->getCachePath());
+
+        return $this;
+    }
+
+    /**
+     * Caches model information.
+     *
+     * @return $this
+     */
+    public function writeCache()
+    {
+        $this->getFileSystem()->put($this->getCachePath(), $this->serializedInformationForCache($this->information));
 
         return $this;
     }
@@ -186,7 +197,7 @@ class ModelInformationRepository implements ModelInformationRepositoryInterface
      */
     protected function isInformationCached()
     {
-        return $this->isCacheEnabled() && $this->core->cache()->has(static::CACHE_KEY);
+        return $this->getFileSystem()->exists($this->getCachePath());
     }
 
     /**
@@ -196,33 +207,56 @@ class ModelInformationRepository implements ModelInformationRepositoryInterface
      */
     protected function retrieveInformationFromCache()
     {
-        if ( ! $this->isCacheEnabled() || ! $this->isInformationCached()) {
+        if ( ! $this->isInformationCached()) {
             throw new \BadMethodCallException("Model information was not cached");
         }
 
-        return $this->core->cache()->get(static::CACHE_KEY);
+        return $this->deserializeInformationFromCache(
+            require($this->getCachePath())
+        );
     }
 
     /**
-     * Caches model information.
+     * Returns the path to which the model information should be cached.
      *
-     * @return $this
+     * @return string
      */
-    protected function storeInformationInCache()
+    protected function getCachePath()
     {
-        if ($this->isCacheEnabled()) {
-            $this->core->cache()->forever(static::CACHE_KEY, $this->information);
-        }
-
-        return $this;
+        return app()->bootstrapPath() . '/cache/cms_model_information.php';
     }
 
     /**
-     * @return boolean
+     * @param Collection $information
+     * @return string
      */
-    protected function isCacheEnabled()
+    protected function serializedInformationForCache(Collection $information)
     {
-        return config('cms-models.repository.cache', false);
+        return '<?php return ' . var_export($information->toArray(), true) . ';' . PHP_EOL;
+    }
+
+    /**
+     * @param array $data
+     * @return Collection|ModelInformationInterface[]
+     */
+    protected function deserializeInformationFromCache(array $data)
+    {
+        return new Collection(
+            array_map(
+                function ($modelData) {
+                    return new ModelInformation($modelData);
+                },
+                $data
+            )
+        );
+    }
+
+    /**
+     * @return Filesystem
+     */
+    protected function getFileSystem()
+    {
+        return app('files');
     }
 
 }

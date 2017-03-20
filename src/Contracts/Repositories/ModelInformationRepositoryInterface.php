@@ -23,6 +23,13 @@ interface ModelInformationRepositoryInterface
     public function clearCache();
 
     /**
+     * Writes model information cache.
+     *
+     * @return $this
+     */
+    public function writeCache();
+
+    /**
      * Returns all sets of model information.
      *
      * @return Collection|ModelInformation[]
