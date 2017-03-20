@@ -30,7 +30,7 @@ class ModelFormFieldsetData extends AbstractModelFormLayoutNodeData implements M
         'required' => null,
 
         // Nested layout children (field keys or nested fieldsets/groups).
-        'chilren' => [],
+        'children' => [],
     ];
 
     protected $known = [
