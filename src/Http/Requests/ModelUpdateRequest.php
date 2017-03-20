@@ -9,7 +9,16 @@ class ModelUpdateRequest extends AbstractModelFormRequest
      */
     public function rules()
     {
-        return $this->modelInformation->form->validation->update();
+        $rules = $this->modelInformation->form->validation->update();
+
+        if ($class = $this->modelInformation->form->validation->rulesClass()) {
+
+            $instance = $this->makeValidationRulesClassInstance($class);
+
+            $rules = $instance->update($rules);
+        }
+
+        return $rules;
     }
 
 }
