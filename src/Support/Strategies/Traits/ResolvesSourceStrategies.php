@@ -66,6 +66,7 @@ trait ResolvesSourceStrategies
     /**
      * @param string $strategy
      * @return InstantiableClassStrategy|false
+     * @throws StrategyResolutionException
      */
     protected function parseAsInstantiableClassMethodStrategyString($strategy)
     {
