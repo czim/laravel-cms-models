@@ -26,7 +26,14 @@ class AbstractTraitAnalyzerTest extends AbstractStepCase
         $step = new UsesAbstractTraitAnalyzerStep;
         $step->setAnalyzer($analyzer);
 
-        static::assertEquals(['Czim\Listify\Listify'], array_values($step->publicGetTraitNames()));
+        $test = array_values(array_filter(
+            $step->publicGetTraitNames(),
+            function ($trait) {
+                return ! starts_with($trait, 'Illuminate\\Database\\Eloquent\\');
+            }
+        ));
+
+        static::assertEquals(['Czim\Listify\Listify'], $test);
     }
 
     /**
