@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Contracts\ModelInformation\Enricher;
 
 use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Illuminate\Support\Collection;
 
