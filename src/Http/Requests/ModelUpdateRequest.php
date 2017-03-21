@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Http\Requests;
 
 use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
 use Czim\CmsModels\Http\Controllers\Traits\AppliesRepositoryContext;
+use Czim\CmsModels\Repositories\ModelRepository;
 
 class ModelUpdateRequest extends AbstractModelFormRequest
 {
@@ -54,9 +55,7 @@ class ModelUpdateRequest extends AbstractModelFormRequest
      */
     protected function makeModelRepository()
     {
-        $repository = app(ModelRepositoryInterface::class, [
-            $this->modelInformation->modelClass()
-        ]);
+        $repository = new ModelRepository($this->modelInformation->modelClass());
 
         $this->applyRepositoryContext($repository, $this->modelInformation);
 
