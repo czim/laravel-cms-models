@@ -30,6 +30,8 @@ class RelationStrategyResolver
             case RelationType::BELONGS_TO_MANY:
             case RelationType::HAS_MANY:
             case RelationType::MORPH_MANY:
+            case RelationType::MORPH_TO_MANY:
+            case RelationType::MORPHED_BY_MANY:
                 return ListDisplayStrategy::RELATION_COUNT;
         }
 
@@ -110,10 +112,6 @@ class RelationStrategyResolver
 
         if ($data->translated) {
             $parameters[] = 'translated';
-        }
-
-        if ($data->nullable) {
-            $parameters[] = 'nullable';
         }
 
         if (count($parameters)) {
