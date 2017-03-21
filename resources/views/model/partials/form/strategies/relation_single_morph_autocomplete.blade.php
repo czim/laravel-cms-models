@@ -75,7 +75,7 @@
 
                         $.each(data, function (key, value) {
 
-                            var modelClass = key;
+                            var modelClass = key,
                                 label      = getReferenceForModelClass(modelClass),
                                 options    = [];
 

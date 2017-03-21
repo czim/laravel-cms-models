@@ -76,7 +76,7 @@
                     headers    : {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    initSelection: function(element, callback) {},
+                    initSelection: function () {},
                     url        : '{{ cms_route('models-meta.references') }}',
                     type       : 'POST',
                     dataType   : 'json',
@@ -91,7 +91,7 @@
                         };
                     },
 
-                    processResults: function (data, params) {
+                    processResults: function (data) {
 
                         // Convert the key/reference pairs from the model meta controller
                         // to the id/text pairs expected by select2.
@@ -129,7 +129,7 @@
 
                 var placeHolder = $('#field-{{ $key }}__row-placeholder__'),
                     html        = placeHolder.html(),
-                    selected    = addSelect.select2('data');
+                    selected    = addSelect.select2('data'),
                     key         = addSelect.val(),
                     reference   = key,
                     inputName   = placeHolder.attr('data-input-name').replace('%ID%', key);
