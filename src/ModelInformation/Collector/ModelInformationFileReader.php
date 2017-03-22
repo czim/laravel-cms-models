@@ -3,6 +3,7 @@ namespace Czim\CmsModels\ModelInformation\Collector;
 
 use Czim\CmsModels\Contracts\ModelInformation\Collector\ModelInformationFileReaderInterface;
 use Czim\CmsModels\Exceptions\ModelConfigurationFileException;
+use Exception;
 
 class ModelInformationFileReader implements ModelInformationFileReaderInterface
 {
@@ -16,7 +17,15 @@ class ModelInformationFileReader implements ModelInformationFileReaderInterface
      */
     public function read($path)
     {
-        $contents = file_get_contents($path);
+        try {
+            $contents = file_get_contents($path);
+
+        } catch (Exception $e) {
+
+            throw (new ModelConfigurationFileException(
+                "Could not find or open configuraion file at '{$path}'"
+            ))->setPath($path);
+        }
 
         // Determine whether to interpret the contents as PHP code or JSON data
         if ('<?php' == substr($contents, 0, 5)) {
@@ -24,7 +33,7 @@ class ModelInformationFileReader implements ModelInformationFileReaderInterface
             try {
                 $contents = eval('?>' . $contents);
 
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
 
                 throw (new ModelConfigurationFileException(
                     "Could not interpret CMS model configuration PHP data for '{$path}'"
