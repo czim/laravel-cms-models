@@ -73,7 +73,7 @@ class ModelInformationFileReaderTest extends TestCase
     {
         $reader = new ModelInformationFileReader;
 
-        $reader->read($this->getReaderTestPath('erroredphpdata.php'));
+        $reader->read($this->getReaderTestPath('erroredphpdata.txt'));
     }
 
     /**
