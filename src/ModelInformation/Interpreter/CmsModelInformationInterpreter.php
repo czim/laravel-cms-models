@@ -331,10 +331,6 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
 
             if ($objectClass) {
 
-                if (empty($value)) {
-                    $value = [];
-                }
-
                 $value = $this->makeClearedDataObject($objectClass, $value, $parentKey ? $parentKey . ".{$index}" : null);
             }
 
