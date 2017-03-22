@@ -179,10 +179,6 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
             // uninterpreted (and thus potentially invalid) data.
             foreach ($this->raw['export']['strategies'] as $key => $strategy) {
 
-                if ( ! $strategy) {
-                    continue;
-                }
-
                 if (true === $strategy) {
                     $strategy = [
                         'strategy' => $key,
