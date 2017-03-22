@@ -62,9 +62,9 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
     {
         if (array_has($this->raw, 'list') && is_array($this->raw['list'])) {
 
-            $this->raw['list']['default_action'] = $this->normalizeStandardArrayProperty(
+            $this->raw['list']['default_action'] = $this->normalizeKeyLessArrayProperty(
                 array_get($this->raw['list'], 'default_action', []),
-                'type',
+                'strategy',
                 ModelActionReferenceData::class,
                 'list.default_action'
             );
@@ -248,6 +248,8 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
     /**
      * Normalizes a standard array property.
      *
+     * This assumes sections such as list.columns, where keys are required designators.
+     *
      * @param array       $source
      * @param string      $standardProperty property to set for string values in normalized array
      * @param null|string $objectClass      dataobject FQN to interpret as
@@ -264,7 +266,8 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
 
         foreach ($source as $key => $value) {
 
-            // list column may just set for order, defaults need to be filled in
+            // key may be present as values, when it is included just for order or presence,
+            // defaults need to be filled in
             if (is_numeric($key) && ! is_array($value)) {
                 $key   = $value;
                 $value = [];
@@ -276,7 +279,7 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
                 $value = $key;
             }
 
-            // if value is just a string, it is the list strategy
+            // if value is just a string, it is the standard property
             if (is_string($value)) {
                 $value = [
                     $standardProperty => $value,
@@ -293,6 +296,49 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
             }
 
             $normalized[ $key ] = $value;
+        }
+
+        return $normalized;
+    }
+
+    /**
+     * Normalizes a standard array property for inassociative data.
+     *
+     * This assumes sections such as list.columns, where values should appear without keys.
+     *
+     * @param array       $source
+     * @param string      $standardProperty property to set for string values in normalized array
+     * @param null|string $objectClass      dataobject FQN to interpret as
+     * @param null|string $parentKey
+     * @return array
+     */
+    protected function normalizeKeyLessArrayProperty(
+        array $source,
+        $standardProperty,
+        $objectClass = null,
+        $parentKey = null
+    ) {
+        $normalized = [];
+
+        foreach ($source as $index => $value) {
+
+            // if value is just a string, it is the standard property
+            if (is_string($value)) {
+                $value = [
+                    $standardProperty => $value,
+                ];
+            }
+
+            if ($objectClass) {
+
+                if (empty($value)) {
+                    $value = [];
+                }
+
+                $value = $this->makeClearedDataObject($objectClass, $value, $parentKey ? $parentKey . ".{$index}" : null);
+            }
+
+            $normalized[] = $value;
         }
 
         return $normalized;
