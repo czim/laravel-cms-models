@@ -48,11 +48,7 @@ class EnrichBasicListData extends AbstractEnricherStep
 
         // No source is set, see if we can find a standard match
         $matchAttributes = config('cms-models.analyzer.reference.sources', []);
-
-        if ( ! count($matchAttributes)) {
-            return $this;
-        }
-
+        
         foreach ($matchAttributes as $matchAttribute) {
 
             if (array_key_exists($matchAttribute, $this->info->attributes)) {
