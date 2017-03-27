@@ -26,6 +26,21 @@ class ModelUpdateRequest extends AbstractModelFormRequest
     }
 
     /**
+     * Returns post-processed validation rules.
+     *
+     * @return array
+     */
+    public function processedRules()
+    {
+        $decorator = $this->getRuleDecorator();
+
+        return $decorator->decorate(
+            $this->container->call([$this, 'rules']),
+            $this->getTargetedModel()
+        );
+    }
+
+    /**
      * Returns the model instance being updated.
      *
      * @return mixed

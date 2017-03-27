@@ -3,16 +3,15 @@ namespace Czim\CmsModels\Http\Requests;
 
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Http\Requests\ValidationRulesInterface;
+use Czim\CmsModels\Contracts\Support\Validation\ValidationRuleDecoratorInterface;
 use Czim\CmsModels\Http\Controllers\DefaultModelController;
 use Czim\CmsModels\Http\Controllers\Traits\HandlesFormFields;
-use Czim\CmsModels\Support\Translation\DecoratesTranslatedValidationRules;
 use Illuminate\Contracts\Validation\Validator;
 use InvalidArgumentException;
 
 class AbstractModelFormRequest extends AbstractModelRequest
 {
-    use HandlesFormFields,
-        DecoratesTranslatedValidationRules;
+    use HandlesFormFields;
 
     /**
      * Returns post-processed validation rules.
@@ -21,7 +20,9 @@ class AbstractModelFormRequest extends AbstractModelRequest
      */
     public function processedRules()
     {
-        return $this->decorateTranslatedValidationRules(
+        $decorator = $this->getRuleDecorator();
+
+        return $decorator->decorate(
             $this->container->call([$this, 'rules'])
         );
     }
@@ -76,6 +77,14 @@ class AbstractModelFormRequest extends AbstractModelRequest
     protected function getCore()
     {
         return app(CoreInterface::class);
+    }
+
+    /**
+     * @return ValidationRuleDecoratorInterface
+     */
+    protected function getRuleDecorator()
+    {
+        return app(ValidationRuleDecoratorInterface::class);
     }
 
     /**
