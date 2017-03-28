@@ -3,12 +3,10 @@ namespace Czim\CmsModels\ModelInformation\Enricher\Steps;
 
 use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\AttributeStrategyResolver;
 use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\RelationStrategyResolver;
-use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\Export\ModelExportColumnDataInterface;
 use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;
 use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
 use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
-use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\ModelInformation\Data\Export\ModelExportColumnData;
 use Czim\CmsModels\Support\Enums\RelationType;
 use UnexpectedValueException;
@@ -81,7 +79,7 @@ class EnrichExportColumnData extends AbstractEnricherStep
                 continue;
             }
 
-            $columns[ $attribute->name ] = $this->makeModelExportColumnDataForAttributeData($attribute, $this->info);
+            $columns[ $attribute->name ] = $this->makeModelExportColumnDataForAttributeData($attribute);
         }
 
         $this->info->export->columns = $columns;
@@ -183,7 +181,7 @@ class EnrichExportColumnData extends AbstractEnricherStep
         }
 
 
-        $attributeColumnInfo = $this->makeModelExportColumnDataForAttributeData($this->info->attributes[ $key ], $this->info);
+        $attributeColumnInfo = $this->makeModelExportColumnDataForAttributeData($this->info->attributes[ $key ]);
 
         $attributeColumnInfo->merge($column);
 
@@ -204,11 +202,10 @@ class EnrichExportColumnData extends AbstractEnricherStep
     /**
      * Makes data set for export column given attribute data.
      *
-     * @param ModelAttributeData                         $attribute
-     * @param ModelInformationInterface|ModelInformation $info
+     * @param ModelAttributeData $attribute
      * @return ModelExportColumnData
      */
-    protected function makeModelExportColumnDataForAttributeData(ModelAttributeData $attribute, ModelInformationInterface $info)
+    protected function makeModelExportColumnDataForAttributeData(ModelAttributeData $attribute)
     {
         return new ModelExportColumnData([
             'hide'     => false,
