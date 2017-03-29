@@ -9,10 +9,6 @@ class EnrichExportStrategyData extends AbstractEnricherStep
      */
     protected function performEnrichment()
     {
-        if ( ! count($this->info->export->strategies)) {
-            return;
-        }
-
         $strategies = $this->info->export->strategies;
 
         foreach ($strategies as $key => $strategyData) {
