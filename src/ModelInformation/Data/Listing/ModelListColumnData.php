@@ -28,7 +28,7 @@ class ModelListColumnData extends AbstractModelInformationDataObject implements 
     protected $attributes = [
 
         // Whether to hide the list column.
-        'hide' => false,
+        'hide' => null,
 
         // The source column or strategy to use. This may be a column on the model, or on models related to it.
         'source' => null,
@@ -45,16 +45,16 @@ class ModelListColumnData extends AbstractModelInformationDataObject implements 
         'style' => null,
 
         // Whether this column is supported for in-line editing.
-        'editable' => false,
+        'editable' => null,
 
         // Whether it is possible to sort the list for this column
-        'sortable' => false,
+        'sortable' => null,
 
         // The sort strategy (class/FQN) to use for sorting
         'sort_strategy' => null,
 
         // Default sort direction for this column, if sortable
-        'sort_direction' => 'asc',
+        'sort_direction' => null,
 
         // Extra options for strategy configuration
         'options' => [],
