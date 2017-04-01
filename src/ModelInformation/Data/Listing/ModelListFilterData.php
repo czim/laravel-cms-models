@@ -29,7 +29,7 @@ class ModelListFilterData extends AbstractModelInformationDataObject implements 
         'source' => null,
 
         // The target column, relation, or other strategy to filter against
-        'target' => '',
+        'target' => null,
 
         // The filter strategy to apply for rendering & application
         'strategy' => null,
