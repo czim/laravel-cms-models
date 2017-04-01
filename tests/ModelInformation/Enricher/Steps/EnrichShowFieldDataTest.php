@@ -5,24 +5,24 @@ use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;
 use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
 use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\AttributeStrategyResolver;
 use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\RelationStrategyResolver;
-use Czim\CmsModels\ModelInformation\Data\Listing\ModelListColumnData;
 use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\ModelInformation\Data\ModelRelationData;
-use Czim\CmsModels\ModelInformation\Enricher\Steps\EnrichListColumnData;
+use Czim\CmsModels\ModelInformation\Data\Show\ModelShowFieldData;
+use Czim\CmsModels\ModelInformation\Enricher\Steps\EnrichShowFieldData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 use Czim\CmsModels\Support\Enums\RelationType;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Czim\CmsModels\Test\TestCase;
 use Mockery;
 
-class EnrichListColumnDataTest extends TestCase
+class EnrichShowFieldDataTest extends TestCase
 {
 
     /**
      * @test
      */
-    function it_fills_list_columns_based_on_attributes_if_none_set()
+    function it_fills_show_fields_based_on_attributes_if_none_set()
     {
         $mockEnricher          = $this->getMockEnricher();
         $mockAttributeResolver = $this->getMockAttributeResolver();
@@ -36,6 +36,7 @@ class EnrichListColumnDataTest extends TestCase
         $info->model          = TestPost::class;
         $info->original_model = TestPost::class;
 
+        // Hidden attributes and foreign key columns should not be included
         $info->attributes = [
             'title'   => new ModelAttributeData(['name' => 'title']),
             'name'    => new ModelAttributeData(['name' => 'name', 'hidden' => true]),
@@ -58,30 +59,30 @@ class EnrichListColumnDataTest extends TestCase
             ]),
         ];
 
-        $info->list->columns = [];
+        $info->show->fields = [];
 
-        $step = new EnrichListColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichShowFieldData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
         $step->enrich($info, []);
 
 
-        static::assertEquals(['title', 'active'], array_keys($info->list->columns));
+        static::assertEquals(['title', 'active'], array_keys($info->show->fields));
 
-        /** @var ModelListColumnData $column */
-        $column = $info->list->columns['title'];
-        static::assertInstanceOf(ModelListColumnData::class, $column);
-        static::assertEquals('title', $column->source);
-        static::assertEquals('display1', $column->strategy);
+        /** @var ModelShowFieldData $field */
+        $field = $info->show->fields['title'];
+        static::assertInstanceOf(ModelShowFieldData::class, $field);
+        static::assertEquals('title', $field->source);
+        static::assertEquals('display1', $field->strategy);
 
-        $column = $info->list->columns['active'];
-        static::assertInstanceOf(ModelListColumnData::class, $column);
-        static::assertEquals('active', $column->source);
-        static::assertEquals('display2', $column->strategy);
+        $field = $info->show->fields['active'];
+        static::assertInstanceOf(ModelShowFieldData::class, $field);
+        static::assertEquals('active', $field->source);
+        static::assertEquals('display2', $field->strategy);
     }
 
     /**
      * @test
      */
-    function it_enriches_set_list_columns_based_on_attributes()
+    function it_enriches_set_show_fields_based_on_attributes()
     {
         $mockEnricher          = $this->getMockEnricher();
         $mockAttributeResolver = $this->getMockAttributeResolver();
@@ -115,135 +116,45 @@ class EnrichListColumnDataTest extends TestCase
             ]),
         ];
 
-        $info->list->columns = [
-            'name'   => new ModelListColumnData(),
-            'active' => new ModelListColumnData(['strategy' => 'alt', 'source' => 'testing']),
-            'new'    => new ModelListColumnData(['strategy' => 'display', 'source' => 'new']),
-            'many'   => new ModelListColumnData(),
+        $info->show->fields = [
+            'name'   => new ModelShowFieldData(),
+            'active' => new ModelShowFieldData(['strategy' => 'alt', 'source' => 'testing']),
+            'new'    => new ModelShowFieldData(['strategy' => 'display', 'source' => 'new']),
+            'many'   => new ModelShowFieldData(),
         ];
 
-        $step = new EnrichListColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichShowFieldData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
         $step->enrich($info, []);
 
 
-        static::assertEquals(['name', 'active', 'new', 'many'], array_keys($info->list->columns));
+        static::assertEquals(['name', 'active', 'new', 'many'], array_keys($info->show->fields));
 
-        /** @var ModelListColumnData $column */
-        $column = $info->list->columns['name'];
-        static::assertInstanceOf(ModelListColumnData::class, $column);
-        static::assertEquals('name', $column->source);
-        static::assertEquals('display1', $column->strategy);
+        /** @var ModelShowFieldData $field */
+        $field = $info->show->fields['name'];
+        static::assertInstanceOf(ModelShowFieldData::class, $field);
+        static::assertEquals('name', $field->source);
+        static::assertEquals('display1', $field->strategy);
 
-        $column = $info->list->columns['active'];
-        static::assertInstanceOf(ModelListColumnData::class, $column);
-        static::assertEquals('testing', $column->source);
-        static::assertEquals('alt', $column->strategy);
+        $field = $info->show->fields['active'];
+        static::assertInstanceOf(ModelShowFieldData::class, $field);
+        static::assertEquals('testing', $field->source);
+        static::assertEquals('alt', $field->strategy);
 
-        $column = $info->list->columns['new'];
-        static::assertInstanceOf(ModelListColumnData::class, $column);
-        static::assertEquals('new', $column->source);
-        static::assertEquals('display', $column->strategy);
+        $field = $info->show->fields['new'];
+        static::assertInstanceOf(ModelShowFieldData::class, $field);
+        static::assertEquals('new', $field->source);
+        static::assertEquals('display', $field->strategy);
 
-        $column = $info->list->columns['many'];
-        static::assertInstanceOf(ModelListColumnData::class, $column);
-        static::assertEquals('many', $column->source);
-        static::assertEquals('display3', $column->strategy);
+        $field = $info->show->fields['many'];
+        static::assertInstanceOf(ModelShowFieldData::class, $field);
+        static::assertEquals('many', $field->source);
+        static::assertEquals('display3', $field->strategy);
     }
 
     /**
      * @test
      */
-    function it_enriches_list_columns_with_sorting_and_sorting_direction_based_on_attribute_data()
-    {
-        $mockEnricher          = $this->getMockEnricher();
-        $mockAttributeResolver = $this->getMockAttributeResolver();
-        $mockRelationResolver  = $this->getMockRelationResolver();
-
-        $mockAttributeResolver->shouldReceive('determineListDisplayStrategy')->andReturn('display1', 'display2');
-        $mockRelationResolver->shouldReceive('determineListDisplayStrategy')->andReturn('display3', 'display4');
-
-        $info = new ModelInformation;
-
-        $info->model          = TestPost::class;
-        $info->original_model = TestPost::class;
-
-        $info->incrementing = true;
-
-        $info->attributes = [
-            'id' => new ModelAttributeData([
-                'name' => 'id',
-                'cast' => AttributeCast::INTEGER,
-            ]),
-            'position' => new ModelAttributeData([
-                'name' => 'position',
-                'cast' => AttributeCast::INTEGER,
-            ]),
-            'active' => new ModelAttributeData([
-                'name' => 'active',
-                'cast' => AttributeCast::BOOLEAN,
-            ]),
-            'title' => new ModelAttributeData([
-                'name' => 'title',
-                'cast' => AttributeCast::STRING,
-            ]),
-            'body' => new ModelAttributeData([
-                'name' => 'body',
-                'cast' => AttributeCast::STRING,
-                'type' => 'text',
-            ]),
-            'blob' => new ModelAttributeData([
-                'name' => 'blob',
-                'cast' => AttributeCast::STRING,
-                'type' => 'blob',
-            ]),
-            'date' => new ModelAttributeData([
-                'name' => 'date',
-                'cast' => AttributeCast::DATE,
-            ]),
-        ];
-
-        $info->list->columns = [
-            'id'       => new ModelListColumnData,
-            'position' => new ModelListColumnData,
-            'active'   => new ModelListColumnData,
-            'title'    => new ModelListColumnData,
-            'body'     => new ModelListColumnData,
-            'blob'     => new ModelListColumnData,
-            'date'     => new ModelListColumnData,
-        ];
-
-        $step = new EnrichListColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
-        $step->enrich($info, []);
-
-        /** @var ModelListColumnData $column */
-        $column = $info->list->columns['id'];
-        static::assertTrue($column->sortable);
-        static::assertEquals('desc', $column->sort_direction);
-
-        $column = $info->list->columns['position'];
-        static::assertTrue($column->sortable);
-        static::assertEquals('asc', $column->sort_direction);
-
-        $column = $info->list->columns['active'];
-        static::assertTrue($column->sortable);
-        static::assertEquals('desc', $column->sort_direction);
-
-        $column = $info->list->columns['title'];
-        static::assertTrue($column->sortable);
-        static::assertEquals('asc', $column->sort_direction);
-
-        $column = $info->list->columns['body'];
-        static::assertNotTrue($column->sortable);
-
-        $column = $info->list->columns['date'];
-        static::assertTrue($column->sortable);
-        static::assertEquals('desc', $column->sort_direction);
-    }
-
-    /**
-     * @test
-     */
-    function it_excludes_attributes_that_should_not_be_editable_by_default()
+    function it_excludes_attributes_that_should_not_be_displayed_by_default()
     {
         $mockEnricher          = $this->getMockEnricher();
         $mockAttributeResolver = $this->getMockAttributeResolver();
@@ -296,18 +207,18 @@ class EnrichListColumnDataTest extends TestCase
             ]),
         ];
 
-        $info->list->columns = [];
+        $info->show->fields = [];
 
-        $step = new EnrichListColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichShowFieldData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
         $step->enrich($info, []);
 
-        static::assertEquals(['image'], array_keys($info->list->columns));
+        static::assertEquals(['image'], array_keys($info->show->fields));
     }
 
     /**
      * @test
      */
-    function it_throws_a_contextually_enriched_exception_if_list_column_data_set_is_incomplete()
+    function it_throws_a_contextually_enriched_exception_if_show_field_data_set_is_incomplete()
     {
         $mockEnricher          = $this->getMockEnricher();
         $mockAttributeResolver = $this->getMockAttributeResolver();
@@ -317,13 +228,13 @@ class EnrichListColumnDataTest extends TestCase
 
         $info->model           = TestPost::class;
         $info->original_model  = TestPost::class;
-        $info->list->columns = [
-            'title' => new ModelListColumnData([
+        $info->show->fields = [
+            'title' => new ModelShowFieldData([
                 'source' => 'test',
             ]),
         ];
 
-        $step = new EnrichListColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichShowFieldData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
 
         try {
             $step->enrich($info, []);
@@ -334,7 +245,7 @@ class EnrichListColumnDataTest extends TestCase
 
             /** @var ModelInformationEnrichmentException $e */
             static::assertInstanceOf(ModelInformationEnrichmentException::class, $e);
-            static::assertEquals('list.columns', $e->getSection());
+            static::assertEquals('show.fields', $e->getSection());
             static::assertEquals('title', $e->getKey());
         }
     }
@@ -342,7 +253,7 @@ class EnrichListColumnDataTest extends TestCase
     /**
      * @test
      */
-    function it_throws_a_contextually_enriched_exception_if_list_column_enrichment_fails()
+    function it_throws_a_contextually_enriched_exception_if_show_field_enrichment_fails()
     {
         $mockEnricher          = $this->getMockEnricher();
         $mockAttributeResolver = $this->getMockAttributeResolver();
@@ -351,16 +262,16 @@ class EnrichListColumnDataTest extends TestCase
         $info = new ModelInformation;
 
         /** @var Mockery\Mock $fieldDataMock */
-        $fieldDataMock = Mockery::mock(ModelListColumnData::class);
+        $fieldDataMock = Mockery::mock(ModelShowFieldData::class);
         $fieldDataMock->shouldReceive('merge')->andThrow(new \Exception('testing'));
 
         $info->model           = TestPost::class;
         $info->original_model  = TestPost::class;
-        $info->list->columns = [
+        $info->show->fields = [
             'title' => $fieldDataMock,
         ];
 
-        $step = new EnrichListColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichShowFieldData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
 
         try {
             $step->enrich($info, []);
@@ -371,7 +282,7 @@ class EnrichListColumnDataTest extends TestCase
 
             /** @var ModelInformationEnrichmentException $e */
             static::assertInstanceOf(ModelInformationEnrichmentException::class, $e);
-            static::assertEquals('list.columns', $e->getSection());
+            static::assertEquals('show.fields', $e->getSection());
             static::assertEquals('title', $e->getKey());
         }
     }
