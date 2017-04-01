@@ -11,11 +11,11 @@ use Mockery;
 
 class EnrichBasicListDataTest extends TestCase
 {
-    
+
     // ------------------------------------------------------------------------------
     //      Default Sorting Order
     // ------------------------------------------------------------------------------
-    
+
     /**
      * @test
      */
@@ -26,8 +26,9 @@ class EnrichBasicListDataTest extends TestCase
         $step = new EnrichBasicListData($mockEnricher);
 
         $info = new ModelInformation;
-        $info->model = TestPost::class;
-        $info->original_model = TestPost::class;
+
+        $info->model              = TestPost::class;
+        $info->original_model     = TestPost::class;
         $info->list->default_sort = 'test';
 
         $step->enrich($info, []);
@@ -45,9 +46,10 @@ class EnrichBasicListDataTest extends TestCase
         $step = new EnrichBasicListData($mockEnricher);
 
         $info = new ModelInformation;
-        $info->model = TestPost::class;
-        $info->original_model = TestPost::class;
-        $info->list->orderable = true;
+
+        $info->model              = TestPost::class;
+        $info->original_model     = TestPost::class;
+        $info->list->orderable    = true;
         $info->list->order_column = 'position';
 
         $step->enrich($info, []);
@@ -65,9 +67,10 @@ class EnrichBasicListDataTest extends TestCase
         $step = new EnrichBasicListData($mockEnricher);
 
         $info = new ModelInformation;
-        $info->model = TestPost::class;
-        $info->original_model = TestPost::class;
-        $info->timestamps = true;
+
+        $info->model             = TestPost::class;
+        $info->original_model    = TestPost::class;
+        $info->timestamps        = true;
         $info->timestamp_created = 'created_at';
 
         $step->enrich($info, []);
@@ -85,10 +88,11 @@ class EnrichBasicListDataTest extends TestCase
         $step = new EnrichBasicListData($mockEnricher);
 
         $info = new ModelInformation;
-        $info->model = TestPost::class;
+
+        $info->model          = TestPost::class;
         $info->original_model = TestPost::class;
-        $info->timestamps = false;
-        $info->incrementing = true;
+        $info->timestamps     = false;
+        $info->incrementing   = true;
 
         $step->enrich($info, []);
 
@@ -105,16 +109,17 @@ class EnrichBasicListDataTest extends TestCase
         $step = new EnrichBasicListData($mockEnricher);
 
         $info = new ModelInformation;
-        $info->model = TestPost::class;
+
+        $info->model          = TestPost::class;
         $info->original_model = TestPost::class;
-        $info->timestamps = false;
-        $info->incrementing = false;
+        $info->timestamps     = false;
+        $info->incrementing   = false;
 
         $step->enrich($info, []);
 
         static::assertEmpty($info->list->default_sort);
     }
-    
+
     // ------------------------------------------------------------------------------
     //      Reference Source
     // ------------------------------------------------------------------------------
@@ -129,8 +134,9 @@ class EnrichBasicListDataTest extends TestCase
         $step = new EnrichBasicListData($mockEnricher);
 
         $info = new ModelInformation;
-        $info->model = TestPost::class;
-        $info->original_model = TestPost::class;
+
+        $info->model             = TestPost::class;
+        $info->original_model    = TestPost::class;
         $info->reference->source = 'test';
 
         $step->enrich($info, []);
@@ -153,9 +159,10 @@ class EnrichBasicListDataTest extends TestCase
         $step = new EnrichBasicListData($mockEnricher);
 
         $info = new ModelInformation;
-        $info->model = TestPost::class;
+
+        $info->model          = TestPost::class;
         $info->original_model = TestPost::class;
-        $info->attributes = [
+        $info->attributes     = [
             'not_this_one' => new ModelAttributeData,
             'testing'      => new ModelAttributeData,
         ];

@@ -33,7 +33,8 @@ class EnrichExportColumnDataTest extends TestCase
         $step = new EnrichExportColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
 
         $info = new ModelInformation;
-        $info->model = TestPost::class;
+
+        $info->model          = TestPost::class;
         $info->original_model = TestPost::class;
 
         // Hidden attributes and foreign key columns should not be included
@@ -43,7 +44,7 @@ class EnrichExportColumnDataTest extends TestCase
             'active'  => new ModelAttributeData(['name' => 'active']),
             'test_id' => new ModelAttributeData(['name' => 'test_id']),
         ];
-        $info->relations = [
+        $info->relations  = [
             'test' => new ModelRelationData([
                 'name'         => 'test',
                 'method'       => 'test',
@@ -53,9 +54,9 @@ class EnrichExportColumnDataTest extends TestCase
                 ],
             ]),
             'many' => new ModelRelationData([
-                'name'         => 'many',
-                'method'       => 'many',
-                'type'         => RelationType::HAS_MANY,
+                'name'   => 'many',
+                'method' => 'many',
+                'type'   => RelationType::HAS_MANY,
             ]),
         ];
 
@@ -66,7 +67,7 @@ class EnrichExportColumnDataTest extends TestCase
 
         static::assertEquals(['title', 'active'], array_keys($info->export->columns));
 
-        /** @var ModelExportColumnData */
+        /** @var ModelExportColumnData $column */
         $column = $info->export->columns['title'];
         static::assertInstanceOf(ModelExportColumnData::class, $column);
         static::assertEquals('title', $column->source);
@@ -92,9 +93,10 @@ class EnrichExportColumnDataTest extends TestCase
         $step = new EnrichExportColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
 
         $info = new ModelInformation;
-        $info->model = TestPost::class;
-        $info->original_model = TestPost::class;
-        $info->attributes = [
+
+        $info->model           = TestPost::class;
+        $info->original_model  = TestPost::class;
+        $info->attributes      = [
             'title'  => new ModelAttributeData(['name' => 'title']),
             'name'   => new ModelAttributeData(['name' => 'name']),
             'active' => new ModelAttributeData(['name' => 'active']),
@@ -110,7 +112,7 @@ class EnrichExportColumnDataTest extends TestCase
 
         static::assertEquals(['name', 'active', 'new'], array_keys($info->export->columns));
 
-        /** @var ModelExportColumnData */
+        /** @var ModelExportColumnData $column */
         $column = $info->export->columns['name'];
         static::assertInstanceOf(ModelExportColumnData::class, $column);
         static::assertEquals('name', $column->source);
@@ -143,9 +145,10 @@ class EnrichExportColumnDataTest extends TestCase
         $step = new EnrichExportColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
 
         $info = new ModelInformation;
-        $info->model = TestPost::class;
-        $info->original_model = TestPost::class;
-        $info->attributes = [
+
+        $info->model              = TestPost::class;
+        $info->original_model     = TestPost::class;
+        $info->attributes         = [
             'name' => new ModelAttributeData(['name' => 'name']),
         ];
         $info->export->strategies = [
@@ -166,7 +169,7 @@ class EnrichExportColumnDataTest extends TestCase
         static::assertInstanceOf(ModelExportStrategyData::class, $strategy);
         static::assertEquals(['name', 'new'], array_keys($strategy->columns));
 
-        /** @var ModelExportColumnData */
+        /** @var ModelExportColumnData $column */
         $column = $strategy->columns['name'];
         static::assertInstanceOf(ModelExportColumnData::class, $column);
         static::assertEquals('name', $column->source);
@@ -193,9 +196,10 @@ class EnrichExportColumnDataTest extends TestCase
         $step = new EnrichExportColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
 
         $info = new ModelInformation;
-        $info->model = TestPost::class;
-        $info->original_model = TestPost::class;
-        $info->attributes = [
+
+        $info->model              = TestPost::class;
+        $info->original_model     = TestPost::class;
+        $info->attributes         = [
             'name' => new ModelAttributeData(['name' => 'name']),
         ];
         $info->export->strategies = [
@@ -213,7 +217,7 @@ class EnrichExportColumnDataTest extends TestCase
         static::assertInstanceOf(ModelExportStrategyData::class, $strategy);
         static::assertEquals(['name'], array_keys($strategy->columns));
 
-        /** @var ModelExportColumnData */
+        /** @var ModelExportColumnData $column */
         $column = $strategy->columns['name'];
         static::assertInstanceOf(ModelExportColumnData::class, $column);
         static::assertEquals('name', $column->source);
@@ -232,10 +236,11 @@ class EnrichExportColumnDataTest extends TestCase
         $step = new EnrichExportColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
 
         $info = new ModelInformation;
-        $info->model = TestPost::class;
-        $info->original_model = TestPost::class;
+
+        $info->model           = TestPost::class;
+        $info->original_model  = TestPost::class;
         $info->export->columns = [
-            'name'   => new ModelExportColumnData(['hide' => true, 'source' => null]),
+            'name' => new ModelExportColumnData(['hide' => true, 'source' => null]),
         ];
 
         try {
@@ -251,7 +256,6 @@ class EnrichExportColumnDataTest extends TestCase
             static::assertEquals('name', $e->getKey());
         }
     }
-
 
 
     /**
