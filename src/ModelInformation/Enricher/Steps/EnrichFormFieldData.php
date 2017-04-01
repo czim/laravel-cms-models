@@ -199,10 +199,10 @@ class EnrichFormFieldData extends AbstractEnricherStep
         }
 
         // Exclude stapler fields other than the main field
-        if (preg_match('#^(?<field>[^_]+)_(file_name|file_size|content_type|updated_at)$#', $attribute->name, $matches)) {
-            if (array_has($info->attributes, $matches['field'])) {
-                return $info->attributes[ $matches['field'] ]->cast !== AttributeCast::STAPLER_ATTACHMENT;
-            }
+        if (    preg_match('#^(?<field>[^_]+)_(file_name|file_size|content_type|updated_at)$#', $attribute->name, $matches)
+            &&  array_has($info->attributes, $matches['field'])
+        ) {
+            return $info->attributes[ $matches['field'] ]->cast !== AttributeCast::STAPLER_ATTACHMENT;
         }
 
         // Any attribute that is a foreign key and should be handled with relation-based strategies
