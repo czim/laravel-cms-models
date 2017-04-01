@@ -13,7 +13,6 @@ use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\ModelInformation\Data\ModelRelationData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 use Czim\CmsModels\Support\Enums\RelationType;
-use UnexpectedValueException;
 
 class EnrichFormFieldData extends AbstractEnricherStep
 {
@@ -133,14 +132,6 @@ class EnrichFormFieldData extends AbstractEnricherStep
         if (    ! isset($this->info->attributes[ $key ])
             &&  ! isset($this->info->relations[ $normalizedRelationName ])
         ) {
-            // If the data is fully set, no need to enrich
-            if ( ! $this->isFormFieldDataComplete($field)) {
-                throw new UnexpectedValueException(
-                    "Unenriched form field set with non-attribute/non-relation-name key; "
-                    . "make sure full field data is provided"
-                );
-            }
-
             // Make sure to set the key if it isn't
             if ( ! $field->key()) {
                 $field->key = $key;
@@ -172,20 +163,6 @@ class EnrichFormFieldData extends AbstractEnricherStep
         $enrichFieldInfo->merge($field);
 
         $fields[ $key ] = $enrichFieldInfo;
-    }
-
-    /**
-     * Returns whether the given data set is filled to the extent that enrichment is not required.
-     *
-     * @param ModelFormFieldDataInterface|ModelFormFieldData $data
-     * @return bool
-     */
-    protected function isFormFieldDataComplete(ModelFormFieldDataInterface $data)
-    {
-        // For now, there is no way a form field has too little data
-        // if no strategies are set up, defaults are used.
-        // The key and source are derived from the field array key, if not set.
-        return true;
     }
 
     /**
@@ -231,42 +208,6 @@ class EnrichFormFieldData extends AbstractEnricherStep
         // Any attribute that is a foreign key and should be handled with relation-based strategies
         return ! $this->isAttributeForeignKey($attribute->name, $info);
     }
-
-    /**
-     * @param string                                     $attribute
-     * @param ModelInformationInterface|ModelInformation $info
-     * @return bool
-     */
-    protected function isAttributeForeignKey($attribute, ModelInformationInterface $info)
-    {
-        if ( ! count($info->relations)) {
-            return false;
-        }
-
-        foreach ($info->relations as $relation) {
-
-            if ( ! in_array($relation->type, [
-                RelationType::BELONGS_TO,
-                RelationType::BELONGS_TO_THROUGH,
-                RelationType::MORPH_TO,
-            ])) {
-                continue;
-            }
-
-            // the relation has a foreign key on this model, check their name(s)
-            // and check if the attribute matches
-            if ( ! $relation->foreign_keys || ! count($relation->foreign_keys)) {
-                continue;
-            }
-
-            if (in_array($attribute, $relation->foreign_keys)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
 
     /**
      * Makes data set for form field given attribute data.
@@ -392,9 +333,13 @@ class EnrichFormFieldData extends AbstractEnricherStep
         }
 
         // Use information for other models in the CMS to find (some of) the related models
-        // If there is no context, ignore it.
-        if ( ! ($context = $this->enricher->getAllModelInformation())) {
+        $context = $this->enricher->getAllModelInformation();
+
+        // If there is no context, silently ignore it.
+        if ( ! $context) {
+            // @codeCoverageIgnoreStart
             return [];
+            // @codeCoverageIgnoreEnd
         }
 
         $models = [];

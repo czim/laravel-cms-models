@@ -7,6 +7,7 @@ use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;
 use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Support\Enums\AttributeCast;
+use Czim\CmsModels\Support\Enums\RelationType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -105,7 +106,37 @@ abstract class AbstractEnricherStep implements EnricherStepInterface
             }
         }
 
-        return true;
+        // Any attribute that is a foreign key and should be handled with relation-based strategies
+        return ! $this->isAttributeForeignKey($attribute->name, $info);
+    }
+
+    /**
+     * @param string                                     $attribute
+     * @param ModelInformationInterface|ModelInformation $info
+     * @return bool
+     */
+    protected function isAttributeForeignKey($attribute, ModelInformationInterface $info)
+    {
+        foreach ($info->relations as $relation) {
+
+            if ( ! in_array($relation->type, [
+                RelationType::BELONGS_TO,
+                RelationType::BELONGS_TO_THROUGH,
+                RelationType::MORPH_TO,
+            ])) {
+                continue;
+            }
+
+            // the relation has a foreign key on this model, check their name(s)
+            // and check if the attribute matches
+            if (    $relation->foreign_keys
+                &&  count($relation->foreign_keys)
+                &&  in_array($attribute, $relation->foreign_keys)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

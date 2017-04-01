@@ -88,7 +88,9 @@ class EnrichFormLayoutData extends AbstractEnricherStep
             return false;
         }
 
+        // @codeCoverageIgnoreStart
         return null;
+        // @codeCoverageIgnoreEnd
     }
 
 }
