@@ -327,10 +327,10 @@ class AttributeStrategyResolver
                 $bytes = 8;
                 break;
 
+            // @codeCoverageIgnoreStart
             default:
-                // @codeCoverageIgnoreStart
                 return [0, 0];
-                // @codeCoverageIgnoreEnd
+            // @codeCoverageIgnoreEnd
         }
 
         if ($unsigned) {

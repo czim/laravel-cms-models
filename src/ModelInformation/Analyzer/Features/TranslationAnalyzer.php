@@ -57,10 +57,10 @@ class TranslationAnalyzer
                 $this->analyzeForTranslatable();
                 break;
 
+            // @codeCoverageIgnoreStart
             default:
-                // @codeCoverageIgnoreStart
                 throw new UnexpectedValueException("Cannot handle translation strategy '{$strategy}");
-                // @codeCoverageIgnoreEnd
+            // @codeCoverageIgnoreEnd
         }
 
         return $this->info;
