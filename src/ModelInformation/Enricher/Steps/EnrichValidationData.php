@@ -196,7 +196,9 @@ class EnrichValidationData extends AbstractEnricherStep
                         ||  ! count($formRules[ $ruleKey ])
                         ||  array_key_exists($ruleKey, $enrichedRules)
                     ) {
+                        // @codeCoverageIgnoreStart
                         continue;
+                        // @codeCoverageIgnoreEnd
                     }
 
                     $enrichedRules[ $ruleKey ] = $formRules[ $ruleKey ];
@@ -300,6 +302,7 @@ class EnrichValidationData extends AbstractEnricherStep
 
     /**
      * @return ModelInformationInterface|ModelInformation
+     * @codeCoverageIgnore
      */
     protected function getModelInformation()
     {
