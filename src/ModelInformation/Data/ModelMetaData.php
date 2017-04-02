@@ -52,8 +52,8 @@ class ModelMetaData extends AbstractModelInformationDataObject implements ModelM
 
     protected $known = [
         'controller',
-        'default_controller_method',
         'controller_api',
+        'default_controller_method',
         'repository_strategy',
         'repository_strategy_parameters',
         'disable_global_scopes',
@@ -68,11 +68,18 @@ class ModelMetaData extends AbstractModelInformationDataObject implements ModelM
      */
     public function merge(ModelMetaDataInterface $with)
     {
-        $this->mergeAttribute('controller', $with->controller);
-        $this->mergeAttribute('default_controller_method', $with->default_controller_method);
-        $this->mergeAttribute('transformer', $with->transformer);
-        $this->mergeAttribute('repository_strategy', $with->repository_strategy);
-        $this->mergeAttribute('disable_global_scopes', $with->disable_global_scopes);
+        $mergeAttributes = [
+            'controller',
+            'controller_api',
+            'default_controller_method',
+            'transformer',
+            'repository_strategy',
+            'disable_global_scopes',
+        ];
+
+        foreach ($mergeAttributes as $attribute) {
+            $this->mergeAttribute($attribute, $with->{$attribute});
+        }
 
         if ( ! empty($with->repository_strategy_parameters)) {
             $this->repository_strategy_parameters = $with->repository_strategy_parameters;

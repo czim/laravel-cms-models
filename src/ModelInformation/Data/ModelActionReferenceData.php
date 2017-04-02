@@ -72,8 +72,15 @@ class ModelActionReferenceData extends AbstractDataObject implements ModelAction
      */
     public function merge(ModelActionReferenceDataInterface $with)
     {
-        $this->mergeAttribute('strategy', $with->strategy);
-        $this->mergeAttribute('options', $with->options);
+        $mergeAttributes = [
+            'strategy',
+            'options',
+            'permissions',
+        ];
+
+        foreach ($mergeAttributes as $attribute) {
+            $this->mergeAttribute($attribute, $with->{$attribute});
+        }
     }
 
 }

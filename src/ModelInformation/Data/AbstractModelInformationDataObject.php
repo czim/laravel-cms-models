@@ -31,7 +31,9 @@ abstract class AbstractModelInformationDataObject extends AbstractDataObject
     protected function checkAttributeAssignable($attribute)
     {
         if ( ! $this->exceptionOnUnknown || empty($this->known)) {
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         if (is_array($attribute)) {
