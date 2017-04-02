@@ -7,6 +7,7 @@ use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;
 use Czim\CmsModels\Exceptions\ModelConfigurationDataException;
 use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
+use Exception;
 use Illuminate\Support\Collection;
 
 class ModelInformationEnricher implements ModelInformationEnricherInterface
@@ -101,7 +102,7 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
                 $this->info = $instance->enrich($this->info);
             }
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             $key     = null;
             $section = null;
