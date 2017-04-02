@@ -189,8 +189,9 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
         $info = $this->informationReader->read($file->getRealPath());
 
         if ( ! is_array($info)) {
+            $path = basename($file->getRelativePath() ?: $file->getRealPath());
             throw new UnexpectedValueException(
-                "Incorrect data from CMS model information file: '{$file->getRelativePath()}'"
+                "Incorrect data from CMS model information file: '{$path}'"
             );
         }
 
@@ -237,33 +238,6 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
     }
 
     /**
-     * Returns a list of CMS model class FQNs.
-     *
-     * @return string[]
-     */
-    protected function getCmsModelClasses()
-    {
-        if ( ! count($this->cmsModelFiles)) {
-            return [];
-        }
-
-        $classes = [];
-
-        foreach ($this->cmsModelFiles as $file) {
-
-            $modelClass = $this->makeModelFqnFromCmsModelPath(
-                $file->getRelativePathname()
-            );
-
-            if ( ! class_exists($modelClass)) continue;
-
-            $classes[] = $modelClass;
-        }
-
-        return $classes;
-    }
-
-    /**
      * @return SplFileInfo[]
      */
     protected function getCmsModelFiles()
@@ -275,17 +249,6 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
         }
 
         return $this->files->allFiles($cmsModelsDir);
-    }
-
-    /**
-     * Returns module key for a given model FQN.
-     *
-     * @param string $class
-     * @return string
-     */
-    protected function getModuleKeyForModelClass($class)
-    {
-        return app('cms-models-modelinfo')->moduleKey($class);
     }
 
     /**
