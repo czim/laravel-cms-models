@@ -11,6 +11,11 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Debug\Dumper;
 use Mockery;
 
+/**
+ * Class ShowModelInformationTest
+ *
+ * @group console
+ */
 class ShowModelInformationTest extends ConsoleTestCase
 {
 

@@ -1,16 +1,16 @@
 <?php
 namespace Czim\CmsModels\Test\Console;
 
-use Czim\CmsModels\Console\Commands\ClearModelInformationCache;
+use Czim\CmsModels\Console\Commands\CacheModelInformation;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Mockery;
 
 /**
- * Class ClearModelInformationCacheTest
- * 
+ * Class CacheModelInformationTest
+ *
  * @group console
  */
-class ClearModelInformationCacheTest extends ConsoleTestCase
+class CacheModelInformationTest extends ConsoleTestCase
 {
 
     /**
@@ -18,14 +18,14 @@ class ClearModelInformationCacheTest extends ConsoleTestCase
      */
     function it_clears_the_model_information_cache()
     {
-        $this->getConsoleKernel()->registerCommand(new ClearModelInformationCache);
+        $this->getConsoleKernel()->registerCommand(new CacheModelInformation());
 
         $mock = $this->getMockRepository();
-        $mock->shouldReceive('clearCache')->once();
+        $mock->shouldReceive('writeCache')->once();
 
         $this->app->instance(ModelInformationRepositoryInterface::class, $mock);
 
-        $this->artisan('cms:models:clear');
+        $this->artisan('cms:models:cache');
     }
 
 
