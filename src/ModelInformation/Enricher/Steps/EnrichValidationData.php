@@ -106,18 +106,45 @@ class EnrichValidationData extends AbstractEnricherStep
         $replace = (bool) $this->info->form->validation->{($forCreate ? 'create' : 'update') . '_replace'};
 
         // If specific is flagged false, then base rules should be ignored.
-        if ($specific === false || $replace) {
+        if ($specific === false) {
             return [];
         }
 
-        // Otherwise, merge the rules as arrays
+        // Otherwise, make sure the rules are merged as arrays
         if ($specific === null || $specific === true) {
             $specific = [];
         }
 
-        // There may be string values in the array that do not have (non-numeric) keys,
-        // these are explicit inclusions of form-field rules.
-        // todo: prevent duplicates?
+        // In replace mode, rules should be merged in from shared only per key, if present as value.
+        // When shared rules are merged in specifically like this, their 'value-only' key marker is
+        // replaced by the actual key-value pair from the shared rules.
+        if ($replace) {
+
+            $sharedKeys = array_filter(
+                $specific,
+                function ($value, $key) {
+                    return is_string($value) && is_numeric($key);
+                },
+                ARRAY_FILTER_USE_BOTH
+            );
+
+            $sharedRules = $this->info->form->validation->sharedRules();
+
+            // After this, there may still be string values in the array that do not have (non-numeric)
+            // keys. These are explicit inclusions of form-field rules.
+            $specific = array_filter(
+                $specific,
+                function ($value, $key) use ($sharedRules) {
+                    return ! is_string($value) || ! is_numeric($key) || ! array_key_exists($value, $sharedRules);
+                },
+                ARRAY_FILTER_USE_BOTH
+            );
+
+            return array_merge(
+                array_only($this->info->form->validation->sharedRules(), $sharedKeys),
+                $specific
+            );
+        }
 
         return array_merge(
             $this->info->form->validation->sharedRules() ?: [],
