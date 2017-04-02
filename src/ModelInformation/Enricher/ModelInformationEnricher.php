@@ -60,6 +60,10 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
      */
     public function getAllModelInformation()
     {
+        if (null === $this->allInfo) {
+            return new Collection;
+        }
+
         return $this->allInfo;
     }
 
