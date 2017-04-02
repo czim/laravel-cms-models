@@ -9,6 +9,7 @@ use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesFormStoreStrategies;
 use Exception;
 use Illuminate\Support\Arr;
+use UnexpectedValueException;
 
 class EnrichValidationData extends AbstractEnricherStep
 {
@@ -16,14 +17,9 @@ class EnrichValidationData extends AbstractEnricherStep
 
 
     /**
-     * List of rules generated for the current context (create/update).
-     *
-     * @var array
-     */
-    protected $generatedRules = [];
-
-    /**
      * Mapping of generated rules per form field.
+     *
+     * Set while collecting generated rules from form fields.
      *
      * @var array   associative, list of rule keys, keyed by form field key
      */
@@ -45,53 +41,33 @@ class EnrichValidationData extends AbstractEnricherStep
 
         $this->layoutFields = $this->info->form->getLayoutFormFieldKeys();
 
-        $this->enrichCreateRules()
-             ->enrichUpdateRules();
+        $this->enrichRules(true)
+             ->enrichRules(false);
     }
 
     /**
-     * Enriches validation rules for (default or) create form data.
+     * Enriches validation rules for create or update form data.
      *
+     * @param bool $forCreate
      * @return $this
      */
-    protected function enrichCreateRules()
+    protected function enrichRules($forCreate = true)
     {
+        $type = $forCreate ? 'create' : 'update';
+
         $this->generatedRulesMap = [];
 
-        $rules = $this->mergeDefaultRulesWithSpecific($this->info->form->validation->create, true);
+        $rules = $this->mergeDefaultRulesWithSpecific($this->info->form->validation->{$type}, $forCreate);
 
-        $this->generatedRules = $this->getFormFieldBaseRules(true);
-
-        if ( ! count($rules)) {
-            $rules = $this->generatedRules;
-        } else {
-            $rules = $this->enrichRulesWithFormRules($rules, $this->generatedRules, $this->generatedRulesMap, true);
-        }
-
-        $this->info->form->validation->create = $rules;
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    protected function enrichUpdateRules()
-    {
-        $rules = $this->mergeDefaultRulesWithSpecific($this->info->form->validation->update);
-
-        $this->generatedRules = $this->getFormFieldBaseRules(false);
-
-        // If no specific update rules were defined, use the
-        // enriched create rules as a starting point.
+        $generatedRules = $this->getFormFieldBaseRules($forCreate);
 
         if ( ! count($rules)) {
-            $rules = $this->generatedRules;
+            $rules = $generatedRules;
         } else {
-            $rules = $this->enrichRulesWithFormRules($rules, $this->generatedRules, $this->generatedRulesMap);
+            $rules = $this->enrichRulesWithFormRules($rules, $generatedRules, $this->generatedRulesMap, $forCreate);
         }
 
-        $this->info->form->validation->update = $rules;
+        $this->info->form->validation->{$type} = $rules;
 
         return $this;
     }
@@ -298,6 +274,14 @@ class EnrichValidationData extends AbstractEnricherStep
 
         if (false === $fieldRules) {
             return;
+        }
+
+        if (is_string($fieldRules)) {
+            $fieldRules = (array) $fieldRules;
+        }
+
+        if ( ! is_array($fieldRules)) {
+            throw new UnexpectedValueException("Form field store strategy offered validation rules not an array");
         }
 
         if (Arr::isAssoc($fieldRules)) {
