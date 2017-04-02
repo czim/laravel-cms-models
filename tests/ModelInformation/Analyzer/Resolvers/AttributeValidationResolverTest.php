@@ -7,6 +7,11 @@ use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 use Czim\CmsModels\Test\TestCase;
 
+/**
+ * Class AttributeValidationResolverTest
+ *
+ * @group analysis
+ */
 class AttributeValidationResolverTest extends TestCase
 {
 

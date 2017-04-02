@@ -24,6 +24,11 @@ use Czim\CmsModels\ModelInformation\Data\Show\ModelShowFieldData;
 use Czim\CmsModels\ModelInformation\Interpreter\CmsModelInformationInterpreter;
 use Czim\CmsModels\Test\TestCase;
 
+/**
+ * Class CmsModelInformationInterpreterTest
+ *
+ * @group collection
+ */
 class CmsModelInformationInterpreterTest extends TestCase
 {
 

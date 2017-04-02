@@ -17,6 +17,11 @@ use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Czim\CmsModels\Test\TestCase;
 use Mockery;
 
+/**
+ * Class EnrichListFilterDataTest
+ *
+ * @group enrichment
+ */
 class EnrichListFilterDataTest extends TestCase
 {
 

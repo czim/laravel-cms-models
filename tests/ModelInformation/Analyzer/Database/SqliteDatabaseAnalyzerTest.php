@@ -3,6 +3,11 @@ namespace Czim\CmsModels\Test\ModelInformation\Analyzer\Database;
 
 use Czim\CmsModels\ModelInformation\Analyzer\Database\SqliteDatabaseAnalyzer;
 
+/**
+ * Class SqliteDatabaseAnalyzerTest
+ *
+ * @group analysis
+ */
 class SqliteDatabaseAnalyzerTest extends AbstractDatabaseAnalyzerTestCase
 {
 

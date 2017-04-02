@@ -4,6 +4,11 @@ namespace Czim\CmsModels\Test\ModelInformation\Analyzer\Processor;
 use Czim\CmsModels\ModelInformation\Analyzer\Processor\ModelAnalyzer;
 use Czim\CmsModels\Test\TestCase;
 
+/**
+ * Class ModelAnalyzerTest
+ *
+ * @group analysis
+ */
 class ModelAnalyzerTest extends TestCase
 {
 

@@ -3,6 +3,11 @@ namespace Czim\CmsModels\Test\ModelInformation\Analyzer\Database;
 
 use Czim\CmsModels\ModelInformation\Analyzer\Database\MysqlDatabaseAnalyzer;
 
+/**
+ * Class MysqlDatabaseAnalyzerTest
+ *
+ * @group analysis
+ */
 class MysqlDatabaseAnalyzerTest extends AbstractDatabaseAnalyzerTestCase
 {
 

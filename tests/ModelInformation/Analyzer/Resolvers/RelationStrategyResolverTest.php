@@ -10,6 +10,11 @@ use Czim\CmsModels\Support\Enums\FormStoreStrategy;
 use Czim\CmsModels\Support\Enums\ListDisplayStrategy;
 use Czim\CmsModels\Test\TestCase;
 
+/**
+ * Class RelationStrategyResolverTest
+ *
+ * @group analysis
+ */
 class RelationStrategyResolverTest extends TestCase
 {
 

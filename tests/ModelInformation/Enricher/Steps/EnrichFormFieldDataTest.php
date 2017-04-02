@@ -19,6 +19,11 @@ use Czim\CmsModels\Test\TestCase;
 use Illuminate\Support\Collection;
 use Mockery;
 
+/**
+ * Class EnrichFormFieldDataTest
+ *
+ * @group enrichment
+ */
 class EnrichFormFieldDataTest extends TestCase
 {
 

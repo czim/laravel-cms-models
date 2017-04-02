@@ -7,6 +7,11 @@ use Czim\CmsModels\ModelInformation\Data\ModelRelationData;
 use Czim\CmsModels\Support\Enums\RelationType;
 use Czim\CmsModels\Test\TestCase;
 
+/**
+ * Class RelationValidationResolverTest
+ *
+ * @group analysis
+ */
 class RelationValidationResolverTest extends TestCase
 {
 

@@ -4,6 +4,11 @@ namespace Czim\CmsModels\Test\ModelInformation\Collector;
 use Czim\CmsModels\ModelInformation\Collector\ModelInformationFileReader;
 use Czim\CmsModels\Test\TestCase;
 
+/**
+ * Class ModelInformationFileReaderTest
+ *
+ * @group collection
+ */
 class ModelInformationFileReaderTest extends TestCase
 {
 
