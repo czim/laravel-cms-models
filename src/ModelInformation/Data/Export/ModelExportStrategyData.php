@@ -140,21 +140,27 @@ class ModelExportStrategyData extends AbstractModelInformationDataObject impleme
 
             foreach ($with->columns as $key => $data) {
 
-                if (array_has($this->columns, $key)) {
-                    $data = $this->columns[ $key ]->merge($data);
+                if ( ! array_has($this->columns, $key)) {
+                    $mergedColumns[ $key ] = $data;
+                    continue;
                 }
 
-                $mergedColumns[ $key ] = $data;
+                $this->columns[ $key ]->merge($data);
+                $mergedColumns[ $key ] = $this->columns[ $key ];
             }
 
             $this->columns = $mergedColumns;
         }
 
         $standardMergeKeys = [
+            'icon',
+            'label',
+            'label_translated',
             'permissions',
             'repository_strategy',
             'repository_strategy_parameters',
-            'strategies',
+            'strategy',
+            'permissions',
         ];
 
         foreach ($standardMergeKeys as $key) {

@@ -55,11 +55,13 @@ class ModelShowData extends AbstractModelInformationDataObject implements ModelS
 
             foreach ($with->fields as $key => $data) {
 
-                if (array_has($this->fields, $key)) {
-                    $data = $this->fields[ $key ]->merge($data);
+                if ( ! array_has($this->fields, $key)) {
+                    $mergedFields[ $key ] = $data;
+                    continue;
                 }
 
-                $mergedFields[ $key ] = $data;
+                $this->fields[ $key ]->merge($data);
+                $mergedFields[ $key ] = $this->fields[ $key ];
             }
 
             $this->fields = $mergedFields;

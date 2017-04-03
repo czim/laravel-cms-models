@@ -9,7 +9,7 @@ use Czim\CmsModels\ModelInformation\Data\AbstractModelInformationDataObject;
  *
  * Data container that represents list representation for the model.
  *
- * @property bool $enabled
+ * @property bool $enable
  * @property array|ModelExportColumnData[] $columns
  * @property array|ModelExportStrategyData[] $strategies
  */
@@ -56,18 +56,20 @@ class ModelExportData extends AbstractModelInformationDataObject implements Mode
 
             foreach ($with->columns as $key => $data) {
 
-                if (array_has($this->columns, $key)) {
-                    $data = $this->columns[ $key ]->merge($data);
+                if ( ! array_has($this->columns, $key)) {
+                    $mergedColumns[ $key ] = $data;
+                    continue;
                 }
 
-                $mergedColumns[ $key ] = $data;
+                $this->columns[ $key ]->merge($data);
+                $mergedColumns[ $key ] = $this->columns[ $key ];
             }
 
             $this->columns = $mergedColumns;
         }
 
         $standardMergeKeys = [
-            'enabled',
+            'enable',
             'strategies',
         ];
 

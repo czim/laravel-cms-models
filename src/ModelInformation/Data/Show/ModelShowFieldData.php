@@ -74,7 +74,7 @@ class ModelShowFieldData extends AbstractModelInformationDataObject implements M
             return $this->label;
         }
 
-        return ucfirst(str_replace('_', ' ', snake_case($this->key)));
+        return ucfirst(str_replace('_', ' ', snake_case($this->source)));
     }
 
     /**
@@ -84,11 +84,7 @@ class ModelShowFieldData extends AbstractModelInformationDataObject implements M
      */
     public function source()
     {
-        if ($this->source) {
-            return $this->source;
-        }
-
-        return $this->key;
+        return $this->source;
     }
 
     /**
