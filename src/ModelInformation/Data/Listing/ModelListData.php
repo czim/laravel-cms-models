@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\ModelInformation\Data\Listing;
 
 use Czim\CmsCore\Contracts\Core\CoreInterface;
+use Czim\CmsCore\Support\Enums\Component;
 use Czim\CmsModels\Contracts\ModelInformation\Data\ModelActionReferenceDataInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\Listing\ModelListDataInterface;
 use Czim\CmsModels\ModelInformation\Data\AbstractModelInformationDataObject;
@@ -155,7 +156,11 @@ class ModelListData extends AbstractModelInformationDataObject implements ModelL
         $actions = $this->default_action;
 
         if ( ! is_array($actions)) {
-            $actions = [ $actions ];
+            $actions = [
+                new ModelActionReferenceData([
+                    'strategy' => $actions,
+                ]),
+            ];
         }
 
         $core = $this->getCore();
@@ -190,11 +195,13 @@ class ModelListData extends AbstractModelInformationDataObject implements ModelL
 
             foreach ($with->columns as $key => $data) {
 
-                if (array_has($this->columns, $key)) {
-                    $data = $this->columns[ $key ]->merge($data);
+                if ( ! array_has($this->columns, $key)) {
+                    $mergedColumns[ $key ] = $data;
+                    continue;
                 }
 
-                $mergedColumns[ $key ] = $data;
+                $this->columns[ $key ]->merge($data);
+                $mergedColumns[ $key ] = $this->columns[ $key ];
             }
 
             $this->columns = $mergedColumns;
@@ -245,7 +252,7 @@ class ModelListData extends AbstractModelInformationDataObject implements ModelL
      */
     public function getCore()
     {
-        return app(CoreInterface::class);
+        return app(Component::CORE);
     }
 
 }

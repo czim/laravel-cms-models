@@ -57,7 +57,6 @@ class ModelListParentData extends AbstractModelInformationDataObject implements 
         return $this->getAttribute('relation');
     }
 
-
     /**
      * @param ModelListParentDataInterface|ModelListParentData $with
      */

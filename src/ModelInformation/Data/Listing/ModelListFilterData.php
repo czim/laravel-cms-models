@@ -102,7 +102,6 @@ class ModelListFilterData extends AbstractModelInformationDataObject implements 
         return $this->options ?: [];
     }
 
-
     /**
      * @param ModelFilterDataInterface|ModelListFilterData $with
      */

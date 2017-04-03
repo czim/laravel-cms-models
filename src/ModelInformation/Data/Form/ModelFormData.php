@@ -173,11 +173,9 @@ class ModelFormData extends AbstractModelInformationDataObject implements ModelF
                 continue;
             }
 
-            if ( ! is_string($value)) {
-                continue;
+            if (is_string($value)) {
+                $fieldKeys[] = $value;
             }
-
-            $fieldKeys[] = $value;
         }
 
         return $fieldKeys;
@@ -197,11 +195,13 @@ class ModelFormData extends AbstractModelInformationDataObject implements ModelF
 
             foreach ($with->fields as $key => $data) {
 
-                if (array_has($this->fields, $key)) {
-                    $data = $this->fields[ $key ]->merge($data);
+                if ( ! array_has($this->fields, $key)) {
+                    $mergedFields[ $key ] = $data;
+                    continue;
                 }
 
-                $mergedFields[ $key ] = $data;
+                $this->fields[ $key ]->merge($data);
+                $mergedFields[ $key ] = $this->fields[ $key ];
             }
 
             $this->fields = $mergedFields;
