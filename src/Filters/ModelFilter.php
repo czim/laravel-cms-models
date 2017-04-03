@@ -49,7 +49,9 @@ class ModelFilter extends Filter
     {
         if ( ! array_key_exists($parameterName, $this->filterInformation)) {
             parent::applyParameter($parameterName, $parameterValue, $query);
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         // We know about this filter, load up the relevant application strategy and apply it
