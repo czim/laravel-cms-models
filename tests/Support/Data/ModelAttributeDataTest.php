@@ -4,6 +4,11 @@ namespace Czim\CmsModels\Test\Support\Data;
 use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 use Czim\CmsModels\Test\TestCase;
 
+/**
+ * Class ModelAttributeDataTest
+ *
+ * @group support-data
+ */
 class ModelAttributeDataTest extends TestCase
 {
 
