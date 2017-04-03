@@ -121,7 +121,7 @@ class ModelFormFieldGroupData extends AbstractModelFormLayoutNodeData
             }
         );
 
-        $fieldWidth = floor((static::GRID_SIZE_WITHOUT_LABEL - $labelsTotalWidth) / $fieldsCount);
+        $fieldWidth = (int) floor((static::GRID_SIZE_WITHOUT_LABEL - $labelsTotalWidth) / $fieldsCount);
 
         $columns = [];
 
