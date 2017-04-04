@@ -208,7 +208,9 @@ class ModelInformationRepository implements ModelInformationRepositoryInterface
     protected function retrieveInformationFromCache()
     {
         if ( ! $this->isInformationCached()) {
+            // @codeCoverageIgnoreStart
             throw new \BadMethodCallException("Model information was not cached");
+            // @codeCoverageIgnoreEnd
         }
 
         return $this->deserializeInformationFromCache(

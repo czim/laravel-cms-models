@@ -19,4 +19,22 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         $app['view']->addNamespace('cms-models', realpath(dirname(__DIR__) . '/resources/views'));
     }
 
+    /**
+     * @return string
+     */
+    protected function getModelsCachePath()
+    {
+        return realpath(__DIR__ .'/../vendor/orchestra/testbench/fixture/bootstrap/cache') . '/cms_model_information.php';
+    }
+
+    /**
+     * Deletes the menu cache file if it exists.
+     */
+    protected function deleteModelsCacheFile()
+    {
+        if (file_exists($this->getModelsCachePath())) {
+            unlink($this->getModelsCachePath());
+        }
+    }
+
 }
