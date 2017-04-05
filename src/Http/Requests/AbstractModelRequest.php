@@ -83,6 +83,39 @@ abstract class AbstractModelRequest extends Request
         return $this;
     }
 
+    /**
+     * Overridden to make sure AJAX calls don't redirect based on session where it can be prevented.
+     *
+     * For POST to <model-slug>/            we should be redirected back to /create
+     * For POST to <model-slug>/update      we should be redirected back to /edit
+     *
+     * {@inheritdoc}
+     */
+    protected function getRedirectUrl()
+    {
+        if ($this->ajax()) {
+
+            $lastSegment = last($this->segments());
+
+            $routePrefix = $this->getRouteHelper()->getRouteNameForModelClass(
+                $this->modelInformation->modelClass(),
+                true
+            );
+
+            // If the model slug is the last segment, and this is a POST request, this is the STORE action.
+            if ($lastSegment == $this->getRouteHelper()->getModelSlugForCurrentRoute() && $this->method() == 'POST') {
+
+                $this->redirect = cms_route("{$routePrefix}.create");
+
+            } elseif ($lastSegment == 'update') {
+
+                $this->redirect = cms_route("{$routePrefix}.edit");
+            }
+        }
+
+        return parent::getRedirectUrl();
+    }
+
 
     /**
      * @return ModelInformationInterface|ModelInformation
