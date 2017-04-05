@@ -72,6 +72,8 @@
               action="{{ cms_route("{$routePrefix}.store") }}"
               enctype="multipart/form-data"
               novalidate
+              data-id=""
+              data-class="{{ $model->modelClass() }}"
         >
     @else
         <form class="model-form"
@@ -79,6 +81,8 @@
               action="{{ cms_route("{$routePrefix}.update", [ $record->getKey() ]) }}"
               enctype="multipart/form-data"
               novalidate
+              data-id="{{ $record->getKey() }}"
+              data-class="{{ $model->modelClass() }}"
         >
             {{ method_field('put') }}
     @endif
