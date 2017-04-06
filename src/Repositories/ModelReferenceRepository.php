@@ -328,21 +328,6 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
     }
 
     /**
-     * Returns an Eloquent model instance for a model class.
-     *
-     * @param string $class
-     * @return Model
-     */
-    protected function getModelInstance($class)
-    {
-        if ( ! class_exists($class) || ! is_a($class, Model::class, true)) {
-            throw new InvalidArgumentException("{$class} is not an Eloquent model");
-        }
-
-        return new $class;
-    }
-
-    /**
      * Returns instance of a model repository for given model information.
      *
      * @param ModelInformationInterface $information
