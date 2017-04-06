@@ -73,7 +73,11 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
         }
 
         /** @var Model $firstModel */
-        $firstModel = head($models);
+        if ($models instanceof Collection) {
+            $firstModel = $models->first();
+        } else {
+            $firstModel = head($models);
+        }
 
         $strategy = $this->determineModelReferenceStrategy($firstModel, $strategy);
 
@@ -212,7 +216,9 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
     protected function getQueryBuilderForNonCmsModelClass($modelClass)
     {
         if ( ! is_a($modelClass, Model::class, true)) {
+            // @codeCoverageIgnoreStart
             throw new UnexpectedValueException("{$modelClass} is not an Eloquent model");
+            // @codeCoverageIgnoreEnd
         }
 
         /** @var Model $model */
