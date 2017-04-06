@@ -130,7 +130,7 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
      *
      * @param ModelMetaReferenceInterface $referenceData
      * @param string|null                 $search           optional search string to limit results
-     * @return array associative
+     * @return Collection   keyed by model key (or class:key)
      */
     public function getReferencesForModelMetaReference(ModelMetaReferenceInterface $referenceData, $search = null)
     {
@@ -173,7 +173,7 @@ class ModelReferenceRepository implements ModelReferenceRepositoryInterface
             );
         }
 
-        return $references;
+        return new Collection($references);
     }
 
     /**

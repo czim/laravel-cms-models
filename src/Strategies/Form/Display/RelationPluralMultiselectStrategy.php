@@ -58,7 +58,7 @@ class RelationPluralMultiselectStrategy extends AbstractRelationStrategy
         );
 
         if ($referenceData) {
-            $references = $this->getReferenceRepository()->getReferencesForModelMetaReference($referenceData);
+            $references = $this->getReferenceRepository()->getReferencesForModelMetaReference($referenceData)->all();
         } else {
             $references = [];
         }

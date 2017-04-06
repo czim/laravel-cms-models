@@ -58,7 +58,7 @@ class RelationSingleMorphDropdownStrategy extends AbstractRelationStrategy
 
             if ($referenceData) {
                 foreach (
-                    $this->getReferenceRepository()->getReferencesForModelMetaReference($referenceData)
+                    $this->getReferenceRepository()->getReferencesForModelMetaReference($referenceData)->all()
                     as $referenceKey => $reference
                 ) {
                     $references[$modelClass][ $modelClass . static::CLASS_AND_KEY_SEPARATOR . $referenceKey] = $reference;

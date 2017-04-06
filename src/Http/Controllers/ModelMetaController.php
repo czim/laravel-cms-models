@@ -116,7 +116,7 @@ class ModelMetaController extends Controller
      */
     protected function getReferencesByMetaData(ModelMetaReference $data, $search = null)
     {
-        $references = $this->referenceRepository->getReferencesForModelMetaReference($data, $search);
+        $references = $this->referenceRepository->getReferencesForModelMetaReference($data, $search)->all();
 
         return $this->formatReferenceOutput($references);
     }
