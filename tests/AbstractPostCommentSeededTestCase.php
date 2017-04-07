@@ -12,12 +12,14 @@ abstract class AbstractPostCommentSeededTestCase extends DatabaseTestCase
     protected function migrateDatabase()
     {
         Schema::create('test_genres', function($table) {
+            /** @var \Illuminate\Database\Schema\Blueprint $table */
             $table->increments('id');
             $table->string('name', 50);
             $table->nullableTimestamps();
         });
 
         Schema::create('test_authors', function($table) {
+            /** @var \Illuminate\Database\Schema\Blueprint $table */
             $table->increments('id');
             $table->string('name', 255);
             $table->enum('gender', [ 'm', 'f' ])->default('f');
@@ -29,6 +31,7 @@ abstract class AbstractPostCommentSeededTestCase extends DatabaseTestCase
         });
 
         Schema::create('test_posts', function($table) {
+            /** @var \Illuminate\Database\Schema\Blueprint $table */
             $table->increments('id');
             $table->integer('test_author_id')->nullable()->unsigned();
             $table->integer('test_genre_id')->nullable()->unsigned();
@@ -39,6 +42,7 @@ abstract class AbstractPostCommentSeededTestCase extends DatabaseTestCase
         });
 
         Schema::create('test_post_translations', function($table) {
+            /** @var \Illuminate\Database\Schema\Blueprint $table */
             $table->increments('id');
             $table->char('locale', 12)->nullable();
             $table->integer('test_post_id')->nullable()->unsigned();
@@ -48,6 +52,7 @@ abstract class AbstractPostCommentSeededTestCase extends DatabaseTestCase
         });
 
         Schema::create('test_comments', function($table) {
+            /** @var \Illuminate\Database\Schema\Blueprint $table */
             $table->increments('id');
             $table->integer('test_post_id')->unsigned();
             $table->integer('test_author_id')->nullable()->unsigned();
@@ -56,6 +61,7 @@ abstract class AbstractPostCommentSeededTestCase extends DatabaseTestCase
         });
 
         Schema::create('test_comment_translations', function($table) {
+            /** @var \Illuminate\Database\Schema\Blueprint $table */
             $table->increments('id');
             $table->char('locale', 12)->nullable();
             $table->integer('test_comment_id')->nullable()->unsigned();
@@ -71,6 +77,7 @@ abstract class AbstractPostCommentSeededTestCase extends DatabaseTestCase
         //});
 
         Schema::create('test_seos', function($table) {
+            /** @var \Illuminate\Database\Schema\Blueprint $table */
             $table->increments('id');
             $table->integer('seoable_id')->unsigned()->nullable();
             $table->string('seoable_type', 255)->nullable();
