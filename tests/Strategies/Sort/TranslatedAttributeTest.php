@@ -1,5 +1,5 @@
 <?php
-namespace Czim\CmsModels\Test\Repositories\SortStrategies;
+namespace Czim\CmsModels\Test\Strategies\Sort;
 
 use Czim\CmsModels\Strategies\Sort\TranslatedAttribute;
 use Czim\CmsModels\Test\AbstractPostCommentSeededTestCase;
