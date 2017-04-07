@@ -85,7 +85,7 @@
         });
 
         // Handle the fileselect event to update the placeholder text input and mark the 'keep' hidden input
-        $(':file').on('fileselect', function(event, numFiles, label) {
+        $(document).on('fileselect', ':file', function(event, numFiles, label) {
             var inputText = $(this).parents('.input-group').find(':text'),
                 inputKeep = $(this).parents('.input-group').find('.file-upload-keep-input'),
                 log       = numFiles > 1 ? numFiles + ' files selected' : label;
@@ -100,7 +100,7 @@
         });
 
         // Handle button clicks to clear the file input
-        $('.btn-empty-file-upload').click(function(event) {
+        $(document).on('click', '.btn-empty-file-upload', function(event) {
             var fileInput = $(this).parents('.input-group').find(':file'),
                 textInput = $(this).parents('.input-group').find(':text'),
                 keepInput = $(this).parents('.input-group').find('.file-upload-keep-input');
