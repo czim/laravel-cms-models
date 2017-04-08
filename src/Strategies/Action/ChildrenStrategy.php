@@ -152,7 +152,11 @@ class ChildrenStrategy extends AbstractActionStrategy
     {
         $this->otherModelClass = array_get($this->actionData->options(), 'model');
 
-        if ( ! $this->otherModelClass || ! is_a($this->otherModelClass, Model::class, true)) {
+        if ( ! $this->otherModelClass) {
+            throw new UnexpectedValueException("No target model class set in options");
+        }
+
+        if ( ! is_a($this->otherModelClass, Model::class, true)) {
             throw new UnexpectedValueException("{$this->otherModelClass} is not a valid target model class");
         }
 
@@ -213,7 +217,9 @@ class ChildrenStrategy extends AbstractActionStrategy
             return $type;
         }
 
+        // @codeCoverageIgnoreStart
         return $class;
+        // @codeCoverageIgnoreEnd
     }
 
 }
