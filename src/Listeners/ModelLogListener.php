@@ -51,6 +51,10 @@ class ModelLogListener
         );
     }
 
+    /**
+     * @param Events\DeletingModelInCms $event
+     * @codeCoverageIgnore
+     */
     public function deletingModel(Events\DeletingModelInCms $event)
     {
         // Ignore for now.
@@ -106,7 +110,7 @@ class ModelLogListener
     {
         $this->core->log(
             LogLevel::INFO,
-            "Model list was exported ({$event->strategy}) "
+            "Model list was exported ({$event->strategy}): "
             . $event->modelClass
             . $this->getUserPostfix()
             . $this->getIpPostfix()
