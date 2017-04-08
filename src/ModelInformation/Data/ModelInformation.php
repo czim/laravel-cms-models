@@ -292,10 +292,11 @@ class ModelInformation extends AbstractModelInformationDataObject implements Mod
      */
     public function label($translated = true)
     {
-        if ($translated && $key = $this->getAttribute('translated_name')) {
-            if (($label = cms_trans($key)) !== $key) {
-                return $label;
-            }
+        if (    $translated
+            &&  ($key = $this->getAttribute('translated_name'))
+            &&  ($label = cms_trans($key)) !== $key
+        ) {
+            return $label;
         }
 
         return $this->getAttribute('verbose_name');
