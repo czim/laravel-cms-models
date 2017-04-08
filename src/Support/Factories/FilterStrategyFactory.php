@@ -22,7 +22,7 @@ class FilterStrategyFactory implements FilterStrategyFactoryInterface
         // A filter must have a resolvable strategy for displaying
         if ( ! ($strategyClass = $this->resolveStrategyClass($strategy))) {
             throw new RuntimeException(
-                "Could not resolve display strategy class for {$key}: '{$strategy}'"
+                "Could not resolve filter strategy class for {$key}: '{$strategy}'"
             );
         }
 
