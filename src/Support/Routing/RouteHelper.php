@@ -143,7 +143,7 @@ class RouteHelper implements RouteHelperInterface
         }
 
         return config('cms-core.route.prefix')
-             . config('cms-models.route.prefix')
+             . config('cms-models.route.prefix') . '/'
              . $modelSlug;
     }
 
