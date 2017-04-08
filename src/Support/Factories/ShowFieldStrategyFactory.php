@@ -34,11 +34,13 @@ class ShowFieldStrategyFactory implements ShowFieldStrategyFactoryInterface
      */
     protected function resolveStrategyClass($strategy)
     {
-        if ( ! str_contains($strategy, '.')) {
-            $strategy = config(
+        if (    ! str_contains($strategy, '.')
+            &&  $aliasStrategy = config(
                 'cms-models.strategies.show.aliases.' . $strategy,
                 config('cms-models.strategies.list.aliases.' . $strategy)
-            );
+            )
+        ) {
+            $strategy = $aliasStrategy;
         }
 
         if (class_exists($strategy) && is_a($strategy, ShowFieldInterface::class, true)) {
