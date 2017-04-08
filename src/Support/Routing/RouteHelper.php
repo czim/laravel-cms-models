@@ -209,6 +209,10 @@ class RouteHelper implements RouteHelperInterface
      */
     protected function getModelModuleKeyForRouteNameSegment($nameSegment)
     {
+        if (false === $nameSegment) {
+            return false;
+        }
+
         return ModuleHelper::MODULE_PREFIX . $this->getModelSlugForRouteNameSegment($nameSegment);
     }
 
@@ -254,6 +258,7 @@ class RouteHelper implements RouteHelperInterface
      * Returns the name of the current route.
      *
      * @return string|null
+     * @codeCoverageIgnore
      */
     protected function getRouteName()
     {
