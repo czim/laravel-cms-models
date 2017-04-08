@@ -5,6 +5,12 @@ use Czim\CmsModels\Support\ModuleHelper;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Czim\CmsModels\Test\TestCase;
 
+/**
+ * Class ModuleHelperTest
+ *
+ * @group support
+ * @group support-helpers
+ */
 class ModuleHelperTest extends TestCase
 {
 
