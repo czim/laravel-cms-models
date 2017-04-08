@@ -39,6 +39,8 @@ abstract class AbstractActionStrategy implements ActionStrategyInterface
     /**
      * Performs initialization.
      * Override this to customize strategy implementations.
+     *
+     * @codeCoverageIgnore
      */
     protected function performInit()
     {
