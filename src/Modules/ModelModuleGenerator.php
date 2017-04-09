@@ -95,7 +95,7 @@ class ModelModuleGenerator implements ModuleGeneratorInterface
         }
 
         if ($information->meta->controller_api) {
-            $module->setWebController($information->meta->controller);
+            $module->setApiController($information->meta->controller_api);
         }
 
         return $module;
