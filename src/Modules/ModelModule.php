@@ -388,17 +388,6 @@ class ModelModule implements ModuleInterface
     // ------------------------------------------------------------------------------
 
     /**
-     * @param string $name
-     * @return $this
-     */
-    protected function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
      * @param string $class
      * @return $this
      */
@@ -475,16 +464,6 @@ class ModelModule implements ModuleInterface
     protected function getRouteSlug()
     {
         return $this->routeHelper->getRouteSlugForModelClass($this->class);
-    }
-
-    /**
-     * Returns the module's model key (with 'models.').
-     *
-     * @return string
-     */
-    protected function getModuleModelKey()
-    {
-        return $this->moduleHelper->moduleKeyForModel($this->class);
     }
 
     /**
