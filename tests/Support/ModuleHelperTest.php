@@ -17,13 +17,26 @@ class ModuleHelperTest extends TestCase
     /**
      * @test
      */
-    function it_returns_the_model_slug_for_a_model_class_without_prefix()
+    function it_returns_the_model_slug_for_a_model_class()
     {
         $helper = new ModuleHelper;
 
         static::assertEquals(
             'czim-cmsmodels-test-helpers-models-testpost',
             $helper->modelSlug(TestPost::class)
+        );
+    }
+
+    /**
+     * @test
+     */
+    function it_returns_the_model_slug_for_a_model_instance()
+    {
+        $helper = new ModuleHelper;
+
+        static::assertEquals(
+            'czim-cmsmodels-test-helpers-models-testpost',
+            $helper->modelSlug(new TestPost)
         );
     }
 
