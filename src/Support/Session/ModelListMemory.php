@@ -188,11 +188,11 @@ class ModelListMemory implements ModelListMemoryInterface
     /**
      * Returns active page for current context.
      *
-     * @return array
+     * @return int|null
      */
     public function getPage()
     {
-        return session()->get($this->getSessionKey(static::TYPE_PAGE), []);
+        return session()->get($this->getSessionKey(static::TYPE_PAGE));
     }
 
     /**
@@ -237,11 +237,11 @@ class ModelListMemory implements ModelListMemoryInterface
     /**
      * Returns active page size for current context.
      *
-     * @return array
+     * @return null|int
      */
     public function getPageSize()
     {
-        return session()->get($this->getSessionKey(static::TYPE_PAGESIZE), []);
+        return session()->get($this->getSessionKey(static::TYPE_PAGESIZE));
     }
 
     /**
@@ -286,11 +286,11 @@ class ModelListMemory implements ModelListMemoryInterface
     /**
      * Returns active scope for current context.
      *
-     * @return array
+     * @return null|string
      */
     public function getScope()
     {
-        return session()->get($this->getSessionKey(static::TYPE_SCOPE), []);
+        return session()->get($this->getSessionKey(static::TYPE_SCOPE));
     }
 
     /**

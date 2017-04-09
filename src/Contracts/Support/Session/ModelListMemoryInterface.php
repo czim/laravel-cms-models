@@ -96,7 +96,7 @@ interface ModelListMemoryInterface
     /**
      * Returns active page for current context.
      *
-     * @return array
+     * @return null|int
      */
     public function getPage();
 
@@ -125,7 +125,7 @@ interface ModelListMemoryInterface
     /**
      * Returns active page size for current context.
      *
-     * @return array
+     * @return null|int
      */
     public function getPageSize();
 
@@ -154,7 +154,7 @@ interface ModelListMemoryInterface
     /**
      * Returns active scope for current context.
      *
-     * @return array
+     * @return string
      */
     public function getScope();
 
