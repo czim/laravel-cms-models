@@ -65,7 +65,7 @@ class MetaReferenceDataProvider implements MetaReferenceDataProviderInterface
     /**
      * Returns nested model classes for model information, type and key.
      *
-     * This can be used to check whether a reference data is for multiple models, and if so, which.
+     * This can be used to check whether reference data is for multiple models, and if so, which.
      *
      * @param ModelInformationInterface $info
      * @param string                    $type
@@ -111,7 +111,7 @@ class MetaReferenceDataProvider implements MetaReferenceDataProviderInterface
         if ($dataIsNested) {
             // Find the nested data for this specific model
 
-            $dataParent = $this->getNestedReferenceFieldOptionData($formFieldData->options(),$targetModel);
+            $dataParent = $this->getNestedReferenceFieldOptionData($formFieldData->options(), $targetModel);
 
         } else {
             // Find the data in the top level form field data, and determine the model
@@ -192,19 +192,25 @@ class MetaReferenceDataProvider implements MetaReferenceDataProviderInterface
     protected function determineTargetModelFromSource($modelClass, $source)
     {
         if ( ! is_a($modelClass, Model::class, true)) {
+            // @codeCoverageIgnoreStart
             throw new UnexpectedValueException("{$modelClass} is not an Eloquent model");
+            // @codeCoverageIgnoreEnd
         }
 
         $model = new $modelClass;
 
         if ( ! ($relation = $this->getNestedRelation($model, $source))) {
+            // @codeCoverageIgnoreStart
             $relation = $this->resolveModelSource($model, $source);
+            // @codeCoverageIgnoreEnd
         }
 
         if ( ! ($relation instanceof Relation)) {
+            // @codeCoverageIgnoreStart
             throw new UnexpectedValueException(
                 "Source {$source} on {$modelClass} does not resolve to an Eloquent relation instance"
             );
+            // @codeCoverageIgnoreEnd
         }
 
         /** @var Relation $relation */
@@ -245,7 +251,9 @@ class MetaReferenceDataProvider implements MetaReferenceDataProviderInterface
     protected function getModelInformation($model)
     {
         if ($model instanceof Model) {
+            // @codeCoverageIgnoreStart
             return $this->getModelInformationRepository()->getByModel($model);
+            // @codeCoverageIgnoreEnd
         }
 
         return $this->getModelInformationRepository()->getByModelClass($model);
