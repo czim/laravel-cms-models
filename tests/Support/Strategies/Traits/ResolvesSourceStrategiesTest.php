@@ -6,6 +6,12 @@ use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Czim\CmsModels\Test\Helpers\Support\SourceMethodTestHelper;
 use Czim\CmsModels\Test\Helpers\Support\UsesResolvesSourceStrategies;
 
+/**
+ * Class ResolvesSourceStrategiesTest
+ *
+ * @group support
+ * @group support-strategies
+ */
 class ResolvesSourceStrategiesTest extends AbstractPostCommentSeededTestCase
 {
 
