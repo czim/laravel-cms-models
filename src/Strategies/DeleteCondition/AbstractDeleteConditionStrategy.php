@@ -23,7 +23,7 @@ abstract class AbstractDeleteConditionStrategy implements DeleteConditionStrateg
      *
      * @param Model $model
      * @param array $parameters strategy-dependent parameters
-     * @return mixed
+     * @return bool
      */
     public function check(Model $model, array $parameters = [])
     {
