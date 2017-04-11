@@ -40,6 +40,7 @@ class ActiveOnlyTest extends TestCase
         /** @var Builder|Mockery\Mock $queryMock */
         $queryMock = Mockery::mock(Builder::class);
         $queryMock->shouldReceive('where')->with('checked', true)->once()->andReturnSelf();
+        $queryMock->shouldReceive('getModel')->andReturn($model);
 
         $strategy = new ActiveOnly;
 
