@@ -74,27 +74,6 @@ class Datepicker extends AbstractFilterStrategy
     }
 
     /**
-     * Returns whether the date format contains no time element.
-     *
-     * @return bool
-     */
-    protected function isFormatDateOnly()
-    {
-        if ($this->filterData) {
-            $format = array_get($this->filterData->options(), 'format');
-        } else {
-            $format = null;
-        }
-
-        // Default is to filter date only
-        if ( ! $format) {
-            return true;
-        }
-
-        return ! preg_match('#[BgGhHisuvcU]#', $format);
-    }
-
-    /**
      * Returns whether the target date column is date only.
      *
      * @return bool     defaults to false if unknown.
@@ -108,7 +87,9 @@ class Datepicker extends AbstractFilterStrategy
         $target = $this->filterData->target();
 
         if ( ! array_key_exists($target, $this->getModelInformation()->attributes)) {
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         // Everything but 'date' has time element ('datetime', 'timestamp', 'time')
