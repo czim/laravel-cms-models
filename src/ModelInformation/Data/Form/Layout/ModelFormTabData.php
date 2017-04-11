@@ -57,6 +57,20 @@ class ModelFormTabData extends AbstractModelFormLayoutNodeData implements ModelF
 
 
     /**
+     * Returns whether the tab-pane should be displayed
+     *
+     * @return bool
+     */
+    public function shouldDisplay()
+    {
+        if ($this->before || $this->after) {
+            return true;
+        }
+
+        return (bool) count($this->children);
+    }
+
+    /**
      * @param ModelFormTabDataInterface|ModelFormTabData $with
      */
     public function merge(ModelFormTabDataInterface $with)

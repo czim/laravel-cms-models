@@ -12,6 +12,13 @@ interface ModelFormTabDataInterface extends ModelFormLayoutNodeInterface
     public function display();
 
     /**
+     * Returns whether the tab-pane should be displayed
+     *
+     * @return bool
+     */
+    public function shouldDisplay();
+
+    /**
      * @param ModelFormTabDataInterface $with
      */
     public function merge(ModelFormTabDataInterface $with);

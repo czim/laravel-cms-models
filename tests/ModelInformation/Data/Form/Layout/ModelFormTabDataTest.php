@@ -15,6 +15,43 @@ class ModelFormTabDataTest extends AbstractModelFormLayoutNodeDataTestCase
     /**
      * @test
      */
+    function it_reports_that_it_should_display_if_it_has_children()
+    {
+        $data = new ModelFormTabData;
+
+        $data->children = [
+            'test',
+            'test2',
+        ];
+
+        static::assertTrue($data->shouldDisplay());
+    }
+
+    /**
+     * @test
+     */
+    function it_reports_that_it_should_display_if_it_has_before_or_after_view()
+    {
+        $data = new ModelFormTabData;
+
+        $data->before = [
+            'view' => 'test',
+        ];
+
+        static::assertTrue($data->shouldDisplay());
+
+        $data = new ModelFormTabData;
+
+        $data->after = [
+            'view' => 'test',
+        ];
+
+        static::assertTrue($data->shouldDisplay());
+    }
+
+    /**
+     * @test
+     */
     function it_merges_with_another_dataobject()
     {
         $data = new ModelFormTabData;
