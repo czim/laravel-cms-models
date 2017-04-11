@@ -8,7 +8,7 @@
     ?>
 
     @foreach ($tabs as $key => $tab)
-        @continue( ! $tab->children)
+        @continue( ! $tab->shouldDisplay())
 
         <?php
             $count++;
