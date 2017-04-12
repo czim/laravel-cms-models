@@ -5,6 +5,12 @@ use Czim\CmsModels\Contracts\Strategies\FilterStrategyInterface;
 use Czim\CmsModels\Strategies\Filter\BasicSplitString;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 
+/**
+ * Class BasicSplitStringTest
+ *
+ * @group strategies
+ * @group strategies-filter
+ */
 class BasicSplitStringTest extends AbstractFilterStrategyTestCase
 {
 

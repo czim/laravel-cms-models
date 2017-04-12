@@ -12,6 +12,12 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Mockery;
 
+/**
+ * Class DatepickerTest
+ *
+ * @group strategies
+ * @group strategies-filter
+ */
 class DatepickerTest extends AbstractFilterStrategyTestCase
 {
 

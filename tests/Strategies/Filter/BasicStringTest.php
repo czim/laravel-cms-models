@@ -9,6 +9,12 @@ use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Illuminate\Contracts\View\View;
 
+/**
+ * Class BasicStringTest
+ *
+ * @group strategies
+ * @group strategies-filter
+ */
 class BasicStringTest extends AbstractFilterStrategyTestCase
 {
 

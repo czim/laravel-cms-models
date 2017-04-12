@@ -13,6 +13,12 @@ use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Illuminate\Contracts\View\View;
 use Mockery;
 
+/**
+ * Class DropdownBooleanTest
+ *
+ * @group strategies
+ * @group strategies-filter
+ */
 class DropdownBooleanTest extends AbstractFilterStrategyTestCase
 {
 
