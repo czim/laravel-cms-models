@@ -6,7 +6,6 @@ use Czim\CmsCore\Support\Enums\Component;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\ModelInformation\Data\Listing\ModelListFilterData;
 use Czim\CmsModels\Strategies\Filter\Datepicker;
-use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Illuminate\Contracts\View\View;
@@ -124,44 +123,4 @@ class DatepickerTest extends AbstractFilterStrategyTestCase
         return Mockery::mock(CoreInterface::class);
     }
 
-    /**
-     * Binds mock repository with mocked information for the test post model.
-     */
-    protected function bindMockModelRepositoryForPostModel()
-    {
-        $this->app->instance(ModelInformationRepositoryInterface::class, $this->getMockModelRepository());
-    }
-
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|ModelInformationRepositoryInterface
-     */
-    protected function getMockModelRepository()
-    {
-        $mock = $this->getMockBuilder(ModelInformationRepositoryInterface::class)->getMock();
-
-        $mock->method('getByModel')
-            ->with(static::isInstanceOf(TestPost::class))
-            ->willReturn(
-                new ModelInformation([
-                    'attributes' => [
-                        'title' => new ModelAttributeData([
-                            'type'       => 'varchar',
-                            'cast'       => 'string',
-                            'translated' => true,
-                        ]),
-                        'body' => new ModelAttributeData([
-                            'type'       => 'text',
-                            'cast'       => 'string',
-                            'translated' => true,
-                        ]),
-                        'description' => new ModelAttributeData([
-                            'type'       => 'varchar',
-                            'cast'       => 'string',
-                        ]),
-                    ],
-                ])
-            );
-
-        return $mock;
-    }
 }
