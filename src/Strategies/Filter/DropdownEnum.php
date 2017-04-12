@@ -62,6 +62,10 @@ class DropdownEnum extends AbstractFilterStrategy
         $values = $this->getDropdownValues();
         $labels = $this->getDropdownLabels();
 
+        if ( ! $values) {
+            return [];
+        }
+
         // Make sure that labels are set for each value
         foreach ($values as $value) {
             if (isset($labels[ $value ])) continue;
@@ -80,7 +84,9 @@ class DropdownEnum extends AbstractFilterStrategy
     protected function getDropdownValues()
     {
         if ( ! $this->filterData) {
+            // @codeCoverageIgnoreStart
             return [];
+            // @codeCoverageIgnoreEnd
         }
 
         if ($source = array_get($this->filterData->options(), 'value_source')) {
@@ -128,7 +134,9 @@ class DropdownEnum extends AbstractFilterStrategy
     protected function getDropdownLabels()
     {
         if ( ! $this->filterData) {
+            // @codeCoverageIgnoreStart
             return [];
+            // @codeCoverageIgnoreEnd
         }
 
         if ($source = array_get($this->filterData->options(), 'label_source')) {
