@@ -275,6 +275,7 @@ abstract class AbstractFilterStrategy implements FilterStrategyInterface
      *
      * @param ModelAttributeData $attribute
      * @return bool
+     * @codeCoverageIgnore
      */
     protected function isAttributeRelevant(ModelAttributeData $attribute)
     {
