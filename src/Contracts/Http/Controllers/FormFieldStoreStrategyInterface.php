@@ -57,15 +57,10 @@ interface FormFieldStoreStrategyInterface extends FormFieldListParentValueInterf
      * If the return array is associative, rules are expected nested per key,
      * otherwise the rules will be added to the top level key.
      *
-     * @param ModelFormFieldDataInterface|null $field
-     * @param ModelInformationInterface|null   $modelInformation
-     * @param bool                             $create              whether the rules are for creating a new record
+     * @param ModelInformationInterface|null $modelInformation
+     * @param bool                           $create whether the rules are for creating a new record
      * @return array|false false if no validation should be performed.
      */
-    public function validationRules(
-        ModelFormFieldDataInterface $field = null,
-        ModelInformationInterface $modelInformation = null,
-        $create
-    );
+    public function validationRules(ModelInformationInterface $modelInformation = null, $create);
 
 }

@@ -272,7 +272,7 @@ class EnrichValidationData extends AbstractEnricherStep
             $this->getFormFieldStoreStrategyParametersForField($field)
         );
 
-        $fieldRules = $instance->validationRules($field, $this->info, $forCreate);
+        $fieldRules = $instance->validationRules($this->info, $forCreate);
 
         if (false === $fieldRules) {
             return;

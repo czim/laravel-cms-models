@@ -173,16 +173,16 @@ class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyInterface
      * If the return array is associative, rules are expected nested per key,
      * otherwise the rules will be added to the top level key.
      *
-     * @param ModelFormFieldDataInterface|ModelFormFieldData|null $field
-     * @param ModelInformationInterface|ModelInformation|null     $modelInformation
-     * @param bool                                                $create
+     * @param ModelInformationInterface|ModelInformation|null $modelInformation
+     * @param bool                                            $create
      * @return array|false false if no validation should be performed.
      */
-    public function validationRules(
-        ModelFormFieldDataInterface $field = null,
-        ModelInformationInterface $modelInformation = null,
-        $create
-    ) {
+    public function validationRules(ModelInformationInterface $modelInformation = null, $create)
+    {
+        if ( ! ($field = $this->formFieldData)) {
+            return false;
+        }
+
         // Default behavior is to check for attribute/relation validation rules
         $rules = $this->getStrategySpecificRules($field);
 
