@@ -267,6 +267,7 @@ class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyInterface
      *
      * @param ModelFormFieldDataInterface|ModelFormFieldData $field
      * @return array|false|null     null to fall back to default rules.
+     * @codeCoverageIgnore
      */
     protected function getStrategySpecificRules(ModelFormFieldDataInterface $field = null)
     {
@@ -285,7 +286,9 @@ class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyInterface
         ModelInformationInterface $modelInformation = null
     ) {
         if ( ! $field || ! $modelInformation) {
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $key = $field->key();
@@ -296,7 +299,6 @@ class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyInterface
                 $modelInformation->attributes[ $key ],
                 $field
             );
-
         }
 
         if (array_key_exists($key, $modelInformation->relations)) {
