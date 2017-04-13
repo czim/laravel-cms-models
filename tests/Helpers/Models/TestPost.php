@@ -4,6 +4,15 @@ namespace Czim\CmsModels\Test\Helpers\Models;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class TestPost
+ *
+ * @property string $title
+ * @property string $body
+ * @property string $type
+ * @property bool   $checked
+ * @property string $description
+ */
 class TestPost extends Model
 {
     use Translatable;
@@ -24,6 +33,9 @@ class TestPost extends Model
     protected $casts = [
         'checked' => 'boolean',
     ];
+
+    public $test = false;
+
 
     public function author()
     {
@@ -46,6 +58,14 @@ class TestPost extends Model
     public function testMethod()
     {
         return 'testing method value';
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function testSetValue($value)
+    {
+        $this->test = $value;
     }
 
 }
