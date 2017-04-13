@@ -70,12 +70,6 @@ abstract class AbstractPostCommentSeededTestCase extends DatabaseTestCase
             $table->nullableTimestamps();
         });
 
-        //Schema::create('test_author_test_post', function($table) {
-        //    $table->increments('id');
-        //    $table->integer('test_author_id')->unsigned();
-        //    $table->integer('test_post_id')->unsigned();
-        //});
-
         Schema::create('test_seos', function($table) {
             /** @var \Illuminate\Database\Schema\Blueprint $table */
             $table->increments('id');
