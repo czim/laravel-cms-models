@@ -40,7 +40,7 @@ class ReferenceResolvingRelay extends AbstractSortStrategy
 
         if ($strategy) {
 
-            $instance = new $strategy;
+            $instance = app($strategy);
 
             if ( ! ($instance instanceof SortStrategyInterface)) {
                 throw new UnexpectedValueException("{$strategy} is not a sort strategy");
