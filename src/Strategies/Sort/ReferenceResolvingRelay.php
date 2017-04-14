@@ -160,19 +160,15 @@ class ReferenceResolvingRelay extends AbstractSortStrategy
     }
 
     /**
-     * @param Model|string $model
+     * @param Model $model
      * @return null|ModelInformationInterface|ModelInformation
      */
-    protected function getModelInformation($model)
+    protected function getModelInformation(Model $model)
     {
         /** @var ModelInformationRepositoryInterface $repository */
         $repository = app(ModelInformationRepositoryInterface::class);
 
-        if ($model instanceof Model) {
-            return $repository->getByModel($model);
-        }
-
-        return $repository->getByModelClass($model);
+        return $repository->getByModel($model);
     }
 
 
@@ -187,7 +183,9 @@ class ReferenceResolvingRelay extends AbstractSortStrategy
         $translatable = config('cms-models.analyzer.traits.translatable', []);
 
         if ( ! count($translatable)) {
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         return (bool) count(array_intersect($this->classUsesDeep($class), $translatable));
