@@ -5,6 +5,12 @@ use Czim\CmsModels\Strategies\Sort\TranslatedAttribute;
 use Czim\CmsModels\Test\AbstractPostCommentSeededTestCase;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 
+/**
+ * Class TranslatedAttributeTest
+ *
+ * @group strategies
+ * @group strategies-sort
+ */
 class TranslatedAttributeTest extends AbstractPostCommentSeededTestCase
 {
 
