@@ -24,7 +24,9 @@ class StaplerStrategy extends DefaultStrategy
 
         // If the value is empty, use the stapler null value instead
         if (empty($value['upload'])) {
+            // @codeCoverageIgnoreStart
             $value['upload'] = STAPLER_NULL;
+            // @codeCoverageIgnoreEnd
         }
 
         return $value;

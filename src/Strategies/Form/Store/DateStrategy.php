@@ -39,9 +39,6 @@ class DateStrategy extends DefaultStrategy
                     $value .= ' 00:00:00';
                 }
                 break;
-
-            case FormDisplayStrategy::DATEPICKER_TIME:
-                break;
         }
 
         if (empty($value)) {

@@ -39,7 +39,9 @@ class PasswordUpdateStrategy extends AbstractFormFieldStoreStrategy
 
         // Do not change anything if the value is not set.
         if ( ! $value) {
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         // Otherwise, hash the value
