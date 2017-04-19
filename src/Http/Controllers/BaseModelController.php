@@ -48,7 +48,7 @@ abstract class BaseModelController extends Controller
 
         // artisan commands, like route:list, may instantiate this without requiring
         // any actions to be called; no exceptions should be thrown in that case.
-        if (app()->runningInConsole()) return;
+        if ( ! $core->bootChecker()->isCmsWebRequest()) return;
 
 
         $this->initializeForModelRoute()
