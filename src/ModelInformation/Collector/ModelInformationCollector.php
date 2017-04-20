@@ -135,7 +135,7 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
                 // Wrap and decorate exceptions so it is easier to track the problem source
                 throw (new ModelInformationCollectionException(
                     "Issue analyzing model {$class}: \n{$e->getMessage()}",
-                    $e->getCode(),
+                    (int) $e->getCode(),
                     $e
                 ))
                     ->setModelClass($class);
@@ -169,7 +169,7 @@ class ModelInformationCollector implements ModelInformationCollectorInterface
                 // Wrap and decorate exceptions so it is easier to track the problem source
                 throw (new ModelInformationCollectionException(
                     "Issue reading/interpreting model configuration file {$file->getRealPath()}: \n{$message}",
-                    $e->getCode(),
+                    (int) $e->getCode(),
                     $e
                 ))
                     ->setConfigurationFile($file->getRealPath());

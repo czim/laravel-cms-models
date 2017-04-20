@@ -101,7 +101,7 @@ class EnrichListColumnData extends AbstractEnricherStep
                 // Wrap and decorate exceptions so it is easier to track the problem source
                 throw (new ModelInformationEnrichmentException(
                     "Issue with list column '{$key}' (list.columns.{$key}): \n{$e->getMessage()}",
-                    $e->getCode(),
+                    (int) $e->getCode(),
                     $e
                 ))
                     ->setSection('list.columns')

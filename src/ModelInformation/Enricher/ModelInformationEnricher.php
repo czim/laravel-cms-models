@@ -118,7 +118,7 @@ class ModelInformationEnricher implements ModelInformationEnricherInterface
             // Wrap and decorate exceptions so it is easier to track the problem source
             throw (new ModelInformationEnrichmentException(
                 "{$information->modelClass()} model configuration issue: \n{$message}",
-                $e->getCode(),
+                (int) $e->getCode(),
                 $e
             ))
                 ->setModelClass($information->modelClass())
