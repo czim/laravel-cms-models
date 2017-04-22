@@ -13,6 +13,7 @@
     <testsuites>
         <testsuite name="CMS Models Package Test Suite">
             <directory suffix=".php">./tests/</directory>
+            <exclude>./tests/Helpers/resources/</exclude>
         </testsuite>
     </testsuites>
 
