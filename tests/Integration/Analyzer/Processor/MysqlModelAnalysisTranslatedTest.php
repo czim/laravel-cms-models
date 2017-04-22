@@ -1,14 +1,18 @@
 <?php
 namespace Czim\CmsModels\Test\Integration\Analyzer\Processor;
 
-use Czim\CmsModels\ModelInformation\Analyzer\Database\MysqlDatabaseAnalyzer;
 use Czim\CmsModels\ModelInformation\Analyzer\Processor\ModelAnalyzer;
-use Czim\CmsModels\Contracts\ModelInformation\Analyzer\DatabaseAnalyzerInterface;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 use Czim\CmsModels\Support\Enums\RelationType;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 
+/**
+ * Class MysqlModelAnalysisTranslatedTest
+ *
+ * @group integration
+ * @group analysis
+ */
 class MysqlModelAnalysisTranslatedTest extends AbstractAnalyzerTestCase
 {
 
@@ -17,19 +21,7 @@ class MysqlModelAnalysisTranslatedTest extends AbstractAnalyzerTestCase
      */
     protected function setDatabaseConnectionConfig($app)
     {
-        $app['config']->set('database.connections.testbench', [
-            'driver'    => 'mysql',
-            'host'      => 'localhost',
-            'port'      => '3306',
-            'database'  => 'testing',
-            'username'  => 'root',
-            'password'  => '',
-            'charset'   => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix'    => '',
-            'strict'    => true,
-            'engine'    => null,
-        ]);
+        $app['config']->set('database.connections.testbench', $this->getDatabaseConfigForMysql());
     }
 
     /**

@@ -8,6 +8,12 @@ use Czim\CmsModels\Test\Helpers\Models\TestComment;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class ModelAnalysisConnectionSwitchTest
+ *
+ * @group integration
+ * @group analysis
+ */
 class ModelAnalysisConnectionSwitchTest extends AbstractAnalyzerTestCase
 {
 
@@ -20,19 +26,7 @@ class ModelAnalysisConnectionSwitchTest extends AbstractAnalyzerTestCase
         parent::setDatabaseConnectionConfig($app);
 
         // And add an alternative
-        $app['config']->set('database.connections.testbench_alt', [
-            'driver'    => 'mysql',
-            'host'      => 'localhost',
-            'port'      => '3306',
-            'database'  => 'testing',
-            'username'  => 'root',
-            'password'  => '',
-            'charset'   => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix'    => '',
-            'strict'    => true,
-            'engine'    => null,
-        ]);
+        $app['config']->set('database.connections.testbench_alt', $this->getDatabaseConfigForMysql());
     }
 
     protected function migrateDatabase()

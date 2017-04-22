@@ -1,14 +1,18 @@
 <?php
 namespace Czim\CmsModels\Test\Integration\Analyzer\Processor;
 
-use Czim\CmsModels\ModelInformation\Analyzer\Database\SqliteDatabaseAnalyzer;
 use Czim\CmsModels\ModelInformation\Analyzer\Processor\ModelAnalyzer;
-use Czim\CmsModels\Contracts\ModelInformation\Analyzer\DatabaseAnalyzerInterface;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 use Czim\CmsModels\Support\Enums\RelationType;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 
+/**
+ * Class SqliteModelAnalysisTranslatedTest
+ *
+ * @group integration
+ * @group analysis
+ */
 class SqliteModelAnalysisTranslatedTest extends AbstractAnalyzerTestCase
 {
 
