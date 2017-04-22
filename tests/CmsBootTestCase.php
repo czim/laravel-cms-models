@@ -3,8 +3,11 @@ namespace Czim\CmsModels\Test;
 
 use Czim\CmsCore\Contracts\Auth\AuthenticatorInterface;
 use Czim\CmsCore\Providers\CmsCoreServiceProvider;
+use Czim\CmsCore\Support\Enums\CmsMiddleware;
 use Czim\CmsCore\Support\Enums\Component;
+use Czim\CmsCore\Support\Enums\NamedRoute;
 use Czim\CmsModels\Providers\CmsModelsServiceProvider;
+use Czim\CmsModels\Test\Helpers\Http\Controllers\MockAuthController;
 use Illuminate\Contracts\Foundation\Application;
 
 abstract class CmsBootTestCase extends DatabaseTestCase
@@ -79,14 +82,46 @@ abstract class CmsBootTestCase extends DatabaseTestCase
 
             $mock = $this->getMockBuilder(AuthenticatorInterface::class)->getMock();
 
-            $mock->method('getRouteLoginAction')->willReturn('MockController@index');
-            $mock->method('getRouteLoginPostAction')->willReturn('MockController@index');
-            $mock->method('getRouteLogoutAction')->willReturn('MockController@index');
+            $mock->method('getRouteLoginAction')
+                ->willReturn([
+                    'middleware' => [ CmsMiddleware::GUEST ],
+                    'as'         => NamedRoute::AUTH_LOGIN,
+                    'uses'       => MockAuthController::class . '@showLoginForm',
+                ]);
 
-            $mock->method('getRoutePasswordEmailGetAction')->willReturn('MockController@index');
-            $mock->method('getRoutePasswordEmailPostAction')->willReturn('MockController@index');
-            $mock->method('getRoutePasswordResetGetAction')->willReturn('MockController@index');
-            $mock->method('getRoutePasswordResetPostAction')->willReturn('MockController@index');
+            $mock->method('getRouteLoginPostAction')
+                ->willReturn([
+                    'middleware' => [ CmsMiddleware::GUEST ],
+                    'uses'       => MockAuthController::class . '@login',
+                ]);
+
+            $mock->method('getRouteLogoutAction')
+                ->willReturn([
+                    'as'   => NamedRoute::AUTH_LOGOUT,
+                    'uses' => MockAuthController::class . '@logout',
+                ]);
+
+            $mock->method('getRoutePasswordEmailGetAction')
+                ->willReturn([
+                    'as'   => NamedRoute::AUTH_PASSWORD_EMAIL,
+                    'uses' => MockAuthController::class . '@showLinkRequestForm',
+                ]);
+
+            $mock->method('getRoutePasswordEmailPostAction')
+                ->willReturn([
+                    'uses' => MockAuthController::class . '@sendResetLinkEmail'
+                ]);
+
+            $mock->method('getRoutePasswordResetGetAction')
+                ->willReturn([
+                    'as'   => NamedRoute::AUTH_PASSWORD_RESET,
+                    'uses' => MockAuthController::class . '@showResetForm',
+                ]);
+
+            $mock->method('getRoutePasswordResetPostAction')
+                ->willReturn([
+                    'uses' => MockAuthController::class . '@reset'
+                ]);
 
             return $mock;
         });

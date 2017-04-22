@@ -1,6 +1,9 @@
 <?php
 namespace Czim\CmsModels\Test;
 
+use App\Console\Kernel;
+use Illuminate\Contracts\Console\Kernel as ConsoleKernelContract;
+
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
 
@@ -35,6 +38,24 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         if (file_exists($this->getModelsCachePath())) {
             unlink($this->getModelsCachePath());
         }
+    }
+
+    /**
+     * Returns most recent artisan command output.
+     *
+     * @return string
+     */
+    protected function getArtisanOutput()
+    {
+        return $this->getConsoleKernel()->output();
+    }
+
+    /**
+     * @return ConsoleKernelContract|Kernel
+     */
+    protected function getConsoleKernel()
+    {
+        return $this->app[ConsoleKernelContract::class];
     }
 
 }

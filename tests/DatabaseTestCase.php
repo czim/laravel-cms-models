@@ -26,11 +26,51 @@ abstract class DatabaseTestCase extends TestCase
     protected function setDatabaseConnectionConfig($app)
     {
         // Setup default database to use sqlite :memory:
-        $app['config']->set('database.connections.testbench', [
+        $app['config']->set('database.connections.testbench', $this->getDatabaseConfigForSqlite());
+    }
+
+    /**
+     * @param \Illuminate\Foundation\Application $app
+     */
+    protected function setDatabaseConnectionConfigForMysql($app)
+    {
+        $app['config']->set('database.connections.testbench', $this->getDatabaseConfigForMysql());
+    }
+
+    /**
+     * Returns the testing config array for a MySQL connection.
+     *
+     * @return array
+     */
+    protected function getDatabaseConfigForMysql()
+    {
+        return [
+            'driver'    => 'mysql',
+            'host'      => 'localhost',
+            'port'      => '3306',
+            'database'  => 'testing',
+            'username'  => 'root',
+            'password'  => '',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => true,
+            'engine'    => null,
+        ];
+    }
+
+    /**
+     * Returns the testing config for a (shared) SQLite connection.
+     *
+     * @return array
+     */
+    protected function getDatabaseConfigForSqlite()
+    {
+        return [
             'driver'   => 'sqlite',
             'database' => ':memory:',
             'prefix'   => '',
-        ]);
+        ];
     }
 
     /**
@@ -57,6 +97,11 @@ abstract class DatabaseTestCase extends TestCase
 
     protected function seedDatabase()
     {
+    }
+
+    protected function setMysqlDatabase()
+    {
+
     }
 
 }

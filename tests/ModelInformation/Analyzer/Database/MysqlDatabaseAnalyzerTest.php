@@ -16,19 +16,7 @@ class MysqlDatabaseAnalyzerTest extends AbstractDatabaseAnalyzerTestCase
      */
     protected function setDatabaseConnectionConfig($app)
     {
-        $app['config']->set('database.connections.testbench', [
-            'driver'    => 'mysql',
-            'host'      => 'localhost',
-            'port'      => '3306',
-            'database'  => 'testing',
-            'username'  => 'root',
-            'password'  => '',
-            'charset'   => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix'    => '',
-            'strict'    => true,
-            'engine'    => null,
-        ]);
+        $this->setDatabaseConnectionConfigForMysql($app);
     }
 
     /**
