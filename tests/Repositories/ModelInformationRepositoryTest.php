@@ -22,9 +22,15 @@ class ModelInformationRepositoryTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-
-        $this->deleteModelsCacheFile();
     }
+
+    public function tearDown()
+    {
+        $this->deleteModelsCacheFile();
+
+        parent::tearDown();
+    }
+
 
     /**
      * @test
