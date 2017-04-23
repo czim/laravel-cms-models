@@ -34,7 +34,10 @@ abstract class AbstractControllerIntegrationTest extends CmsBootTestCase
     protected $mockBootApi = false;
 
     /**
-     * A per-model custom configuration to inject as collected model information.
+     * A per-test-method, per-model custom configuration to inject as collected model information.
+     *
+     * Use:
+     *      'it_tests_method_name' => [ 'test_post' => [ ... configuration ... ] ]
      *
      * @var array
      */
@@ -142,7 +145,11 @@ abstract class AbstractControllerIntegrationTest extends CmsBootTestCase
      */
     protected function prepareCustomModelConfiguration($app)
     {
-        foreach ($this->customModelConfiguration as $key => $configuration) {
+        if ( ! array_key_exists($this->getName(), $this->customModelConfiguration)) {
+            return;
+        }
+
+        foreach ($this->customModelConfiguration[ $this->getName() ] as $key => $configuration) {
             $app->instance('cms-models-test.integration.information.' . $key, $configuration);
         }
     }
