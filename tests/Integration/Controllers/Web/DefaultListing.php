@@ -15,6 +15,15 @@ class DefaultListing extends AbstractControllerIntegrationTest
 {
     const ROUTE_BASE = 'cms::models.model.czim-cmsmodels-test-helpers-models-testpost';
 
+
+    protected $customModelConfiguration = [
+        'it_redirects_to_form_page_if_single_mode_is_enabled' => [
+            'test-post' => [
+                'single' => true,
+            ],
+        ],
+    ];
+
     /**
      * @test
      */
@@ -100,6 +109,100 @@ class DefaultListing extends AbstractControllerIntegrationTest
         static::assertNotHtmlElementInResponse('tr.records-row[data-id=1]', 'Third record should not be present');
     }
 
+    /**
+     * @test
+     * @see $customModelConfiguration
+     */
+    function it_redirects_to_form_page_if_single_mode_is_enabled()
+    {
+        $this
+            ->visitRoute(static::ROUTE_BASE . '.index')
+            ->seeStatusCode(200);
+
+        static::assertHtmlElementInResponse('form.model-form[data-id=1]', 'Expected form for model #1');
+    }
+    
+    /**
+     * @test
+     */
+    function it_shows_a_list_of_models_with_custom_sorting()
+    {
+        $this
+            ->visitRoute(static::ROUTE_BASE . '.index')
+            ->seeStatusCode(200);
+
+        // Check if current sort order is ID descending
+        $rows = $this->crawler()->filter('tr.records-row');
+        static::assertEquals(3, $rows->first()->attr('data-id'), 'Order incorrect for default sort');
+        static::assertEquals(2, $rows->eq(1)->attr('data-id'), 'Order incorrect for default sort');
+        static::assertEquals(1, $rows->last()->attr('data-id'), 'Order incorrect for default sort');
+
+        $this->assertHtmlElementInResponse(
+            'a.sort.active[href="?sort=id&sortdir=asc"]',
+            'ID active ascending link should be present'
+        );
+
+        // Select title for sorting
+        $this
+            ->visitRoute(static::ROUTE_BASE . '.index', ['sort' => 'title'])
+            ->seeStatusCode(200);
+
+        // Check if new sort order is title ascending
+        $rows = $this->crawler()->filter('tr.records-row');
+        static::assertEquals(2, $rows->first()->attr('data-id'), 'Order incorrect for title sort');
+        static::assertEquals(1, $rows->eq(1)->attr('data-id'), 'Order incorrect for title sort');
+        static::assertEquals(3, $rows->last()->attr('data-id'), 'Order incorrect for title sort');
+
+        $this->assertHtmlElementInResponse(
+            'a.sort.active[href="?sort=title&sortdir=desc"]',
+            'Title active descending link should be present'
+        );
+
+        // Select descending order for title for sorting
+        $this
+            ->visitRoute(static::ROUTE_BASE . '.index', ['sort' => 'title', 'sortdir' => 'desc'])
+            ->seeStatusCode(200);
+
+        // Check if new sort order is title descending
+        $rows = $this->crawler()->filter('tr.records-row');
+        static::assertEquals(3, $rows->first()->attr('data-id'), 'Order incorrect for title desc sort');
+        static::assertEquals(1, $rows->eq(1)->attr('data-id'), 'Order incorrect for title desc sort');
+        static::assertEquals(2, $rows->last()->attr('data-id'), 'Order incorrect for title desc sort');
+    }
+
+    /**
+     * @test
+     * @depends it_shows_a_list_of_models_with_custom_sorting
+     */
+    function it_remembers_page_and_sorting_in_session()
+    {
+        $this->app['config']->set('cms-models.strategies.list.page-size', 2);
+
+        // Request with specific sorting
+        $this
+            ->visitRoute(static::ROUTE_BASE . '.index', ['sort' => 'title', 'sortdir' => 'desc'])
+            ->seeStatusCode(200);
+
+        // Request specific page, using session-set sorting
+        $this
+            ->visitRoute(static::ROUTE_BASE . '.index', ['page' => 2])
+            ->seeStatusCode(200);
+
+        // Only #2 (sorted last for title desc) should be on page 2
+        static::assertHtmlElementInResponse('tr.records-row[data-id=2]', 'Expected model record not found');
+        static::assertNotHtmlElementInResponse('tr.records-row[data-id=3]', 'Model from first page should not be present');
+        static::assertNotHtmlElementInResponse('tr.records-row[data-id=1]', 'Model from first page should not be present');
+
+        // Request without parameters, using the session-set page & sorting
+        $this
+            ->visitRoute(static::ROUTE_BASE . '.index')
+            ->seeStatusCode(200);
+
+        // Only #2 (sorted last for title desc) should be on page 2
+        static::assertHtmlElementInResponse('tr.records-row[data-id=2]', 'Expected model record not found');
+        static::assertNotHtmlElementInResponse('tr.records-row[data-id=3]', 'Model from first page should not be present');
+        static::assertNotHtmlElementInResponse('tr.records-row[data-id=1]', 'Model from first page should not be present');
+    }
 
     /**
      * Returns a list of strings with contents from the listing, for a given row (by record ID).
