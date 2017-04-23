@@ -248,32 +248,4 @@ class DefaultListing extends AbstractControllerIntegrationTest
         return in_array($text, $columns);
     }
 
-    /**
-     * @param string      $selector
-     * @param string|null $message
-     */
-    protected function assertHtmlElementInResponse($selector, $message = null)
-    {
-        static::assertCount(
-            1,
-            $this->crawler()->filter($selector),
-            ($message ?: "HTML element '{$selector}' not found in response.")
-            . PHP_EOL . $this->crawler()->html()
-        );
-    }
-
-    /**
-     * @param string      $selector
-     * @param string|null $message
-     */
-    protected function assertNotHtmlElementInResponse($selector, $message = null)
-    {
-        static::assertCount(
-            0,
-            $this->crawler()->filter($selector),
-            ($message ?: "HTML element '{$selector}' found in response.")
-            . PHP_EOL . $this->crawler()->html()
-        );
-    }
-
 }

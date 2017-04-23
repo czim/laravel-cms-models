@@ -58,4 +58,32 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         return $this->app[ConsoleKernelContract::class];
     }
 
+    /**
+     * @param string      $selector
+     * @param string|null $message
+     */
+    protected function assertHtmlElementInResponse($selector, $message = null)
+    {
+        static::assertCount(
+            1,
+            $this->crawler()->filter($selector),
+            ($message ?: "HTML element '{$selector}' not found in response.")
+            . PHP_EOL . $this->crawler()->html()
+        );
+    }
+
+    /**
+     * @param string      $selector
+     * @param string|null $message
+     */
+    protected function assertNotHtmlElementInResponse($selector, $message = null)
+    {
+        static::assertCount(
+            0,
+            $this->crawler()->filter($selector),
+            ($message ?: "HTML element '{$selector}' found in response.")
+            . PHP_EOL . $this->crawler()->html()
+        );
+    }
+
 }
