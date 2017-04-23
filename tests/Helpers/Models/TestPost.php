@@ -68,4 +68,22 @@ class TestPost extends Model
         $this->test = $value;
     }
 
+    /**
+     * @param \Illuminate\Database\Query\Builder $query
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function scopeChecked($query)
+    {
+        return $query->where('checked', true);
+    }
+
+    /**
+     * @param \Illuminate\Database\Query\Builder $query
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function scopeNotice($query)
+    {
+        return $query->where('type', 'notice');
+    }
+
 }
