@@ -86,7 +86,8 @@ class DefaultModelController extends BaseModelController
             return $this->returnViewForSingleDisplay();
         }
 
-        $this->checkListParents()
+        $this->resetStateBeforeIndexAction()
+             ->checkListParents()
              ->applyListParentContext()
              ->checkActiveSort()
              ->checkScope()
@@ -535,6 +536,24 @@ class DefaultModelController extends BaseModelController
         return $download;
     }
 
+
+    /**
+     * Resets the controller's state before handling the index action.
+     *
+     * @return $this
+     */
+    protected function resetStateBeforeIndexAction()
+    {
+        $this->activeSort           = null;
+        $this->activeSortDescending = null;
+        $this->activeScope          = null;
+        $this->filters              = [];
+        $this->activePage           = null;
+        $this->activePageSize       = null;
+        $this->resetActivePage      = false;
+
+        return $this;
+    }
 
     /**
      * Removes the page query parameter from a full URL.
