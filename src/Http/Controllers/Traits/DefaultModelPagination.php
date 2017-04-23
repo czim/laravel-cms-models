@@ -56,7 +56,7 @@ trait DefaultModelPagination
 
         } elseif ($this->getListMemory()->hasPageSize()) {
 
-            $this->retrieveActivePageSzeFromSession();
+            $this->retrieveActivePageSizeFromSession();
         }
 
         if ($update && ($pageSetByRequest || $pageSizeSetByRequest)) {
@@ -86,7 +86,7 @@ trait DefaultModelPagination
     /**
      * Retrieves the sort settions from the session and restores them as active.
      */
-    protected function retrieveActivePageSzeFromSession()
+    protected function retrieveActivePageSizeFromSession()
     {
         $this->activePageSize = $this->getListMemory()->getPageSize();
     }
