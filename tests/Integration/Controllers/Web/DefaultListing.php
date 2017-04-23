@@ -24,9 +24,9 @@ class DefaultListing extends AbstractControllerIntegrationTest
             ->visitRoute(static::ROUTE_BASE . '.index')
             ->seeStatusCode(200);
 
-        static::assertHtmlElementInResponse('tr.records-row[data-id=1]', 'Expected model record not found');
-        static::assertHtmlElementInResponse('tr.records-row[data-id=2]', 'Expected model record not found');
         static::assertHtmlElementInResponse('tr.records-row[data-id=3]', 'Expected model record not found');
+        static::assertHtmlElementInResponse('tr.records-row[data-id=2]', 'Expected model record not found');
+        static::assertHtmlElementInResponse('tr.records-row[data-id=1]', 'Expected model record not found');
 
         static::assertTrue($this->listingHasColumnTextForRecord(1, 'Some Basic Title'), 'ID #1 title not present');
         static::assertTrue($this->listingHasColumnTextForRecord(2, 'Elaborate Alternative Title'), 'ID #2 title not present');
@@ -52,9 +52,9 @@ class DefaultListing extends AbstractControllerIntegrationTest
             ->seeLink('3', route(static::ROUTE_BASE . '.index', ['page' => 3]), true);
 
         // Make sure the correct model records are present
-        static::assertHtmlElementInResponse('tr.records-row[data-id=1]', 'Expected model record not found');
+        static::assertHtmlElementInResponse('tr.records-row[data-id=3]', 'Expected model record not found');
         static::assertHtmlElementInResponse('tr.records-row[data-id=2]', 'Expected model record not found');
-        static::assertNotHtmlElementInResponse('tr.records-row[data-id=3]', 'Third record should not be present');
+        static::assertNotHtmlElementInResponse('tr.records-row[data-id=1]', 'Third record should not be present');
 
         // Load the next page
         $this
@@ -97,7 +97,7 @@ class DefaultListing extends AbstractControllerIntegrationTest
             // There should be a link to page 2
             ->seeLink('2', route(static::ROUTE_BASE . '.index', ['page' => 2]));
 
-        static::assertNotHtmlElementInResponse('tr.records-row[data-id=3]', 'Third record should not be present');
+        static::assertNotHtmlElementInResponse('tr.records-row[data-id=1]', 'Third record should not be present');
     }
 
 
