@@ -91,7 +91,9 @@ trait DefaultModelScoping
         $info = $this->getModelInformation();
 
         if ( ! $info->list->scopes || ! count($info->list->scopes)) {
+            // @codeCoverageIgnoreStart
             return [];
+            // @codeCoverageIgnoreEnd
         }
 
         $counts = [];
@@ -143,7 +145,9 @@ trait DefaultModelScoping
     protected function isValidScopeKey($key)
     {
         if ( ! $this->areScopesEnabled()) {
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         return in_array($key, array_keys($this->getModelInformation()->list->scopes));

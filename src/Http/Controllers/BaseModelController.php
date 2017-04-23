@@ -67,13 +67,17 @@ abstract class BaseModelController extends Controller
         $this->permissionPrefix = $this->routeHelper->getPermissionPrefixForModelSlug($this->modelSlug);
 
         if ( ! $this->moduleKey) {
+            // @codeCoverageIgnoreStart
             throw new RuntimeException("Could not determine module key for route");
+            // @codeCoverageIgnoreEnd
         }
 
         $this->modelInformation = $this->infoRepository->getByKey($this->modelSlug);
 
         if ( ! $this->modelInformation) {
+            // @codeCoverageIgnoreStart
             throw new RuntimeException("Could not load information for model key '{$this->modelSlug}'");
+            // @codeCoverageIgnoreEnd
         }
 
         $this->routePrefix = $this->routeHelper->getRouteNameForModelClass(

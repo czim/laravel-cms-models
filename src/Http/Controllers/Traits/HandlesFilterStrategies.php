@@ -31,22 +31,26 @@ trait HandlesFilterStrategies
             try {
                 $instance = $this->getFilterFactory()->make($data->strategy, $key, $data);
 
+                // @codeCoverageIgnoreStart
             } catch (\Exception $e) {
 
                 $message = "Failed to make list filter strategy for '{$key}': \n{$e->getMessage()}";
 
                 throw new StrategyRenderException($message, $e->getCode(), $e);
+                // @codeCoverageIgnoreEnd
             }
 
             try {
                 $views[ $key ] = $instance->render($key, array_get($values, $key));
 
+                // @codeCoverageIgnoreStart
             } catch (\Exception $e) {
 
                 $message = "Failed to render list filter '{$key}' for strategy " . get_class($instance)
                          . ": \n{$e->getMessage()}";
 
                 throw new StrategyRenderException($message, $e->getCode(), $e);
+                // @codeCoverageIgnoreEnd
             }
         }
 
