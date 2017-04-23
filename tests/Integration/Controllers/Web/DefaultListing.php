@@ -25,9 +25,9 @@ class DefaultListing extends AbstractControllerIntegrationTest
             ->visitRoute(static::ROUTE_BASE . '.index')
             ->seeStatusCode(200);
 
-        static::assertCount(1, $this->crawler()->filter('tr.records-row[data-id=1]'), 'Expected model record not found');
-        static::assertCount(1, $this->crawler()->filter('tr.records-row[data-id=2]'), 'Expected model record not found');
-        static::assertCount(1, $this->crawler()->filter('tr.records-row[data-id=3]'), 'Expected model record not found');
+        static::assertHtmlElementInResponse('tr.records-row[data-id=1]', 'Expected model record not found');
+        static::assertHtmlElementInResponse('tr.records-row[data-id=2]', 'Expected model record not found');
+        static::assertHtmlElementInResponse('tr.records-row[data-id=3]', 'Expected model record not found');
 
         static::assertTrue($this->listingHasColumnTextForRecord(1, 'Some Basic Title'), 'ID #1 title not present');
         static::assertTrue($this->listingHasColumnTextForRecord(2, 'Elaborate Alternative Title'), 'ID #2 title not present');
@@ -53,9 +53,9 @@ class DefaultListing extends AbstractControllerIntegrationTest
             ->seeLink('3', route(static::ROUTE_BASE . '.index', ['page' => 3]), true);
 
         // Make sure the correct model records are present
-        static::assertCount(1, $this->crawler()->filter('tr.records-row[data-id=1]'), 'Expected model record not found');
-        static::assertCount(1, $this->crawler()->filter('tr.records-row[data-id=2]'), 'Expected model record not found');
-        static::assertCount(0, $this->crawler()->filter('tr.records-row[data-id=3]'), 'Third record should not be present');
+        static::assertHtmlElementInResponse('tr.records-row[data-id=1]', 'Expected model record not found');
+        static::assertHtmlElementInResponse('tr.records-row[data-id=2]', 'Expected model record not found');
+        static::assertNotHtmlElementInResponse('tr.records-row[data-id=3]', 'Third record should not be present');
 
         // Load the next page
         $this
@@ -83,9 +83,9 @@ class DefaultListing extends AbstractControllerIntegrationTest
             ->seeLink('2', route(static::ROUTE_BASE . '.index', ['page' => 2]), true);
 
         // Make sure the page size options are present
-        static::assertCount(1, $this->crawler()->filter('#input-pagination-page-size option[value=10]'));
-        static::assertCount(1, $this->crawler()->filter('#input-pagination-page-size option[value=2]'));
-        static::assertCount(1, $this->crawler()->filter('#input-pagination-page-size option[value=50]'));
+        static::assertHtmlElementInResponse('#input-pagination-page-size option[value=10]');
+        static::assertHtmlElementInResponse('#input-pagination-page-size option[value=2]');
+        static::assertHtmlElementInResponse('#input-pagination-page-size option[value=50]');
 
         // Submit a form with a smaller page size
         $this->makeRequestUsingForm(
@@ -98,7 +98,7 @@ class DefaultListing extends AbstractControllerIntegrationTest
             // There should be a link to page 2
             ->seeLink('2', route(static::ROUTE_BASE . '.index', ['page' => 2]));
 
-        static::assertCount(0, $this->crawler()->filter('tr.records-row[data-id=3]'), 'Third record should not be present');
+        static::assertNotHtmlElementInResponse('tr.records-row[data-id=3]', 'Third record should not be present');
     }
 
 
@@ -144,6 +144,34 @@ class DefaultListing extends AbstractControllerIntegrationTest
         }
 
         return in_array($text, $columns);
+    }
+
+    /**
+     * @param string      $selector
+     * @param string|null $message
+     */
+    protected function assertHtmlElementInResponse($selector, $message = null)
+    {
+        static::assertCount(
+            1,
+            $this->crawler()->filter($selector),
+            ($message ?: "HTML element '{$selector}' not found in response.")
+            . PHP_EOL . $this->crawler()->html()
+        );
+    }
+
+    /**
+     * @param string      $selector
+     * @param string|null $message
+     */
+    protected function assertNotHtmlElementInResponse($selector, $message = null)
+    {
+        static::assertCount(
+            0,
+            $this->crawler()->filter($selector),
+            ($message ?: "HTML element '{$selector}' found in response.")
+            . PHP_EOL . $this->crawler()->html()
+        );
     }
 
 }
