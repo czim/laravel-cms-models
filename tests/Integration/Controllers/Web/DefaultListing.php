@@ -10,7 +10,6 @@ use Czim\CmsModels\Test\Integration\Controllers\AbstractControllerIntegrationTes
  *
  * @group integration
  * @group controllers
- * @runInSeparateProcess
  */
 class DefaultListing extends AbstractControllerIntegrationTest
 {
