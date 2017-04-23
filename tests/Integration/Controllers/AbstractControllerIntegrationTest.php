@@ -33,6 +33,13 @@ abstract class AbstractControllerIntegrationTest extends CmsBootTestCase
      */
     protected $mockBootApi = false;
 
+    /**
+     * A per-model custom configuration to inject as collected model information.
+     *
+     * @var array
+     */
+    protected $customModelConfiguration = [];
+
 
     public function setUp()
     {
@@ -52,6 +59,8 @@ abstract class AbstractControllerIntegrationTest extends CmsBootTestCase
      */
     protected function getEnvironmentSetUp($app)
     {
+        $this->prepareCustomModelConfiguration($app);
+
         parent::getEnvironmentSetUp($app);
 
         // Set up configuration for modules & models
@@ -64,11 +73,10 @@ abstract class AbstractControllerIntegrationTest extends CmsBootTestCase
             TestComment::class,
         ]);
 
-        // todo: figure out the problem with this
-        //$app['config']->set(
-        //    'cms-models.collector.source.dir',
-        //    realpath('tests/Helpers/Models')
-        //);
+        $app['config']->set(
+            'cms-models.collector.source.dir',
+            realpath('tests/Helpers/ModelConfiguration/Integration')
+        );
 
         $app['config']->set(
             'cms-models.collector.source.models-dir',
@@ -122,6 +130,21 @@ abstract class AbstractControllerIntegrationTest extends CmsBootTestCase
         }
 
         return MockWebBootChecker::class;
+    }
+
+
+    // ------------------------------------------------------------------------------
+    //      Custom Model Information
+    // ------------------------------------------------------------------------------
+
+    /**
+     * @param \Illuminate\Foundation\Application $app
+     */
+    protected function prepareCustomModelConfiguration($app)
+    {
+        foreach ($this->customModelConfiguration as $key => $configuration) {
+            $app->instance('cms-models-test.integration.information.' . $key, $configuration);
+        }
     }
 
 
