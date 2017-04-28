@@ -28,6 +28,7 @@ class NotRelatedTest extends DatabaseTestCase
             $table->increments('id');
             $table->string('name', 255);
             $table->enum('gender', [ 'm', 'f' ])->default('f');
+            $table->integer('position')->unsigned()->nullable();
             $table->string('image_file_name')->nullable();
             $table->integer('image_file_size')->nullable();
             $table->string('image_content_type')->nullable();
@@ -43,6 +44,7 @@ class NotRelatedTest extends DatabaseTestCase
             $table->string('description', 255)->nullable();
             $table->enum('type', [ 'announcement', 'news', 'notice', 'periodical' ])->default('news');
             $table->boolean('checked')->default(false);
+            $table->integer('position')->unsigned()->nullable();
             $table->nullableTimestamps();
         });
 

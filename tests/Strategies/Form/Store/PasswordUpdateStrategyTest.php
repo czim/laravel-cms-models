@@ -26,6 +26,7 @@ class PasswordUpdateStrategyTest extends DatabaseTestCase
             $table->string('description', 255)->nullable();
             $table->enum('type', [ 'announcement', 'news', 'notice', 'periodical' ])->default('news');
             $table->boolean('checked')->default(false);
+            $table->integer('position')->unsigned()->nullable();
             $table->nullableTimestamps();
         });
 

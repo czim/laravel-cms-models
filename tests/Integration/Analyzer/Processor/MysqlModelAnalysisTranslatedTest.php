@@ -48,7 +48,7 @@ class MysqlModelAnalysisTranslatedTest extends AbstractAnalyzerTestCase
         static::assertEquals('translatable', $info['translation_strategy']);
         static::assertEquals(['translations'], $info['includes']['default']);
 
-        static::assertCount(10, $info['attributes'], 'Incorrect attribute count');
+        static::assertCount(11, $info['attributes'], 'Incorrect attribute count');
         static::assertArrayHasKey('id', $info['attributes']);
         static::assertArrayHasKey('test_author_id', $info['attributes']);
         static::assertArrayHasKey('test_genre_id', $info['attributes']);
@@ -59,6 +59,7 @@ class MysqlModelAnalysisTranslatedTest extends AbstractAnalyzerTestCase
         static::assertArrayHasKey('updated_at', $info['attributes']);
         static::assertArrayHasKey('title', $info['attributes']);
         static::assertArrayHasKey('body', $info['attributes']);
+        static::assertArrayHasKey('position', $info['attributes']);
 
         static::assertCount(3, $info['relations'], 'Incorrect relation count');
         static::assertArrayHasKey('author', $info['relations']);

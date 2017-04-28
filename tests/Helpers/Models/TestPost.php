@@ -23,6 +23,7 @@ class TestPost extends Model
         'type',
         'checked',
         'description',
+        'position',
     ];
 
     protected $translatedAttributes = [

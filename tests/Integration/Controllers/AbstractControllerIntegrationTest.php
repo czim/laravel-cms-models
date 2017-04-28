@@ -74,6 +74,7 @@ abstract class AbstractControllerIntegrationTest extends CmsBootTestCase
         $app['config']->set('cms-models.models', [
             TestPost::class,
             TestComment::class,
+            TestAuthor::class,
         ]);
 
         $app['config']->set(
@@ -179,11 +180,13 @@ abstract class AbstractControllerIntegrationTest extends CmsBootTestCase
     protected function seedAuthors()
     {
         TestAuthor::create([
-            'name' => 'Test Testington',
+            'name'     => 'Test Testington',
+            'position' => 1,
         ]);
 
         TestAuthor::create([
-            'name' => 'Tosti Tortellini Von Testering',
+            'name'     => 'Tosti Tortellini Von Testering',
+            'position' => 2,
         ]);
 
         return $this;
@@ -197,6 +200,7 @@ abstract class AbstractControllerIntegrationTest extends CmsBootTestCase
             'type'        => 'notice',
             'checked'     => true,
             'description' => 'the best possible post for testing',
+            'position'    => 3,
         ]);
         $post->author()->associate(TestAuthor::first());
         $post->save();
@@ -214,9 +218,11 @@ abstract class AbstractControllerIntegrationTest extends CmsBootTestCase
             'type'        => 'news',
             'checked'     => false,
             'description' => 'some alternative testing post',
+            'position'    => 2,
         ]);
         $post->author()->associate(TestAuthor::first());
         $post->save();
+
 
         $post = new TestPost([
             'title'       => 'Surprising Testing Title',
@@ -224,6 +230,7 @@ abstract class AbstractControllerIntegrationTest extends CmsBootTestCase
             'type'        => 'announcement',
             'checked'     => true,
             'description' => 'something else',
+            'position'    => 1,
         ]);
         $post->author()->associate(TestAuthor::skip(1)->first());
         $post->save();
@@ -291,6 +298,7 @@ abstract class AbstractControllerIntegrationTest extends CmsBootTestCase
                 $table->increments('id');
                 $table->string('name', 255);
                 $table->enum('gender', ['m', 'f'])->default('f');
+                $table->integer('position')->unsigned()->nullable();
                 $table->string('image_file_name')->nullable();
                 $table->integer('image_file_size')->nullable();
                 $table->string('image_content_type')->nullable();
@@ -308,6 +316,7 @@ abstract class AbstractControllerIntegrationTest extends CmsBootTestCase
                 $table->string('description', 255)->nullable();
                 $table->enum('type', ['announcement', 'news', 'notice', 'periodical'])->default('news');
                 $table->boolean('checked')->default(false);
+                $table->integer('position')->unsigned()->nullable();
                 $table->nullableTimestamps();
             });
         }
