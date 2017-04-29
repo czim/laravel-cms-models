@@ -39,6 +39,9 @@ abstract class AbstractControllerIntegrationTest extends CmsBootTestCase
      * Use:
      *      'it_tests_method_name' => [ 'test_post' => [ ... configuration ... ] ]
      *
+     * Note that, for this to work, the model configuration php file in
+     * Helpers/Modelconfiguration/Integration must be set up accordingly.
+     *
      * @var array
      */
     protected $customModelConfiguration = [];

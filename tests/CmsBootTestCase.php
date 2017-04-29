@@ -14,6 +14,21 @@ abstract class CmsBootTestCase extends DatabaseTestCase
 {
 
     /**
+     * Whether the mocked user should be treated as a super admin.
+     *
+     * @var bool
+     */
+    protected $mockSuperAdmin = true;
+
+    /**
+     * Which permissions should be available for the (non-admin) mocked user.
+     *
+     * @var string[]
+     */
+    protected $mockPermissions = [];
+
+
+    /**
      * {@inheritdoc}
      */
     protected function getEnvironmentSetUp($app)
@@ -82,6 +97,26 @@ abstract class CmsBootTestCase extends DatabaseTestCase
 
             $mock = $this->getMockBuilder(AuthenticatorInterface::class)->getMock();
 
+            // Mock permissions of the user
+            $mock->method('amin')->willReturn($this->mockSuperAdmin);
+            $mock->method('can')->willReturnCallback(function ($permissions, $any = false) {
+                if ($this->mockSuperAdmin) {
+                    return true;
+                }
+                $permissions = (array) $permissions;
+                if ($any) {
+                    return (bool) count(array_intersect($permissions, $this->mockPermissions));
+                }
+                return ! (bool) array_diff($permissions, $this->mockPermissions);
+            });
+            $mock->method('canAnyOf')->willReturnCallback(function ($permissions) {
+                if ($this->mockSuperAdmin) {
+                    return true;
+                }
+                return (bool) count(array_intersect($permissions, $this->mockPermissions));
+            });
+
+            // Mock the authentication routes
             $mock->method('getRouteLoginAction')
                 ->willReturn([
                     'middleware' => [ CmsMiddleware::GUEST ],
