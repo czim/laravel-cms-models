@@ -230,7 +230,7 @@ class ModelListData extends AbstractModelInformationDataObject implements ModelL
             'order_column',
             'order_scope_relation',
             'activatable',
-            'activate_column',
+            'active_column',
             'default_sort',
             'disable_filters',
             'disable_scopes',
