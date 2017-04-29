@@ -40,9 +40,7 @@ class ActivatableTest extends AbstractControllerIntegrationTest
      */
     function it_shows_a_list_of_models_as_an_activatable_listing()
     {
-        $this
-            ->visitRoute(static::ROUTE_BASE . '.index')
-            ->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
 
         // Check if we have activation logic column cells
         static::assertCount(3, $this->crawler()->filter('td.column-activate'));
@@ -70,20 +68,17 @@ class ActivatableTest extends AbstractControllerIntegrationTest
      */
     function it_toggles_an_activatable_record()
     {
-        $this
-            ->visitRoute(static::ROUTE_BASE . '.index')
-            ->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
 
-        $token = $this->crawler()->filter('meta[name="csrf-token"]')->first()->attr('content');
+        $token = $this->getCsrfTokenFromResponse();
 
         // Deactivate the first record
-        $response = $this->route('POST', static::ROUTE_BASE . '.activate', [1], [
+        $this->route('POST', static::ROUTE_BASE . '.activate', [1], [
             '_method'  => 'put',
             '_token'   => $token,
             'activate' => false,
-        ]);
-
-        static::assertTrue($response->isRedirection(), 'Should be redirected after active toggle');
+        ], [], [], $this->getAjaxHeaders());
+        $this->seeJson(['success' => true]);
 
         // Check if it is now deactivated
         $this

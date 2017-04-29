@@ -139,6 +139,29 @@ abstract class AbstractControllerIntegrationTest extends CmsBootTestCase
         return MockWebBootChecker::class;
     }
 
+    /**
+     * Returns the currently valid CSRF token if a response is available.
+     *
+     * @return null|string
+     */
+    protected function getCsrfTokenFromResponse()
+    {
+        return $this->crawler()->filter('meta[name="csrf-token"]')->first()->attr('content');
+    }
+
+    /**
+     * Returns the headers to send with a call to simulate an AJAX request.
+     *
+     * @return array
+     */
+    protected function getAjaxHeaders()
+    {
+        return [
+            'HTTP_X-Requested-With' => 'XMLHttpRequest',
+            'HTTP_CONTENT_TYPE'     => 'application/json',
+            'HTTP_ACCEPT'           => 'application/json',
+        ];
+    }
 
     // ------------------------------------------------------------------------------
     //      Custom Model Information
