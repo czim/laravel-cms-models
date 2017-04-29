@@ -5,14 +5,14 @@ use Czim\CmsModels\Test\Helpers\Strategies\Context\TestSpecificIdOnly;
 use Czim\CmsModels\Test\Integration\Controllers\AbstractControllerIntegrationTest;
 
 /**
- * Class DefaultListing
+ * Class DefaultListingTest
  *
  * Tests for simple model listings. Note browser/javascript functionality is deliberately not tested here.
  *
  * @group integration
  * @group controllers
  */
-class DefaultListing extends AbstractControllerIntegrationTest
+class DefaultListingTest extends AbstractControllerIntegrationTest
 {
     const ROUTE_BASE = 'cms::models.model.czim-cmsmodels-test-helpers-models-testpost';
 
