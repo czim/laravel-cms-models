@@ -86,4 +86,15 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         );
     }
 
+    /**
+     * Appends response HTML to message string.
+     *
+     * @param string $message
+     * @return string
+     */
+    protected function appendResponseHtml($message)
+    {
+        return $message . PHP_EOL . $this->crawler()->html();
+    }
+
 }

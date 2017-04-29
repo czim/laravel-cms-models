@@ -49,9 +49,19 @@ class ActivatableTest extends AbstractControllerIntegrationTest
 
         // Check if active status is correct
         $rows = $this->crawler()->filter('tr.records-row .activate-toggle');
-        static::assertEquals(1, $rows->first()->attr('data-active'), 'Incorrect active state for #1');
-        static::assertEquals(0, $rows->eq(1)->attr('data-active'), 'Incorrect active state for #2');
-        static::assertEquals(1, $rows->last()->attr('data-active'), 'Incorrect active state for #3');
+        static::assertEquals(
+            1,
+            $rows->first()->attr('data-active'),
+            $this->appendResponseHtml('Incorrect active state for #1'));
+        static::assertEquals(
+            0,
+            $rows->eq(1)->attr('data-active'),
+            $this->appendResponseHtml('Incorrect active state for #2'));
+        static::assertEquals(
+            1,
+            $rows->last()->attr('data-active'),
+            $this->appendResponseHtml('Incorrect active state for #3')
+        );
     }
     
     /**
@@ -81,7 +91,11 @@ class ActivatableTest extends AbstractControllerIntegrationTest
             ->seeStatusCode(200);
 
         $rows = $this->crawler()->filter('tr.records-row .activate-toggle');
-        static::assertEquals(0, $rows->first()->attr('data-active'), 'Incorrect active state for #1');
+        static::assertEquals(
+            0,
+            $rows->first()->attr('data-active'),
+            $this->appendResponseHtml('Incorrect active state for #1')
+        );
     }
 
 }
