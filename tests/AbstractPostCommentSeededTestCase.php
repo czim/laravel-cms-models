@@ -4,21 +4,22 @@ namespace Czim\CmsModels\Test;
 use Czim\CmsModels\Test\Helpers\Models\TestAuthor;
 use Czim\CmsModels\Test\Helpers\Models\TestComment;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
-use Illuminate\Support\Facades\Schema;
 
 abstract class AbstractPostCommentSeededTestCase extends DatabaseTestCase
 {
 
     protected function migrateDatabase()
     {
-        Schema::create('test_genres', function($table) {
+        $schema = $this->schema();
+
+        $schema->create('test_genres', function($table) {
             /** @var \Illuminate\Database\Schema\Blueprint $table */
             $table->increments('id');
             $table->string('name', 50);
             $table->nullableTimestamps();
         });
 
-        Schema::create('test_authors', function($table) {
+        $schema->create('test_authors', function($table) {
             /** @var \Illuminate\Database\Schema\Blueprint $table */
             $table->increments('id');
             $table->string('name', 255);
@@ -31,7 +32,7 @@ abstract class AbstractPostCommentSeededTestCase extends DatabaseTestCase
             $table->nullableTimestamps();
         });
 
-        Schema::create('test_posts', function($table) {
+        $schema->create('test_posts', function($table) {
             /** @var \Illuminate\Database\Schema\Blueprint $table */
             $table->increments('id');
             $table->integer('test_author_id')->nullable()->unsigned();
@@ -43,7 +44,7 @@ abstract class AbstractPostCommentSeededTestCase extends DatabaseTestCase
             $table->nullableTimestamps();
         });
 
-        Schema::create('test_post_translations', function($table) {
+        $schema->create('test_post_translations', function($table) {
             /** @var \Illuminate\Database\Schema\Blueprint $table */
             $table->increments('id');
             $table->char('locale', 12)->nullable();
@@ -53,7 +54,7 @@ abstract class AbstractPostCommentSeededTestCase extends DatabaseTestCase
             $table->nullableTimestamps();
         });
 
-        Schema::create('test_comments', function($table) {
+        $schema->create('test_comments', function($table) {
             /** @var \Illuminate\Database\Schema\Blueprint $table */
             $table->increments('id');
             $table->integer('test_post_id')->unsigned();
@@ -62,7 +63,7 @@ abstract class AbstractPostCommentSeededTestCase extends DatabaseTestCase
             $table->nullableTimestamps();
         });
 
-        Schema::create('test_comment_translations', function($table) {
+        $schema->create('test_comment_translations', function($table) {
             /** @var \Illuminate\Database\Schema\Blueprint $table */
             $table->increments('id');
             $table->char('locale', 12)->nullable();
@@ -72,7 +73,7 @@ abstract class AbstractPostCommentSeededTestCase extends DatabaseTestCase
             $table->nullableTimestamps();
         });
 
-        Schema::create('test_seos', function($table) {
+        $schema->create('test_seos', function($table) {
             /** @var \Illuminate\Database\Schema\Blueprint $table */
             $table->increments('id');
             $table->integer('seoable_id')->unsigned()->nullable();

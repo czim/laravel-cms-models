@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Test;
 
 use Czim\CmsModels\Contracts\ModelInformation\Analyzer\DatabaseAnalyzerInterface;
 use Czim\CmsModels\ModelInformation\Analyzer\Database\SimpleDatabaseAnalyzer;
+use Illuminate\Database\Schema\Builder;
 
 abstract class DatabaseTestCase extends TestCase
 {
@@ -102,6 +103,14 @@ abstract class DatabaseTestCase extends TestCase
     protected function setMysqlDatabase()
     {
 
+    }
+
+    /**
+     * @return Builder
+     */
+    protected function schema()
+    {
+        return $this->app['db']->connection()->getSchemaBuilder();
     }
 
 }
