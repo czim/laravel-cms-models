@@ -7,7 +7,7 @@ use Czim\CmsModels\Test\Integration\Controllers\AbstractControllerIntegrationTes
 /**
  * Class DefaultListingTest
  *
- * Tests for simple model listings. Note browser/javascript functionality is deliberately not tested here.
+ * Tests for simple model listings. Note that browser/javascript functionality is deliberately not tested here.
  *
  * @group integration
  * @group controllers

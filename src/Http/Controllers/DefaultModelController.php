@@ -354,9 +354,11 @@ class DefaultModelController extends BaseModelController
         event( new Events\DeletingModelInCms($record) );
 
         if ( ! $this->deleteModel($record)) {
+            // @codeCoverageIgnoreStart
             return $this->failureResponse(
                 cms_trans('models.delete.failure.unknown')
             );
+            // @codeCoverageIgnoreEnd
         }
 
         event( new Events\ModelDeletedInCms($this->getModelInformation()->modelClass(), $id) );
