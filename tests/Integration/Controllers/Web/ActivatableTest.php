@@ -46,18 +46,24 @@ class ActivatableTest extends AbstractControllerIntegrationTest
         static::assertCount(3, $this->crawler()->filter('td.column-activate'));
 
         // Check if active status is correct
-        $rows = $this->crawler()->filter('tr.records-row .activate-toggle');
+        $this->assertHtmlElementInResponse('tr.records-row[data-id=1] .activate-toggle');
+        $this->assertHtmlElementInResponse('tr.records-row[data-id=2] .activate-toggle');
+        $this->assertHtmlElementInResponse('tr.records-row[data-id=3] .activate-toggle');
+
+
         static::assertEquals(
             1,
-            $rows->first()->attr('data-active'),
-            $this->appendResponseHtml('Incorrect active state for #1'));
+            $this->crawler()->filter('tr.records-row[data-id=1] .activate-toggle')->attr('data-active'),
+            $this->appendResponseHtml('Incorrect active state for #1')
+        );
         static::assertEquals(
             0,
-            $rows->eq(1)->attr('data-active'),
-            $this->appendResponseHtml('Incorrect active state for #2'));
+            $this->crawler()->filter('tr.records-row[data-id=2] .activate-toggle')->attr('data-active'),
+            $this->appendResponseHtml('Incorrect active state for #2')
+        );
         static::assertEquals(
             1,
-            $rows->last()->attr('data-active'),
+            $this->crawler()->filter('tr.records-row[data-id=3] .activate-toggle')->attr('data-active'),
             $this->appendResponseHtml('Incorrect active state for #3')
         );
     }
@@ -81,14 +87,11 @@ class ActivatableTest extends AbstractControllerIntegrationTest
         $this->seeJson(['success' => true]);
 
         // Check if it is now deactivated
-        $this
-            ->visitRoute(static::ROUTE_BASE . '.index')
-            ->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
 
-        $rows = $this->crawler()->filter('tr.records-row .activate-toggle');
         static::assertEquals(
             0,
-            $rows->first()->attr('data-active'),
+            $this->crawler()->filter('tr.records-row[data-id=1] .activate-toggle')->attr('data-active'),
             $this->appendResponseHtml('Incorrect active state for #1')
         );
     }
