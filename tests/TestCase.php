@@ -64,9 +64,9 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
      */
     protected function assertHtmlElementInResponse($selector, $message = null)
     {
-        static::assertCount(
+        static::assertGreaterThanOrEqual(
             1,
-            $this->crawler()->filter($selector),
+            $this->crawler()->filter($selector)->count(),
             ($message ?: "HTML element '{$selector}' not found in response.")
             . PHP_EOL . $this->crawler()->html()
         );
