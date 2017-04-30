@@ -93,6 +93,7 @@ class DefaultCreateFormTest extends AbstractControllerIntegrationTest
 
     /**
      * @test
+     * @depends it_shows_a_create_model_form
      */
     function it_creates_a_model_and_returns_to_listing_using_save_and_close_mode()
     {
@@ -118,6 +119,7 @@ class DefaultCreateFormTest extends AbstractControllerIntegrationTest
 
     /**
      * @test
+     * @depends it_shows_a_create_model_form
      */
     function it_shows_validation_errors_for_invalid_input()
     {
@@ -132,7 +134,6 @@ class DefaultCreateFormTest extends AbstractControllerIntegrationTest
                     'title'       => ['en' => 'Testing Title'],
                     // Missing body for en
                 ])
-
         );
         $this->seeStatusCode(200);
 
@@ -142,6 +143,8 @@ class DefaultCreateFormTest extends AbstractControllerIntegrationTest
         static::assertEmpty($form->attr('data-id'), 'Form data-id should be empty');
 
         static::assertHtmlElementInResponse('div.alert.alert-danger', 'There should be a general alert message');
+        static::assertHtmlElementInResponse('#type-errors.help-block', 'There should be an error message for type input');
+        static::assertHtmlElementInResponse('#body-errors.help-block', 'There should be an error message for body input');
     }
 
 }
