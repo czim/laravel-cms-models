@@ -24,8 +24,6 @@ class DefaultCreateFormTest extends AbstractControllerIntegrationTest
     {
         $this->visitRoute(static::ROUTE_BASE . '.create')->seeStatusCode(200);
 
-        //dd(app(ModelInformationRepositoryInterface::class)->getByModelClass(TestPost::class));
-
         static::assertHtmlElementInResponse('form.model-form');
         $form = $this->crawler()->filter('form.model-form');
         static::assertEmpty($form->attr('data-id'), 'Form data-id should be empty');
