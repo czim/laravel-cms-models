@@ -7,6 +7,7 @@ use Czim\CmsModels\Contracts\ModelInformation\Data\Show\ModelShowFieldDataInterf
 use Czim\CmsModels\Contracts\Support\Factories\ShowFieldStrategyFactoryInterface;
 use Czim\CmsModels\Exceptions\StrategyRenderException;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 
@@ -44,22 +45,24 @@ trait HandlesShowFieldStrategies
                     }
                 }
 
-            } catch (\Exception $e) {
-
+            } catch (Exception $e) {
+                // @codeCoverageIgnoreStart
                 $message = "Failed to make show field strategy for '{$key}': \n{$e->getMessage()}";
 
                 throw new StrategyRenderException($message, $e->getCode(), $e);
+                // @codeCoverageIgnoreEnd
             }
 
             try {
                 $views[ $key ] = $instance->render($model, $data->source);
 
-            } catch (\Exception $e) {
-
+            } catch (Exception $e) {
+                // @codeCoverageIgnoreStart
                 $message = "Failed to render show field '{$key}' for strategy " . get_class($instance)
                          . ": \n{$e->getMessage()}";
 
                 throw new StrategyRenderException($message, $e->getCode(), $e);
+                // @codeCoverageIgnoreEnd
             }
         }
 
