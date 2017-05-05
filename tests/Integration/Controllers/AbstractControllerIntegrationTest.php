@@ -12,6 +12,7 @@ use Czim\CmsModels\Test\Helpers\Http\Middleware\NullMiddleware;
 use Czim\CmsModels\Test\Helpers\Models\TestAuthor;
 use Czim\CmsModels\Test\Helpers\Models\TestComment;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
+use Czim\CmsModels\Test\Helpers\Models\TestSeo;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
@@ -78,6 +79,7 @@ abstract class AbstractControllerIntegrationTest extends CmsBootTestCase
             TestPost::class,
             TestComment::class,
             TestAuthor::class,
+            TestSeo::class,
         ]);
 
         $app['config']->set(
