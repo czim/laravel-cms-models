@@ -10,7 +10,7 @@ interface DeleteStrategyInterface
      * Deletes a model.
      *
      * @param Model $model
-     * @return mixed
+     * @return bool
      */
     public function delete(Model $model);
 

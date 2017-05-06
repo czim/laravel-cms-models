@@ -7,7 +7,7 @@ interface ActionStrategyFactoryInterface
 {
 
     /**
-     * Makes a action strategy instance.
+     * Makes an action strategy instance.
      *
      * @param string $strategy
      * @return ActionStrategyInterface
