@@ -534,7 +534,9 @@ class DefaultModelController extends BaseModelController
         $download = $exporter->download($query, $filename);
 
         if (false === $download) {
-            abort(500, "Fail to export model listing for strategy '{$strategy}'");
+            // @codeCoverageIgnoreStart
+            abort(500, "Failed to export model listing for strategy '{$strategy}'");
+            // @codeCoverageIgnoreEnd
         }
 
         event( new Events\ModelListExportedInCms($this->modelInformation->modelClass(), $strategy) );
