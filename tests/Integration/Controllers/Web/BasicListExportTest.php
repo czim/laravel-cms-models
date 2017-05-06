@@ -40,6 +40,16 @@ class BasicListExportTest extends AbstractControllerIntegrationTest
                 ],
             ],
         ],
+        'it_does_not_allow_export_if_user_has_no_permission' => [
+            'test-post' => [
+                'export' => [
+                    'enable' => true,
+                    'strategies' => [
+                        'csv' => true,
+                    ],
+                ],
+            ],
+        ],
     ];
 
     /**
@@ -66,6 +76,20 @@ class BasicListExportTest extends AbstractControllerIntegrationTest
     {
         $this->call('GET', route(static::ROUTE_BASE . '.export', ['csv']));
         $this->seeStatusCode(403);
+    }
+
+    /**
+     * @test
+     */
+    function it_does_not_allow_export_if_user_has_no_permission()
+    {
+        $this->mockSuperAdmin  = false;
+        $this->mockPermissions = [];
+
+        $this->call('GET', route(static::ROUTE_BASE . '.export', ['csv']));
+        $this->seeStatusCode(403);
+
+        $this->mockSuperAdmin = true;
     }
 
     /**
