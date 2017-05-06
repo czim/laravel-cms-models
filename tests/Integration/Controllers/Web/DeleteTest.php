@@ -5,6 +5,7 @@ use Czim\CmsModels\Test\Helpers\Strategies\Delete\MockDeleteSpy;
 use Czim\CmsModels\Test\Helpers\Strategies\DeleteCondition\OnlyIfIdIsTwo;
 use Czim\CmsModels\Test\Helpers\Strategies\DeleteCondition\PassesOnParameter;
 use Czim\CmsModels\Test\Integration\Controllers\AbstractControllerIntegrationTest;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * Class DeleteTest
@@ -172,6 +173,33 @@ class DeleteTest extends AbstractControllerIntegrationTest
 
         // Check if the mock delete spy was triggered
         static::assertTrue($this->app->bound('mock-delete-spy-triggered'), 'Spy flag was not set by mock strategy');
+    }
+
+    /**
+     * @test
+     */
+    function it_redirects_back_for_non_ajax_requests()
+    {
+        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+
+        static::assertHtmlElementInResponse('tr.records-row[data-id=1]', 'Record #1 should be present');
+
+        $token = $this->getCsrfTokenFromResponse();
+
+        // Check the deletable response
+        $this->route('GET', static::ROUTE_BASE . '.deletable', [1]);
+        static::assertInstanceOf(RedirectResponse::class, $this->response);
+
+        // Delete the record
+        $this->route('POST', static::ROUTE_BASE . '.destroy', [1], [
+            '_method'  => 'delete',
+            '_token'   => $token
+        ]);
+        static::assertInstanceOf(RedirectResponse::class, $this->response);
+
+        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+
+        static::assertNotHtmlElementInResponse('tr.records-row[data-id=1]', 'Record #1 should no longer be present');
     }
 
 }
