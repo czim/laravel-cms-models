@@ -1,6 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\Integration\Controllers\Web;
 
+use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Czim\CmsModels\Test\Helpers\Strategies\Context\TestSpecificIdOnly;
 use Czim\CmsModels\Test\Integration\Controllers\AbstractControllerIntegrationTest;
 
@@ -26,6 +27,11 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
             ],
         ],
         'it_redirects_to_form_page_if_single_mode_is_enabled' => [
+            'test-post' => [
+                'single' => true,
+            ],
+        ],
+        'it_redirects_to_create_form_page_if_single_mode_is_enabled_and_no_models_exist' => [
             'test-post' => [
                 'single' => true,
             ],
@@ -376,6 +382,21 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
             ->seeStatusCode(200);
 
         static::assertHtmlElementInResponse('form.model-form[data-id=1]', 'Expected form for model #1');
+    }
+
+    /**
+     * @test
+     * @see $customModelConfiguration
+     */
+    function it_redirects_to_create_form_page_if_single_mode_is_enabled_and_no_models_exist()
+    {
+        TestPost::destroy([1, 2, 3]);
+
+        $this
+            ->visitRoute(static::ROUTE_BASE . '.index')
+            ->seeStatusCode(200);
+
+        static::assertHtmlElementInResponse('form.model-form[data-id=""]', 'Expected create form');
     }
 
     /**
