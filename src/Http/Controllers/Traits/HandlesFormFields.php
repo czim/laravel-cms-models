@@ -9,6 +9,7 @@ use Czim\CmsModels\Exceptions\StrategyApplicationException;
 use Czim\CmsModels\Exceptions\StrategyRetrievalException;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesFormStoreStrategies;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\ViewErrorBag;
@@ -83,12 +84,13 @@ trait HandlesFormFields
                 try {
                     $values[ $key ] = $instance->valueForListParentKey($this->getListParentRecordKey());
 
-                } catch (\Exception $e) {
-
+                    // @codeCoverageIgnoreStart
+                } catch (Exception $e) {
                     $message = "Failed retrieving value for form field '{$key}' (using " . get_class($instance)
                              . " (valueForListParentKey)): \n{$e->getMessage()}";
 
                     throw new StrategyRetrievalException($message, $e->getCode(), $e);
+                    // @codeCoverageIgnoreEnd
                 }
 
                 continue;
@@ -97,12 +99,13 @@ trait HandlesFormFields
             try {
                 $values[ $key ] = $instance->retrieve($model, $field->source ?: $field->key);
 
-            } catch (\Exception $e) {
-
+                // @codeCoverageIgnoreStart
+            } catch (Exception $e) {
                 $message = "Failed retrieving value for form field '{$key}' (using " . get_class($instance)
                          . "): \n{$e->getMessage()}";
 
                 throw new StrategyRetrievalException($message, $e->getCode(), $e);
+                // @codeCoverageIgnoreEnd
             }
         }
 
@@ -148,12 +151,13 @@ trait HandlesFormFields
             try {
                 $strategies[ $key ]->store($model, $fields[ $key ]->source(), $value);
 
-            } catch (\Exception $e) {
-
+                // @codeCoverageIgnoreStart
+            } catch (Exception $e) {
                 $class   = get_class($strategies[ $key ]);
                 $message = "Failed storing value for form field '{$key}' (using $class): \n{$e->getMessage()}";
 
                 throw new StrategyApplicationException($message, $e->getCode(), $e);
+                // @codeCoverageIgnoreEnd
             }
 
         }
@@ -172,12 +176,13 @@ trait HandlesFormFields
             try {
                 $strategies[ $key ]->storeAfter($model, $fields[ $key ]->source(), $value);
 
-            } catch (\Exception $e) {
-
+                // @codeCoverageIgnoreStart
+            } catch (Exception $e) {
                 $class   = get_class($strategies[ $key ]);
                 $message = "Failed storing value for form field '{$key}' (using $class (after)): \n{$e->getMessage()}";
 
                 throw new StrategyApplicationException($message, $e->getCode(), $e);
+                // @codeCoverageIgnoreEnd
             }
         }
 

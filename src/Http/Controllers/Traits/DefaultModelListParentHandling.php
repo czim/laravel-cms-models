@@ -601,9 +601,11 @@ trait DefaultModelListParentHandling
             $parentModelClass = $this->getRelationMappedMorphClass($parentType);
 
             if ( ! is_a($parentModelClass, Model::class, true)) {
+                // @codeCoverageIgnoreStart
                 throw new UnexpectedValueException(
                     "Parent record indicator {$key} does not refer to usable Eloquent model parent."
                 );
+                // @codeCoverageIgnoreEnd
             }
 
             $parentModel = new $parentModelClass;
@@ -752,10 +754,12 @@ trait DefaultModelListParentHandling
         $infoRepository = app(ModelInformationRepositoryInterface::class);
 
         if ( ! ($info = $infoRepository->getByModel($model))) {
+            // @codeCoverageIgnoreStart
             throw new UnexpectedValueException(
                 "List parent hierarchy relation model "
                 . get_class($model) . " is not part of the CMS."
             );
+            // @codeCoverageIgnoreEnd
         }
 
         return $info;

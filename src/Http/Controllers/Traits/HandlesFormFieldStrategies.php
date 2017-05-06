@@ -29,8 +29,8 @@ trait HandlesFormFieldStrategies
             try {
                 $instance = $this->getFormFieldStrategyFactory()->make($field->display_strategy);
 
-            } catch (Exception $e) {
                 // @codeCoverageIgnoreStart
+            } catch (Exception $e) {
                 $message = "Failed to make form field strategy for '{$key}': \n{$e->getMessage()}";
 
                 throw new StrategyRenderException($message, $e->getCode(), $e);
@@ -46,8 +46,8 @@ trait HandlesFormFieldStrategies
                     array_get($errors, $key, [])
                 );
 
-            } catch (Exception $e) {
                 // @codeCoverageIgnoreStart
+            } catch (Exception $e) {
                 $message = "Failed to render form field '{$key}' for strategy " . get_class($instance)
                          . ": \n{$e->getMessage()}";
 

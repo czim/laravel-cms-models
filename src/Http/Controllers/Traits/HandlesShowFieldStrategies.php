@@ -45,8 +45,8 @@ trait HandlesShowFieldStrategies
                     }
                 }
 
-            } catch (Exception $e) {
                 // @codeCoverageIgnoreStart
+            } catch (Exception $e) {
                 $message = "Failed to make show field strategy for '{$key}': \n{$e->getMessage()}";
 
                 throw new StrategyRenderException($message, $e->getCode(), $e);
@@ -56,8 +56,8 @@ trait HandlesShowFieldStrategies
             try {
                 $views[ $key ] = $instance->render($model, $data->source);
 
-            } catch (Exception $e) {
                 // @codeCoverageIgnoreStart
+            } catch (Exception $e) {
                 $message = "Failed to render show field '{$key}' for strategy " . get_class($instance)
                          . ": \n{$e->getMessage()}";
 
