@@ -223,11 +223,13 @@ class DefaultModelController extends BaseModelController
         $data = $request->only($this->getRelevantFormFieldKeys(true));
 
         if ( ! $this->storeFormFieldValuesForModel($record, $data)) {
+            // @codeCoverageIgnoreStart
             return redirect()->back()
                 ->withInput()
                 ->withErrors([
                     static::GENERAL_ERRORS_KEY => [ $this->getGeneralStoreFailureError() ],
                 ]);
+            // @codeCoverageIgnoreEnd
         }
 
         $this->storeActiveTab($request->input(static::ACTIVE_TAB_PANE_KEY));
@@ -307,11 +309,13 @@ class DefaultModelController extends BaseModelController
         $data = $request->only($this->getRelevantFormFieldKeys());
 
         if ( ! $this->storeFormFieldValuesForModel($record, $data)) {
+            // @codeCoverageIgnoreStart
             return redirect()->back()
                 ->withInput()
                 ->withErrors([
                     static::GENERAL_ERRORS_KEY => [ $this->getGeneralStoreFailureError() ],
                 ]);
+            // @codeCoverageIgnoreEnd
         }
 
         $this->storeActiveTab($request->input(static::ACTIVE_TAB_PANE_KEY));
