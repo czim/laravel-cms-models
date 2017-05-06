@@ -48,26 +48,6 @@ trait DefaultModelListParentHandling
 
 
     /**
-     * Returns list of currently active list parent chain.
-     *
-     * @return array
-     */
-    protected function getListParents()
-    {
-        return $this->listParents;
-    }
-
-    /**
-     * Returns currently active list parent relation name, if any.
-     *
-     * @return string|false|null
-     */
-    protected function getListParentRelation()
-    {
-        return $this->listParentRelation;
-    }
-
-    /**
      * Returns currently active list parent record key/indicator, if any.
      *
      * @return string|false|null
