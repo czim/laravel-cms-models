@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Http\Controllers\Traits;
 
 use Czim\CmsModels\Contracts\Support\Factories\FormFieldStrategyFactoryInterface;
 use Czim\CmsModels\Exceptions\StrategyRenderException;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,11 +29,12 @@ trait HandlesFormFieldStrategies
             try {
                 $instance = $this->getFormFieldStrategyFactory()->make($field->display_strategy);
 
-            } catch (\Exception $e) {
-
+            } catch (Exception $e) {
+                // @codeCoverageIgnoreStart
                 $message = "Failed to make form field strategy for '{$key}': \n{$e->getMessage()}";
 
                 throw new StrategyRenderException($message, $e->getCode(), $e);
+                // @codeCoverageIgnoreEnd
             }
 
             try {
@@ -44,12 +46,13 @@ trait HandlesFormFieldStrategies
                     array_get($errors, $key, [])
                 );
 
-            } catch (\Exception $e) {
-
+            } catch (Exception $e) {
+                // @codeCoverageIgnoreStart
                 $message = "Failed to render form field '{$key}' for strategy " . get_class($instance)
                          . ": \n{$e->getMessage()}";
 
                 throw new StrategyRenderException($message, $e->getCode(), $e);
+                // @codeCoverageIgnoreEnd
             }
         }
 
