@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Test\Integration\Controllers\Web;
 
 use Czim\CmsModels\Test\Integration\Controllers\AbstractControllerIntegrationTest;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * Class ActivatableTest
@@ -25,6 +26,14 @@ class ActivatableTest extends AbstractControllerIntegrationTest
             ],
         ],
         'it_toggles_an_activatable_record' => [
+            'test-post' => [
+                'list' => [
+                    'activatable'   => true,
+                    'active_column' => 'checked',
+                ],
+            ],
+        ],
+        'it_redirects_back_after_toggling_activatable_record_for_non_ajax_request' => [
             'test-post' => [
                 'list' => [
                     'activatable'   => true,
@@ -85,6 +94,51 @@ class ActivatableTest extends AbstractControllerIntegrationTest
             'activate' => false,
         ], [], [], $this->getAjaxHeaders());
         $this->seeJson(['success' => true]);
+
+        // Check if it is now deactivated
+        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+
+        static::assertEquals(
+            0,
+            $this->crawler()->filter('tr.records-row[data-id=1] .activate-toggle')->attr('data-active'),
+            $this->appendResponseHtml('Incorrect active state for #1')
+        );
+
+        // Reactivate the first record
+        $this->route('POST', static::ROUTE_BASE . '.activate', [1], [
+            '_method'  => 'put',
+            '_token'   => $token,
+            'activate' => true,
+        ], [], [], $this->getAjaxHeaders());
+        $this->seeJson(['success' => true]);
+
+        // Check if it is now activated
+        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+
+        static::assertEquals(
+            1,
+            $this->crawler()->filter('tr.records-row[data-id=1] .activate-toggle')->attr('data-active'),
+            $this->appendResponseHtml('Incorrect active state for #1')
+        );
+    }
+
+    /**
+     * @test
+     */
+    function it_redirects_back_after_toggling_activatable_record_for_non_ajax_request()
+    {
+        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+
+        $token = $this->getCsrfTokenFromResponse();
+
+        // Deactivate the first record
+        $this->route('POST', static::ROUTE_BASE . '.activate', [1], [
+            '_method'  => 'put',
+            '_token'   => $token,
+            'activate' => false,
+        ]);
+
+        static::assertInstanceof(RedirectResponse::class, $this->response);
 
         // Check if it is now deactivated
         $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
