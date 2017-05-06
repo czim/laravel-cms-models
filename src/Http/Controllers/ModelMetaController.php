@@ -82,7 +82,9 @@ class ModelMetaController extends Controller
         $referenceData = $this->getModelMetaReferenceData($modelClass, $type, $key);
 
         if ( ! $referenceData) {
+            // @codeCoverageIgnoreStart
             abort(404, "Could not determine reference for {$modelClass} (type: {$type}, key: {$key})");
+            // @codeCoverageIgnoreEnd
         }
 
         $search = $request->input('search');
@@ -99,13 +101,10 @@ class ModelMetaController extends Controller
             $references = $this->getReferencesByMetaData($referenceData, $search);
         }
 
-        if ($request->ajax()) {
-            return response()->json($references);
-        }
-
-        // todo figure out what to return for non-ajax requests
-        // consider using optional response strategy (for both ajax and non-ajax..)
+        // For now, always return json data, even if the request was not AJAX.
+        return response()->json($references);
     }
+
 
     /**
      * Returns references by meta reference data.
@@ -137,7 +136,6 @@ class ModelMetaController extends Controller
             $references
         );
     }
-
 
     /**
      * Returns reference data from CMS model information, by type.
@@ -194,6 +192,5 @@ class ModelMetaController extends Controller
     {
         return $this->infoRepository->getByModelClass($class);
     }
-
 
 }
