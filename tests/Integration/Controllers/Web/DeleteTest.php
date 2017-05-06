@@ -1,7 +1,9 @@
 <?php
 namespace Czim\CmsModels\Test\Integration\Controllers\Web;
 
+use Czim\CmsModels\Test\Helpers\Strategies\Delete\MockDeleteSpy;
 use Czim\CmsModels\Test\Helpers\Strategies\DeleteCondition\OnlyIfIdIsTwo;
+use Czim\CmsModels\Test\Helpers\Strategies\DeleteCondition\PassesOnParameter;
 use Czim\CmsModels\Test\Integration\Controllers\AbstractControllerIntegrationTest;
 
 /**
@@ -24,7 +26,12 @@ class DeleteTest extends AbstractControllerIntegrationTest
         ],
         'it_uses_a_delete_condition_if_configured' => [
             'test-post' => [
-                'delete_condition' => OnlyIfIdIsTwo::class,
+                'delete_condition' => OnlyIfIdIsTwo::class . '|' . PassesOnParameter::class . ':1',
+            ],
+        ],
+        'it_uses_a_delete_strategy_if_configured' => [
+            'test-post' => [
+                'delete_strategy' => MockDeleteSpy::class,
             ],
         ],
     ];
@@ -144,6 +151,27 @@ class DeleteTest extends AbstractControllerIntegrationTest
             '_token'   => $token,
         ], [], [], $this->getAjaxHeaders());
         $this->seeJson(['success' => true]);
+    }
+
+    /**
+     * @test
+     */
+    function it_uses_a_delete_strategy_if_configured()
+    {
+        static::assertFalse($this->app->bound('mock-delete-spy-triggered'), 'Spy flag setup failed');
+
+        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $token = $this->getCsrfTokenFromResponse();
+
+        // Attempt to delete the record
+        $this->route('POST', static::ROUTE_BASE . '.destroy', [2], [
+            '_method'  => 'delete',
+            '_token'   => $token,
+        ], [], [], $this->getAjaxHeaders());
+        $this->seeJson(['success' => true]);
+
+        // Check if the mock delete spy was triggered
+        static::assertTrue($this->app->bound('mock-delete-spy-triggered'), 'Spy flag was not set by mock strategy');
     }
 
 }
