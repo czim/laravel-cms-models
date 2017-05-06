@@ -73,6 +73,14 @@ class BasicListExportTest extends AbstractControllerIntegrationTest
      */
     function it_exports_listing_as_csv()
     {
+        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+
+        // Apply a filter so we only match one row
+        $this->makeRequestUsingForm(
+            $this->crawler()->filter('#filters-form')->form()->setValues(['filter[any]' => 'elaborate'])
+        );
+        $this->seeStatusCode(200);
+
         $this->call('GET', route(static::ROUTE_BASE . '.export', ['csv']));
         $this->seeStatusCode(200);
 
@@ -94,7 +102,7 @@ class BasicListExportTest extends AbstractControllerIntegrationTest
         $content = file_get_contents($path);
         $lines = array_filter(explode("\n", $content));
 
-        static::assertCount(4, $lines, 'There should be 3 lines and 1 header line');
+        static::assertCount(2, $lines, 'There should be 1 line and 1 header line');
 
         static::assertEquals(
             'Id;"Test genre id";Description;Type;Checked;Position;"Created at";"Updated at";Title;Body',
@@ -104,9 +112,9 @@ class BasicListExportTest extends AbstractControllerIntegrationTest
 
         static::assertRegExp(
             '#^'
-            . preg_quote('1;;"the best possible post for testing";notice;common.boolean.true;3;"')
+            . preg_quote('2;;"some alternative testing post";news;common.boolean.false;2;"')
             . '\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}";"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}'
-            . preg_quote('";"Some Basic Title";"Lorem ipsum dolor sit amet, egg beater batter pan consectetur adipiscing elit. Cras nec erat a turpis iaculis viverra sed in dolor."')
+            . preg_quote('";"Elaborate Alternative Title";"Donec nec metus urna. Tosti pancake frying pan tortellini Fusce ex massa, commodo ut rhoncus eu, iaculis sed quam."')
             . '$#',
             $lines[1],
             'Content row does not match'
