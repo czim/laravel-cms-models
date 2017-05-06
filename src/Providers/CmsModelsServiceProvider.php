@@ -192,6 +192,8 @@ class CmsModelsServiceProvider extends ServiceProvider
         $this->app->singleton(FactoriesContracts\ShowFieldStrategyFactoryInterface::class, Factories\ShowFieldStrategyFactory::class);
         $this->app->singleton(FactoriesContracts\FormFieldStrategyFactoryInterface::class, Factories\FormFieldStrategyFactory::class);
         $this->app->singleton(FactoriesContracts\ActionStrategyFactoryInterface::class, Factories\ActionStrategyFactory::class);
+        $this->app->singleton(FactoriesContracts\DeleteStrategyFactoryInterface::class, Factories\DeleteStrategyFactory::class);
+        $this->app->singleton(FactoriesContracts\DeleteConditionStrategyFactoryInterface::class, Factories\DeleteConditionStrategyFactory::class);
         $this->app->singleton(FactoriesContracts\ExportColumnStrategyFactoryInterface::class, Factories\ExportColumnStrategyFactory::class);
         $this->app->singleton(FactoriesContracts\ExportStrategyFactoryInterface::class, Factories\ExportStrategyFactory::class);
 

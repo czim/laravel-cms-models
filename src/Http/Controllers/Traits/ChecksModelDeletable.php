@@ -2,9 +2,8 @@
 namespace Czim\CmsModels\Http\Controllers\Traits;
 
 use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
-use Czim\CmsModels\Contracts\Strategies\DeleteConditionStrategyInterface;
+use Czim\CmsModels\Contracts\Support\Factories\DeleteConditionStrategyFactoryInterface;
 use Illuminate\Database\Eloquent\Model;
-use UnexpectedValueException;
 
 trait ChecksModelDeletable
 {
@@ -51,11 +50,12 @@ trait ChecksModelDeletable
 
         foreach ($strategies as $strategy => $parameters) {
 
-            /** @var DeleteConditionStrategyInterface $instance */
-            $instance = app($strategy);
+            /** @var DeleteConditionStrategyFactoryInterface $factory */
+            $factory = app(DeleteConditionStrategyFactoryInterface::class);
+            $strategy = $factory->make($strategy);
 
-            if ( ! $instance->check($model, $parameters)) {
-                $this->lastUnmetDeleteConditionMessage = $instance->message();
+            if ( ! $strategy->check($model, $parameters)) {
+                $this->lastUnmetDeleteConditionMessage = $strategy->message();
                 return false;
             }
         }
@@ -102,7 +102,6 @@ trait ChecksModelDeletable
             $normalized = [];
 
             foreach ($condition as $partialCondition) {
-
                 $normalized = array_merge($normalized, $this->interpretDeleteCondition($partialCondition));
             }
 
@@ -118,48 +117,8 @@ trait ChecksModelDeletable
             $parameters = [];
         }
 
-        $strategy = $this->resolveDeleteConditionStrategyClass($strategy);
-
+        /** @var string $strategy */
         return [ $strategy => $parameters ];
-    }
-
-    /**
-     * Resolves strategy assuming it is the class name or FQN of a delete condition interface
-     * implementation, or a configured alias.
-     *
-     * @param string $strategy
-     * @return string|false     returns full class namespace if it was resolved succesfully
-     */
-    protected function resolveDeleteConditionStrategyClass($strategy)
-    {
-        $originalStrategy = $strategy;
-
-        if ( ! str_contains($strategy, '.')) {
-            $strategy = config('cms-models.strategies.delete.condition-aliases.' . $strategy, $strategy);
-        }
-
-        if (class_exists($strategy) && is_a($strategy, DeleteConditionStrategyInterface::class, true)) {
-            return $strategy;
-        }
-
-        $strategy = $this->prefixDeleteConditionStrategyNamespace($strategy);
-
-        if (class_exists($strategy) && is_a($strategy, DeleteConditionStrategyInterface::class, true)) {
-            return $strategy;
-        }
-
-        throw new UnexpectedValueException(
-            "Could not resolve strategy '{$originalStrategy}' as a DeleteConditionStrategy"
-        );
-    }
-
-    /**
-     * @param string $class
-     * @return string
-     */
-    protected function prefixDeleteConditionStrategyNamespace($class)
-    {
-        return rtrim(config('cms-models.strategies.delete.default-condition-namespace'), '\\') . '\\' . $class;
     }
 
     /**
