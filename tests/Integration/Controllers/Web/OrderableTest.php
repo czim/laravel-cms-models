@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Test\Integration\Controllers\Web;
 
 use Czim\CmsModels\Support\Enums\OrderablePosition;
 use Czim\CmsModels\Test\Integration\Controllers\AbstractControllerIntegrationTest;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * Class OrderableTest
@@ -49,6 +50,30 @@ class OrderableTest extends AbstractControllerIntegrationTest
             'position' => OrderablePosition::TOP,
         ], [], [], $this->getAjaxHeaders());
         $this->seeJson(['success' => true]);
+
+        // Check if order is now altered
+        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+
+        $rows = $this->crawler()->filter('tr.records-row');
+        static::assertEquals(2, $rows->first()->attr('data-id'), 'Order incorrect');
+        static::assertEquals(1, $rows->last()->attr('data-id'), 'Order incorrect');
+    }
+
+    /**
+     * @test
+     */
+    function it_redirects_back_after_toggling_activatable_record_for_non_ajax_request()
+    {
+        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+
+        $token = $this->crawler()->filter('meta[name="csrf-token"]')->first()->attr('content');
+
+        $this->route('POST', static::ROUTE_BASE . '.position', [2], [
+            '_method'  => 'put',
+            '_token'   => $token,
+            'position' => OrderablePosition::TOP,
+        ]);
+        static::assertInstanceOf(RedirectResponse::class, $this->response);
 
         // Check if order is now altered
         $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
