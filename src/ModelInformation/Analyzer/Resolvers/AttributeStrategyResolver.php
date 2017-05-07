@@ -329,8 +329,8 @@ class AttributeStrategyResolver
 
             // @codeCoverageIgnoreStart
             default:
+                // @codeCoverageIgnoreStart
                 return [0, 0];
-            // @codeCoverageIgnoreEnd
         }
 
         if ($unsigned) {
