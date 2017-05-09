@@ -55,11 +55,13 @@
         @endif
     >
 
-    <label class="input-group-btn">
-        <span class="btn btn-danger btn-empty-file-upload" title="{{ cms_trans('models.upload.remove') }}">
-            &times;
-        </span>
-    </label>
+    @if ( ! $required || $translated)
+        <label class="input-group-btn">
+            <span class="btn btn-danger btn-empty-file-upload" title="{{ cms_trans('models.upload.remove') }}">
+                &times;
+            </span>
+        </label>
+    @endif
 </div>
 
 
