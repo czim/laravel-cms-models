@@ -4,10 +4,7 @@ namespace Czim\CmsModels\Http\Controllers\Traits;
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\Form\Layout\ModelFormTabDataInterface;
-use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
-use Czim\CmsModels\Exceptions\StrategyApplicationException;
 use Czim\CmsModels\Exceptions\StrategyRetrievalException;
-use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesFormStoreStrategies;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -110,88 +107,6 @@ trait HandlesFormFields
         }
 
         return $values;
-    }
-
-    /**
-     * Stores filled in form field data for a model instance.
-     * Note that this will persist the model if it is a new instance.
-     *
-     * @param Model $model
-     * @param array $values     associative array with form data, should only include actual field data
-     * @return bool
-     * @throws StrategyApplicationException
-     */
-    protected function storeFormFieldValuesForModel(Model $model, array $values)
-    {
-        // Prepare field data and strategies
-
-        /** @var ModelFormFieldDataInterface[]|ModelFormFieldData[] $fields */
-        /** @var FormFieldStoreStrategyInterface[] $strategies */
-        $fields     = [];
-        $strategies = [];
-
-        foreach (array_keys($values) as $key) {
-
-            $field = $this->getModelFormFieldDataForKey($key);
-            if ( ! $this->allowedToUseFormFieldData($field)) continue;
-
-            $fields[ $key ]     = $field;
-            $strategies[ $key ] = $this->getFormFieldStoreStrategyInstanceForField($fields[ $key ]);
-
-            $strategies[ $key ]->setFormFieldData($fields[ $key ]);
-            $strategies[ $key ]->setParameters(
-                $this->getFormFieldStoreStrategyParametersForField($fields[ $key ])
-            );
-        }
-        
-        // First store values (such as necessary belongsTo-related instances),
-        // before storing the model
-        foreach ($values as $key => $value) {
-
-            try {
-                $strategies[ $key ]->store($model, $fields[ $key ]->source(), $value);
-
-                // @codeCoverageIgnoreStart
-            } catch (Exception $e) {
-                $class   = get_class($strategies[ $key ]);
-                $message = "Failed storing value for form field '{$key}' (using $class): \n{$e->getMessage()}";
-
-                throw new StrategyApplicationException($message, $e->getCode(), $e);
-                // @codeCoverageIgnoreEnd
-            }
-
-        }
-
-        // Save the model itself
-        $success = $model->save();
-
-        if ( ! $success) {
-            return false;
-        }
-
-        // Then store values that can only be stored after the model exists
-        // and is succesfully saved
-        foreach ($values as $key => $value) {
-
-            try {
-                $strategies[ $key ]->storeAfter($model, $fields[ $key ]->source(), $value);
-
-                // @codeCoverageIgnoreStart
-            } catch (Exception $e) {
-                $class   = get_class($strategies[ $key ]);
-                $message = "Failed storing value for form field '{$key}' (using $class (after)): \n{$e->getMessage()}";
-
-                throw new StrategyApplicationException($message, $e->getCode(), $e);
-                // @codeCoverageIgnoreEnd
-            }
-        }
-
-        // If the model is still dirty after this, save it again
-        if ($model->isDirty()) {
-            $success = $model->save();
-        }
-
-        return $success;
     }
 
     /**
