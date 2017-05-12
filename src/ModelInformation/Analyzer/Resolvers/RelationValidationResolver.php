@@ -20,6 +20,10 @@ class RelationValidationResolver
 
         if ($field->required() && ! $field->translated()) {
             $rules[] = 'required';
+        } else {
+            // Anything that is not required should by default be explicitly nullable
+            // since Laravel 5.4.
+            $rules[] = 'nullable';
         }
 
         // todo

@@ -103,6 +103,10 @@ class AttributeValidationResolver
             // This should be handled by the class that requested the attribute validation rules.
             /** @see AbstractFormFieldStoreStrategy */
             $rules[] = 'required';
+        } else {
+            // Anything that is not required should by default be explicitly nullable
+            // since Laravel 5.4.
+            $rules[] = 'nullable';
         }
 
         return $rules;
