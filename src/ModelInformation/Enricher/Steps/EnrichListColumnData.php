@@ -37,8 +37,6 @@ class EnrichListColumnData extends AbstractEnricherStep
         AttributeStrategyResolver $attributeStrategyResolver,
         RelationStrategyResolver $relationStrategyResolver
     ) {
-        parent::__construct($enricher);
-
         $this->attributeStrategyResolver = $attributeStrategyResolver;
         $this->relationStrategyResolver  = $relationStrategyResolver;
     }
@@ -144,8 +142,7 @@ class EnrichListColumnData extends AbstractEnricherStep
         } else {
             // Get from relation data
             $attributeColumnInfo = $this->makeModelListColumnDataForRelationData(
-                $this->info->relations[ $normalizedRelationName ],
-                $this->info
+                $this->info->relations[ $normalizedRelationName ]
             );
         }
 
@@ -210,11 +207,10 @@ class EnrichListColumnData extends AbstractEnricherStep
     /**
      * Makes data set for list column given relation data.
      *
-     * @param ModelRelationData                          $relation
-     * @param ModelInformationInterface|ModelInformation $info
+     * @param ModelRelationData $relation
      * @return ModelListColumnData
      */
-    protected function makeModelListColumnDataForRelationData(ModelRelationData $relation, ModelInformationInterface $info)
+    protected function makeModelListColumnDataForRelationData(ModelRelationData $relation)
     {
         return new ModelListColumnData([
             'source'         => $relation->method,

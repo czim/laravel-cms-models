@@ -33,8 +33,6 @@ class EnrichExportColumnData extends AbstractEnricherStep
         AttributeStrategyResolver $attributeStrategyResolver,
         RelationStrategyResolver $relationStrategyResolver
     ) {
-        parent::__construct($enricher);
-
         $this->attributeStrategyResolver = $attributeStrategyResolver;
         $this->relationStrategyResolver  = $relationStrategyResolver;
     }

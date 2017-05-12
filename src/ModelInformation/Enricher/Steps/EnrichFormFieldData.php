@@ -37,8 +37,6 @@ class EnrichFormFieldData extends AbstractEnricherStep
         AttributeStrategyResolver $attributeStrategyResolver,
         RelationStrategyResolver $relationStrategyResolver
     ) {
-        parent::__construct($enricher);
-
         $this->attributeStrategyResolver = $attributeStrategyResolver;
         $this->relationStrategyResolver  = $relationStrategyResolver;
     }
@@ -70,14 +68,14 @@ class EnrichFormFieldData extends AbstractEnricherStep
                 continue;
             }
 
-            $fields[ $attribute->name ] = $this->makeModelFormFieldDataForAttributeData($attribute, $this->info);
+            $fields[ $attribute->name ] = $this->makeModelFormFieldDataForAttributeData($attribute);
         }
 
 
         // Add fields for relations
         foreach ($this->info->relations as $relation) {
 
-            $fields[ $relation->name ] = $this->makeModelFormFieldDataForRelationData($relation, $this->info);
+            $fields[ $relation->name ] = $this->makeModelFormFieldDataForRelationData($relation);
         }
 
 
@@ -142,12 +140,11 @@ class EnrichFormFieldData extends AbstractEnricherStep
         }
 
         if (isset($this->info->attributes[ $key ])) {
-            $enrichFieldInfo = $this->makeModelFormFieldDataForAttributeData($this->info->attributes[ $key ], $this->info);
+            $enrichFieldInfo = $this->makeModelFormFieldDataForAttributeData($this->info->attributes[ $key ]);
         } else {
             // get from relation data
             $enrichFieldInfo = $this->makeModelFormFieldDataForRelationData(
                 $this->info->relations[ $normalizedRelationName ],
-                $this->info,
                 $key
             );
         }
@@ -212,11 +209,10 @@ class EnrichFormFieldData extends AbstractEnricherStep
     /**
      * Makes data set for form field given attribute data.
      *
-     * @param ModelAttributeData                         $attribute
-     * @param ModelInformationInterface|ModelInformation $info
+     * @param ModelAttributeData $attribute
      * @return ModelFormFieldData
      */
-    protected function makeModelFormFieldDataForAttributeData(ModelAttributeData $attribute, ModelInformationInterface $info)
+    protected function makeModelFormFieldDataForAttributeData(ModelAttributeData $attribute)
     {
         return new ModelFormFieldData([
             'key'              => $attribute->name,
@@ -240,12 +236,11 @@ class EnrichFormFieldData extends AbstractEnricherStep
     /**
      * Makes data set for form field given relation data.
      *
-     * @param ModelRelationData                          $relation
-     * @param ModelInformationInterface|ModelInformation $info
-     * @param string|null                                $key
+     * @param ModelRelationData $relation
+     * @param string|null       $key
      * @return ModelFormFieldData
      */
-    protected function makeModelFormFieldDataForRelationData(ModelRelationData $relation, ModelInformationInterface $info, $key = null)
+    protected function makeModelFormFieldDataForRelationData(ModelRelationData $relation, $key = null)
     {
         $required = (   in_array($relation->type, [
                             RelationType::BELONGS_TO,
