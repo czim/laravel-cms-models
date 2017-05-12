@@ -1,6 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\ModelInformation\Enricher;
 
+use Czim\CmsModels\Contracts\Support\Factories\FormStoreStrategyFactoryInterface;
 use Czim\CmsModels\Exceptions\ModelConfigurationDataException;
 use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
 use Czim\CmsModels\ModelInformation\Data\Form\Layout\ModelFormFieldGroupData;
@@ -12,6 +13,7 @@ use Czim\CmsModels\ModelInformation\Enricher\ModelInformationEnricher;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 use Czim\CmsModels\Support\Enums\FormDisplayStrategy;
 use Czim\CmsModels\Support\Enums\RelationType;
+use Czim\CmsModels\Support\Factories\FormStoreStrategyFactory;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Czim\CmsModels\Test\TestCase;
 use Exception;
@@ -25,6 +27,13 @@ use Mockery;
  */
 class ModelInformationEnricherTest extends TestCase
 {
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->app->bind(FormStoreStrategyFactoryInterface::class, FormStoreStrategyFactory::class);
+    }
 
     /**
      * @test
