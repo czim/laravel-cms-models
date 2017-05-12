@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Test\ModelInformation\Enricher\Steps;
 
 use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;
+use Czim\CmsModels\Contracts\Support\Factories\FormStoreStrategyFactoryInterface;
 use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
@@ -24,6 +25,20 @@ use Mockery;
  */
 class EnrichValidationDataTest extends TestCase
 {
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        /** @var FormStoreStrategyFactoryInterface|Mockery\Mock $mockStrategyFactory */
+        $mockStrategyFactory = $this->getMockStrategyFactory();
+        $mockStrategyFactory->shouldReceive('make')
+            ->andReturnUsing(function ($strategy) {
+                return new $strategy;
+            });
+
+        $this->app->instance(FormStoreStrategyFactoryInterface::class, $mockStrategyFactory);
+    }
 
     /**
      * @test
@@ -659,6 +674,14 @@ class EnrichValidationDataTest extends TestCase
     protected function getMockEnricher()
     {
         return Mockery::mock(ModelInformationEnricherInterface::class);
+    }
+
+    /**
+     * @return FormStoreStrategyFactoryInterface|Mockery\MockInterface
+     */
+    protected function getMockStrategyFactory()
+    {
+        return Mockery::mock(FormStoreStrategyFactoryInterface::class);
     }
 
 }
