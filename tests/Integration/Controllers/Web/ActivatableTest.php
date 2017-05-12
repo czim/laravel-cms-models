@@ -49,7 +49,7 @@ class ActivatableTest extends AbstractControllerIntegrationTest
      */
     function it_shows_a_list_of_models_as_an_activatable_listing()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         // Check if we have activation logic column cells
         static::assertCount(3, $this->crawler()->filter('td.column-activate'));
@@ -83,20 +83,20 @@ class ActivatableTest extends AbstractControllerIntegrationTest
      */
     function it_toggles_an_activatable_record()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         $token = $this->getCsrfTokenFromResponse();
 
         // Deactivate the first record
-        $this->route('POST', static::ROUTE_BASE . '.activate', [1], [
+        $this->post(route(static::ROUTE_BASE . '.activate', [1]), [
             '_method'  => 'put',
             '_token'   => $token,
             'activate' => false,
-        ], [], [], $this->getAjaxHeaders());
-        $this->seeJson(['success' => true]);
+        ], $this->getAjaxHeaders())
+            ->assertJson(['success' => true]);
 
         // Check if it is now deactivated
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         static::assertEquals(
             0,
@@ -105,15 +105,15 @@ class ActivatableTest extends AbstractControllerIntegrationTest
         );
 
         // Reactivate the first record
-        $this->route('POST', static::ROUTE_BASE . '.activate', [1], [
+        $this->post(route(static::ROUTE_BASE . '.activate', [1]), [
             '_method'  => 'put',
             '_token'   => $token,
             'activate' => true,
-        ], [], [], $this->getAjaxHeaders());
-        $this->seeJson(['success' => true]);
+        ], $this->getAjaxHeaders())
+            ->assertJson(['success' => true]);
 
         // Check if it is now activated
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         static::assertEquals(
             1,
@@ -127,21 +127,19 @@ class ActivatableTest extends AbstractControllerIntegrationTest
      */
     function it_redirects_back_after_toggling_activatable_record_for_non_ajax_request()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         $token = $this->getCsrfTokenFromResponse();
 
         // Deactivate the first record
-        $this->route('POST', static::ROUTE_BASE . '.activate', [1], [
+        $this->post(route(static::ROUTE_BASE . '.activate', [1]), [
             '_method'  => 'put',
             '_token'   => $token,
             'activate' => false,
-        ]);
-
-        static::assertInstanceof(RedirectResponse::class, $this->response);
+        ])->assertRedirect();
 
         // Check if it is now deactivated
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         static::assertEquals(
             0,

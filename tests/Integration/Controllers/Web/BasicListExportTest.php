@@ -57,7 +57,7 @@ class BasicListExportTest extends AbstractControllerIntegrationTest
      */
     function it_shows_export_links_on_listing_page()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         static::assertHtmlElementInResponse(
             'a[href="http://localhost/cms/model/czim-cmsmodels-test-helpers-models-testpost/export/csv"]',
@@ -74,8 +74,7 @@ class BasicListExportTest extends AbstractControllerIntegrationTest
      */
     function it_does_not_allow_export_if_not_enabled()
     {
-        $this->call('GET', route(static::ROUTE_BASE . '.export', ['csv']));
-        $this->seeStatusCode(403);
+        $this->get(route(static::ROUTE_BASE . '.export', ['csv']))->assertStatus(403);
     }
 
     /**
@@ -86,8 +85,7 @@ class BasicListExportTest extends AbstractControllerIntegrationTest
         $this->mockSuperAdmin  = false;
         $this->mockPermissions = [];
 
-        $this->call('GET', route(static::ROUTE_BASE . '.export', ['csv']));
-        $this->seeStatusCode(403);
+        $this->get(route(static::ROUTE_BASE . '.export', ['csv']))->assertStatus(403);
 
         $this->mockSuperAdmin = true;
     }
@@ -97,19 +95,16 @@ class BasicListExportTest extends AbstractControllerIntegrationTest
      */
     function it_exports_listing_as_csv()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         // Apply a filter so we only match one row
         $this->makeRequestUsingForm(
             $this->crawler()->filter('#filters-form')->form()->setValues(['filter[any]' => 'elaborate'])
-        );
-        $this->seeStatusCode(200);
+        )->assertStatus(200);
 
-        $this->call('GET', route(static::ROUTE_BASE . '.export', ['csv']));
-        $this->seeStatusCode(200);
+        $response = $this->get(route(static::ROUTE_BASE . '.export', ['csv']))->assertStatus(200)->baseResponse;
 
         /** @var BinaryFileResponse $response */
-        $response = $this->response;
 
         // Check response
         static::assertInstanceOf(BinaryFileResponse::class, $response, 'Expected binary file response');

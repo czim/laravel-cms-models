@@ -2,10 +2,12 @@
 namespace Czim\CmsModels\Test;
 
 use App\Console\Kernel;
+use Czim\CmsModels\Test\Helpers\Traits\InteractsWithPages;
 use Illuminate\Contracts\Console\Kernel as ConsoleKernelContract;
 
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
+    use InteractsWithPages;
 
     /**
      * {@inheritdoc}

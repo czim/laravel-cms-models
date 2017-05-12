@@ -22,7 +22,7 @@ class DefaultCreateFormTest extends AbstractControllerIntegrationTest
      */
     function it_shows_a_create_model_form()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.create')->seeStatusCode(200);
+        $this->makeRequest('GET', route(static::ROUTE_BASE . '.create'))->assertStatus(200);
 
         static::assertHtmlElementInResponse('form.model-form');
         $form = $this->crawler()->filter('form.model-form');
@@ -60,7 +60,7 @@ class DefaultCreateFormTest extends AbstractControllerIntegrationTest
      */
     function it_creates_a_model_on_form_submit()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.create')->seeStatusCode(200);
+        $this->makeRequest('GET', route(static::ROUTE_BASE . '.create'))->assertStatus(200);
 
         $this->makeRequestUsingForm(
             $this->crawler()->filter('form.model-form')->first()->form()
@@ -70,11 +70,12 @@ class DefaultCreateFormTest extends AbstractControllerIntegrationTest
                     'title'       => ['en' => 'Testing Title'],
                     'body'        => ['en' => 'Testing Body Content'],
                 ])
-        );
-        $this->seeStatusCode(200);
+        )
+            ->assertStatus(200);
 
         // The form should now be in edit mode
         static::assertHtmlElementInResponse('form.model-form');
+        static::assertNotHtmlElementInResponse('div.alert-danger', 'There should be no errors');
         $form = $this->crawler()->filter('form.model-form');
         static::assertEquals(4, $form->attr('data-id'), 'Form data-id should be 4');
         static::assertEquals(
@@ -97,7 +98,7 @@ class DefaultCreateFormTest extends AbstractControllerIntegrationTest
      */
     function it_creates_a_model_and_returns_to_listing_using_save_and_close_mode()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.create')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.create')->assertStatus(200);
 
         $this->makeRequestUsingForm(
             $this->crawler()->filter('form.model-form')->first()->form()
@@ -108,8 +109,8 @@ class DefaultCreateFormTest extends AbstractControllerIntegrationTest
                     'title'              => ['en' => 'Testing Title'],
                     'body'               => ['en' => 'Testing Body Content'],
                 ])
-        );
-        $this->seeStatusCode(200);
+        )
+            ->assertStatus(200);
 
         // The response should be a listing
         static::assertNotHtmlElementInResponse('form.model-form');
@@ -123,7 +124,7 @@ class DefaultCreateFormTest extends AbstractControllerIntegrationTest
      */
     function it_shows_validation_errors_for_invalid_input()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.create')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.create')->assertStatus(200);
 
         $this->makeRequestUsingForm(
             $this->crawler()->filter('form.model-form')->first()->form()
@@ -134,8 +135,8 @@ class DefaultCreateFormTest extends AbstractControllerIntegrationTest
                     'title'       => ['en' => 'Testing Title'],
                     // Missing body for en
                 ])
-        );
-        $this->seeStatusCode(200);
+        )
+            ->assertStatus(200);
 
         // The form should still be in create mode
         static::assertHtmlElementInResponse('form.model-form');
