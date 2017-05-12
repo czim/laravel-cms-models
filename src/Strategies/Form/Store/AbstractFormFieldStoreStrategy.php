@@ -202,10 +202,17 @@ class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyInterface
             // Modify and overwrite required rule, if present to special locale-context required rule
             if (is_string($rules)) {
                 if ($rules === 'required') {
-                    $rules = $this->getTranslationRequiredWithRule($modelInformation, $key);
+                    $rules = [ $this->getTranslationRequiredWithRule($modelInformation, $key) ];
                 }
             } elseif ($index = array_search('required', $rules)) {
                 $rules[$index] = $this->getTranslationRequiredWithRule($modelInformation, $key);
+            }
+
+            // For now, make sure the fields are always nullable.
+            // If the field is required, it is always required_with.
+            // Note that this behaviour may change later!
+            if ( ! in_array('nullable', $rules)) {
+                $rules[] = 'nullable';
             }
 
             $rules = [
