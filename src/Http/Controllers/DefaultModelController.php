@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Http\Controllers;
 
 use Czim\CmsCore\Support\Enums\FlashLevel;
 use Czim\CmsModels\Contracts\Repositories\ModelReferenceRepositoryInterface;
+use Czim\CmsModels\Contracts\Support\Form\FormDataStorerInterface;
 use Czim\CmsModels\Contracts\Support\Session\ModelListMemoryInterface;
 use Czim\CmsModels\Events;
 use Czim\CmsModels\Http\Requests\ActivateRequest;
@@ -222,7 +223,11 @@ class DefaultModelController extends BaseModelController
 
         $data = $request->only($this->getRelevantFormFieldKeys(true));
 
-        if ( ! $this->storeFormFieldValuesForModel($record, $data)) {
+        /** @var FormDataStorerInterface $storer */
+        $storer = app(FormDataStorerInterface::class);
+        $storer->setModelInformation($this->getModelInformation());
+
+        if ( ! $storer->store($record, $data)) {
             // @codeCoverageIgnoreStart
             return redirect()->back()
                 ->withInput()
@@ -308,7 +313,11 @@ class DefaultModelController extends BaseModelController
 
         $data = $request->only($this->getRelevantFormFieldKeys());
 
-        if ( ! $this->storeFormFieldValuesForModel($record, $data)) {
+        /** @var FormDataStorerInterface $storer */
+        $storer = app(FormDataStorerInterface::class);
+        $storer->setModelInformation($this->getModelInformation());
+
+        if ( ! $storer->store($record, $data)) {
             // @codeCoverageIgnoreStart
             return redirect()->back()
                 ->withInput()

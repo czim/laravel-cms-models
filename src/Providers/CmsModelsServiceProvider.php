@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Providers;
 
 use Czim\CmsModels\Console\Commands;
+use Czim\CmsModels\Contracts\Support\Form\FormDataStorerInterface;
 use Czim\CmsModels\Contracts\Support\Validation\ValidationRuleDecoratorInterface;
 use Czim\CmsModels\ModelInformation\Analyzer\Database\SimpleDatabaseAnalyzer;
 use Czim\CmsModels\ModelInformation\Analyzer\Processor\ModelAnalyzer;
@@ -20,6 +21,7 @@ use Czim\CmsModels\Listeners\ModelLogListener;
 use Czim\CmsModels\ModelInformation;
 use Czim\CmsModels\Repositories;
 use Czim\CmsModels\Support\Factories;
+use Czim\CmsModels\Support\Form\FormDataStorer;
 use Czim\CmsModels\Support\ModuleHelper;
 use Czim\CmsModels\Support\Routing\RouteHelper;
 use Czim\CmsModels\Support\Session\ModelListMemory;
@@ -133,6 +135,8 @@ class CmsModelsServiceProvider extends ServiceProvider
 
         $this->app->singleton(RepositoriesContracts\ModelReferenceRepositoryInterface::class, Repositories\ModelReferenceRepository::class);
 
+        $this->app->bind(FormDataStorerInterface::class, FormDataStorer::class);
+
         $this->registerHelperInterfaceBindings()
              ->registerModelInformationInterfaceBindings()
              ->registerStrategyInterfaceBindings()
@@ -191,6 +195,7 @@ class CmsModelsServiceProvider extends ServiceProvider
         $this->app->singleton(FactoriesContracts\ListDisplayStrategyFactoryInterface::class, Factories\ListDisplayStrategyFactory::class);
         $this->app->singleton(FactoriesContracts\ShowFieldStrategyFactoryInterface::class, Factories\ShowFieldStrategyFactory::class);
         $this->app->singleton(FactoriesContracts\FormFieldStrategyFactoryInterface::class, Factories\FormFieldStrategyFactory::class);
+        $this->app->singleton(FactoriesContracts\FormStoreStrategyFactoryInterface::class, Factories\FormStoreStrategyFactory::class);
         $this->app->singleton(FactoriesContracts\ActionStrategyFactoryInterface::class, Factories\ActionStrategyFactory::class);
         $this->app->singleton(FactoriesContracts\DeleteStrategyFactoryInterface::class, Factories\DeleteStrategyFactory::class);
         $this->app->singleton(FactoriesContracts\DeleteConditionStrategyFactoryInterface::class, Factories\DeleteConditionStrategyFactory::class);

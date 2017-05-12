@@ -4,7 +4,7 @@ namespace Czim\CmsModels\Support\Strategies\Traits;
 use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
-use Czim\CmsModels\Exceptions\StrategyResolutionException;
+use Czim\CmsModels\Contracts\Support\Factories\FormStoreStrategyFactoryInterface;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 
@@ -23,9 +23,10 @@ trait ResolvesFormStoreStrategies
             $strategy = head(explode(':', $strategy));
         }
 
-        $strategy = $this->resolveFormFieldStoreStrategyClass($strategy);
+        /** @var FormStoreStrategyFactoryInterface $strategy */
+        $factory = app(FormStoreStrategyFactoryInterface::class);
 
-        return new $strategy;
+        return $factory->make($strategy);
     }
 
     /**
@@ -54,49 +55,6 @@ trait ResolvesFormStoreStrategies
     protected function getModelFormFieldDataForKey($fieldKey)
     {
         return $this->getModelInformation()->form->fields[ $fieldKey ];
-    }
-
-    /**
-     * Resolves strategy assuming it is the class name or FQN of a form field store
-     * interface implementation, or a configured alias.
-     *
-     * @param string $strategy
-     * @return string           returns full class namespace if it was resolved succesfully
-     * @throws StrategyResolutionException
-     */
-    protected function resolveFormFieldStoreStrategyClass($strategy)
-    {
-        if ( ! empty($strategy)) {
-
-            if ( ! str_contains($strategy, '.')) {
-                $strategy = config('cms-models.strategies.form.store-aliases.' . $strategy, $strategy);
-            }
-
-            if (class_exists($strategy) && is_a($strategy, FormFieldStoreStrategyInterface::class, true)) {
-                return $strategy;
-            }
-
-            $strategy = $this->prefixFormFieldStoreStrategyNamespace($strategy);
-
-            if (class_exists($strategy) && is_a($strategy, FormFieldStoreStrategyInterface::class, true)) {
-                return $strategy;
-            }
-
-            if ($strategy) {
-                throw new StrategyResolutionException("Could not find form store class for strategy '{$strategy}'");
-            }
-        }
-
-        return config('cms-models.strategies.form.default-store-strategy');
-    }
-
-    /**
-     * @param string $class
-     * @return string
-     */
-    protected function prefixFormFieldStoreStrategyNamespace($class)
-    {
-        return rtrim(config('cms-models.strategies.form.default-store-namespace'), '\\') . '\\' . $class;
     }
 
     /**
