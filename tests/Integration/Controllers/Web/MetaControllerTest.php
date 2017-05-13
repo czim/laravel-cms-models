@@ -50,19 +50,19 @@ class MetaControllerTest extends AbstractControllerIntegrationTest
             'type'  => 'form.field',
             'key'   => 'comments',
         ])
-            ->seeStatusCode(200)
-            ->seeJsonStructure([
+            ->assertStatus(200)
+            ->assertJsonStructure([
                 '*' => ['key', 'reference']
             ])
-            ->seeJsonContains([
+            ->assertJsonFragment([
                 'key'       => 1,
                 'reference' => '#1: Comment Title A',
             ])
-            ->seeJsonContains([
+            ->assertJsonFragment([
                 'key'       => 2,
                 'reference' => '#2: Comment Title B',
             ])
-            ->seeJsonContains([
+            ->assertJsonFragment([
                 'key'       => 3,
                 'reference' => '#3: Comment Title C',
             ]);
@@ -78,40 +78,40 @@ class MetaControllerTest extends AbstractControllerIntegrationTest
             'type'  => 'form.field',
             'key'   => 'seoable',
         ])
-            ->seeStatusCode(200)
-            ->seeJsonStructure([
+            ->assertStatus(200)
+            ->assertJsonStructure([
                 TestPost::class    => ['*' => ['key', 'reference']],
                 TestComment::class => ['*' => ['key', 'reference']],
                 TestAuthor::class  => ['*' => ['key', 'reference']],
             ])
             // Posts
-            ->seeJsonContains([
+            ->assertJsonFragment([
                 'key'       => 1,
                 'reference' => '#1: Some Basic Title',
             ])
-            ->seeJsonContains([
+            ->assertJsonFragment([
                 'key'       => 2,
                 'reference' => '#2: Elaborate Alternative Title',
             ])
             // Comments
-            ->seeJsonContains([
+            ->assertJsonFragment([
                 'key'       => 1,
                 'reference' => '#1: Comment Title A',
             ])
-            ->seeJsonContains([
+            ->assertJsonFragment([
                 'key'       => 2,
                 'reference' => '#2: Comment Title B',
             ])
-            ->seeJsonContains([
+            ->assertJsonFragment([
                 'key'       => 3,
                 'reference' => '#3: Comment Title C',
             ])
             // Authors
-            ->seeJsonContains([
+            ->assertJsonFragment([
                 'key'       => 1,
                 'reference' => '#1: Test Testington',
             ])
-            ->seeJsonContains([
+            ->assertJsonFragment([
                 'key'       => 2,
                 'reference' => '#2: Tosti Tortellini Von Testering',
             ]);
@@ -128,21 +128,13 @@ class MetaControllerTest extends AbstractControllerIntegrationTest
             'key'    => 'comments',
             'search' => 'a',
         ])
-            ->seeStatusCode(200)
-            ->seeJson();
-
-        // Check that json does not contain more than it should
-        $content = json_decode($this->response->content(), true);
-
-        static::assertEquals(
-            [
+            ->assertStatus(200)
+            ->assertExactJson([
                 [
                     'key'       => 1,
                     'reference' => '#1: Comment Title A',
                 ]
-            ],
-            $content,
-            'JSON content is incorrect'
+            ]
         );
     }
 
@@ -155,7 +147,7 @@ class MetaControllerTest extends AbstractControllerIntegrationTest
             'model' => TestPost::class,
             'type'  => 'unknown.type',
             'key'   => 'unknown',
-        ])->seeStatusCode(404);
+        ])->assertStatus(404);
     }
 
     /**
@@ -167,7 +159,7 @@ class MetaControllerTest extends AbstractControllerIntegrationTest
             'model' => static::class,
             'type'  => 'form.field',
             'key'   => 'irrelevant',
-        ])->seeStatusCode(404);
+        ])->assertStatus(404);
     }
 
 }

@@ -5,7 +5,6 @@ use Czim\CmsModels\Test\Helpers\Strategies\Delete\MockDeleteSpy;
 use Czim\CmsModels\Test\Helpers\Strategies\DeleteCondition\OnlyIfIdIsTwo;
 use Czim\CmsModels\Test\Helpers\Strategies\DeleteCondition\PassesOnParameter;
 use Czim\CmsModels\Test\Integration\Controllers\AbstractControllerIntegrationTest;
-use Illuminate\Http\RedirectResponse;
 
 /**
  * Class DeleteTest
@@ -43,24 +42,25 @@ class DeleteTest extends AbstractControllerIntegrationTest
      */
     function it_deletes_a_model()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         static::assertHtmlElementInResponse('tr.records-row[data-id=1]', 'Record #1 should be present');
 
         $token = $this->getCsrfTokenFromResponse();
 
         // Check the deletable response
-        $this->route('GET', static::ROUTE_BASE . '.deletable', [1], [], [], [], $this->getAjaxHeaders());
-        $this->seeJson(['success' => true]);
+        $this
+            ->get(route(static::ROUTE_BASE . '.deletable', [1]), $this->getAjaxHeaders())
+            ->assertJson(['success' => true]);
 
         // Delete the record
-        $this->route('POST', static::ROUTE_BASE . '.destroy', [1], [
+        $this->post(route(static::ROUTE_BASE . '.destroy', [1]), [
             '_method'  => 'delete',
             '_token'   => $token,
-        ], [], [], $this->getAjaxHeaders());
-        $this->seeJson(['success' => true]);
+        ], $this->getAjaxHeaders())
+            ->assertJson(['success' => true]);
 
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         static::assertNotHtmlElementInResponse('tr.records-row[data-id=1]', 'Record #1 should no longer be present');
     }
@@ -71,23 +71,23 @@ class DeleteTest extends AbstractControllerIntegrationTest
      */
     function it_does_not_allow_deleting_when_explicitly_disallowed()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         $token = $this->getCsrfTokenFromResponse();
 
         // Check the deletable response
-        $this->route('GET', static::ROUTE_BASE . '.deletable', [1], [], [], [], $this->getAjaxHeaders());
-        $this->seeJson(['success' => false]);
+        $this->get(route(static::ROUTE_BASE . '.deletable', [1]), $this->getAjaxHeaders())
+            ->assertJson(['success' => false]);
 
         // Attempt to delete the record
-        $this->route('POST', static::ROUTE_BASE . '.destroy', [1], [
+        $this->post(route(static::ROUTE_BASE . '.destroy', [1]), [
             '_method'  => 'delete',
             '_token'   => $token,
-        ], [], [], $this->getAjaxHeaders());
-        $this->seeJson(['success' => false]);
+        ], $this->getAjaxHeaders())
+            ->assertJson(['success' => false]);
 
         // Check if the model is still present
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         static::assertHtmlElementInResponse('tr.records-row[data-id=1]', 'Record #1 should still be present');
     }
@@ -98,7 +98,7 @@ class DeleteTest extends AbstractControllerIntegrationTest
      */
     function it_does_not_allow_deletion_if_user_does_not_have_permission()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         $token = $this->getCsrfTokenFromResponse();
 
@@ -106,16 +106,15 @@ class DeleteTest extends AbstractControllerIntegrationTest
         $this->mockSuperAdmin = false;
 
         // Check the deletable response
-        $this->route('GET', static::ROUTE_BASE . '.deletable', [1], [], [], [], $this->getAjaxHeaders());
-        $this->seeJson(['success' => false]);
+        $this->get(route(static::ROUTE_BASE . '.deletable', [1]), $this->getAjaxHeaders())
+            ->assertJson(['success' => false]);
 
         // Attempt to delete the record
-        $this->route('POST', static::ROUTE_BASE . '.destroy', [1], [
+        $this->post(route(static::ROUTE_BASE . '.destroy', [1]), [
             '_method'  => 'delete',
             '_token'   => $token,
-        ], [], [], $this->getAjaxHeaders());
-
-        $this->seeJson(['success' => false]);
+        ], $this->getAjaxHeaders())
+            ->assertJson(['success' => false]);
     }
 
     /**
@@ -123,35 +122,35 @@ class DeleteTest extends AbstractControllerIntegrationTest
      */
     function it_uses_a_delete_condition_if_configured()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         $token = $this->getCsrfTokenFromResponse();
 
         // Deletion of #1 should not be allowed
 
         // Check the deletable response
-        $this->route('GET', static::ROUTE_BASE . '.deletable', [1], [], [], [], $this->getAjaxHeaders());
-        $this->seeJson(['success' => false]);
+        $this->get(route(static::ROUTE_BASE . '.deletable', [1]), $this->getAjaxHeaders())
+            ->assertJson(['success' => false]);
 
         // Attempt to delete the record
-        $this->route('POST', static::ROUTE_BASE . '.destroy', [1], [
+        $this->post(route(static::ROUTE_BASE . '.destroy', [1]), [
             '_method'  => 'delete',
             '_token'   => $token,
-        ], [], [], $this->getAjaxHeaders());
-        $this->seeJson(['success' => false]);
+        ], $this->getAjaxHeaders())
+            ->assertJson(['success' => false]);
 
         // Deletion of #2 should be allowed
 
         // Check the deletable response
-        $this->route('GET', static::ROUTE_BASE . '.deletable', [2], [], [], [], $this->getAjaxHeaders());
-        $this->seeJson(['success' => true]);
+        $this->get(route(static::ROUTE_BASE . '.deletable', [2]), $this->getAjaxHeaders())
+            ->assertJson(['success' => true]);
 
         // Attempt to delete the record
-        $this->route('POST', static::ROUTE_BASE . '.destroy', [2], [
+        $this->post(route(static::ROUTE_BASE . '.destroy', [2]), [
             '_method'  => 'delete',
             '_token'   => $token,
-        ], [], [], $this->getAjaxHeaders());
-        $this->seeJson(['success' => true]);
+        ], $this->getAjaxHeaders())
+            ->assertJson(['success' => true]);
     }
 
     /**
@@ -161,15 +160,15 @@ class DeleteTest extends AbstractControllerIntegrationTest
     {
         static::assertFalse($this->app->bound('mock-delete-spy-triggered'), 'Spy flag setup failed');
 
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
         $token = $this->getCsrfTokenFromResponse();
 
         // Attempt to delete the record
-        $this->route('POST', static::ROUTE_BASE . '.destroy', [2], [
+        $this->post(route(static::ROUTE_BASE . '.destroy', [2]), [
             '_method'  => 'delete',
             '_token'   => $token,
-        ], [], [], $this->getAjaxHeaders());
-        $this->seeJson(['success' => true]);
+        ], $this->getAjaxHeaders())
+            ->assertJson(['success' => true]);
 
         // Check if the mock delete spy was triggered
         static::assertTrue($this->app->bound('mock-delete-spy-triggered'), 'Spy flag was not set by mock strategy');
@@ -180,24 +179,23 @@ class DeleteTest extends AbstractControllerIntegrationTest
      */
     function it_redirects_back_for_non_ajax_requests()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         static::assertHtmlElementInResponse('tr.records-row[data-id=1]', 'Record #1 should be present');
 
         $token = $this->getCsrfTokenFromResponse();
 
         // Check the deletable response
-        $this->route('GET', static::ROUTE_BASE . '.deletable', [1]);
-        static::assertInstanceOf(RedirectResponse::class, $this->response);
+        $this->get(route(static::ROUTE_BASE . '.deletable', [1]))->assertRedirect();
 
         // Delete the record
-        $this->route('POST', static::ROUTE_BASE . '.destroy', [1], [
+        $this->post(route(static::ROUTE_BASE . '.destroy', [1]), [
             '_method'  => 'delete',
             '_token'   => $token
-        ]);
-        static::assertInstanceOf(RedirectResponse::class, $this->response);
+        ])
+            ->assertRedirect();
 
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         static::assertNotHtmlElementInResponse('tr.records-row[data-id=1]', 'Record #1 should no longer be present');
     }

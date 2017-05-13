@@ -80,7 +80,7 @@ class ListParentHandlingTest extends AbstractControllerIntegrationTest
     function it_shows_a_list_of_models_in_context_of_an_active_list_parent()
     {
         // Check for child relation link in parent listing
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         $column = $this->crawler()->filter('tr.records-row[data-id=3] td.column a')->first();
         $link   = $column->attr('href');
@@ -92,7 +92,7 @@ class ListParentHandlingTest extends AbstractControllerIntegrationTest
         );
 
         // Check for child list in context for parent
-        $this->visitRoute(static::ROUTE_ALT_BASE . '.index', ['parent' => 'post:3'])->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_ALT_BASE . '.index', ['parent' => 'post:3'])->assertStatus(200);
 
         // Check for contextual links
         $breadcrumbs = $this->crawler()->filter('ol.breadcrumb li');
@@ -111,19 +111,19 @@ class ListParentHandlingTest extends AbstractControllerIntegrationTest
         );
 
         // Check if session memory works
-        $this->visitRoute(static::ROUTE_ALT_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_ALT_BASE . '.index')->assertStatus(200);
         static::assertCount(3, $this->crawler()->filter('ol.breadcrumb li'), 'There should be 3 breadcrumbs');
 
         // Check if home=1 removes the parent context
-        $this->visitRoute(static::ROUTE_ALT_BASE . '.index', ['home' => '1'])->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_ALT_BASE . '.index', ['home' => '1'])->assertStatus(200);
         static::assertCount(2, $this->crawler()->filter('ol.breadcrumb li'), 'There should be 2 breadcrumb');
 
         // Check if list parents can be set as a whole chain (with one element)
-        $this->visitRoute(static::ROUTE_ALT_BASE . '.index', ['parents' => 'post:3'])->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_ALT_BASE . '.index', ['parents' => 'post:3'])->assertStatus(200);
         static::assertCount(3, $this->crawler()->filter('ol.breadcrumb li'), 'There should be 3 breadcrumbs');
 
         // Check if setting list parents chain to all (or empty) removes the context
-        $this->visitRoute(static::ROUTE_ALT_BASE . '.index', ['parents' => 'all'])->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_ALT_BASE . '.index', ['parents' => 'all'])->assertStatus(200);
         static::assertCount(2, $this->crawler()->filter('ol.breadcrumb li'), 'There should be 2 breadcrumb');
     }
 
@@ -141,7 +141,7 @@ class ListParentHandlingTest extends AbstractControllerIntegrationTest
         ]);
 
         // Check for child relation link in parent listing
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         $column = $this->crawler()->filter('tr.records-row[data-id=3] td.column a')->first();
         $link   = $column->attr('href');
@@ -155,7 +155,7 @@ class ListParentHandlingTest extends AbstractControllerIntegrationTest
         // Check for child list in context for parent
         $this->visitRoute(static::ROUTE_MORPH_BASE . '.index', [
             'parent' => 'seoable:Czim\CmsModels\Test\Helpers\Models\TestPost:3'
-        ])->seeStatusCode(200);
+        ])->assertStatus(200);
 
         // Check for contextual links
         $breadcrumbs = $this->crawler()->filter('ol.breadcrumb li');
@@ -174,11 +174,11 @@ class ListParentHandlingTest extends AbstractControllerIntegrationTest
         );
 
         // Check if session memory works
-        $this->visitRoute(static::ROUTE_MORPH_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_MORPH_BASE . '.index')->assertStatus(200);
         static::assertCount(3, $this->crawler()->filter('ol.breadcrumb li'), 'There should be 3 breadcrumbs');
 
         // Check if home=1 removes the parent context
-        $this->visitRoute(static::ROUTE_MORPH_BASE . '.index', ['home' => '1'])->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_MORPH_BASE . '.index', ['home' => '1'])->assertStatus(200);
         static::assertCount(2, $this->crawler()->filter('ol.breadcrumb li'), 'There should be 2 breadcrumb');
 
     }

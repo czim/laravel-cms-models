@@ -21,7 +21,7 @@ class DefaultShow extends AbstractControllerIntegrationTest
      */
     function it_shows_model_data()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.show', [1])->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.show', [1])->assertStatus(200);
 
         $groups = $this->crawler()->filter('div.form-group.row');
 

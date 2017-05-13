@@ -22,7 +22,7 @@ class DefaultEditFormTest extends AbstractControllerIntegrationTest
      */
     function it_shows_an_edit_model_form()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.edit', [1])->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.edit', [1])->assertStatus(200);
 
         static::assertHtmlElementInResponse('form.model-form');
         $form = $this->crawler()->filter('form.model-form');
@@ -62,7 +62,7 @@ class DefaultEditFormTest extends AbstractControllerIntegrationTest
      */
     function it_updates_a_model_on_form_submit()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.edit', [1])->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.edit', [1])->assertStatus(200);
 
         $this->makeRequestUsingForm(
             $this->crawler()->filter('form.model-form')->first()->form()
@@ -70,8 +70,8 @@ class DefaultEditFormTest extends AbstractControllerIntegrationTest
                     'description' => 'Updated description',
                     'title'       => ['en' => 'New English Title'],
                 ])
-        );
-        $this->seeStatusCode(200);
+        )
+            ->assertStatus(200);
 
         // The form should now be in edit mode
         static::assertHtmlElementInResponse('form.model-form');
@@ -102,7 +102,7 @@ class DefaultEditFormTest extends AbstractControllerIntegrationTest
      */
     function it_updates_a_model_and_returns_to_listing_using_save_and_close_mode()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.edit', [1])->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.edit', [1])->assertStatus(200);
 
         $this->makeRequestUsingForm(
             $this->crawler()->filter('form.model-form')->first()->form()
@@ -110,8 +110,8 @@ class DefaultEditFormTest extends AbstractControllerIntegrationTest
                     '__save_and_close__' => 1,
                     'description'        => 'Updated description',
                 ])
-        );
-        $this->seeStatusCode(200);
+        )
+            ->assertStatus(200);
 
         // The response should be a listing
         static::assertNotHtmlElementInResponse('form.model-form');
@@ -124,7 +124,7 @@ class DefaultEditFormTest extends AbstractControllerIntegrationTest
      */
     function it_shows_validation_errors_for_invalid_input()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.edit', [1])->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.edit', [1])->assertStatus(200);
 
         $this->makeRequestUsingForm(
             $this->crawler()->filter('form.model-form')->first()->form()
@@ -132,8 +132,8 @@ class DefaultEditFormTest extends AbstractControllerIntegrationTest
                 ->setValues([
                     'type' => 'incorrect',
                 ])
-        );
-        $this->seeStatusCode(200);
+        )
+            ->assertStatus(200);
 
         // The form should still be in create mode
         static::assertHtmlElementInResponse('form.model-form');
