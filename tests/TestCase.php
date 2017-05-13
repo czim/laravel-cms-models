@@ -89,6 +89,54 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     }
 
     /**
+     * @param string      $href
+     * @param string|null $text
+     * @param string|null $message
+     */
+    protected function assertResponseHasLink($href, $text = null, $message = null)
+    {
+        $selector = 'a[href="' . $href .'"]';
+
+        $filtered = $this->crawler()->filter($selector);
+
+        static::assertGreaterThanOrEqual(
+            1,
+            $filtered->count(),
+            ($message ?: "No link with href '{$href}' found in response.")
+            . PHP_EOL . $this->crawler()->html()
+        );
+
+        // Check link text but only if it is set
+        if (null === $text) {
+            return;
+        }
+
+        foreach ($filtered as $match) {
+            if ($match->textContent == $text) {
+                return;
+            }
+        }
+
+        static::fail($message ?: "Link found for '{$href}', but not matching text '{$text}'");
+    }
+
+    /**
+     * @param string      $href
+     * @param string|null $message
+     */
+    protected function assertNotResponseHasLink($href, $message = null)
+    {
+        $selector = 'a[href="' . $href .'"]';
+
+        static::assertCount(
+            0,
+            $this->crawler()->filter($selector),
+            ($message ?: "Link with href '{$href}' found in response.")
+            . PHP_EOL . $this->crawler()->html()
+        );
+    }
+
+    /**
      * Appends response HTML to message string.
      *
      * @param string $message

@@ -72,9 +72,7 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
      */
     function it_shows_a_list_of_models()
     {
-        $this
-            ->visitRoute(static::ROUTE_BASE . '.index')
-            ->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         static::assertHtmlElementInResponse('tr.records-row[data-id=3]', 'Expected model record not found');
         static::assertHtmlElementInResponse('tr.records-row[data-id=2]', 'Expected model record not found');
@@ -100,13 +98,11 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
 
         $this
             ->visitRoute(static::ROUTE_BASE . '.index')
-            ->seeStatusCode(200)
-            ->seeRouteIs(static::ROUTE_BASE . '.index')
-            // There should be links to page 2
-            ->seeLink('2', route(static::ROUTE_BASE . '.index', ['page' => 2]))
-            ->seeLink('»', route(static::ROUTE_BASE . '.index', ['page' => 2]))
-            // There should be no page 3
-            ->seeLink('3', route(static::ROUTE_BASE . '.index', ['page' => 3]), true);
+            ->assertStatus(200);
+
+        static::assertResponseHasLink(route(static::ROUTE_BASE . '.index', ['page' => 2]), '2');
+        static::assertResponseHasLink(route(static::ROUTE_BASE . '.index', ['page' => 2]), '»');
+        static::assertNotResponseHasLink(route(static::ROUTE_BASE . '.index', ['page' => 3]), '3');
 
         // Make sure the correct model records are present
         static::assertHtmlElementInResponse('tr.records-row[data-id=3]', 'Expected model record not found');
@@ -116,11 +112,10 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
         // Load the next page
         $this
             ->visitRoute(static::ROUTE_BASE . '.index', ['page' => 2])
-            ->seeStatusCode(200)
-            ->seeRouteIs(static::ROUTE_BASE . '.index', ['page' => 2])
-            // There should be links back to page 1
-            ->seeLink('1', route(static::ROUTE_BASE . '.index', ['page' => 1]))
-            ->seeLink('«', route(static::ROUTE_BASE . '.index', ['page' => 1]));
+            ->assertStatus(200);
+
+        static::assertResponseHasLink(route(static::ROUTE_BASE . '.index', ['page' => 1]), '1');
+        static::assertResponseHasLink(route(static::ROUTE_BASE . '.index', ['page' => 1]), '«');
     }
 
     /**
@@ -133,10 +128,9 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
 
         $this
             ->visitRoute(static::ROUTE_BASE . '.index')
-            ->seeStatusCode(200)
-            ->seeRouteIs(static::ROUTE_BASE . '.index')
-            // There should not be any pages beyond the first by default
-            ->seeLink('2', route(static::ROUTE_BASE . '.index', ['page' => 2]), true);
+            ->assertStatus(200);
+
+        static::assertNotResponseHasLink(route(static::ROUTE_BASE . '.index', ['page' => 2]), '2');
 
         // Make sure the page size options are present
         static::assertHtmlElementInResponse('#input-pagination-page-size option[value=10]');
@@ -146,13 +140,12 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
         // Submit a form with a smaller page size
         $this->makeRequestUsingForm(
             $this->crawler()->filter('#form-pagination-page-size')->form()->setValues(['pagesize' => 2])
-        );
+        )
+            ->assertStatus(200);
 
         // Verify page is limited to new size
-        $this
-            ->seeStatusCode(200)
-            // There should be a link to page 2
-            ->seeLink('2', route(static::ROUTE_BASE . '.index', ['page' => 2]));
+        // There should be a link to page 2
+        static::assertResponseHasLink(route(static::ROUTE_BASE . '.index', ['page' => 2]), '2');
 
         static::assertNotHtmlElementInResponse('tr.records-row[data-id=1]', 'Third record should not be present');
     }
@@ -163,7 +156,7 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
      */
     function it_shows_a_paginated_list_of_models_with_custom_page_size_from_model_configuration()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         // Make sure the page size options are present
         static::assertHtmlElementInResponse('#input-pagination-page-size option[value=2]');
@@ -182,7 +175,7 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
 
         $this
             ->visitRoute(static::ROUTE_BASE . '.index', ['page' => 4])
-            ->seeStatusCode(200);
+            ->assertStatus(200);
 
         static::assertCount(1, $this->crawler()->filter('tr.records-row'), 'Should be page 2 with 1 record');
     }
@@ -194,7 +187,7 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
     {
         $this
             ->visitRoute(static::ROUTE_BASE . '.index')
-            ->seeStatusCode(200);
+            ->assertStatus(200);
 
         // Check if current sort order is ID descending
         $rows = $this->crawler()->filter('tr.records-row');
@@ -210,7 +203,7 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
         // Select title for sorting
         $this
             ->visitRoute(static::ROUTE_BASE . '.index', ['sort' => 'title'])
-            ->seeStatusCode(200);
+            ->assertStatus(200);
 
         // Check if new sort order is title ascending
         $rows = $this->crawler()->filter('tr.records-row');
@@ -226,7 +219,7 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
         // Select descending order for title for sorting
         $this
             ->visitRoute(static::ROUTE_BASE . '.index', ['sort' => 'title', 'sortdir' => 'desc'])
-            ->seeStatusCode(200);
+            ->assertStatus(200);
 
         // Check if new sort order is title descending
         $rows = $this->crawler()->filter('tr.records-row');
@@ -245,7 +238,7 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
      */
     function it_does_not_display_filters_when_they_are_disabled()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         static::assertNotHtmlElementInResponse('form#filters-form', 'Filters form should not be present');
     }
@@ -255,14 +248,13 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
      */
     function it_shows_a_list_of_models_filtered_by_text_string()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         // Submit a filter
         $this->makeRequestUsingForm(
             $this->crawler()->filter('#filters-form')->form()->setValues(['filter[any]' => 'elaborate'])
-        );
-
-        $this->seeStatusCode(200);
+        )
+            ->assertStatus(200);
 
         static::assertHtmlElementInResponse('tr.records-row[data-id=2]', 'Matched model record not found');
         static::assertNotHtmlElementInResponse('tr.records-row[data-id=3]', 'Unmatched model should not be present');
@@ -276,9 +268,8 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
         // Submit clearing the filters
         $this->makeRequestUsingForm(
             $this->crawler()->filter('#filters-form')->form()->setValues(['_clear' => 1])
-        );
-
-        $this->seeStatusCode(200);
+        )
+            ->assertStatus(200);
 
         static::assertHtmlElementInResponse('tr.records-row[data-id=1]', 'All records should be present');
         static::assertHtmlElementInResponse('tr.records-row[data-id=2]', 'All records should be present');
@@ -296,7 +287,7 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
      */
     function it_does_not_display_scopes_when_they_are_disabled()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         static::assertNotHtmlElementInResponse('#scope-form', 'Scopes should not be present');
     }
@@ -307,7 +298,7 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
      */
     function it_only_displays_specified_scopes_in_configuration()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         static::assertHtmlElementInResponse(
             'a.scope-tab-activate[data-scope="notice"]',
@@ -325,7 +316,7 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
      */
     function it_shows_a_list_of_models_for_a_given_scope()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         static::assertHtmlElementInResponse(
             'li.active > a.scope-tab-activate[data-scope=""]',
@@ -338,9 +329,8 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
 
         $this->makeRequestUsingForm(
             $this->crawler()->filter('#scope-form')->form()->setValues(['scope' => 'checked'])
-        );
-
-        $this->seeStatusCode(200);
+        )
+            ->assertStatus(200);
 
         static::assertHtmlElementInResponse('tr.records-row[data-id=1]', 'Matched model for scope not found');
         static::assertHtmlElementInResponse('tr.records-row[data-id=3]', 'Matched model for scope not found');
@@ -352,13 +342,12 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
      */
     function it_ignores_invalid_scope_silently()
     {
-        $this->visitRoute(static::ROUTE_BASE . '.index')->seeStatusCode(200);
+        $this->visitRoute(static::ROUTE_BASE . '.index')->assertStatus(200);
 
         $this->makeRequestUsingForm(
             $this->crawler()->filter('#scope-form')->form()->setValues(['scope' => 'does-not-exist'])
-        );
-
-        $this->seeStatusCode(200);
+        )
+            ->assertStatus(200);
 
         static::assertHtmlElementInResponse(
             'li.active > a.scope-tab-activate[data-scope=""]',
@@ -379,7 +368,7 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
     {
         $this
             ->visitRoute(static::ROUTE_BASE . '.index')
-            ->seeStatusCode(200);
+            ->assertStatus(200);
 
         static::assertHtmlElementInResponse('form.model-form[data-id=1]', 'Expected form for model #1');
     }
@@ -394,7 +383,7 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
 
         $this
             ->visitRoute(static::ROUTE_BASE . '.index')
-            ->seeStatusCode(200);
+            ->assertStatus(200);
 
         static::assertHtmlElementInResponse('form.model-form[data-id=""]', 'Expected create form');
     }
@@ -407,7 +396,7 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
     {
         $this
             ->visitRoute(static::ROUTE_BASE . '.index')
-            ->seeStatusCode(200);
+            ->assertStatus(200);
 
         static::assertCount(1, $this->crawler()->filter('tr.records-row'), 'There should only be one record row');
         static::assertHtmlElementInResponse('tr.records-row[data-id=2]', 'Expected model record not found');
@@ -427,23 +416,23 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
         // Request page-size
         $this
             ->visitRoute(static::ROUTE_BASE . '.index', ['pagesize' => 1])
-            ->seeStatusCode(200);
+            ->assertStatus(200);
 
         // Apply filter (that matches everything)
         $this->makeRequestUsingForm(
             $this->crawler()->filter('#filters-form')->form()->setValues(['filter[any]' => 'e'])
-        );
-        $this->seeStatusCode(200);
+        )
+            ->assertStatus(200);
 
         // Request with scope
         $this
             ->visitRoute(static::ROUTE_BASE . '.index', ['scope' => 'checked'])
-            ->seeStatusCode(200);
+            ->assertStatus(200);
 
         // Request with specific sorting
         $this
             ->visitRoute(static::ROUTE_BASE . '.index', ['sort' => 'title', 'sortdir' => 'desc'])
-            ->seeStatusCode(200);
+            ->assertStatus(200);
 
         static::assertHtmlElementInResponse('tr.records-row[data-id=3]', 'Expected model record not found');
         static::assertNotHtmlElementInResponse('tr.records-row[data-id=2]', 'Unmatched model should not be present');
@@ -452,7 +441,7 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
         // Request specific page, still using session-set sorting, scope & page-size
         $this
             ->visitRoute(static::ROUTE_BASE . '.index', ['page' => 2])
-            ->seeStatusCode(200);
+            ->assertStatus(200);
 
         // Only #1 (sorted last for title desc) should be on page 2
         static::assertHtmlElementInResponse('tr.records-row[data-id=1]', 'Expected model record not found');
@@ -462,7 +451,7 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
         // Request without parameters, using the session-set page, page-size, scope & sorting
         $this
             ->visitRoute(static::ROUTE_BASE . '.index')
-            ->seeStatusCode(200);
+            ->assertStatus(200);
 
         // Only #1 (sorted last for title desc) should be on page 2
         static::assertHtmlElementInResponse('tr.records-row[data-id=1]', 'Expected model record not found');
