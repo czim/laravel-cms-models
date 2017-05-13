@@ -15,9 +15,7 @@ class CheckNullable extends Check
      */
     public function render(Model $model, $source)
     {
-        $source = $this->resolveModelSource($model, $source);
-
-        if (null === $source) {
+        if (null === $this->resolveModelSource($model, $source)) {
             return '';
         }
 
