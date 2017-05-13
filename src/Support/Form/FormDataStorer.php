@@ -3,7 +3,6 @@ namespace Czim\CmsModels\Support\Form;
 
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
-use Czim\CmsModels\Contracts\ModelInformation\Data\Form\Layout\ModelFormTabDataInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Support\Factories\FormStoreStrategyFactoryInterface;
@@ -13,9 +12,7 @@ use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesFormStoreStrategies;
 use Exception;
-use Illuminate\Support\MessageBag;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\ViewErrorBag;
 
 class FormDataStorer implements FormDataStorerInterface
 {
@@ -152,90 +149,6 @@ class FormDataStorer implements FormDataStorerInterface
         }
 
         return $success;
-    }
-
-    /**
-     * Returns associative array with form validation errors, keyed by field keys.
-     *
-     * This normalizes the errors to a nested structure that may be handled for display
-     * by form field strategies.
-     *
-     * @return array
-     */
-    protected function getNormalizedFormFieldErrors()
-    {
-        $viewBags = session('errors');
-
-        if ( ! ($viewBags instanceof ViewErrorBag) || ! count($viewBags)) {
-            return [];
-        }
-
-        /** @var MessageBag $errorBag */
-        $errorBag = head($viewBags->getBags());
-
-        if ( ! $errorBag->any()) {
-            return [];
-        }
-
-        $normalized = [];
-
-        foreach ($errorBag->toArray() as $field => $errors) {
-            array_set($normalized, $field, $errors);
-        }
-
-        return $normalized;
-    }
-
-    /**
-     * Returns the error count keyed by tab pane keys.
-     *
-     * @return array
-     */
-    protected function getErrorCountsPerTabPane()
-    {
-        $normalizedErrorKeys = array_keys($this->getNormalizedFormFieldErrors());
-
-        if ( ! count($normalizedErrorKeys)) {
-            return [];
-        }
-
-        $errorCount = [];
-
-        foreach ($this->getModelInformation()->form->layout() as $key => $node) {
-
-            if ( ! ($node instanceof ModelFormTabDataInterface)) {
-                continue;
-            }
-
-            $fieldKeys = $this->getFieldKeysForTab($key);
-
-            $errorCount[ $key ] = count(array_intersect($normalizedErrorKeys, $fieldKeys));
-        }
-
-        return $errorCount;
-    }
-
-    /**
-     * Returns the form field keys that are descendants of a given tab pane.
-     *
-     * @param string $tab   key for a tab pane
-     * @return string[]
-     */
-    protected function getFieldKeysForTab($tab)
-    {
-        $layout = $this->getModelInformation()->form->layout();
-
-        if ( ! array_key_exists($tab, $layout)) {
-            return [];
-        }
-
-        $tabData = $layout[ $tab ];
-
-        if ( ! ($tabData instanceof ModelFormTabDataInterface)) {
-            return [];
-        }
-
-        return $tabData->descendantFieldKeys();
     }
 
     /**
