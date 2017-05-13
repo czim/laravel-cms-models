@@ -66,7 +66,8 @@ class EnrichShowFieldDataTest extends TestCase
 
         $info->show->fields = [];
 
-        $step = new EnrichShowFieldData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichShowFieldData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
         $step->enrich($info, []);
 
 
@@ -128,7 +129,8 @@ class EnrichShowFieldDataTest extends TestCase
             'many'   => new ModelShowFieldData(),
         ];
 
-        $step = new EnrichShowFieldData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichShowFieldData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
         $step->enrich($info, []);
 
 
@@ -214,7 +216,8 @@ class EnrichShowFieldDataTest extends TestCase
 
         $info->show->fields = [];
 
-        $step = new EnrichShowFieldData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichShowFieldData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
         $step->enrich($info, []);
 
         static::assertEquals(['image'], array_keys($info->show->fields));
@@ -239,7 +242,8 @@ class EnrichShowFieldDataTest extends TestCase
             ]),
         ];
 
-        $step = new EnrichShowFieldData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichShowFieldData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
 
         try {
             $step->enrich($info, []);
@@ -276,7 +280,8 @@ class EnrichShowFieldDataTest extends TestCase
             'title' => $fieldDataMock,
         ];
 
-        $step = new EnrichShowFieldData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichShowFieldData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
 
         try {
             $step->enrich($info, []);

@@ -35,7 +35,8 @@ class EnrichExportColumnDataTest extends TestCase
 
         $mockAttributeResolver->shouldReceive('determineExportColumnStrategy')->times(2)->andReturn('test', 'test2');
 
-        $step = new EnrichExportColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichExportColumnData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -95,7 +96,8 @@ class EnrichExportColumnDataTest extends TestCase
 
         $mockAttributeResolver->shouldReceive('determineExportColumnStrategy')->times(2)->andReturn('test', 'test2');
 
-        $step = new EnrichExportColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichExportColumnData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -147,7 +149,8 @@ class EnrichExportColumnDataTest extends TestCase
         // One attribute, enriched once for default and once for 'csv' strategy, means two calls
         $mockAttributeResolver->shouldReceive('determineExportColumnStrategy')->andReturn('test');
 
-        $step = new EnrichExportColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichExportColumnData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -198,7 +201,8 @@ class EnrichExportColumnDataTest extends TestCase
         // One attribute, enriched once for default and once for 'csv' strategy, means two calls
         $mockAttributeResolver->shouldReceive('determineExportColumnStrategy')->andReturn('test');
 
-        $step = new EnrichExportColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichExportColumnData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -238,7 +242,8 @@ class EnrichExportColumnDataTest extends TestCase
         $mockAttributeResolver = $this->getMockAttributeResolver();
         $mockRelationResolver  = $this->getMockRelationResolver();
 
-        $step = new EnrichExportColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichExportColumnData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
 
         $info = new ModelInformation;
 

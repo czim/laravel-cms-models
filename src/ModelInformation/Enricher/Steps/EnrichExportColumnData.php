@@ -4,7 +4,6 @@ namespace Czim\CmsModels\ModelInformation\Enricher\Steps;
 use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\AttributeStrategyResolver;
 use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\RelationStrategyResolver;
 use Czim\CmsModels\Contracts\ModelInformation\Data\Export\ModelExportColumnDataInterface;
-use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;
 use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
 use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 use Czim\CmsModels\ModelInformation\Data\Export\ModelExportColumnData;
@@ -24,12 +23,10 @@ class EnrichExportColumnData extends AbstractEnricherStep
     protected $relationStrategyResolver;
 
     /**
-     * @param ModelInformationEnricherInterface $enricher
      * @param AttributeStrategyResolver         $attributeStrategyResolver
      * @param RelationStrategyResolver          $relationStrategyResolver
      */
     public function __construct(
-        ModelInformationEnricherInterface $enricher,
         AttributeStrategyResolver $attributeStrategyResolver,
         RelationStrategyResolver $relationStrategyResolver
     ) {

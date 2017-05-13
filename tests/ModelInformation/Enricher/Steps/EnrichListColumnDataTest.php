@@ -65,7 +65,8 @@ class EnrichListColumnDataTest extends TestCase
 
         $info->list->columns = [];
 
-        $step = new EnrichListColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichListColumnData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
         $step->enrich($info, []);
 
 
@@ -127,7 +128,8 @@ class EnrichListColumnDataTest extends TestCase
             'many'   => new ModelListColumnData(),
         ];
 
-        $step = new EnrichListColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichListColumnData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
         $step->enrich($info, []);
 
 
@@ -217,7 +219,8 @@ class EnrichListColumnDataTest extends TestCase
             'date'     => new ModelListColumnData,
         ];
 
-        $step = new EnrichListColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichListColumnData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
         $step->enrich($info, []);
 
         /** @var ModelListColumnData $column */
@@ -303,7 +306,8 @@ class EnrichListColumnDataTest extends TestCase
 
         $info->list->columns = [];
 
-        $step = new EnrichListColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichListColumnData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
         $step->enrich($info, []);
 
         static::assertEquals(['image'], array_keys($info->list->columns));
@@ -328,7 +332,8 @@ class EnrichListColumnDataTest extends TestCase
             ]),
         ];
 
-        $step = new EnrichListColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichListColumnData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
 
         try {
             $step->enrich($info, []);
@@ -365,7 +370,8 @@ class EnrichListColumnDataTest extends TestCase
             'title' => $fieldDataMock,
         ];
 
-        $step = new EnrichListColumnData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichListColumnData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
 
         try {
             $step->enrich($info, []);

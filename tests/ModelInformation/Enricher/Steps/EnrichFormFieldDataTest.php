@@ -72,7 +72,8 @@ class EnrichFormFieldDataTest extends TestCase
 
         $info->form->fields = [];
 
-        $step = new EnrichFormFieldData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichFormFieldData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
         $step->enrich($info, []);
 
 
@@ -152,7 +153,8 @@ class EnrichFormFieldDataTest extends TestCase
             'many'   => new ModelFormfieldData(),
         ];
 
-        $step = new EnrichFormFieldData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichFormFieldData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
         $step->enrich($info, []);
 
 
@@ -248,7 +250,8 @@ class EnrichFormFieldDataTest extends TestCase
 
         $info->form->fields = [];
 
-        $step = new EnrichFormFieldData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichFormFieldData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
         $step->enrich($info, []);
 
         static::assertEquals(['image', 'single'], array_keys($info->form->fields));
@@ -282,7 +285,8 @@ class EnrichFormFieldDataTest extends TestCase
 
         $info->form->fields = [];
 
-        $step = new EnrichFormFieldData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichFormFieldData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
         $step->enrich($info, []);
 
         static::assertEquals(['id'], array_keys($info->form->fields));
@@ -380,7 +384,8 @@ class EnrichFormFieldDataTest extends TestCase
 
         $info->form->fields = [];
 
-        $step = new EnrichFormFieldData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichFormFieldData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
         $step->enrich($info, []);
 
 
@@ -427,7 +432,8 @@ class EnrichFormFieldDataTest extends TestCase
         $mockAttributeResolver = $this->getMockAttributeResolver();
         $mockRelationResolver  = $this->getMockRelationResolver();
 
-        $step = new EnrichFormFieldData($mockEnricher, $mockAttributeResolver, $mockRelationResolver);
+        $step = new EnrichFormFieldData($mockAttributeResolver, $mockRelationResolver);
+        $step->setEnricher($mockEnricher);
 
         $info = new ModelInformation;
 
