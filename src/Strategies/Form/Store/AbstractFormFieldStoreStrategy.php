@@ -110,6 +110,12 @@ class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyInterface
         }
 
         foreach ($value as $locale => $singleValue) {
+
+            // Safeguard: use empty string if non-nullable translated field is null
+            if (null === $singleValue && ! $this->isNullable()) {
+                $singleValue = '';
+            }
+
             $this->performStore($model->translateOrNew($locale), $source, $singleValue);
         }
     }
