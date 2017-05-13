@@ -4,7 +4,6 @@ namespace Czim\CmsModels\Support\Strategies\Traits;
 use Czim\CmsModels\Exceptions\StrategyResolutionException;
 use Czim\CmsModels\Support\Data\Strategies\InstantiableClassStrategy;
 use Illuminate\Database\Eloquent\Model;
-use RuntimeException;
 
 trait ResolvesSourceStrategies
 {
