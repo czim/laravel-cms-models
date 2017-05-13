@@ -6,8 +6,10 @@ use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelRepositoryInterface;
 use Czim\CmsModels\Contracts\Strategies\FilterStrategyInterface;
 use Czim\CmsModels\Contracts\Support\Factories\FilterStrategyFactoryInterface;
+use Czim\CmsModels\Contracts\Support\Factories\ModelRepositoryFactoryInterface;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Repositories\ModelReferenceRepository;
+use Czim\CmsModels\Repositories\ModelRepository;
 use Czim\CmsModels\Strategies\Filter\BasicSplitString;
 use Czim\CmsModels\Strategies\Reference\DefaultReference;
 use Czim\CmsModels\Strategies\Reference\IdAndAttribute;
@@ -26,6 +28,19 @@ use Mockery;
  */
 class ModelReferenceRepositoryTest extends AbstractPostCommentSeededTestCase
 {
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        /** @var ModelRepositoryFactoryInterface|Mockery\Mock $mockFactory */
+        $mockFactory = Mockery::mock(ModelRepositoryFactoryInterface::class);
+        $mockFactory->shouldReceive('make')->andReturnUsing(function ($model) {
+            return new ModelRepository($model);
+        });
+
+        $this->app->instance(ModelRepositoryFactoryInterface::class, $mockFactory);
+    }
 
     protected function seedDatabase()
     {
@@ -247,7 +262,9 @@ class ModelReferenceRepositoryTest extends AbstractPostCommentSeededTestCase
     function it_returns_reference_for_model_meta_reference_by_key()
     {
         $info = new ModelInformation([
-            'reference' => [],
+            'model'          => TestPost::class,
+            'original_model' => TestPost::class,
+            'reference'      => [],
         ]);
 
         $refData = new ModelMetaReference([
@@ -311,7 +328,10 @@ class ModelReferenceRepositoryTest extends AbstractPostCommentSeededTestCase
      */
     function it_returns_reference_for_model_meta_references_by_reference_data()
     {
-        $info = new ModelInformation();
+        $info = new ModelInformation([
+            'model'          => TestPost::class,
+            'original_model' => TestPost::class,
+        ]);
 
         $refData = new ModelMetaReference([
             'model'  => TestPost::class,
@@ -343,7 +363,10 @@ class ModelReferenceRepositoryTest extends AbstractPostCommentSeededTestCase
      */
     function it_returns_reference_for_model_meta_references_by_reference_data_filtered_by_search_string()
     {
-        $info = new ModelInformation();
+        $info = new ModelInformation([
+            'model'          => TestPost::class,
+            'original_model' => TestPost::class,
+        ]);
 
         $refData = new ModelMetaReference([
             'model'  => TestPost::class,
@@ -385,7 +408,10 @@ class ModelReferenceRepositoryTest extends AbstractPostCommentSeededTestCase
      */
     function it_returns_reference_for_model_meta_references_by_reference_data_applying_a_specified_context_strategy()
     {
-        $info = new ModelInformation();
+        $info = new ModelInformation([
+            'model'          => TestPost::class,
+            'original_model' => TestPost::class,
+        ]);
 
         $refData = new ModelMetaReference([
             'model'            => TestPost::class,
@@ -418,7 +444,10 @@ class ModelReferenceRepositoryTest extends AbstractPostCommentSeededTestCase
      */
     function it_throws_an_exception_if_the_resolved_sorting_strategy_is_invalid()
     {
-        $info = new ModelInformation();
+        $info = new ModelInformation([
+            'model'          => TestPost::class,
+            'original_model' => TestPost::class,
+        ]);
 
         $refData = new ModelMetaReference([
             'model'         => TestPost::class,
