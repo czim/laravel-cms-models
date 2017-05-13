@@ -10,6 +10,8 @@ use Czim\CmsModels\Test\TestCase;
 /**
  * Class AttributeValidationResolverTest
  *
+ * Note that 'empty' rules will contain Laravel 5.4's explicit 'nullable'.
+ *
  * @group analysis
  */
 class AttributeValidationResolverTest extends TestCase
@@ -32,7 +34,7 @@ class AttributeValidationResolverTest extends TestCase
         ]);
 
         static::assertEquals(
-            [],
+            ['nullable'],
             $resolver->determineValidationRules($data, $field)
         );
     }
@@ -336,7 +338,7 @@ class AttributeValidationResolverTest extends TestCase
         ]);
 
         static::assertEquals(
-            [],
+            ['nullable'],
             $resolver->determineValidationRules($data, $field)
         );
     }
