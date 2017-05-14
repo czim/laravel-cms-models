@@ -58,11 +58,13 @@ class DateStrategy extends DefaultStrategy
     {
         $format = $this->getExpectedDateFormat();
 
+        $base = $this->isNullable() ? ['nullable'] : [];
+
         if ( ! $format) {
-            return [ 'date' ];
+            return array_merge($base, [ 'date' ]);
         }
 
-        return [ 'date_format:' . $format ];
+        return array_merge($base, [ 'date_format:' . $format ]);
     }
 
     /**

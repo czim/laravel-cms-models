@@ -71,7 +71,7 @@ class LocationFieldsStrategy extends DefaultStrategy
         $rules = [
             $key . '.longitude' => [ 'numeric' ],
             $key . '.latitude'  => [ 'numeric' ],
-            $key . '.text'      => [ 'string' ],
+            $key . '.text'      => [ 'string', 'nullable' ],
         ];
 
         // Always require long/lat if the field itself is required
@@ -81,6 +81,9 @@ class LocationFieldsStrategy extends DefaultStrategy
         if ($required) {
             $rules[ $key . '.longitude' ][] = 'required';
             $rules[ $key . '.latitude' ][]  = 'required';
+        } else {
+            $rules[ $key . '.longitude' ][] = 'nullable';
+            $rules[ $key . '.latitude' ][]  = 'nullable';
         }
 
         // todo: determine whether text column, if made available, is required

@@ -72,16 +72,18 @@ class DateRangeStrategy extends DefaultStrategy
 
         $key = $this->formFieldData->key();
 
+        $base = $this->isNullable() ? ['nullable'] : [];
+
         if ( ! $format) {
             return [
-                $key . '.from' => [ 'date' ],
-                $key . '.to'   => [ 'date' ],
+                $key . '.from' => array_merge($base, [ 'date' ]),
+                $key . '.to'   => array_merge($base, [ 'date' ]),
             ];
         }
 
         return [
-            $key . '.from' => [ 'date_format:' . $format ],
-            $key . '.to'   => [ 'date_format:' . $format ],
+            $key . '.from' => array_merge($base, [ 'date_format:' . $format ]),
+            $key . '.to'   => array_merge($base, [ 'date_format:' . $format ]),
         ];
     }
 
