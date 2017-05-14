@@ -1,4 +1,3 @@
-
 @if ($link)
     <a href="{{ $link }}">
         <span class="relation-count">
