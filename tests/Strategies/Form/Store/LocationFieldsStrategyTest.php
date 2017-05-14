@@ -181,9 +181,9 @@ class LocationFieldsStrategyTest extends TestCase
 
         static::assertEquals(
             [
-                'location.latitude'  => ['numeric'],
-                'location.longitude' => ['numeric'],
-                'location.text'      => ['string'],
+                'location.latitude'  => ['numeric', 'nullable'],
+                'location.longitude' => ['numeric', 'nullable'],
+                'location.text'      => ['string', 'nullable'],
             ],
             $strategy->validationRules($info, false)
         );
@@ -214,7 +214,7 @@ class LocationFieldsStrategyTest extends TestCase
             [
                 'location.latitude'  => ['numeric', 'required'],
                 'location.longitude' => ['numeric', 'required'],
-                'location.text'      => ['string'],
+                'location.text'      => ['string', 'nullable'],
             ],
             $strategy->validationRules($info, false)
         );
