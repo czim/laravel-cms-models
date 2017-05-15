@@ -37,12 +37,16 @@ class RelationReference extends AbstractListDisplayStrategy
         $relation = $this->getActualNestedRelation($model, $source);
 
         if ( ! $relation) {
+            // @codeCoverageIgnoreStart
             return $this->getEmptyReference();
+            // @codeCoverageIgnoreEnd
         }
 
         // Note that there is no way we can reliably apply repository context for
         // a morph relation; we cannot know or sensibly generalize for the related models.
-        if ( ! $this->isMorphRelation($relation)) {
+        if ($this->isMorphRelation($relation)) {
+            $query = $relation;
+        } else {
             $query = $this->modifyRelationQueryForContext($relation->getRelated(), $relation);
         }
 
