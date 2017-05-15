@@ -13,7 +13,6 @@ use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Modules\ModelModule;
 use Czim\CmsModels\Strategies\ListColumn\RelationCountChildrenLink;
 use Czim\CmsModels\Test\AbstractPostCommentSeededTestCase;
-use Czim\CmsModels\Test\Helpers\Models\TestAuthor;
 use Czim\CmsModels\Test\Helpers\Models\TestComment;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Czim\CmsModels\Test\Helpers\Models\TestSeo;
@@ -36,6 +35,9 @@ class RelationCountChildrenLinkTest extends AbstractPostCommentSeededTestCase
         parent::setUp();
 
         $this->setUpGlobalContext();
+
+        // Make sure the morph map is reset
+        Relation::morphMap([], false);
     }
 
     /**
