@@ -8,6 +8,8 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use RuntimeException;
+use UnexpectedValueException;
 
 /**
  * Class RelationCountChildrenLink
@@ -36,9 +38,17 @@ class RelationCountChildrenLink extends RelationCount
             return '<span class="relation-count count-empty">&nbsp;</span>';
         }
 
-        // Use the options or relation to get the
+        if ( ! $this->listColumnData) {
+            throw new RuntimeException('List column data must be set');
+        }
+
+        // Use the options or relation to get the relevant context for the link
         $relationMethod = array_get($this->listColumnData->options(), 'relation');
         $modelClass     = array_get($this->listColumnData->options(), 'model', get_class($relation->getRelated()));
+
+        if ( ! $relationMethod) {
+            throw new RuntimeException(get_class($this) . ' requires option.relation to be set!');
+        }
 
         $childrenName = $this->getVerboseChildrenName($modelClass);
 
@@ -87,7 +97,9 @@ class RelationCountChildrenLink extends RelationCount
             return $type;
         }
 
+        // @codeCoverageIgnoreStart
         return $class;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -99,7 +111,9 @@ class RelationCountChildrenLink extends RelationCount
     protected function getChildrenLink($parentIndicator, $relationMethod, $modelClass)
     {
         if (empty($relationMethod)) {
-            throw new \UnexpectedValueException(get_class($this) . ' requires option.relation to be set!');
+            // @codeCoverageIgnoreStart
+            throw new UnexpectedValueException(get_class($this) . ' requires option.relation to be set!');
+            // @codeCoverageIgnoreEnd
         }
 
         /** @var ModuleManagerInterface $modules */
