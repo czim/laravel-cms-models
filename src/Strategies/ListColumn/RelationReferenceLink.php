@@ -8,19 +8,6 @@ class RelationReferenceLink extends RelationReference
 {
 
     /**
-     * @var RouteHelperInterface
-     */
-    protected $routeHelper;
-
-    /**
-     * @param RouteHelperInterface $routeHelper
-     */
-    public function __construct(RouteHelperInterface $routeHelper)
-    {
-        $this->routeHelper = $routeHelper;
-    }
-
-    /**
      * Returns a reference representation for a single model.
      *
      * @param Model $model
@@ -53,7 +40,7 @@ class RelationReferenceLink extends RelationReference
      */
     protected function getLinkForReferenceModel(Model $model)
     {
-        $routeName = $this->routeHelper->getRouteNameForModelClass(get_class($model), true);
+        $routeName = $this->getRouteHelper()->getRouteNameForModelClass(get_class($model), true);
 
         $action = $this->determineRouteAction($model);
 
@@ -70,8 +57,10 @@ class RelationReferenceLink extends RelationReference
      */
     protected function determineRouteAction(Model $model)
     {
-        $permissionPrefix = $this->routeHelper->getPermissionPrefixForModelSlug(
-            $this->routeHelper->getRouteSlugForModelClass(get_class($model))
+        $routeHelper = $this->getRouteHelper();
+
+        $permissionPrefix = $routeHelper->getPermissionPrefixForModelSlug(
+            $routeHelper->getRouteSlugForModelClass(get_class($model))
         );
 
         // Change the action to show if we don't have edit permissions
@@ -80,6 +69,14 @@ class RelationReferenceLink extends RelationReference
         }
 
         return 'edit';
+    }
+
+    /**
+     * @return RouteHelperInterface
+     */
+    protected function getRouteHelper()
+    {
+        return app(RouteHelperInterface::class);
     }
 
 }
