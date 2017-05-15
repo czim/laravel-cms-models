@@ -264,7 +264,7 @@ class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyInterface
 
         $translated = array_map(
             function ($key) {
-                return $key . '.<trans>';
+                return $key . '.' . TranslationLocaleHelper::VALIDATION_LOCALE_PLACEHOLDER;
             },
             $translated
         );
