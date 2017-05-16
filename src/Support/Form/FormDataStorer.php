@@ -5,7 +5,6 @@ use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
-use Czim\CmsModels\Contracts\Support\Factories\FormStoreStrategyFactoryInterface;
 use Czim\CmsModels\Contracts\Support\Form\FormDataStorerInterface;
 use Czim\CmsModels\Exceptions\StrategyApplicationException;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
@@ -24,24 +23,17 @@ class FormDataStorer implements FormDataStorerInterface
     protected $core;
 
     /**
-     * @var FormStoreStrategyFactoryInterface
-     */
-    protected $storeFactory;
-
-    /**
      * @var ModelInformationInterface|ModelInformation
      */
     protected $information;
 
 
     /**
-     * @param CoreInterface                     $core
-     * @param FormStoreStrategyFactoryInterface $storeFactory
+     * @param CoreInterface $core
      */
-    public function __construct(CoreInterface $core, FormStoreStrategyFactoryInterface $storeFactory)
+    public function __construct(CoreInterface $core)
     {
-        $this->core         = $core;
-        $this->storeFactory = $storeFactory;
+        $this->core = $core;
     }
 
     /**
@@ -64,8 +56,6 @@ class FormDataStorer implements FormDataStorerInterface
      */
     public function store(Model $model, array $data)
     {
-        // todo sanitize as needed
-
         return $this->storeFormFieldValuesForModel($model, $data);
     }
 
@@ -123,7 +113,9 @@ class FormDataStorer implements FormDataStorerInterface
         $success = $model->save();
 
         if ( ! $success) {
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         // Then store values that can only be stored after the model exists
@@ -133,13 +125,11 @@ class FormDataStorer implements FormDataStorerInterface
             try {
                 $strategies[ $key ]->storeAfter($model, $fields[ $key ]->source(), $value);
 
-                // @codeCoverageIgnoreStart
             } catch (Exception $e) {
                 $class   = get_class($strategies[ $key ]);
                 $message = "Failed storing value for form field '{$key}' (using $class (after)): \n{$e->getMessage()}";
 
                 throw new StrategyApplicationException($message, $e->getCode(), $e);
-                // @codeCoverageIgnoreEnd
             }
         }
 
@@ -163,17 +153,17 @@ class FormDataStorer implements FormDataStorerInterface
             return true;
         }
 
-        $user = $this->core->auth()->user();
+        $auth = $this->core->auth();
 
-        if ( ! $user || $field->adminOnly() && ! $user->isAdmin()) {
+        if ($field->adminOnly() && ! $auth->admin()) {
             return false;
         }
 
-        if ($user->isAdmin() || ! count($field->permissions())) {
+        if ($auth->admin() || ! count($field->permissions())) {
             return true;
         }
 
-        return $user->can($field->permissions());
+        return $auth->can($field->permissions());
     }
 
     /**
