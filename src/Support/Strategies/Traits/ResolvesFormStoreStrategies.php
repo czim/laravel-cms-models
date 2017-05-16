@@ -7,6 +7,7 @@ use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
 use Czim\CmsModels\Contracts\Support\Factories\FormStoreStrategyFactoryInterface;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
+use UnexpectedValueException;
 
 trait ResolvesFormStoreStrategies
 {
@@ -54,6 +55,10 @@ trait ResolvesFormStoreStrategies
      */
     protected function getModelFormFieldDataForKey($fieldKey)
     {
+        if ( ! array_key_exists($fieldKey, $this->getModelInformation()->form->fields)) {
+            throw new UnexpectedValueException("Form field with key '{$fieldKey}' not set in model information");
+        }
+
         return $this->getModelInformation()->form->fields[ $fieldKey ];
     }
 
