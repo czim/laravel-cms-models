@@ -95,6 +95,7 @@ class FormDataStorer implements FormDataStorerInterface
         // First store values (such as necessary belongsTo-related instances),
         // before storing the model
         foreach ($values as $key => $value) {
+            if ( ! array_key_exists($key, $strategies)) continue;
 
             try {
                 $strategies[ $key ]->store($model, $fields[ $key ]->source(), $value);
@@ -121,6 +122,7 @@ class FormDataStorer implements FormDataStorerInterface
         // Then store values that can only be stored after the model exists
         // and is succesfully saved
         foreach ($values as $key => $value) {
+            if ( ! array_key_exists($key, $strategies)) continue;
 
             try {
                 $strategies[ $key ]->storeAfter($model, $fields[ $key ]->source(), $value);
