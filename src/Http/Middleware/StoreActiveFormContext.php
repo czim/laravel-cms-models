@@ -17,17 +17,19 @@ class StoreActiveFormContext
      */
     public function handle($request, Closure $next)
     {
-        $this->storeActiveTranslationLocale();
+        $this->storeActiveTranslationLocale($request);
 
         return $next($request);
     }
 
     /**
      * Stores active translation locale in session.
+     *
+     * @param \Illuminate\Http\Request $request
      */
-    protected function storeActiveTranslationLocale()
+    protected function storeActiveTranslationLocale($request)
     {
-        $locale = request()->input(DefaultModelController::ACTIVE_TRANSLATION_LOCALE_KEY);
+        $locale = $request->input(DefaultModelController::ACTIVE_TRANSLATION_LOCALE_KEY);
 
         if ( ! $locale) return;
 
