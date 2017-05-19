@@ -102,102 +102,13 @@ class XmlExportStrategy extends AbstractModelListExporter
     }
 
     /**
-     * Writes CSV content to given file handle resource.
-     *
-     * @param resource $resource
-     */
-    protected function writeCsvContent($resource)
-    {
-        $columns    = $this->exportInfo->columns;
-        $strategies = $this->getColumnStrategyInstances();
-
-        $delimiter = $this->getDelimiterSymbol();
-        $enclosure = $this->getEnclosureSymbol();
-        $escape    = $this->getEscapeSymbol();
-
-
-        // Generate header row, if not disabled
-        if ($this->shouldHaveHeaderRow()) {
-
-            $headers = array_map(
-                function (ModelExportColumnDataInterface $column) {
-                    return $column->header();
-                },
-                $columns
-            );
-
-            fputcsv($resource, $headers, $delimiter, $enclosure, $escape);
-        }
-
-        // For each query chunk: get a model instance,
-        // and for each column, generate the column content using the strategies
-        $this->query->chunk(
-            static::CHUNK_SIZE,
-            function ($records) use ($resource, $columns, $strategies, $delimiter, $enclosure, $escape) {
-                /** @var Collection|Model[] $records */
-
-                foreach ($records as $record) {
-
-                    $fields = [];
-
-                    foreach ($strategies as $key => $strategy) {
-                        $fields[] = $strategy->render($record, $columns[$key]->source);
-                    }
-
-                    fputcsv($resource, $fields, $delimiter, $enclosure, $escape);
-                }
-            }
-        );
-    }
-
-    /**
      * Returns temporary file path to use while building export.
      *
      * @return string
      */
     protected function getTemporaryFilePath()
     {
-        return storage_path(uniqid('csv-model-export') . '.csv');
-    }
-
-    /**
-     * Returns whether document should have a header row.
-     *
-     * @return bool
-     */
-    protected function shouldHaveHeaderRow()
-    {
-        return ! (bool) array_get($this->exportInfo->options(), 'no_header_row', false);
-    }
-
-    /**
-     * Returns CSV delimiter symbol.
-     *
-     * @return string
-     */
-    protected function getDelimiterSymbol()
-    {
-        return ';';
-    }
-
-    /**
-     * Returns CSV value enclosure symbol.
-     *
-     * @return string
-     */
-    protected function getEnclosureSymbol()
-    {
-        return '"';
-    }
-
-    /**
-     * Returns CSV escape symbol.
-     *
-     * @return string
-     */
-    protected function getEscapeSymbol()
-    {
-        return '\\';
+        return storage_path(uniqid('xml-model-export') . '.xml');
     }
 
 }
