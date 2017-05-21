@@ -91,16 +91,6 @@ class ModelModuleTest extends TestCase
 
     /**
      * @test
-     */
-    function it_returns_its_service_providers()
-    {
-        $module = $this->makeModule();
-
-        static::assertEquals([], $module->getServiceProviders());
-    }
-
-    /**
-     * @test
      * @uses \Illuminate\Routing\Router
      */
     function it_maps_its_web_routes()

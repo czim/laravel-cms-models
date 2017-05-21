@@ -58,16 +58,6 @@ class ModelMetaModule implements ModuleInterface
     }
 
     /**
-     * Returns a list of FQNs for service providers that should always be registered.
-     *
-     * @return string[]
-     */
-    public function getServiceProviders()
-    {
-        return [];
-    }
-
-    /**
      * Generates web routes for the module given a contextual router instance.
      *
      * @param Router $router
