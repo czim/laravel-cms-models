@@ -1,5 +1,4 @@
 
-
 <div id="field-{{ $key }}-preview_original" class="form-control-static preview-state-server">
 
     @if (   ! ($original instanceof \Codesleeve\Stapler\Interfaces\Attachment)
@@ -36,11 +35,11 @@
     </div>
 
     <div class="state-preview" style="display: none">
-        <span class="text-primary" style="margin-right: 2em">
+        <span class="text-primary preview-state-filename" style="margin-right: 2em">
             filename
         </span>
 
-        <span class="text-muted">
+        <span class="text-muted  preview-state-type-and-size">
             content-type,
             size bytes
         </span>
@@ -199,7 +198,11 @@
                                 $("#field-{{ $key }}-upload_id").val(data.id);
                                 $("#field-{{ $key }}").val('');
 
-                                // todo: get and use more information from data
+                                var i           = Math.floor( Math.log(data.size) / Math.log(1024) );
+                                var typeAndSize = data.mimetype + ', ' + (( data.size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB'][i]);
+
+                                $("#field-{{ $key }}-preview_ajax .state-preview .preview-state-filename").text(data.name);
+                                $("#field-{{ $key }}-preview_ajax .state-preview .preview-state-type-and-size").text(typeAndSize);
 
                             } else {
                                 // Server reported (generic) error
