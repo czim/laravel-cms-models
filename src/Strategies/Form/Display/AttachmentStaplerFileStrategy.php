@@ -14,7 +14,7 @@ class AttachmentStaplerFileStrategy extends AbstractDefaultStrategy
      */
     protected function getView()
     {
-        if ($this->isUploadModuleAvailable()) {
+        if ($this->useFileUploader()) {
             return 'cms-models::model.partials.form.strategies.attachment_stapler_file_uploader';
         }
 
@@ -31,10 +31,22 @@ class AttachmentStaplerFileStrategy extends AbstractDefaultStrategy
     {
         $data['accept'] = array_get($data['options'], 'accept');
 
-        $data['uploadUrl']       = cms_route('fileupload.file.upload');
-        $data['uploadDeleteUrl'] = cms_route('fileupload.file.delete', ['ID_PLACEHOLDER']);
+        if ($this->useFileUploader()) {
+            $data['uploadUrl']       = cms_route('fileupload.file.upload');
+            $data['uploadDeleteUrl'] = cms_route('fileupload.file.delete', ['ID_PLACEHOLDER']);
+        }
 
         return $data;
+    }
+
+    /**
+     * Returns whether the file uploader model can and should be used.
+     *
+     * @return bool
+     */
+    protected function useFileUploader()
+    {
+        return ! array_get($this->field->options, 'no_ajax') && $this->isUploadModuleAvailable();
     }
 
 }

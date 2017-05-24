@@ -8,6 +8,14 @@ use Czim\CmsUploadModule\Contracts\Repositories\FileRepositoryInterface;
 
 trait UsesUploadModule
 {
+
+    /**
+     * Remember result to only perform the check once.
+     *
+     * @var bool
+     */
+    protected $isUploadModuleAvailable;
+
     /**
      * Returns whether the upload module is loaded.
      *
@@ -15,8 +23,12 @@ trait UsesUploadModule
      */
     protected function isUploadModuleAvailable()
     {
-        return  false !== $this->getUploadModule()
-            &&  app()->bound(FileRepositoryInterface::class);
+        if ($this->isUploadModuleAvailable === null) {
+            $this->isUploadModuleAvailable =    false !== $this->getUploadModule()
+                                            &&  app()->bound(FileRepositoryInterface::class);
+        }
+
+        return $this->isUploadModuleAvailable;
     }
 
     /**
