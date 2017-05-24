@@ -4,6 +4,10 @@ This strategy renders a file browse/upload field with a link preview to the curr
 
 It submits a file upload, and expects a Stapler attachment.
 
+If the [File Upload Module](https://github.com/czim/laravel-cms-upload-module) is installed, this strategy will use it and upload files using AJAX.
+
+The submitted value is an array with `keep` (boolean), `upload` (if not using AJAX), and `upload_id` (when using AJAX).
+
 
 ## Options
 
@@ -18,6 +22,8 @@ It submits a file upload, and expects a Stapler attachment.
          // Accept attribute input value
          'accept' => 'image/*',
 
+         // Disable AJAX uploading even if the upload module is loaded.
+         'no_ajax' => true,
      ]
  ```
 
