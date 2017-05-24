@@ -56,7 +56,7 @@
 
     <div class="state-error" style="display: none">
 
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-danger" role="alert" style="margin-bottom: 0; padding: 10px">
             <i class="glyphicon glyphicon-exclamation-sign" style="padding-right: 0.5em"></i>
             <span class="message">Error</span>
             <button type="button" class="close" aria-label="Close">
@@ -107,10 +107,6 @@
             </span>
         </label>
     @endif
-
-    <div class="loading-overlay" style="z-index: 10; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center">
-        <i class="glyphicon glyphicon-refresh gly-spin" style="color: white; text-align: center"></i>
-    </div>
 </div>
 
 
@@ -150,7 +146,7 @@
                 var reader = new FileReader();
 
                 reader.readAsText(file, 'UTF-8');
-                reader.onload = function (event) {
+                reader.onload = function () {
                     var fileName = document.getElementById("field-{{ $key }}").files[0].name;
 
                     var data = new FormData();
@@ -163,9 +159,10 @@
                     $("#field-{{ $key }}-preview_ajax").show();
 
                     // Start loading state
-                    $("#field-{{ $key }}-input_group .loading-overlay").css('display', 'flex');
+                    $("#field-{{ $key }}-input_group").find("#field-{{ $key }}, input[type=text], .btn-empty-file-upload").prop('disabled', true);
                     $("#field-{{ $key }}-preview_ajax > div").hide();
-                    $("#field-{{ $key }}-preview_ajax .state-progress .progress-bar").prop('aria-valuenow', 0).css('width', '0%');
+                    $("#field-{{ $key }}-preview_ajax .state-progress .progress-bar")
+                        .prop('aria-valuenow', 0).css('width', '0%');
                     $("#field-{{ $key }}-preview_original").hide();
                     $("#field-{{ $key }}-preview_ajax .state-progress").show();
 
@@ -188,7 +185,8 @@
                                         percent = Math.ceil(position / total * 100);
                                     }
 
-                                    $("#field-{{ $key }}-preview_ajax .state-progress .progress-bar").prop('aria-valuenow', percent).css('width', percent + '%');
+                                    $("#field-{{ $key }}-preview_ajax .state-progress .progress-bar")
+                                        .prop('aria-valuenow', percent).css('width', percent + '%');
                                 }, true);
                             }
                             return xhr;
@@ -211,7 +209,7 @@
                             }
 
                             // Stop loading state
-                            $("#field-{{ $key }}-input_group .loading-overlay").hide();
+                            $("#field-{{ $key }}-input_group").find("#field-{{ $key }}, input[type=text], .btn-empty-file-upload").prop('disabled', false);
                         },
                         error: function(jqXHR, textStatus) {
                             // Handle errors here
@@ -220,7 +218,7 @@
                             $("#field-{{ $key }}-preview_ajax .state-error").show();
 
                             // Stop loading state
-                            $("#field-{{ $key }}-input_group .loading-overlay").hide();
+                            $("#field-{{ $key }}-input_group").find("#field-{{ $key }}, input[type=text], .btn-empty-file-upload").prop('disabled', false);
                         }
                     };
 
@@ -255,7 +253,8 @@
             var fileInput = $(this).parents('.input-group').find(':file'),
                 textInput = $(this).parents('.input-group').find(':text'),
                 keepInput = $(this).parents('.input-group').find('.file-upload-keep-input'),
-                idInput   = $(this).parents('.input-group').find('.file-upload-id-input');
+                idInput   = $(this).parents('.input-group').find('.file-upload-id-input'),
+                uploadId  = idInput.val();
 
             fileInput.wrap('<form>').closest('form').get(0).reset();
             fileInput.unwrap();
@@ -263,6 +262,28 @@
             textInput.val('');
             keepInput.val(0);
             idInput.val('');
+
+            $("#field-{{ $key }}-preview_ajax").hide();
+            $("#field-{{ $key }}-preview_original").show();
+
+            // If the file upload id is set, the uploaded file should be cleaned up
+            if (uploadId) {
+                $.ajax({
+                    url        : "{{ $uploadDeleteUrl }}".replace('ID_PLACEHOLDER', uploadId),
+                    headers    : { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type       : 'POST',
+                    data       : {
+                        _method: 'DELETE'
+                    },
+                    dataType   : 'json',
+                    success: function() {
+                        $("#field-{{ $key }}-upload_id").val('');
+                    },
+                    error: function() {
+                        $("#field-{{ $key }}-upload_id").val('');
+                    }
+                });
+            }
 
             event.preventDefault();
         });
