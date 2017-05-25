@@ -5,6 +5,7 @@ use Czim\CmsCore\Contracts\Modules\ModuleInterface;
 use Czim\CmsCore\Contracts\Modules\ModuleManagerInterface;
 use Czim\CmsCore\Support\Enums\Component;
 use Czim\CmsUploadModule\Contracts\Repositories\FileRepositoryInterface;
+use Czim\CmsUploadModule\Contracts\Support\Security\SessionGuardInterface;
 
 trait UsesUploadModule
 {
@@ -52,10 +53,20 @@ trait UsesUploadModule
      */
     protected function getUploadedFileRecordById($id)
     {
-        /** @var FileRepositoryInterface $repository */
-        $repository = app(FileRepositoryInterface::class);
+        return $this->getFileUploadFileRepository()->findById($id);
+    }
 
-        return $repository->findById($id);
+    /**
+     * Returns whether file upload is allowed to be used within this session.
+     *
+     * @param int $id
+     * @return bool
+     */
+    protected function checkFileUploadWithSessionGuard($id)
+    {
+        $guard = $this->getFileUploadSesssionGuard();
+
+        return ! $guard->enabled() || $guard->check($id);
     }
 
     /**
@@ -66,6 +77,22 @@ trait UsesUploadModule
     protected function getUploadModuleKey()
     {
         return 'file-uploader';
+    }
+
+    /**
+     * @return FileRepositoryInterface
+     */
+    protected function getFileUploadFileRepository()
+    {
+        return app(FileRepositoryInterface::class);
+    }
+
+    /**
+     * @return SessionGuardInterface
+     */
+    protected function getFileUploadSesssionGuard()
+    {
+        return app(SessionGuardInterface::class);
     }
 
 }

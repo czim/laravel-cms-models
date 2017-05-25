@@ -64,15 +64,20 @@ class StaplerStrategy extends DefaultStrategy
             return;
         }
 
-        // todo: it should also be verified that the indicated uploaded file by id
-        //       was actually uploaded by this user (in this session), otherwise
-        //       there would be a file hijacking security risk.
 
         // If no ID is given, this should be treated as nullifying the field.
         // We can use the stapler null value from the upload field.
         if ( ! ($fileRecordId = array_get($value, 'upload_id'))) {
             $model->{$source} = array_get($value, 'upload');
             return;
+        }
+
+        // It should be verified that the uploaded record belongs to this user.
+        // This is done using the upload module's session guard.
+        if ( ! $this->checkFileUploadWithSessionGuard($fileRecordId)) {
+            throw new RuntimeException(
+                "Not allowed to use file record with ID #{$fileRecordId} for field '{$this->formFieldData->key}'"
+            );
         }
 
         if ( ! ($fileRecord = $this->getUploadedFileRecordById($fileRecordId))) {
