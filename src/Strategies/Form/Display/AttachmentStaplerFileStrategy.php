@@ -1,11 +1,8 @@
 <?php
 namespace Czim\CmsModels\Strategies\Form\Display;
 
-use Czim\CmsModels\Support\Strategies\Traits\UsesUploadModule;
-
-class AttachmentStaplerFileStrategy extends AbstractDefaultStrategy
+class AttachmentStaplerFileStrategy extends AbstractStaplerStrategy
 {
-    use UsesUploadModule;
 
     /**
      * Returns the view partial that should be used.
@@ -32,21 +29,12 @@ class AttachmentStaplerFileStrategy extends AbstractDefaultStrategy
         $data['accept'] = array_get($data['options'], 'accept');
 
         if ($this->useFileUploader()) {
-            $data['uploadUrl']       = cms_route('fileupload.file.upload');
-            $data['uploadDeleteUrl'] = cms_route('fileupload.file.delete', ['ID_PLACEHOLDER']);
+            $data['uploadUrl']        = cms_route('fileupload.file.upload');
+            $data['uploadDeleteUrl']  = cms_route('fileupload.file.delete', ['ID_PLACEHOLDER']);
+            $data['uploadValidation'] = $this->getFileValidationRules();
         }
 
         return $data;
-    }
-
-    /**
-     * Returns whether the file uploader model can and should be used.
-     *
-     * @return bool
-     */
-    protected function useFileUploader()
-    {
-        return ! array_get($this->field->options, 'no_ajax') && $this->isUploadModuleAvailable();
     }
 
 }

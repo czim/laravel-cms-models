@@ -45,6 +45,20 @@ trait UsesUploadModule
     }
 
     /**
+     * Returns the upload modules file record by ID.
+     *
+     * @param int $id
+     * @return \Czim\CmsUploadModule\Models\File|null
+     */
+    protected function getUploadedFileRecordById($id)
+    {
+        /** @var FileRepositoryInterface $repository */
+        $repository = app(FileRepositoryInterface::class);
+
+        return $repository->findById($id);
+    }
+
+    /**
      * Returns the module key for the upload module.
      *
      * @return string

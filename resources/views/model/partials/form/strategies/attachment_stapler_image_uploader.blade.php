@@ -153,6 +153,7 @@
                     data.append('file', document.getElementById("field-{{ $key }}").files[0]);
                     data.append('name', fileName);
                     data.append('reference', "{{ str_replace('\\', '\\\\', get_class($record)) }}::field-{{ $key }}");
+                    data.append('validation', "{!! str_replace('"', '\\"', str_replace('\\', '\\\\', json_encode($uploadValidation))) !!}");
 
                     // Load the image as preview
                     $("#field-{{ $key }}-preview_ajax .state-preview .preview-state-image").attr('src', event.target.result);

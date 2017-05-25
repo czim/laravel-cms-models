@@ -152,6 +152,7 @@
                     data.append('file', document.getElementById("field-{{ $key }}").files[0]);
                     data.append('name', fileName);
                     data.append('reference', "{{ str_replace('\\', '\\\\', get_class($record)) }}::field-{{ $key }}");
+                    data.append('validation', "{!! str_replace('"', '\\"', str_replace('\\', '\\\\', json_encode($uploadValidation))) !!}");
 
                     // Replace server preview with ajax preview
                     $("#field-{{ $key }}-preview_original").hide();
