@@ -34,7 +34,7 @@ abstract class AbstractStaplerStrategy extends AbstractDefaultStrategy
                 $rules .= '|image';
             }
         } elseif ( ! in_array('image', $rules)) {
-            $rules[] = 'image';
+            array_unshift($rules, 'image');
         }
 
         return $rules;

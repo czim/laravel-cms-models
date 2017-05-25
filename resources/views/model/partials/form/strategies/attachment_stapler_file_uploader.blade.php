@@ -208,8 +208,12 @@
                             } else {
                                 // Server reported (generic) error
                                 $("#field-{{ $key }}-preview_ajax .state-error .message").text('Upload failed.');
+                                $("#field-{{ $key }}-preview_ajax .state-error .message").text(
+                                    data.hasOwnProperty('error') ? data.error : 'Upload failed.'
+                                );
                                 $("#field-{{ $key }}-preview_ajax .state-error").show();
                                 $("#field-{{ $key }}-upload_id").val('');
+                                inputText.val('');
                             }
 
                             // Stop loading state
