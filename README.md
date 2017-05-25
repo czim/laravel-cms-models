@@ -23,6 +23,8 @@ Features:
 
 To be used to with the [Laravel CMS Core](https://github.com/czim/laravel-cms-core).
 
+For a better end-user experience when using file uploads, installing the [Laravel CMS Upload Module](https://github.com/czim/laravel-cms-upload-module) is recommended.
+
 
 ## Version Compatibility
 
