@@ -132,9 +132,10 @@
 
         // Handle the fileselect event to update the placeholder text input and mark the 'keep' hidden input
         $(document).on('fileselect', "#field-{{ $key }}:file", function(event, numFiles, label) {
-            var inputText = $(this).parents('.input-group').find(':text'),
-                inputKeep = $(this).parents('.input-group').find('.file-upload-keep-input'),
-                log       = numFiles > 1 ? numFiles + ' files selected' : label;
+            var inputText   = $(this).parents('.input-group').find(':text'),
+                inputKeep   = $(this).parents('.input-group').find('.file-upload-keep-input'),
+                inputFileId = $(this).parents('.input-group').find('.file-upload-id-input'),
+                log         = numFiles > 1 ? numFiles + ' files selected' : label;
 
             if (inputText.length) {
                 inputText.val(log);
@@ -166,6 +167,8 @@
                     $("#field-{{ $key }}-preview_original").hide();
                     $("#field-{{ $key }}-preview_ajax .state-progress").show();
 
+                    var previousFileId = inputFileId.val();
+
                     var options = {
                         url        : '{{ $uploadUrl }}',
                         type       : 'POST',
@@ -190,6 +193,20 @@
                                 }, true);
                             }
                             return xhr;
+                        },
+                        complete: function () {
+                            // If a file was previously uploaded, delete it from the server.
+                            if (previousFileId) {
+                                $.ajax({
+                                    url        : "{{ $uploadDeleteUrl }}".replace('ID_PLACEHOLDER', previousFileId),
+                                    headers    : { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                                    type       : 'POST',
+                                    data       : {
+                                        _method: 'DELETE'
+                                    },
+                                    dataType   : 'json'
+                                });
+                            }
                         },
                         success: function(data) {
                             $("#field-{{ $key }}-preview_ajax > div").hide();
