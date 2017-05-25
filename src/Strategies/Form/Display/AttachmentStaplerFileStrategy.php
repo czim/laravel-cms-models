@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Strategies\Form\Display;
 
-class AttachmentStaplerFileStrategy extends AbstractDefaultStrategy
+class AttachmentStaplerFileStrategy extends AbstractStaplerStrategy
 {
 
     /**
@@ -11,6 +11,10 @@ class AttachmentStaplerFileStrategy extends AbstractDefaultStrategy
      */
     protected function getView()
     {
+        if ($this->useFileUploader()) {
+            return 'cms-models::model.partials.form.strategies.attachment_stapler_file_uploader';
+        }
+
         return 'cms-models::model.partials.form.strategies.attachment_stapler_file';
     }
 
@@ -23,6 +27,12 @@ class AttachmentStaplerFileStrategy extends AbstractDefaultStrategy
     protected function decorateFieldData(array $data)
     {
         $data['accept'] = array_get($data['options'], 'accept');
+
+        if ($this->useFileUploader()) {
+            $data['uploadUrl']        = cms_route('fileupload.file.upload');
+            $data['uploadDeleteUrl']  = cms_route('fileupload.file.delete', ['ID_PLACEHOLDER']);
+            $data['uploadValidation'] = $this->getFileValidationRules();
+        }
 
         return $data;
     }
