@@ -118,7 +118,7 @@
 
 
 @push('javascript-end')
-<!-- form field display strategy: stapler file -->
+<!-- form field display strategy: stapler image file -->
 <script>
     $(function () {
 
@@ -145,7 +145,6 @@
                 var file   = document.getElementById("field-{{ $key }}").files[0];
                 var reader = new FileReader();
 
-//                reader.readAsText(file, 'UTF-8');
                 reader.readAsDataURL(file);
                 reader.onload = function (event) {
                     var fileName = document.getElementById("field-{{ $key }}").files[0].name;
@@ -208,6 +207,11 @@
 
                                 $("#field-{{ $key }}-preview_ajax .state-preview .preview-state-image").attr('alt', data.name);
                                 $("#field-{{ $key }}-preview_ajax .state-preview .preview-state-type-and-size").text(typeAndSize);
+
+                                // Clear the file input to prevent unnecessarily submitting the file itself
+                                var fileInput = $("#field-{{ $key }}");
+                                fileInput.wrap('<form>').closest('form').get(0).reset();
+                                fileInput.unwrap();
 
                             } else {
                                 // Server reported (generic) error
