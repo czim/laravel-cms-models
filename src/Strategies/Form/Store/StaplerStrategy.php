@@ -1,7 +1,9 @@
 <?php
 namespace Czim\CmsModels\Strategies\Form\Store;
 
+use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
 use Czim\CmsModels\Exceptions\InvalidFileUploadedException;
+use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\Support\Strategies\Traits\UsesUploadModule;
 use File;
 use Illuminate\Database\Eloquent\Model;
@@ -121,11 +123,51 @@ class StaplerStrategy extends DefaultStrategy
      * These are relevant here for AJAX uploads, since they may not have
      * passed validation for the actual asynchronous upload.
      *
-     * @return array
+     * @return array|string
      */
     protected function getFileValidationRules()
     {
         return array_get($this->formFieldData->options, 'validation', []);
+    }
+
+    /**
+     * Returns validation rules specific for the strategy.
+     *
+     * @param ModelFormFieldDataInterface|ModelFormFieldData $field
+     * @return array|false|null     null to fall back to default rules.
+     */
+    protected function getStrategySpecificRules(ModelFormFieldDataInterface $field = null)
+    {
+        // Build up validation rules
+        $fileRules = $this->getFileValidationRules();
+
+        if ( ! is_array($fileRules)) {
+            $fileRules = explode('|', $fileRules);
+        }
+
+        if ( ! in_array('nullable', $fileRules)) {
+            $fileRules[] = 'nullable';
+        }
+
+        if ( ! in_array('file', $fileRules)) {
+            $fileRules[] = 'file';
+        }
+
+        $keepRules   = ['nullable', 'boolean'];
+        $fileIdRules = ['nullable', 'integer'];
+
+        // Modify rules for required fields that may be either uploaded directly or asynchronously.
+        if ($this->formFieldData->required && ! $this->formFieldData->translated) {
+            $fileRules   = 'required_without_all:' . $field->key() . '.upload_id,' . $field->key() . '.keep';
+            $keepRules[] = 'required_without_all:' . $field->key() . '.upload,' . $field->key() . '.upload_id';
+            $fileIdRules = 'required_without_all:' . $field->key() . '.upload,' . $field->key() . '.keep';
+        }
+
+        return [
+            $field->key() . '.keep'      => $keepRules,
+            $field->key() . '.upload'    => $fileRules,
+            $field->key() . '.upload_id' => $fileIdRules,
+        ];
     }
 
     /**
