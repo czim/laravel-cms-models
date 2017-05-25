@@ -16,13 +16,25 @@ The submitted value is an array with `keep` (boolean), `upload` (if not using AJ
 - `accept` (string)  
     The file upload input `accept` attribute value.  
     Defaults to: `'image/*'`.
-
+    
+- `validation` (array of strings)  
+     The validation rules to apply to the file upload.
+     The `nullable`, `required` and `image` rules need not be included, these will be determined automatically.
+     
+- `no_ajax` (boolean)  
+    Set to `true` if AJAX uploading should be disabled even if the upload module is loaded.
  
  ```php
      'options' => [
      
          // Accept attribute input value
          'accept' => 'image/jpeg|image/png',
+
+         // Validation rules for the image upload
+         'validation' => [
+            'mimes:jpeg,gif,png',
+            'dimensions:min_height=200',
+         ],
 
          // Disable AJAX uploading even if the upload module is loaded.
          'no_ajax' => true,

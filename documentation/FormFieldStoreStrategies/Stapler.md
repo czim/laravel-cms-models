@@ -18,5 +18,12 @@ Expects an array like so:
 
 ## Options
 
-- `no_ajax` (bool)  
+
+- `validation` (array of strings)  
+     The validation rules to apply to the file upload.
+     The `nullable` and `required` rules need not be included, these will be determined automatically.
+     
+- `no_ajax` (boolean)  
+    Set to `true` if AJAX uploading should be disabled even if the upload module is loaded.  
     Expects the `upload` value to be a file and ignores `upload_id`, even if the upload module is loaded.
+
