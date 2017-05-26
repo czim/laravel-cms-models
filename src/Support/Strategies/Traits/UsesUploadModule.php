@@ -57,6 +57,17 @@ trait UsesUploadModule
     }
 
     /**
+     * Deletes an upload modules file record (and its file) by ID.
+     *
+     * @param int $id
+     * @return bool
+     */
+    protected function deleteUploadedFileRecordById($id)
+    {
+        return $this->getFileUploadFileRepository()->delete($id);
+    }
+
+    /**
      * Returns whether file upload is allowed to be used within this session.
      *
      * @param int $id

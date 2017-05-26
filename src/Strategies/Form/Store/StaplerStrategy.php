@@ -115,6 +115,8 @@ class StaplerStrategy extends DefaultStrategy
         }
 
         $model->{$source} = $file;
+
+        $this->deleteUploadedFileRecordById($fileRecordId);
     }
 
     /**
