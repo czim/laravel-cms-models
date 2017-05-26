@@ -98,7 +98,7 @@ abstract class CmsBootTestCase extends DatabaseTestCase
             $mock = $this->getMockBuilder(AuthenticatorInterface::class)->getMock();
 
             // Mock permissions of the user
-            $mock->method('amin')->willReturn($this->mockSuperAdmin);
+            $mock->method('admin')->willReturn($this->mockSuperAdmin);
             $mock->method('can')->willReturnCallback(function ($permissions, $any = false) {
                 if ($this->mockSuperAdmin) {
                     return true;
