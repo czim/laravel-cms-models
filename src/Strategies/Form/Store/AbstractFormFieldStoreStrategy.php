@@ -17,7 +17,7 @@ use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use UnexpectedValueException;
 
-class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyInterface
+abstract class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyInterface
 {
     use ResolvesSourceStrategies;
 
