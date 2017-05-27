@@ -2,7 +2,7 @@
 namespace Czim\CmsModels\Support\Form;
 
 use Czim\CmsCore\Contracts\Core\CoreInterface;
-use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
+use Czim\CmsModels\Contracts\Strategies\FormFieldStoreStrategyInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\Support\Form\FormDataStorerInterface;

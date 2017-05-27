@@ -6,7 +6,7 @@ use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\RelationValidationResolve
 use Czim\CmsModels\Contracts\ModelInformation\Data\ModelAttributeDataInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
-use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
+use Czim\CmsModels\Contracts\Strategies\FormFieldStoreStrategyInterface;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;

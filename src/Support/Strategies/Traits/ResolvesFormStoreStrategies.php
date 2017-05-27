@@ -3,7 +3,7 @@ namespace Czim\CmsModels\Support\Strategies\Traits;
 
 use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
-use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
+use Czim\CmsModels\Contracts\Strategies\FormFieldStoreStrategyInterface;
 use Czim\CmsModels\Contracts\Support\Factories\FormStoreStrategyFactoryInterface;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
