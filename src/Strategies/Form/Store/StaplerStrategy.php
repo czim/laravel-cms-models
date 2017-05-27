@@ -16,6 +16,13 @@ class StaplerStrategy extends DefaultStrategy
     use UsesUploadModule;
 
     /**
+     * If file uploader was used, the uploaded record ID.
+     *
+     * @var int|null
+     */
+    protected $uploadedFileRecordId;
+
+    /**
      * Adjusts or normalizes a value before storing it.
      *
      * @param mixed $value
@@ -62,6 +69,7 @@ class StaplerStrategy extends DefaultStrategy
         // If we don't use the file uploader, we should trust the validation
         // performed on the field['upload'] input itself.
         if ( ! $this->useFileUploader()) {
+            $this->uploadedFileRecordId = null;
             $model->{$source} = array_get($value, 'upload');
             return;
         }
@@ -73,6 +81,8 @@ class StaplerStrategy extends DefaultStrategy
             $model->{$source} = array_get($value, 'upload');
             return;
         }
+
+        $this->uploadedFileRecordId = $fileRecordId;
 
         // It should be verified that the uploaded record belongs to this user.
         // This is done using the upload module's session guard.
@@ -115,8 +125,18 @@ class StaplerStrategy extends DefaultStrategy
         }
 
         $model->{$source} = $file;
+    }
 
-        $this->deleteUploadedFileRecordById($fileRecordId);
+    /**
+     * Performs finalizing/cleanup handling.
+     *
+     * After the model has been successfully stored, the uploaded file may be cleaned up.
+     */
+    public function finish()
+    {
+        if (null !== $this->uploadedFileRecordId) {
+            $this->deleteUploadedFileRecordById($this->uploadedFileRecordId);
+        }
     }
 
     /**
