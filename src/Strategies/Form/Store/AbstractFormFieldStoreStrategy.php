@@ -168,6 +168,15 @@ class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyInterface
     }
 
     /**
+     * Performs finalizing/cleanup handling.
+     *
+     * @codeCoverageIgnore
+     */
+    public function finish()
+    {
+    }
+
+    /**
      * Returns validation rules to use for submitted form data for this strategy.
      *
      * If the return array is associative, rules are expected nested per key,

@@ -53,6 +53,13 @@ interface FormFieldStoreStrategyInterface extends FormFieldListParentValueInterf
     public function storeAfter(Model $model, $source, $value);
 
     /**
+     * Performs finalizing/cleanup handling.
+     *
+     * This is called after a model has been successfully stored or updated.
+     */
+    public function finish();
+
+    /**
      * Returns validation rules to use for submitted form data for this strategy.
      *
      * If the return array is associative, rules are expected nested per key,

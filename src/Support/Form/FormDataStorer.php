@@ -140,6 +140,21 @@ class FormDataStorer implements FormDataStorerInterface
             $success = $model->save();
         }
 
+        // Call hooks to finish store strategies
+        foreach ($values as $key => $value) {
+            if ( ! array_key_exists($key, $strategies)) continue;
+
+            try {
+                $strategies[ $key ]->finish();
+
+            } catch (Exception $e) {
+                $class   = get_class($strategies[ $key ]);
+                $message = "Failed finishing strategy form field '{$key}' (using $class): \n{$e->getMessage()}";
+
+                throw new StrategyApplicationException($message, $e->getCode(), $e);
+            }
+        }
+
         return $success;
     }
 
