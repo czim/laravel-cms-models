@@ -77,6 +77,13 @@ class TestSimpleStoreAfter implements FormFieldStoreStrategyInterface
     }
 
     /**
+     * Performs finalizing/cleanup handling.
+     */
+    public function finish()
+    {
+    }
+
+    /**
      * @param ModelInformationInterface|null $modelInformation
      * @param bool                           $create whether the rules are for creating a new record
      * @return array|false false if no validation should be performed.

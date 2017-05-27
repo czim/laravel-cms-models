@@ -79,4 +79,11 @@ abstract class AbstractTestSimpleValidation implements FormFieldStoreStrategyInt
     {
     }
 
+    /**
+     * Performs finalizing/cleanup handling.
+     */
+    public function finish()
+    {
+    }
+
 }
