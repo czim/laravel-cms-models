@@ -103,6 +103,9 @@ This list is not exhaustive; custom strategy classes and aliases may be created 
 - [**`PasswordUpdate`**](FormFieldStoreStrategies/PasswordUpdate.md)  
     For storing hashed passwords, but only if entered.
 
+- [**`Stapler`**](FormFieldStoreStrategies/Stapler.md)  
+    For storing file uploads for stapler attachments.
+
 - [**`Taggable`**](FormFieldStoreStrategies/Taggable.md)  
     For storing tags to a model with the Taggable trait.
 

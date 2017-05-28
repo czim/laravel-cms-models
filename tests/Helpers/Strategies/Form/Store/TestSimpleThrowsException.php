@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\Helpers\Strategies\Form\Store;
 
-use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
+use Czim\CmsModels\Contracts\Strategies\FormFieldStoreStrategyInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -73,6 +73,13 @@ class TestSimpleThrowsException implements FormFieldStoreStrategyInterface
      * @param mixed $value
      */
     public function storeAfter(Model $model, $source, $value)
+    {
+    }
+
+    /**
+     * Performs finalizing/cleanup handling.
+     */
+    public function finish()
     {
     }
 

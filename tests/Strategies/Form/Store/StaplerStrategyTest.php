@@ -1,10 +1,13 @@
 <?php
 namespace Czim\CmsModels\Test\Strategies\Form\Store;
 
+use Czim\CmsCore\Contracts\Modules\ModuleManagerInterface;
+use Czim\CmsCore\Support\Enums\Component;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\Strategies\Form\Store\StaplerStrategy;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Czim\CmsModels\Test\TestCase;
+use Mockery;
 
 /**
  * Class StaplerStrategyTest
@@ -36,6 +39,8 @@ class StaplerStrategyTest extends TestCase
      */
     function it_stores_a_value_on_a_model_if_keep_is_not_flagged()
     {
+        $this->app->instance(Component::MODULES, $this->getMockModules());
+
         $model = new TestPost;
         $model->test = false;
 
@@ -57,6 +62,8 @@ class StaplerStrategyTest extends TestCase
      */
     function it_does_not_store_a_value_on_a_model_if_keep_is_flagged()
     {
+        $this->app->instance(Component::MODULES, $this->getMockModules());
+
         $model = new TestPost;
         $model->test = false;
 
@@ -71,6 +78,19 @@ class StaplerStrategyTest extends TestCase
         ]);
 
         static::assertFalse($model->test);
+    }
+
+    /**
+     * @return ModuleManagerInterface|Mockery\MockInterface|Mockery\Mock
+     */
+    protected function getMockModules()
+    {
+        /** @var ModuleManagerInterface|Mockery\MockInterface|Mockery\Mock $manager */
+        $manager = Mockery::mock(ModuleManagerInterface::class);
+
+        $manager->shouldReceive('get')->with('file-uploader')->andReturn(null);
+
+        return $manager;
     }
 
 }

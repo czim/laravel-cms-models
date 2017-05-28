@@ -23,7 +23,16 @@ Features:
 
 To be used to with the [Laravel CMS Core](https://github.com/czim/laravel-cms-core).
 
+For a better end-user experience when using file uploads, installing the [Laravel CMS Upload Module](https://github.com/czim/laravel-cms-upload-module) is recommended.
 
+
+## Version Compatibility
+
+ Laravel             | Package 
+:--------------------|:--------
+ 5.3.x               | 1.3.x
+ 5.4.x               | 1.4.x
+ 
 ## Configuration
 
 Models may be added with basic functionality by simply registering them in the `cms-models` config, or special CMS model configuration files may be created for them to customize them as needed.

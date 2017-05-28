@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Support\Factories;
 
-use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
+use Czim\CmsModels\Contracts\Strategies\FormFieldStoreStrategyInterface;
 use Czim\CmsModels\Contracts\Support\Factories\FormStoreStrategyFactoryInterface;
 
 class FormStoreStrategyFactory extends AbstractStrategyFactory implements FormStoreStrategyFactoryInterface

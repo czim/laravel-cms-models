@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\Helpers\Strategies\Form\Store;
 
-use Czim\CmsModels\Contracts\Http\Controllers\FormFieldStoreStrategyInterface;
+use Czim\CmsModels\Contracts\Strategies\FormFieldStoreStrategyInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
 use Illuminate\Database\Eloquent\Model;
 
@@ -76,6 +76,13 @@ abstract class AbstractTestSimpleValidation implements FormFieldStoreStrategyInt
      * @param mixed $value
      */
     public function storeAfter(Model $model, $source, $value)
+    {
+    }
+
+    /**
+     * Performs finalizing/cleanup handling.
+     */
+    public function finish()
     {
     }
 

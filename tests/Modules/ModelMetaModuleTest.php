@@ -57,16 +57,6 @@ class ModelMetaModuleTest extends TestCase
 
     /**
      * @test
-     */
-    function it_returns_its_service_providers()
-    {
-        $module = new ModelMetaModule;
-
-        static::assertEquals([], $module->getServiceProviders());
-    }
-
-    /**
-     * @test
      * @uses \Illuminate\Routing\Router
      */
     function it_maps_its_web_routes()

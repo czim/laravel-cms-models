@@ -31,4 +31,5 @@ class TestSimpleAssocArrayFormatValidation extends AbstractTestSimpleValidation
             'field_b' => 'size:' . ($create ? '10' : '20'),
         ];
     }
+
 }

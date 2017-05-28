@@ -100,11 +100,6 @@ abstract class DatabaseTestCase extends TestCase
     {
     }
 
-    protected function setMysqlDatabase()
-    {
-
-    }
-
     /**
      * @return Builder
      */

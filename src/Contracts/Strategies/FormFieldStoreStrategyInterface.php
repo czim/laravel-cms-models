@@ -1,6 +1,7 @@
 <?php
-namespace Czim\CmsModels\Contracts\Http\Controllers;
+namespace Czim\CmsModels\Contracts\Strategies;
 
+use Czim\CmsModels\Contracts\Http\Controllers\FormFieldListParentValueInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -50,6 +51,13 @@ interface FormFieldStoreStrategyInterface extends FormFieldListParentValueInterf
      * @param mixed $value
      */
     public function storeAfter(Model $model, $source, $value);
+
+    /**
+     * Performs finalizing/cleanup handling.
+     *
+     * This is called after a model has been successfully stored or updated.
+     */
+    public function finish();
 
     /**
      * Returns validation rules to use for submitted form data for this strategy.

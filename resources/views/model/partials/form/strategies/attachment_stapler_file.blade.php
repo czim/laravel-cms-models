@@ -50,7 +50,7 @@
            @if ($original)
            data-original="{{ $original->originalFilename() }}"
            value="{{ $original->originalFilename() }}"
-            @endif
+           @endif
     >
 
     @if ( ! $required || $translated)
