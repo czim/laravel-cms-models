@@ -38,8 +38,7 @@
 </form>
 
 
-@push('javascript-end')
-
+@cms_script
     <script>
         $('.scope-tab-activate').click(function() {
 
@@ -52,5 +51,5 @@
             return false;
         })
     </script>
+@cms_endscript
 
-@endpush

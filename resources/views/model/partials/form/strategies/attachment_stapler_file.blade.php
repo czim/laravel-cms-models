@@ -70,19 +70,13 @@
 ])
 
 
-@push('javascript-end')
+@cms_script
 <!-- form field display strategy: stapler file -->
 <script>
     $(function () {
 
         // Trigger the fileselect event when a new file is selected
-        $(document).on('change', ':file', function() {
-            var input    = $(this),
-                numFiles = input.get(0).files ? input.get(0).files.length : 1,
-                label    = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-
-            input.trigger('fileselect', [numFiles, label]);
-        });
+        $(document).on('change', ':file', attachmentUploadTriggerFileSelect);
 
         // Handle the fileselect event to update the placeholder text input and mark the 'keep' hidden input
         $(document).on('fileselect', ':file', function(event, numFiles, label) {
@@ -116,4 +110,6 @@
 
     })
 </script>
-@endpush
+@cms_endscript
+
+@include('cms-models::model.partials.form.strategies.attachment_stapler_shared_scripts')

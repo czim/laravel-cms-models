@@ -33,7 +33,7 @@
 
 @endif
 
-@push('javascript-end')
+@cms_script
     <script>
         $('#input-filters-clear-button').click(function () {
             var form = $('#filters-form');
@@ -41,4 +41,4 @@
             form.submit();
         });
     </script>
-@endpush
+@cms_endscript

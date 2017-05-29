@@ -117,19 +117,13 @@
 ])
 
 
-@push('javascript-end')
+@cms_script
 <!-- form field display strategy: stapler image file -->
 <script>
     $(function () {
 
         // Trigger the fileselect event when a new file is selected
-        $(document).on('change', "#field-{{ $key }}:file", function() {
-            var input    = $(this),
-                numFiles = input.get(0).files ? input.get(0).files.length : 1,
-                label    = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-
-            input.trigger('fileselect', [numFiles, label]);
-        });
+        $(document).on('change', "#field-{{ $key }}:file", attachmentUploadTriggerFileSelect);
 
         // Handle the fileselect event to update the placeholder text input and mark the 'keep' hidden input
         $(document).on('fileselect', "#field-{{ $key }}:file", function(event, numFiles, label) {
@@ -201,15 +195,7 @@
                         complete: function () {
                             // If a file was previously uploaded, delete it from the server.
                             if (previousFileId) {
-                                $.ajax({
-                                    url        : "{{ $uploadDeleteUrl }}".replace('ID_PLACEHOLDER', previousFileId),
-                                    headers    : { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                                    type       : 'POST',
-                                    data       : {
-                                        _method: 'DELETE'
-                                    },
-                                    dataType   : 'json'
-                                });
+                                attachmentUploadDelete(previousFileId);
                             }
                         },
                         success: function(data) {
@@ -302,21 +288,11 @@
 
             // If the file upload id is set, the uploaded file should be cleaned up
             if (uploadId) {
-                $.ajax({
-                    url        : "{{ $uploadDeleteUrl }}".replace('ID_PLACEHOLDER', uploadId),
-                    headers    : { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    type       : 'POST',
-                    data       : {
-                        _method: 'DELETE'
-                    },
-                    dataType   : 'json',
-                    success: function() {
-                        $("#field-{{ $key }}-upload_id").val('');
-                    },
-                    error: function() {
-                        $("#field-{{ $key }}-upload_id").val('');
-                    }
-                });
+                attachmentUploadDelete(
+                    uploadId,
+                    function() { $("#field-{{ $key }}-upload_id").val(''); },
+                    function() { $("#field-{{ $key }}-upload_id").val(''); }
+                );
             }
 
             event.preventDefault();
@@ -324,4 +300,7 @@
 
     })
 </script>
-@endpush
+@cms_endscript
+
+@include('cms-models::model.partials.form.strategies.attachment_stapler_shared_scripts')
+@include('cms-models::model.partials.form.strategies.attachment_stapler_uploader_shared_scripts')

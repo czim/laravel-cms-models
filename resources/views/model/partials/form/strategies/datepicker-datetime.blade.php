@@ -25,7 +25,7 @@
 ])
 
 
-@push('javascript-end')
+@cms_script
     <!-- form field display strategy: datepicker datetime -->
     <?php
         $jsOptions = [
@@ -54,4 +54,4 @@
             $('#__datetimepicker__{{ $key }}').datetimepicker({!! json_encode($jsOptions) !!});
         });
     </script>
-@endpush
+@cms_endscript

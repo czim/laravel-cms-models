@@ -24,7 +24,7 @@
 ])
 
 
-@push('javascript-end')
+@cms_script
     <!-- form field display strategy: relation single autocomplete -->
     <script>
         $(function() {
@@ -105,4 +105,4 @@
             });
         });
     </script>
-@endpush
+@cms_endscript

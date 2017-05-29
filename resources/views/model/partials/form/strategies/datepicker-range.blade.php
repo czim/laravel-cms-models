@@ -51,34 +51,34 @@
 ])
 
 
-@push('javascript-end')
-    <!-- form field display strategy: datepicker datetime -->
-    <?php
-        $jsOptions = [
-            'format' => array_get($options, 'moment_format', 'YYYY-MM-DD HH:mm'),
-        ];
+@cms_script
+<!-- form field display strategy: datepicker datetime -->
+<?php
+    $jsOptions = [
+        'format' => array_get($options, 'moment_format', 'YYYY-MM-DD HH:mm'),
+    ];
 
-        if (array_get($options, 'view_mode')) {
-            $jsOptions['viewMode'] = array_get($options, 'view_mode');
-        }
+    if (array_get($options, 'view_mode')) {
+        $jsOptions['viewMode'] = array_get($options, 'view_mode');
+    }
 
-        if (isset($minimumDate)) {
-            $jsOptions['minDate'] = $minimumDate;
-        }
+    if (isset($minimumDate)) {
+        $jsOptions['minDate'] = $minimumDate;
+    }
 
-        if (isset($maximumDate)) {
-            $jsOptions['maxDate'] = $maximumDate;
-        }
+    if (isset($maximumDate)) {
+        $jsOptions['maxDate'] = $maximumDate;
+    }
 
-        if (isset($excludedDates) && count($excludedDates)) {
-            $jsOptions['disabledDates'] = $excludedDates;
-        }
+    if (isset($excludedDates) && count($excludedDates)) {
+        $jsOptions['disabledDates'] = $excludedDates;
+    }
 
-    ?>
-    <script>
-        $(function () {
-            $('#__datetimepicker__{{ $key }}__from').datetimepicker({!! json_encode($jsOptions) !!});
-            $('#__datetimepicker__{{ $key }}__to').datetimepicker({!! json_encode($jsOptions) !!});
-        });
-    </script>
-@endpush
+?>
+<script>
+    $(function () {
+        $('#__datetimepicker__{{ $key }}__from').datetimepicker({!! json_encode($jsOptions) !!});
+        $('#__datetimepicker__{{ $key }}__to').datetimepicker({!! json_encode($jsOptions) !!});
+    });
+</script>
+@cms_endscript
