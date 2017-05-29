@@ -26,6 +26,7 @@ class StaplerFile extends AbstractListDisplayStrategy
         }
 
         return view(static::VIEW, [
+            'exists'      => $source->size() > 0,
             'filename'    => $source->originalFilename(),
             'url'         => $source->url(),
         ]);

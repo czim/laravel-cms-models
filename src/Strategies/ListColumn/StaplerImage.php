@@ -10,6 +10,9 @@ class StaplerImage extends AbstractListDisplayStrategy
 {
     const VIEW = 'cms-models::model.partials.list.strategies.stapler_image';
 
+    const WIDTH  = 64;
+    const HEIGHT = 64;
+
     /**
      * Renders a display value to print to the list view.
      *
@@ -27,12 +30,16 @@ class StaplerImage extends AbstractListDisplayStrategy
 
         $resize = $this->getResizetoUse($source);
 
+        $width  = array_get($this->listColumnData->options, 'width');
+        $height = array_get($this->listColumnData->options, 'height');
+
         return view(static::VIEW, [
+            'exists'      => $source->size() > 0,
             'filename'    => $source->originalFilename(),
             'urlThumb'    => $source->url($resize),
             'urlOriginal' => $source->url(),
-            'width'       => 64,
-            'height'      => 64,
+            'width'       => $width ?: $height ?: static::WIDTH,
+            'height'      => $height ?: $width ?: static::HEIGHT,
         ]);
     }
 
