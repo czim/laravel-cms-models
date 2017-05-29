@@ -14,7 +14,7 @@
 ])
 
 
-@push('javascript-end')
+@cms_script
     <!-- form field display strategy: wysiwyg -->
     <script>
         $(function() {
@@ -67,4 +67,4 @@
             @endif
         });
     </script>
-@endpush
+@cms_endscript

@@ -62,7 +62,7 @@
 ])
 
 
-@push('javascript-end')
+@cms_script
     <!-- form field display strategy: locationpicker -->
     <?php
         $jsOptions = [
@@ -106,12 +106,7 @@
             $('#field-{{ $key }}__map').locationpicker({!! $encodedOptions !!});
         });
     </script>
-@endpush
+@cms_endscript
 
-@push('javascript-head')
-    <script src="//maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&libraries=places"></script>
-@endpush
-
-@push('javascript-end')
-    <script src="{{ asset('_cms/js/locationpicker.jquery.min.js') }}"></script>
-@endpush
+@cms_scriptassethead('//maps.googleapis.com/maps/api/js?key=' . e($googleMapsApiKey) . '&libraries=places')
+@cms_scriptasset(asset('_cms/js/locationpicker.jquery.min.js'))

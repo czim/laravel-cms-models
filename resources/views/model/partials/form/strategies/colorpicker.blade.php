@@ -24,7 +24,7 @@
 ])
 
 
-@push('javascript-end')
+@cms_script
     <!-- form field display strategy: colorpicker -->
     <?php
         $jsOptions = [];
@@ -39,4 +39,4 @@
             $('#__colorpicker__{{ $key }}').colorpicker({!! json_encode($jsOptions) !!});
         });
     </script>
-@endpush
+@cms_endscript

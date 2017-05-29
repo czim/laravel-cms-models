@@ -33,8 +33,7 @@
 
 
 
-@push('javascript-end')
-
+@cms_script
     <script>
         $(function() {
             $('#input-pagination-page-size').change(function() {
@@ -42,5 +41,4 @@
             });
         })
     </script>
-
-@endpush
+@cms_endscript

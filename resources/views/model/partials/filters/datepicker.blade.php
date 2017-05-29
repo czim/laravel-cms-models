@@ -16,7 +16,7 @@
 </div>
 
 
-@push('javascript-end')
+@cms_script
     <!-- filter strategy: datepicker -->
     <?php
         $jsOptions = [
@@ -45,4 +45,4 @@
             $('#__filter_datepicker__{{ $key }}').datetimepicker({!! json_encode($jsOptions) !!});
         });
     </script>
-@endpush
+@cms_endscript

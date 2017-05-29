@@ -35,13 +35,11 @@
 
 
 
-@push('javascript-end')
-
+@cms_scriptonce
     <script>
         $('form .edit-button-save-and-close').click(function () {
             $('#edit-form-save-and-close-input').val(1);
             $(this).closest('.btn-group').find('.edit-button-save').click();
         });
     </script>
-
-@endpush
+@cms_endscriptonce

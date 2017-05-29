@@ -177,8 +177,7 @@
 
 @endsection
 
-@push('javascript-end')
-
+@cms_script
     <script>
         $(function () {
 
@@ -214,4 +213,4 @@
             });
         });
     </script>
-@endpush
+@cms_endscript

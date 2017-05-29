@@ -27,7 +27,7 @@
 ])
 
 
-@push('javascript-end')
+@cms_script
     <!-- form field display strategy: relation plural autocomplete -->
     <?php
         $tagData = array_map(function ($tag) { return [ 'id' => $tag, 'text' => $tag ]; }, $tags ?: []);
@@ -44,4 +44,4 @@
             });
         });
     </script>
-@endpush
+@cms_endscript

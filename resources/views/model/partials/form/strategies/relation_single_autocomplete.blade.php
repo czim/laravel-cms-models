@@ -22,7 +22,7 @@
     'translated' => $translated,
 ])
 
-@push('javascript-end')
+@cms_script
     <!-- form field display strategy: relation single autocomplete -->
     <script>
         $(function() {
@@ -70,16 +70,7 @@
                 },
 
                 minimumInputLength: {{ $minimumInputLength }}
-
-                // let our custom formatter work
-//                escapeMarkup: function (markup) { return markup; }
-
-                // omitted for brevity, see the source of this page
-//                templateResult     : formatRepo,
-
-                // omitted for brevity, see the source of this page
-//                templateSelection  : formatRepoSelection
             });
         });
     </script>
-@endpush
+@cms_endscript

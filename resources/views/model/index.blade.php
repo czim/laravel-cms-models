@@ -244,7 +244,7 @@
 @endsection
 
 
-@push('javascript-end')
+@cms_script
 
     @include('cms-models::model.partials.list.scripts_delete', compact(
         'model',
@@ -277,5 +277,5 @@
         </script>
     @endif
 
-@endpush
+@cms_endscript
 
