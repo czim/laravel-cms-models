@@ -28,6 +28,7 @@ class StaplerImage extends AbstractListDisplayStrategy
         $resize = $this->getResizetoUse($source);
 
         return view(static::VIEW, [
+            'exists'      => $source->size() > 0,
             'filename'    => $source->originalFilename(),
             'urlThumb'    => $source->url($resize),
             'urlOriginal' => $source->url(),
