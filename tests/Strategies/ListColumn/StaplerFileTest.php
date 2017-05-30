@@ -40,6 +40,7 @@ class StaplerFileTest extends AbstractPostCommentSeededTestCase
         $attachment = Mockery::mock(Attachment::class);
         $attachment->shouldReceive('originalFilename')->andReturn('testing.txt');
         $attachment->shouldReceive('url')->andReturn('http://some.url/testing.txt');
+        $attachment->shouldReceive('size')->andReturn(123);
 
         /** @var Model|Mockery\Mock $model */
         $model = Mockery::mock(Model::class);
