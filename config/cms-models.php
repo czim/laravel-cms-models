@@ -348,6 +348,13 @@ return [
             // Aliases for field display strategy classes
             'aliases' => [
                 Enums\FormDisplayStrategy::TEXT             => 'DefaultStrategy',
+                Enums\FormDisplayStrategy::TEXT_EMAIL       => 'DefaultStrategy',
+                Enums\FormDisplayStrategy::PASSWORD         => 'DefaultStrategy',
+                Enums\FormDisplayStrategy::NUMERIC_DECIMAL  => 'DefaultStrategy',
+                Enums\FormDisplayStrategy::NUMERIC_INTEGER  => 'DefaultStrategy',
+                Enums\FormDisplayStrategy::NUMERIC_PRICE    => 'DefaultStrategy',
+                Enums\FormDisplayStrategy::NUMERIC_YEAR     => 'DefaultStrategy',
+
                 Enums\FormDisplayStrategy::BOOLEAN_CHECKBOX => 'BooleanCheckboxStrategy',
                 Enums\FormDisplayStrategy::BOOLEAN_DROPDOWN => 'BooleanDropdownStrategy',
                 Enums\FormDisplayStrategy::TEXTAREA         => 'TextAreaStrategy',
