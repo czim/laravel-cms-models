@@ -49,11 +49,22 @@ class FormStoreStrategyFactoryTest extends TestCase
     /**
      * @test
      */
-    function it_makes_a_default_strategy_if_it_could_not_be_resolved()
+    function it_makes_a_default_strategy_for_an_empty_value()
     {
         $factory = new FormStoreStrategyFactory;
 
-        static::assertInstanceOf(DefaultStrategy::class, $factory->make('unresolvable'));
+        static::assertInstanceOf(DefaultStrategy::class, $factory->make(null));
+    }
+
+    /**
+     * @test
+     * @expectedException \RuntimeException
+     */
+    function it_throws_an_exception_if_it_could_not_be_resolved()
+    {
+        $factory = new FormStoreStrategyFactory;
+
+        $factory->make('unresolvable');
     }
 
 }

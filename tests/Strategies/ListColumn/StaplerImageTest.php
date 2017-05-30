@@ -91,6 +91,7 @@ class StaplerImageTest extends AbstractPostCommentSeededTestCase
         $attachment->shouldReceive('url')->with('large')->once()->andReturn('http://some.url/testing_large.png');
         $attachment->shouldReceive('url')->andReturn('http://some.url/testing.png');
         $attachment->shouldReceive('getConfig')->andReturn($config);
+        $attachment->shouldReceive('size')->andReturn(1234);
 
         /** @var Model|Mockery\Mock $model */
         $model = Mockery::mock(Model::class);
