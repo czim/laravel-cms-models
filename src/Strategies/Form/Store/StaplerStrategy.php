@@ -167,22 +167,24 @@ class StaplerStrategy extends DefaultStrategy
             $fileRules = explode('|', $fileRules);
         }
 
-        if ( ! in_array('nullable', $fileRules)) {
-            $fileRules[] = 'nullable';
-        }
-
         if ( ! in_array('file', $fileRules)) {
             $fileRules[] = 'file';
         }
 
-        $keepRules   = ['nullable', 'boolean'];
-        $fileIdRules = ['nullable', 'integer'];
+        $keepRules   = ['boolean'];
+        $fileIdRules = ['integer'];
 
         // Modify rules for required fields that may be either uploaded directly or asynchronously.
         if ($this->formFieldData->required && ! $this->formFieldData->translated) {
-            $fileRules   = 'required_without_all:' . $field->key() . '.upload_id,' . $field->key() . '.keep';
-            $keepRules[] = 'required_without_all:' . $field->key() . '.upload,' . $field->key() . '.upload_id';
-            $fileIdRules = 'required_without_all:' . $field->key() . '.upload,' . $field->key() . '.keep';
+            $fileRules[]   = 'required_without_all:' . $field->key() . '.upload_id,' . $field->key() . '.keep';
+            $keepRules[]   = 'required_without_all:' . $field->key() . '.upload,' . $field->key() . '.upload_id';
+            $fileIdRules[] = 'required_without_all:' . $field->key() . '.upload,' . $field->key() . '.keep';
+        } else {
+            if ( ! in_array('nullable', $fileRules)) {
+                $fileRules[] = 'nullable';
+            }
+            $keepRules[]   = 'nullable';
+            $fileIdRules[] = 'nullable';
         }
 
         return [
