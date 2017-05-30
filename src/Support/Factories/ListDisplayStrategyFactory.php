@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Support\Factories;
 
 use Czim\CmsModels\Contracts\Support\Factories\ListDisplayStrategyFactoryInterface;
 use Czim\CmsModels\Contracts\Strategies\ListDisplayInterface;
+use RuntimeException;
 
 class ListDisplayStrategyFactory extends AbstractStrategyFactory implements ListDisplayStrategyFactoryInterface
 {
@@ -15,6 +16,10 @@ class ListDisplayStrategyFactory extends AbstractStrategyFactory implements List
      */
     public function make($strategy)
     {
+        if ( ! $strategy) {
+            return $this->getDefaultStrategy();
+        }
+
         // If the strategy indicates the FQN of display strategy,
         // or a classname that can be found in the default strategy name path, use it.
         if ($strategyClass = $this->resolveStrategyClass($strategy)) {
@@ -22,7 +27,7 @@ class ListDisplayStrategyFactory extends AbstractStrategyFactory implements List
             return app($strategyClass);
         }
 
-        return $this->getDefaultStrategy();
+        throw new RuntimeException("Could not create strategy instance for '{$strategy}'");
     }
 
     /**
