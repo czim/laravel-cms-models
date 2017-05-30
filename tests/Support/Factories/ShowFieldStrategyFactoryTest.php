@@ -64,23 +64,34 @@ class ShowFieldStrategyFactoryTest extends TestCase
     /**
      * @test
      */
-    function it_makes_a_default_strategy_if_it_could_not_be_resolved()
+    function it_makes_a_default_strategy_for_an_empty_value()
     {
         $factory = new ShowFieldStrategyFactory;
 
-        static::assertInstanceOf(DefaultStrategy::class, $factory->make('unresolvable'));
+        static::assertInstanceOf(DefaultStrategy::class, $factory->make(null));
     }
 
     /**
      * @test
      */
-    function it_makes_a_default_strategy_if_it_could_not_be_resolved_falling_back_to_list_default()
+    function it_uses_the_list_strategy_default_as_a_default_for_an_empty_value()
+    {
+        $this->app['config']->set('cms-models.strategies.show.default-strategy', null);
+
+        $factory = new ShowFieldStrategyFactory;
+
+        static::assertInstanceOf(DefaultStrategy::class, $factory->make(null));
+    }
+
+    /**
+     * @test
+     * @expectedException \RuntimeException
+     */
+    function it_throws_an_exception_if_it_could_not_be_resolved()
     {
         $factory = new ShowFieldStrategyFactory;
 
-        $this->app['config']->set('cms-models.strategies.show.default-strategy', null);
-
-        static::assertInstanceOf(DefaultStrategy::class, $factory->make('unresolvable'));
+        $factory->make('unresolvable');
     }
 
 }

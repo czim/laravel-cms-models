@@ -74,7 +74,7 @@
             {{ ucfirst(cms_trans('models.upload.browse')) }}
 
             {{-- Whether we should keep the old file --}}
-            <input name="{{ $name ?: (isset($baseKey) ? $baseKey : $key) }}[keep]" class="file-upload-keep-input" type="hidden" value="1">
+            <input name="{{ $name ?: (isset($baseKey) ? $baseKey : $key) }}[keep]" class="file-upload-keep-input" type="hidden" value="{{ $record->exists ? 1 : null }}">
 
             <input id="field-{{ $key }}"
                    type="file"

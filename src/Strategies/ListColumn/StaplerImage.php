@@ -30,8 +30,13 @@ class StaplerImage extends AbstractListDisplayStrategy
 
         $resize = $this->getResizetoUse($source);
 
-        $width  = array_get($this->listColumnData->options, 'width');
-        $height = array_get($this->listColumnData->options, 'height');
+        if ($this->listColumnData) {
+            $width  = array_get($this->listColumnData->options, 'width');
+            $height = array_get($this->listColumnData->options, 'height');
+        } else {
+            $width  = null;
+            $height = null;
+        }
 
         return view(static::VIEW, [
             'exists'      => $source->size() > 0,

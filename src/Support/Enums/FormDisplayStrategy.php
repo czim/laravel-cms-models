@@ -15,7 +15,7 @@ class FormDisplayStrategy extends Enum
 
     const TEXT         = 'text';
     const TEXT_EMAIL   = 'text-email';
-    const PASSWORD     = 'text';
+    const PASSWORD     = 'text-password';
     const TEXTAREA     = 'textarea';
     const WYSIWYG      = 'wysiwyg';
     const DROPDOWN     = 'dropdown';

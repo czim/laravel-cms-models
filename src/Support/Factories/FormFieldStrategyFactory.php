@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Support\Factories;
 
 use Czim\CmsModels\Contracts\Support\Factories\FormFieldStrategyFactoryInterface;
 use Czim\CmsModels\Contracts\Strategies\FormFieldDisplayInterface;
+use RuntimeException;
 
 class FormFieldStrategyFactory extends AbstractStrategyFactory implements FormFieldStrategyFactoryInterface
 {
@@ -15,6 +16,10 @@ class FormFieldStrategyFactory extends AbstractStrategyFactory implements FormFi
      */
     public function make($strategy)
     {
+        if ( ! $strategy) {
+            return $this->getDefaultStrategy();
+        }
+
         // If the strategy indicates the FQN of display strategy,
         // or a classname that can be found in the default strategy name path, use it.
         if ($strategyClass = $this->resolveStrategyClass($strategy)) {
@@ -22,7 +27,7 @@ class FormFieldStrategyFactory extends AbstractStrategyFactory implements FormFi
             return app($strategyClass);
         }
 
-        return $this->getDefaultStrategy();
+        throw new RuntimeException("Could not create strategy instance for '{$strategy}'");
     }
 
     /**
