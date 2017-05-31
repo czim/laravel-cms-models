@@ -15,6 +15,9 @@ use Czim\CmsModels\Support\Enums;
 
 return [
 
+    // Whether model create/update handling should be performed in a database transaction
+    'transactions' => false,
+
     /*
     |--------------------------------------------------------------------------
     | Models

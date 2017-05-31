@@ -10,6 +10,7 @@ use Czim\CmsModels\Exceptions\StrategyApplicationException;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesFormStoreStrategies;
+use DB;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 
@@ -53,10 +54,35 @@ class FormDataStorer implements FormDataStorerInterface
      * @param Model $model
      * @param array $data
      * @return bool
+     * @throws Exception
      */
     public function store(Model $model, array $data)
     {
-        return $this->storeFormFieldValuesForModel($model, $data);
+        if ( ! config('cms-models.transactions')) {
+            return $this->storeFormFieldValuesForModel($model, $data);
+        }
+
+        // Perform the whole store process in a transaction
+        DB::beginTransaction();
+
+        try {
+
+            $success = $this->storeFormFieldValuesForModel($model, $data);
+
+            if ($success) {
+                DB::commit();
+            } else {
+                DB::rollBack();
+            }
+
+        } catch (Exception $e) {
+
+            DB::rollBack();
+
+            throw $e;
+        }
+
+        return $success;
     }
 
 
