@@ -25,6 +25,7 @@ use Czim\CmsModels\ModelInformation\Data\ModelViewReferenceData;
  * @property string                 $style
  * @property bool                   $admin_only
  * @property string|string[]        $permissions
+ * @property ModelFormFieldHelpData $help
  * @property ModelViewReferenceData $before
  * @property ModelViewReferenceData $after
  */
@@ -34,6 +35,7 @@ class ModelFormFieldData extends AbstractModelInformationDataObject implements M
     protected $objects = [
         'before' => ModelViewReferenceData::class,
         'after'  => ModelViewReferenceData::class,
+        'help'   => ModelFormFieldHelpData::class,
     ];
 
     protected $attributes = [
@@ -81,7 +83,16 @@ class ModelFormFieldData extends AbstractModelInformationDataObject implements M
 
         // A permission key or an array of permission keys that is required to see & use this field
         'permissions' => null,
-        
+
+        // Set help information text to display to the user (instance of FormFieldHelpData)
+        'help' => [
+            // Defines texts to appear in the label, or field, instances of FormFieldHelpTextData
+            'label'         => [],
+            'label_tooltip' => [],
+            'field'         => [],
+            'field_tooltip' => [],
+        ],
+
         // Views to show before and/or after the form field. Instance of ModelViewReferenceData.
         'before' => null,
         'after'  => null,
@@ -103,6 +114,7 @@ class ModelFormFieldData extends AbstractModelInformationDataObject implements M
         'options',
         'admin_only',
         'permissions',
+        'help',
         'before',
         'after',
     ];

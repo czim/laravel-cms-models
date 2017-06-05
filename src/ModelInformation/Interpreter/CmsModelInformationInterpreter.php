@@ -122,8 +122,39 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
     {
         if (array_has($this->raw, 'form') && is_array($this->raw['form'])) {
 
+            $this->raw['form']['fields'] = array_get($this->raw['form'], 'fields', []);
+
+            foreach ($this->raw['form']['fields'] as $fieldKey => $field) {
+
+                if ( ! isset($field['help']) || empty($field['help'])) {
+                    continue;
+                }
+
+                // If the help text is given as a single string, translate to the default display
+                if (is_string($field['help'])) {
+
+                    $type = $this->getDefaultHelpTextType();
+                    $this->raw['form']['fields'][ $fieldKey ]['help'] = [
+                        $type => [ 'text' => $field['help'] ],
+                    ];
+                    continue;
+                }
+
+
+                foreach (['label', 'label_tooltip', 'field', 'field_tooltip'] as $helpKey) {
+
+                    // If the help text for a specific type is a string, translate to array data
+                    if (is_string(array_get($field['help'], $helpKey))) {
+
+                        $this->raw['form']['fields'][ $fieldKey ]['help'][ $helpKey ] = [
+                            'text' => array_get($field['help'], $helpKey),
+                        ];
+                    }
+                }
+            }
+
             $this->raw['form']['fields'] = $this->normalizeStandardArrayProperty(
-                array_get($this->raw['form'], 'fields', []),
+                $this->raw['form']['fields'],
                 'display_strategy',
                 ModelFormFieldData::class,
                 'form.fields'
@@ -362,6 +393,14 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
         }
 
         return $object;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getDefaultHelpTextType()
+    {
+        return config('cms-models.help-text.form.default-type', 'field');
     }
 
 }
