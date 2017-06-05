@@ -72,7 +72,7 @@ class ModelFormHelpTextData extends AbstractModelInformationDataObject implement
      *
      * @return string|null
      */
-    public function class()
+    public function cssClass()
     {
         return $this->class;
     }

@@ -26,7 +26,7 @@ interface ModelFormHelpTextDataInterface extends ArrayAccess, Arrayable
      *
      * @return string|null
      */
-    public function class();
+    public function cssClass();
 
     /**
      * Returns the view partial to use for this help text.
