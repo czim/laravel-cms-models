@@ -90,6 +90,20 @@ class ModelFormHelpTextDataTest extends TestCase
     /**
      * @test
      */
+    function it_returns_whether_it_should_be_escaped()
+    {
+        $data = new ModelFormHelpTextData;
+
+        static::assertTrue($data->escape());
+
+        $data->escape = false;
+
+        static::assertFalse($data->escape());
+    }
+
+    /**
+     * @test
+     */
     function it_merges_with_another_dataobject()
     {
         $data = new ModelFormHelpTextData;
