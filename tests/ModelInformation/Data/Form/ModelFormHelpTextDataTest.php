@@ -72,7 +72,7 @@ class ModelFormHelpTextDataTest extends TestCase
 
         $data->class = 'testing';
 
-        static::assertEquals('testing', $data->class());
+        static::assertEquals('testing', $data->cssClass());
     }
 
     /**
