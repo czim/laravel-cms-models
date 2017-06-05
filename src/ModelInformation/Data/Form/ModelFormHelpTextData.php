@@ -14,6 +14,7 @@ use Czim\CmsModels\ModelInformation\Data\AbstractModelInformationDataObject;
  * @property string $icon
  * @property string $class
  * @property string $view
+ * @property bool   $escape
  */
 class ModelFormHelpTextData extends AbstractModelInformationDataObject implements ModelFormHelpTextDataInterface
 {
@@ -32,6 +33,9 @@ class ModelFormHelpTextData extends AbstractModelInformationDataObject implement
 
         // View partial to use, to which text content is passed as $text
         'view' => null,
+
+        // Whether the text content should be HTML-escaped
+        'escape' => true,
     ];
 
     protected $known = [
@@ -40,6 +44,7 @@ class ModelFormHelpTextData extends AbstractModelInformationDataObject implement
         'icon',
         'class',
         'view',
+        'escape',
     ];
 
 
@@ -85,6 +90,16 @@ class ModelFormHelpTextData extends AbstractModelInformationDataObject implement
     public function view()
     {
         return $this->view;
+    }
+
+    /**
+     * Returns whether the text content should be HTML-escaped.
+     *
+     * @return bool
+     */
+    public function escape()
+    {
+        return (bool) $this->escape;
     }
 
     /**

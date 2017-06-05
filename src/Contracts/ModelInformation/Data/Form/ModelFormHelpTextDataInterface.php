@@ -36,6 +36,13 @@ interface ModelFormHelpTextDataInterface extends ArrayAccess, Arrayable
     public function view();
 
     /**
+     * Returns whether the text content should be HTML-escaped.
+     *
+     * @return bool
+     */
+    public function escape();
+
+    /**
      * @param ModelFormHelpTextDataInterface $with
      */
     public function merge(ModelFormHelpTextDataInterface $with);
