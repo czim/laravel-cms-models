@@ -14,6 +14,7 @@ use Czim\CmsModels\Exceptions\ModelConfigurationDataException;
 use Czim\CmsModels\ModelInformation\Data\Export\ModelExportColumnData;
 use Czim\CmsModels\ModelInformation\Data\Export\ModelExportStrategyData;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
+use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldHelpData;
 use Czim\CmsModels\ModelInformation\Data\Listing\ModelListColumnData;
 use Czim\CmsModels\ModelInformation\Data\Listing\ModelListFilterData;
 use Czim\CmsModels\ModelInformation\Data\Listing\ModelListParentData;
@@ -320,6 +321,18 @@ class CmsModelInformationInterpreterTest extends TestCase
                             'format' => 'd-m-Y H:i',
                         ],
                     ],
+                    'help_field_a' => [
+                        'display_strategy' => 'test',
+                        'store_strategy'   => 'test',
+                        'help' => 'help string',
+                    ],
+                    'help_field_b' => [
+                        'display_strategy' => 'test',
+                        'store_strategy'   => 'test',
+                        'help' => [
+                            'label_tooltip' => 'help string',
+                        ],
+                    ],
                 ],
             ],
         ];
@@ -330,7 +343,7 @@ class CmsModelInformationInterpreterTest extends TestCase
 
         static::assertInstanceOf(ModelInformation::class, $output);
 
-        static::assertCount(3, $output->form->fields);
+        static::assertCount(5, $output->form->fields);
 
         /** @var ModelFormFieldData $field */
         $field = $output->form->fields['title'];
@@ -353,6 +366,16 @@ class CmsModelInformationInterpreterTest extends TestCase
         static::assertEquals('datetime', $field->display_strategy);
         static::assertEquals('date', $field->store_strategy);
         static::assertEquals(['format' => 'd-m-Y H:i'], $field->options);
+
+        $field = $output->form->fields['help_field_a'];
+        static::assertInstanceOf(ModelFormFieldDataInterface::class, $field);
+        static::assertInstanceOf(ModelFormFieldHelpData::class, $field->help);
+        static::assertEquals('help string', $field->help->field->text);
+
+        $field = $output->form->fields['help_field_b'];
+        static::assertInstanceOf(ModelFormFieldDataInterface::class, $field);
+        static::assertInstanceOf(ModelFormFieldHelpData::class, $field->help);
+        static::assertEquals('help string', $field->help->label_tooltip->text);
     }
 
     // ------------------------------------------------------------------------------
