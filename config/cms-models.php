@@ -567,4 +567,23 @@ return [
 
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Help Texts
+    |--------------------------------------------------------------------------
+    |
+    | Settings for default rendering of help text in the CMS.
+    |
+    */
+
+    'help-text' => [
+
+        'form' => [
+
+            // Default way to show help texts defined for form fields
+            // One of: field, field_tooltip, label, label_tooltip
+            'default-type' => 'field',
+        ],
+    ],
+
 ];
