@@ -9,5 +9,6 @@
         'text'   => $help->text(),
         'class'  => $help->cssClass(),
         'escape' => $help->escape(),
+        'icon'   => $help->icon(),
     ])
-@endif  
+@endif
