@@ -10,7 +10,7 @@ services:
 before_install:
   - mysql -e 'CREATE DATABASE testing;'
 
-install: composer install --dev
+install: composer install
 
 script:
   - mkdir -p build/logs
