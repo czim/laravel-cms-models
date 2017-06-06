@@ -7,12 +7,13 @@
                 {{ $field->label() }}
             </span>
 
-            {{-- Help text --}}
-            @include('cms-models::model.partials.form.field_help_strategy', [
-                'type' => 'label',
-                'help' => $field->help->label,
-                'key'  => $key,
-            ])
+            @if ($field->help)
+                @include('cms-models::model.partials.form.field_help_strategy', [
+                    'type' => 'label',
+                    'help' => $field->help->label,
+                    'key'  => $key,
+                ])
+            @endif
         </label>
 @endif
 
@@ -25,12 +26,13 @@
 
         {!! $strategy !!}
 
-        {{-- Help text --}}
-        @include('cms-models::model.partials.form.field_help_strategy', [
-            'type' => 'field',
-            'help' => $field->help->field,
-            'key'  => $key,
-        ])
+        @if ($field->help)
+            @include('cms-models::model.partials.form.field_help_strategy', [
+                'type' => 'field',
+                'help' => $field->help->field,
+                'key'  => $key,
+            ])
+        @endif
 
         {{-- After view --}}
         @if ($field->after && $field->after->view)
