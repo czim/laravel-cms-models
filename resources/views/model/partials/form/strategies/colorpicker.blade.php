@@ -26,13 +26,13 @@
 
 @cms_script
     <!-- form field display strategy: colorpicker -->
-    <?php
+    @php
         $jsOptions = [];
 
         if (array_get($options, 'format')) {
             $jsOptions['format'] = array_get($options, 'format');
         }
-    ?>
+    @endphp
 
     <script>
         $(function() {

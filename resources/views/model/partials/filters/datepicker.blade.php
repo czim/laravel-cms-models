@@ -18,7 +18,7 @@
 
 @cms_script
     <!-- filter strategy: datepicker -->
-    <?php
+    @php
         $jsOptions = [
             'format' => array_get($options, 'moment_format', 'YYYY-MM-DD'),
         ];
@@ -38,8 +38,8 @@
         if (isset($excludedDates) && count($excludedDates)) {
             $jsOptions['disabledDates'] = $excludedDates;
         }
+    @endphp
 
-    ?>
     <script>
         $(function () {
             $('#__filter_datepicker__{{ $key }}').datetimepicker({!! json_encode($jsOptions) !!});

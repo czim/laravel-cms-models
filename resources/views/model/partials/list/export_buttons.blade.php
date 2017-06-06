@@ -8,9 +8,9 @@
 
         @foreach ($availableExportKeys as $exportKey)
 
-            <?php
+            @php
                 $exportData = $model->export->strategies[ $exportKey ];
-            ?>
+            @endphp
 
             <a class="btn btn-sm btn-default" href="{{ route("{$routePrefix}.export", [ $exportKey ]) }}" target="_blank">
                 @if ($exportData->icon())

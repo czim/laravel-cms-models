@@ -9,10 +9,10 @@
         {{ $group->display() }}
     </label>
 
-    <?php
+    @php
         $columnWidths = $group->columns();
         $index = 0;
-    ?>
+    @endphp
 
     @foreach ($group->children as $nodeKey => $node)
 
@@ -33,7 +33,9 @@
             ]
         ))
 
-        <?php $index++ ?>
+        @php
+            $index++
+        @endphp
     @endforeach
 
 </div>

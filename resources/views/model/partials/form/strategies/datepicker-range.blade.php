@@ -53,7 +53,7 @@
 
 @cms_script
 <!-- form field display strategy: datepicker datetime -->
-<?php
+@php
     $jsOptions = [
         'format' => array_get($options, 'moment_format', 'YYYY-MM-DD HH:mm'),
     ];
@@ -73,8 +73,8 @@
     if (isset($excludedDates) && count($excludedDates)) {
         $jsOptions['disabledDates'] = $excludedDates;
     }
+@endphp
 
-?>
 <script>
     $(function () {
         $('#__datetimepicker__{{ $key }}__from').datetimepicker({!! json_encode($jsOptions) !!});

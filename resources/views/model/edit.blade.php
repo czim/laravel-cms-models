@@ -1,6 +1,6 @@
 @extends(cms_config('views.layout'))
 
-<?php
+@php
     if ($creating) {
         $title = ucfirst(cms_trans('common.action.create')) . ' ' . $model->label();
     } else {
@@ -8,7 +8,7 @@
                . ' ' . $model->label()
                . ' ' . (trim($recordReference) ?: ($record->incrementing ? '#' . $record->getKey() : "'" . $record->getKey() .  "'"));
     }
-?>
+@endphp
 
 @section('title', $title)
 
@@ -101,9 +101,9 @@
 
         @if ($model->form->hasTabs())
 
-            <?php
+            @php
                 $tabs = $model->form->tabs();
-            ?>
+            @endphp
 
             <div class="tab-container">
 

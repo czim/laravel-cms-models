@@ -64,7 +64,7 @@
 
 @cms_script
     <!-- form field display strategy: locationpicker -->
-    <?php
+    @php
         $jsOptions = [
             'location' => [
                 'latitude'  => array_get($value, 'latitude') ?: $defaultLatitude,
@@ -100,7 +100,8 @@
             ],
             $encodedOptions
         );
-    ?>
+    @endphp
+
     <script>
         $(function () {
             $('#field-{{ $key }}__map').locationpicker({!! $encodedOptions !!});

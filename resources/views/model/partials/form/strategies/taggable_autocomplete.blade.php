@@ -29,9 +29,9 @@
 
 @cms_script
     <!-- form field display strategy: relation plural autocomplete -->
-    <?php
+    @php
         $tagData = array_map(function ($tag) { return [ 'id' => $tag, 'text' => $tag ]; }, $tags ?: []);
-    ?>
+    @endphp
 
     <script>
         $(function() {

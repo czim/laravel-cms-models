@@ -1,7 +1,7 @@
-<?php
+@php
     // todo: make strategy dependent...
     $active = $record->{$model->list->active_column};
-?>
+@endphp
 
 <td class="column column-activate">
 

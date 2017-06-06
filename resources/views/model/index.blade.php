@@ -1,6 +1,6 @@
 @extends(cms_config('views.layout'))
 
-<?php
+@php
     if ($hasActiveListParent) {
         if ($listParent = last($listParents)) {
             $title = cms_trans('models.list-parents.children-for-parent-with-id', [
@@ -17,7 +17,7 @@
     } else {
         $title = ucfirst($model->labelPlural());
     }
-?>
+@endphp
 
 @section('title', $title)
 
@@ -123,14 +123,14 @@
 
                     <tbody>
 
-                        <?php
+                        @php
                             // set the user link route according to permissions
                             $route = cms_auth()->can("{$permissionPrefix}edit") ? "{$routePrefix}.edit" : "{$routePrefix}.show";
-                        ?>
+                        @endphp
 
                         @foreach ($records as $record)
 
-                            <?php
+                            @php
                                 $recordKey = $record->getKey();
 
                                 $style = $model->list->activatable && ! $record->{$model->list->active_column}
@@ -138,7 +138,7 @@
 
 
                                 $defaultActionUrl = $defaultRowAction ? $defaultRowAction->link($record) : false;
-                            ?>
+                            @endphp
 
                             <tr class="records-row {{ $style }}" data-id="{{ $record->getKey() }}" data-reference="{{ $recordReferences[ $record->getKey() ] }}"
                                 @if ($defaultActionUrl) data-default-action-url="{{ $defaultActionUrl }}" @endif>

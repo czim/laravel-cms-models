@@ -16,10 +16,10 @@
 
         @foreach ($scopes as $key => $scope)
 
-            <?php
+            @php
                 $count = ($scopeCounts && isset($scopeCounts[ $key ])) ? $scopeCounts[ $key ] : null;
                 $class = trim(($activeScope == $scope->method ? 'active' : null) . ' ' . ($count === 0 ? 'disabled' : null));
-            ?>
+            @endphp
 
             <li role="presentation" class="{{ $class }}">
                 <a class="scope-tab-activate" href="#" role="tab" data-scope="{{ $scope->method }}">

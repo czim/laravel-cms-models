@@ -1,22 +1,22 @@
 
 <ul class="nav nav-tabs" role="tablist">
 
-    <?php
+    @php
         $count = 0;
 
         $oldTabKey = old(\Czim\CmsModels\Http\Controllers\DefaultModelController::ACTIVE_TAB_PANE_KEY, $activeTab);
-    ?>
+    @endphp
 
     @foreach ($tabs as $key => $tab)
         @continue( ! $tab->shouldDisplay())
 
-        <?php
+        @php
             $count++;
 
             $tabActive = $oldTabKey ? $oldTabKey === $key : $count == 1;
 
             $hasErrors = array_key_exists($key, $errorsPerTab) && $errorsPerTab[$key];
-        ?>
+        @endphp
 
         <li role="presentation" class="{{ $tabActive ? 'active' : null }}">
             <a href="#tab-{{ $key }}" aria-controls="tab-{{ $key }}" role="tab"

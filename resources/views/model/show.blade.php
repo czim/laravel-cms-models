@@ -1,9 +1,9 @@
 @extends(cms_config('views.layout'))
 
-<?php
+@php
     $title = ucfirst($model->label())
            . ' ' . (trim($recordReference) ?: ($record->incrementing ? '#' . $record->getKey() : "'" . $record->getKey() .  "'"));
-?>
+@endphp
 
 @section('title', $title)
 

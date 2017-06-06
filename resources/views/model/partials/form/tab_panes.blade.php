@@ -1,20 +1,20 @@
 
 <div class="tab-content">
 
-    <?php
+    @php
         $count = 0;
 
         $oldTabKey = old(\Czim\CmsModels\Http\Controllers\DefaultModelController::ACTIVE_TAB_PANE_KEY, $activeTab);
-    ?>
+    @endphp
 
     @foreach ($tabs as $key => $tab)
         @continue( ! $tab->shouldDisplay())
 
-        <?php
+        @php
             $count++;
 
             $tabActive = $oldTabKey ? $oldTabKey === $key : $count == 1;
-        ?>
+        @endphp
 
         <div id="tab-{{ $key }}" role="tabpanel" class="tab-pane {{ $tabActive ? 'active' : null }}">
 
