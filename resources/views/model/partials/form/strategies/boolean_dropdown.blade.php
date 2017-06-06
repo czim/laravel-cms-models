@@ -9,12 +9,12 @@
             @endif
     ></option>
 
-    <?php
+    @php
         $selectOptions = [
             1 => cms_trans('common.boolean.true'),
             0 => cms_trans('common.boolean.false'),
         ];
-    ?>
+    @endphp
 
     @foreach ($selectOptions as $selectKey => $display)
 

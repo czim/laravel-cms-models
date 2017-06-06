@@ -1,4 +1,4 @@
-<?php
+@php
     /** @var \Czim\CmsModels\Contracts\Strategies\ListDisplayInterface $strategy */
     /** @var \Czim\CmsModels\ModelInformation\Data\Listing\ModelListColumnData $column */
     /** @var \Illuminate\Database\Eloquent\Model $record */
@@ -18,10 +18,10 @@
             array_values($attributes)
         )
     );
-?>
+@endphp
 
 <td {!! $attributes !!}>
-    <?php
+    @php
         try {
             echo $strategy->render($record, $column->source);
 
@@ -34,5 +34,5 @@
                 $e
             );
         }
-    ?>
+    @endphp
 </td>

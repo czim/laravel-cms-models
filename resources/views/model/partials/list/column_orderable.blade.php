@@ -1,7 +1,7 @@
-<?php
+@php
     $orderable = $record->{$model->list->orderable};
     $position  = $record->{$model->list->getOrderableColumn()};
-?>
+@endphp
 
 <td class="column column-orderable column-right" nowrap="nowrap"
     data-id="{{ $record->getKey() }}"

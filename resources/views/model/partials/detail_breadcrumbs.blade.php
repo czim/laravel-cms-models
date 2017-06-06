@@ -8,9 +8,9 @@
 
     @if ($hasActiveListParent)
 
-        <?php
+        @php
             $previousListParent = null;
-        ?>
+        @endphp
 
         @foreach ($listParents as $listParent)
 
@@ -38,13 +38,15 @@
                 @endif
             </li>
 
-            <?php
+            @php
                 $previousListParent = $listParent;
-            ?>
+            @endphp
 
         @endforeach
 
-        <?php $listParent = last($listParents) ?>
+        @php
+            $listParent = last($listParents)
+        @endphp
 
         <li>
             <a href="{{ cms_route("{$routePrefix}.index") }}">

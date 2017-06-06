@@ -1,7 +1,7 @@
 
-<?php
+@php
     $filterData = $model->list->filters;
-?>
+@endphp
 
 @if ( ! $model->list->disable_filters && $filterData && count($filterData))
 

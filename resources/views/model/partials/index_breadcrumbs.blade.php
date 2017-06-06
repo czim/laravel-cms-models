@@ -8,9 +8,9 @@
 
     @if ($hasActiveListParent)
 
-        <?php
+        @php
             $previousListParent = null;
-        ?>
+        @endphp
 
         @foreach ($listParents as $listParent)
 
@@ -38,9 +38,9 @@
                 @endif
             </li>
 
-            <?php
+            @php
                 $previousListParent = $listParent;
-            ?>
+            @endphp
 
         @endforeach
 

@@ -19,7 +19,7 @@
     <script>
         $(function() {
 
-            <?php
+            @php
                 $settings = [];
 
                 // Build config path to use
@@ -58,7 +58,7 @@
                 if (is_array(array_get($options, 'editor_options'))) {
                     $settings = array_merge($settings, array_get($options, 'editor_options'));
                 }
-            ?>
+            @endphp
 
             @if ( ! count($settings))
                 CKEDITOR.replace("field-{{ $key }}");

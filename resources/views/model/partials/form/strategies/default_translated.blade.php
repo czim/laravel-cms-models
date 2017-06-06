@@ -1,12 +1,12 @@
 
 <div class="translated-form-field-container">
 
-    <?php
+    @php
         /** @var \Czim\CmsModels\Contracts\Support\Translation\TranslationLocaleHelperInterface $helper */
         $helper = app(\Czim\CmsModels\Contracts\Support\Translation\TranslationLocaleHelperInterface::class);
         $currentLocale      = $helper->activeLocale();
         $translationLocales = $helper->availableLocales();
-    ?>
+    @endphp
 
     {{-- for each active locale show the pre-rendered form field strategy view --}}
     @foreach ($translationLocales as $locale)
