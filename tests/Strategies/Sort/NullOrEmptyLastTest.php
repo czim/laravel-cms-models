@@ -1,17 +1,17 @@
 <?php
 namespace Czim\CmsModels\Test\Strategies\Sort;
 
-use Czim\CmsModels\Strategies\Sort\NullLast;
+use Czim\CmsModels\Strategies\Sort\NullOrEmptyLast;
 use Czim\CmsModels\Test\DatabaseTestCase;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 
 /**
- * Class NullLastTest
+ * Class NullOrEmptyLastTest
  *
  * @group strategies
  * @group strategies-sort
  */
-class NullLastTest extends DatabaseTestCase
+class NullOrEmptyLastTest extends DatabaseTestCase
 {
 
     /**
@@ -19,7 +19,7 @@ class NullLastTest extends DatabaseTestCase
      */
     function it_orders_a_model_query_normally_if_using_if_is_not_supported()
     {
-        $strategy = new NullLast;
+        $strategy = new NullOrEmptyLast;
 
         // title ordered
         $query = $strategy->apply(new TestPost, 'type');
@@ -34,13 +34,13 @@ class NullLastTest extends DatabaseTestCase
     {
         $this->setConfigForMysql();
 
-        $strategy = new NullLast;
+        $strategy = new NullOrEmptyLast;
 
         $query = TestPost::query();
         $query = $strategy->apply($query, 'type');
 
         static::assertRegExp(
-            '#order by IF\((`[a-z0-9_-]+`\.)?`type` IS NULL,1,0\) asc#',
+            '#order by IF\((`[a-z0-9_-]+`\.)?`type` IS NULL OR (`[a-z0-9_-]+`\.)?`type` = \'\',1,0\) asc#',
             $query->toSql(),
             'No null-sorting IF() clause found in query'
         );

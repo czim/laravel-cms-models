@@ -5,6 +5,11 @@ use DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class NullLast
+ *
+ * Sorts only strict NULL values after all else.
+ */
 class NullLast extends AbstractSortStrategy
 {
 
@@ -24,11 +29,25 @@ class NullLast extends AbstractSortStrategy
             $query = $query->query();
         }
 
-        if ($this->databaseSupportsIf($query)) {
-            $query = $query->orderBy(DB::raw("IF(`{$column}` IS NULL OR `{$column}` = '',1,0)"));
-        }
+        $query = $this->applyNullLastQuery($query, $column);
 
         return $query->orderBy($column, $direction);
+    }
+
+    /**
+     * Applies logic to query builder to sort null or empty fields last.
+     *
+     * @param Builder $query
+     * @param string $column
+     * @return Builder
+     */
+    protected function applyNullLastQuery($query, $column)
+    {
+        if ($this->databaseSupportsIf($query)) {
+            $query = $query->orderBy(DB::raw("IF(`{$column}` IS NULL,1,0)"));
+        }
+
+        return $query;
     }
 
 }

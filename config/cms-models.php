@@ -311,8 +311,9 @@ return [
 
             // Aliases for sort strategy classes
             'sort-aliases' => [
-                'null-last'  => SortStrategies\NullLast::class,
-                'translated' => SortStrategies\TranslatedAttribute::class,
+                Enums\SortStrategy::NULL_LAST       => SortStrategies\NullLast::class,
+                Enums\SortStrategy::NULL_LAST_EMPTY => SortStrategies\NullOrEmptyLast::class,
+                Enums\SortStrategy::TRANSLATED      => SortStrategies\TranslatedAttribute::class,
             ],
 
             // Aliases for action link strategy classes
