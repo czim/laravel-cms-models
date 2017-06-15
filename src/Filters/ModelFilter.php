@@ -67,6 +67,16 @@ class ModelFilter extends Filter
     }
 
     /**
+     * Altered to allow '0' to be a usable value, but ignore empty string.
+     *
+     * {@inheritdoc}
+     */
+    protected function isParameterValueUnset($parameter, $value)
+    {
+        return $value === '' || $value === null;
+    }
+
+    /**
      * @return FilterStrategyFactoryInterface
      */
     protected function getFilterFactory()
