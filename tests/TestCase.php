@@ -19,6 +19,9 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         $app['config']->set('cms-models', include(realpath(dirname(__DIR__) . '/config/cms-models.php')));
         $app['config']->set('cms-models.analyzer.database.class', null);
 
+        $app['config']->set('cms-models.defaults.default-listing-action-edit', false);
+        $app['config']->set('cms-models.defaults.default-listing-action-show', false);
+
         $app['view']->addNamespace('cms-models', realpath(dirname(__DIR__) . '/resources/views'));
     }
 
