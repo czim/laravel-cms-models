@@ -1,6 +1,9 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Enricher\Steps;
 
+use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
+use Czim\CmsModels\Support\Enums\ActionReferenceType;
+
 class EnrichBasicListData extends AbstractEnricherStep
 {
 
@@ -10,7 +13,8 @@ class EnrichBasicListData extends AbstractEnricherStep
     protected function performEnrichment()
     {
         $this->setReferenceSource()
-             ->setSortingOrder();
+             ->setSortingOrder()
+             ->setDefaultRowActions();
     }
 
     /**
@@ -58,6 +62,58 @@ class EnrichBasicListData extends AbstractEnricherStep
         }
 
         return $this;
+    }
+
+    /**
+     * Sets default actions, if configured to and none are defined.
+     *
+     * @return $this
+     */
+    protected function setDefaultRowActions()
+    {
+        $actions = $this->info->list->default_action ?: [];
+
+        if (count($actions)) {
+            return $this;
+        }
+
+        $addEditAction = config('cms-models.defaults.default-listing-action-edit', false);
+        $addShowAction = config('cms-models.defaults.default-listing-action-show', false);
+
+        if ( ! $addEditAction && ! $addShowAction) {
+            return $this;
+        }
+
+        // The edit and/or show action should be set as default index row click action.
+
+        $modelSlug        = $this->getRouteHelper()->getRouteSlugForModelClass(get_class($this->model));
+        $permissionPrefix = $this->getRouteHelper()->getPermissionPrefixForModelSlug($modelSlug);
+
+        if ($addEditAction) {
+            $actions[] = [
+                'strategy'    => ActionReferenceType::EDIT,
+                'permissions' => "{$permissionPrefix}edit",
+            ];
+        }
+
+        if ($addShowAction) {
+            $actions[] = [
+                'strategy'    => ActionReferenceType::SHOW,
+                'permissions' => "{$permissionPrefix}show",
+            ];
+        }
+
+        $this->info->list->default_action = $actions;
+
+        return $this;
+    }
+
+    /**
+     * @return RouteHelperInterface
+     */
+    protected function getRouteHelper()
+    {
+        return app(RouteHelperInterface::class);
     }
 
 }

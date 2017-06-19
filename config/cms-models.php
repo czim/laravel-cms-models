@@ -72,6 +72,12 @@ return [
         // Whether to ask a user to provide extra confirmation before deleting models.
         'confirm_delete' => false,
 
+
+        // Whether to default any model listing click to the edit action if permissible
+        'default-listing-action-edit' => true,
+        // Whether to default any model listing click to the show action if permissible
+        // This is overruled by default-listing-action-edit if enabled.
+        'default-listing-action-show' => true,
     ],
 
     /*
