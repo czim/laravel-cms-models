@@ -2,6 +2,8 @@
 namespace Czim\CmsModels\Test\ModelInformation\Enricher\Steps;
 
 use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;
+use Czim\CmsModels\Contracts\Routing\RouteHelperInterface;
+use Czim\CmsModels\ModelInformation\Data\ModelActionReferenceData;
 use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\ModelInformation\Enricher\Steps\EnrichBasicListData;
@@ -170,6 +172,77 @@ class EnrichBasicListDataTest extends TestCase
         $step->enrich($info, []);
 
         static::assertEquals('testing', $info->reference->source);
+    }
+
+
+    // ------------------------------------------------------------------------------
+    //      Default Row Action
+    // ------------------------------------------------------------------------------
+
+    /**
+     * @test
+     */
+    function it_uses_default_edit_and_show_actions_if_none_set_and_configured_to()
+    {
+        $this->app['config']->set('cms-models.defaults.default-listing-action-edit', true);
+        $this->app['config']->set('cms-models.defaults.default-listing-action-show', true);
+
+        /** @var RouteHelperInterface|Mockery\Mock $routeHelper */
+        $routeHelper = Mockery::mock(RouteHelperInterface::class);
+        $routeHelper->shouldReceive('getRouteSlugForModelClass')->andReturn('app-models-test');
+        $routeHelper->shouldReceive('getPermissionPrefixForModelSlug')->with('app-models-test')->andReturn('models.app-models-test.');
+
+        $this->app->instance(RouteHelperInterface::class, $routeHelper);
+
+        $mockEnricher = $this->getMockEnricher();
+
+        $step = new EnrichBasicListData($mockEnricher);
+
+        $info = new ModelInformation;
+
+        $info->model          = TestPost::class;
+        $info->original_model = TestPost::class;
+
+        $step->enrich($info, []);
+
+        static::assertCount(2, $info->list->default_action);
+        static::assertInstanceof(ModelActionReferenceData::class, $info->list->default_action[0]);
+        static::assertEquals('edit', $info->list->default_action[0]['strategy']);
+        static::assertEquals('models.app-models-test.edit', $info->list->default_action[0]['permissions']);
+        static::assertInstanceof(ModelActionReferenceData::class, $info->list->default_action[1]);
+        static::assertEquals('show', $info->list->default_action[1]['strategy']);
+        static::assertEquals('models.app-models-test.show', $info->list->default_action[1]['permissions']);
+    }
+
+    /**
+     * @test
+     */
+    function it_does_not_enricht_default_actions_if_they_are_set()
+    {
+        $this->app['config']->set('cms-models.defaults.default-listing-action-edit', true);
+        $this->app['config']->set('cms-models.defaults.default-listing-action-show', true);
+
+        $mockEnricher = $this->getMockEnricher();
+
+        $step = new EnrichBasicListData($mockEnricher);
+
+        $info = new ModelInformation;
+
+        $info->model          = TestPost::class;
+        $info->original_model = TestPost::class;
+        $info->list->default_action = [
+            [
+                'strategy'    => 'show',
+                'permissions' => 'testing',
+            ]
+        ];
+
+        $step->enrich($info, []);
+
+        static::assertCount(1, $info->list->default_action);
+        static::assertInstanceof(ModelActionReferenceData::class, $info->list->default_action[0]);
+        static::assertEquals('show', $info->list->default_action[0]['strategy']);
+        static::assertEquals('testing', $info->list->default_action[0]['permissions']);
     }
 
 
