@@ -21,7 +21,8 @@ class CacheModelInformationTest extends ConsoleTestCase
         $this->getConsoleKernel()->registerCommand(new CacheModelInformation());
 
         $mock = $this->getMockRepository();
-        $mock->shouldReceive('writeCache')->once();
+        $mock->shouldReceive('clearCache')->once()->andReturnSelf();
+        $mock->shouldReceive('writeCache')->once()->andReturnSelf();
 
         $this->app->instance(ModelInformationRepositoryInterface::class, $mock);
 
