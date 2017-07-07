@@ -19,7 +19,9 @@ class CacheModelInformation extends Command
      */
     public function handle(ModelInformationRepositoryInterface $repository)
     {
-        $repository->writeCache();
+        $repository
+            ->clearCache()
+            ->writeCache();
 
         $this->info('Cached model information.');
     }
