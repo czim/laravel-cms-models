@@ -33,6 +33,33 @@ For a better end-user experience when using file uploads, installing the [Larave
  5.3.x               | 1.3.x
  5.4.x               | 1.4.x
  
+## Installation
+
+Add the module class to your `cms-modules.php` configuration file:
+
+``` php
+    'modules' => [
+        // ...
+        Czim\CmsModels\Modules\ModelModuleGenerator::class,
+    ],
+```
+
+Add the service provider to your `cms-modules.php` configuration file:
+
+``` php
+    'providers' => [
+        // ...
+        Czim\CmsModels\Providers\CmsModelsServiceProvider::class,
+        // ...
+    ],
+```
+
+To publish the config:
+
+``` bash
+php artisan vendor:publish
+```
+
 ## Configuration
 
 Models may be added with basic functionality by simply registering them in the `cms-models` config, or special CMS model configuration files may be created for them to customize them as needed.
