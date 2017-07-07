@@ -241,15 +241,10 @@ Purely for convenience, it is possible to set a default action for clicking on a
 
 This must be an array with one or more arrays with the following keys:
 
-- `type` (string)  
-    A special type for a built-in route for the model.
+- `strategy` (string)  
+    A required type for a built-in route for the model, or an alias or classname for an action  strategy.
     This may be `'edit'` or `'show'` for a quick link to edit/show the model record.  
-    Required if `route` is not set.
     
-- `route` (string)  
-    The route name for a (CMS) route to use as the action.  
-    Required if `type` is not set.
-
 - `permissions` (string|string[])  
     One or more permissions that must all be granted in order to use the action. If the user does not have the permission(s), this action will not be offered.
 
@@ -273,12 +268,12 @@ return [
         'default_action' => [
             // Action for users with 'edit' permission
             [
-                'type'        => 'edit',
+                'strategy'    => 'edit',
                 'permissions' => 'models.app-models-post.edit',
             ],
             // Action for users with 'show' permission
             [
-                'type'        => 'show',
+                'strategy'    => 'show',
                 'permissions' => 'models.app-models-post.show',
             ],
             // Fall-back action when no permissions given
