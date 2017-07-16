@@ -32,20 +32,31 @@
     @endif
 
 @elseif ($node->type() === \Czim\CmsModels\Support\Enums\LayoutNodeType::FIELDSET)
+    @php
+        /** @var \Czim\CmsModels\Contracts\ModelInformation\Data\Form\Layout\ModelFormFieldsetDataInterface $node */
 
-    @include('cms-models::model.partials.form.layout_fieldset', array_merge(
-        compact(
-            'record',
-            'model',
-            'values',
-            'fields',
-            'errors'
-        ),
-        [
-            'key'      => $nodeKey,
-            'fieldset' => $node,
-        ]
-    ))
+        // if none of the descendant field keys should be displayed, hide the set
+        $shouldDisplay = (bool) count(array_intersect($node->descendantFieldKeys(), array_keys($fields)));
+
+    @endphp
+
+    @if ($node->shouldDisplay() && $shouldDisplay)
+
+        @include('cms-models::model.partials.form.layout_fieldset', array_merge(
+            compact(
+                'record',
+                'model',
+                'values',
+                'fields',
+                'errors'
+            ),
+            [
+                'key'      => $nodeKey,
+                'fieldset' => $node,
+            ]
+        ))
+
+    @endif
 
 @elseif ($node->type() === \Czim\CmsModels\Support\Enums\LayoutNodeType::GROUP)
 

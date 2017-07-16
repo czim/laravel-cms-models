@@ -12,6 +12,13 @@ interface ModelFormFieldsetDataInterface extends ModelFormLayoutNodeInterface
     public function display();
 
     /**
+     * Returns whether the fieldset should be displayed.
+     *
+     * @return bool
+     */
+    public function shouldDisplay();
+
+    /**
      * @param ModelFormFieldsetDataInterface $with
      */
     public function merge(ModelFormFieldsetDataInterface $with);

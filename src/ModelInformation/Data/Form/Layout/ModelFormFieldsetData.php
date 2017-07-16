@@ -43,6 +43,16 @@ class ModelFormFieldsetData extends AbstractModelFormLayoutNodeData implements M
 
 
     /**
+     * Returns whether the fieldset should be displayed.
+     *
+     * @return bool
+     */
+    public function shouldDisplay()
+    {
+        return (bool) count($this->children);
+    }
+
+    /**
      * @param ModelFormFieldsetDataInterface|ModelFormFieldsetData $with
      */
     public function merge(ModelFormFieldsetDataInterface $with)
