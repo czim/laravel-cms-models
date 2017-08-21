@@ -10,6 +10,7 @@ class FormStoreStrategy extends Enum
     const DATE_RANGE             = 'date-range';
     const LOCATION_FIELDS        = 'location-fields';
     const STAPLER                = 'stapler';
+    const PAPERCLIP              = 'paperclip';
     const TAGGABLE               = 'taggable';
     const RELATION_SINGLE_KEY    = 'relation-single-key';
     const RELATION_PLURAL_KEYS   = 'relation-plural-key';

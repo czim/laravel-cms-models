@@ -44,7 +44,7 @@ class StaplerStrategy extends DefaultStrategy
         // If the value is empty, use the stapler null value instead
         if (empty($value['upload'])) {
             // @codeCoverageIgnoreStart
-            $value['upload'] = STAPLER_NULL;
+            $value['upload'] = $this->getNullAttachmentHash();
             // @codeCoverageIgnoreEnd
         }
 
@@ -202,6 +202,16 @@ class StaplerStrategy extends DefaultStrategy
     protected function useFileUploader()
     {
         return ! array_get($this->formFieldData->options, 'no_ajax') && $this->isUploadModuleAvailable();
+    }
+
+    /**
+     * Returns the hash value that clears the attachment.
+     *
+     * @return string
+     */
+    protected function getNullAttachmentHash()
+    {
+        return STAPLER_NULL;
     }
 
 }

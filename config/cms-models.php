@@ -308,6 +308,8 @@ return [
                 Enums\ListDisplayStrategy::DATETIME                => 'DateTime',
                 Enums\ListDisplayStrategy::STAPLER_THUMBNAIL       => 'StaplerImage',
                 Enums\ListDisplayStrategy::STAPLER_FILENAME        => 'StaplerFile',
+                Enums\ListDisplayStrategy::PAPERCLIP_THUMBNAIL     => 'PaperclipImage',
+                Enums\ListDisplayStrategy::PAPERCLIP_FILENAME      => 'PaperclipFile',
                 Enums\ListDisplayStrategy::RELATION_COUNT          => 'RelationCount',
                 Enums\ListDisplayStrategy::RELATION_REFERENCE      => 'RelationReference',
                 Enums\ListDisplayStrategy::RELATION_REFERENCE_LINK => 'RelationReferenceLink',
@@ -381,8 +383,10 @@ return [
                 Enums\FormDisplayStrategy::LOCATIONPICKER      => 'LocationStrategy',
                 Enums\FormDisplayStrategy::TAGGABLE            => 'TaggableAutocompleteStrategy',
 
-                Enums\FormDisplayStrategy::ATTACHMENT_STAPLER_IMAGE => 'AttachmentStaplerImageStrategy',
-                Enums\FormDisplayStrategy::ATTACHMENT_STAPLER_FILE  => 'AttachmentStaplerFileStrategy',
+                Enums\FormDisplayStrategy::ATTACHMENT_STAPLER_IMAGE   => 'AttachmentStaplerImageStrategy',
+                Enums\FormDisplayStrategy::ATTACHMENT_STAPLER_FILE    => 'AttachmentStaplerFileStrategy',
+                Enums\FormDisplayStrategy::ATTACHMENT_PAPERCLIP_IMAGE => 'AttachmentPaperclipImageStrategy',
+                Enums\FormDisplayStrategy::ATTACHMENT_PAPERCLIP_FILE  => 'AttachmentPaperclipFileStrategy',
 
                 Enums\FormDisplayStrategy::RELATION_SINGLE_DROPDOWN     => 'RelationSingleDropdownStrategy',
                 Enums\FormDisplayStrategy::RELATION_SINGLE_AUTOCOMPLETE => 'RelationSingleAutocompleteStrategy',
@@ -401,6 +405,7 @@ return [
                 Enums\FormStoreStrategy::DATE_RANGE             => 'DateRangeStrategy',
                 Enums\FormStoreStrategy::LOCATION_FIELDS        => 'LocationFieldsStrategy',
                 Enums\FormStoreStrategy::STAPLER                => 'StaplerStrategy',
+                Enums\FormStoreStrategy::PAPERCLIP              => 'PaperclipStrategy',
                 Enums\FormStoreStrategy::TAGGABLE               => 'TaggableStrategy',
                 Enums\FormStoreStrategy::RELATION_SINGLE_KEY    => 'RelationSingleKey',
                 Enums\FormStoreStrategy::RELATION_PLURAL_KEYS   => 'RelationPluralKeys',
@@ -457,10 +462,11 @@ return [
 
             // Aliases for export column strategy classes
             'column-aliases' => [
-                Enums\ExportColumnStrategy::BOOLEAN_STRING    => 'BooleanStringStrategy',
-                Enums\ExportColumnStrategy::DATE              => 'DateStrategy',
-                Enums\ExportColumnStrategy::STAPLER_FILE_LINK => 'StaplerFileLinkStrategy',
-                Enums\ExportColumnStrategy::TAG_LIST          => 'TagListStrategy',
+                Enums\ExportColumnStrategy::BOOLEAN_STRING      => 'BooleanStringStrategy',
+                Enums\ExportColumnStrategy::DATE                => 'DateStrategy',
+                Enums\ExportColumnStrategy::PAPERCLIP_FILE_LINK => 'PaperclipFileLinkStrategy',
+                Enums\ExportColumnStrategy::STAPLER_FILE_LINK   => 'StaplerFileLinkStrategy',
+                Enums\ExportColumnStrategy::TAG_LIST            => 'TagListStrategy',
             ],
         ],
 

@@ -14,5 +14,6 @@ class AttributeCast extends Enum
     const JSON       = 'json';
 
     // Special casts
-    const STAPLER_ATTACHMENT = 'stapler-attachment';
+    const STAPLER_ATTACHMENT   = 'stapler-attachment';
+    const PAPERCLIP_ATTACHMENT = 'paperclip-attachment';
 }
