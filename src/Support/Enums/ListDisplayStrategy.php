@@ -13,8 +13,10 @@ class ListDisplayStrategy extends Enum
     const DATETIME = 'datetime';
     const TAGS     = 'tags';
 
-    const STAPLER_FILENAME  = 'stapler-filename';
-    const STAPLER_THUMBNAIL = 'stapler-thumbnail';
+    const STAPLER_FILENAME    = 'stapler-filename';
+    const STAPLER_THUMBNAIL   = 'stapler-thumbnail';
+    const PAPERCLIP_FILENAME  = 'paperclip-filename';
+    const PAPERCLIP_THUMBNAIL = 'paperclip-thumbnail';
 
     // Relations
 

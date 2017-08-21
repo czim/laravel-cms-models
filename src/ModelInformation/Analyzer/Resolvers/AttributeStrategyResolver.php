@@ -57,6 +57,15 @@ class AttributeStrategyResolver
                     $type = ListDisplayStrategy::STAPLER_FILENAME;
                 }
                 break;
+
+            // Special case: paperclip file attachment
+            case 'paperclip-attachment':
+                if ($data->type === 'image') {
+                    $type = ListDisplayStrategy::PAPERCLIP_THUMBNAIL;
+                } else {
+                    $type = ListDisplayStrategy::PAPERCLIP_FILENAME;
+                }
+                break;
         }
 
         return $type;
@@ -157,6 +166,15 @@ class AttributeStrategyResolver
                     $type = FormDisplayStrategy::ATTACHMENT_STAPLER_FILE;
                 }
                 break;
+
+            // Special case: paperclip file attachment
+            case 'paperclip-attachment':
+                if ($data->type === 'image') {
+                    $type = FormDisplayStrategy::ATTACHMENT_PAPERCLIP_IMAGE;
+                } else {
+                    $type = FormDisplayStrategy::ATTACHMENT_PAPERCLIP_FILE;
+                }
+                break;
         }
 
         return $type;
@@ -189,6 +207,11 @@ class AttributeStrategyResolver
             // Special case: stapler file attachment
             case 'stapler-attachment':
                 $type = FormStoreStrategy::STAPLER;
+                break;
+
+            // Special case: paperclip file attachment
+            case 'paperclip-attachment':
+                $type = FormStoreStrategy::PAPERCLIP;
                 break;
         }
 
@@ -287,6 +310,10 @@ class AttributeStrategyResolver
 
             case 'stapler-attachment':
                 $type = ExportColumnStrategy::STAPLER_FILE_LINK;
+                break;
+
+            case 'paperclip-attachment':
+                $type = ExportColumnStrategy::PAPERCLIP_FILE_LINK;
                 break;
 
             case 'date':
