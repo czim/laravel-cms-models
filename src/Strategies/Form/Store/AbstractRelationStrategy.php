@@ -177,7 +177,7 @@ abstract class AbstractRelationStrategy extends AbstractFormFieldStoreStrategy
         }
 
         if ($relation instanceof BelongsToMany) {
-            return [ $relation->getQualifiedForeignKeyName(), $relation->getQualifiedRelatedKeyName() ];
+            return [ $relation->getQualifiedForeignPivotKeyName(), $relation->getQualifiedRelatedPivotKeyName() ];
         }
 
         if (    $relation instanceof MorphTo
@@ -189,9 +189,9 @@ abstract class AbstractRelationStrategy extends AbstractFormFieldStoreStrategy
 
         if ($relation instanceof MorphToMany) {
             return [
-                $relation->getQualifiedForeignKeyName(),
+                $relation->getQualifiedForeignPivotKeyName(),
                 $relation->getMorphType(),
-                $relation->getQualifiedRelatedKeyName(),
+                $relation->getQualifiedRelatedPivotKeyName(),
             ];
         }
 
