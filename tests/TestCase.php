@@ -32,7 +32,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
      */
     protected function getModelsCachePath()
     {
-        return realpath(__DIR__ .'/../vendor/orchestra/testbench-core/fixture/bootstrap/cache') . '/cms_model_information.php';
+        return realpath(__DIR__ .'/../vendor/orchestra/testbench-core/laravel/bootstrap/cache') . '/cms_model_information.php';
     }
 
     /**
