@@ -90,16 +90,16 @@ class AnalyzeRelations extends AbstractAnalyzerStep
             } elseif ($type == RelationType::BELONGS_TO_MANY) {
                 /** @var Relations\BelongsToMany $relation */
                 $foreignKeys = [
-                    $relation->getQualifiedForeignKeyName(),
-                    $relation->getQualifiedRelatedKeyName(),
+                    $relation->getQualifiedForeignPivotKeyName(),
+                    $relation->getQualifiedRelatedPivotKeyName(),
                 ];
 
             } elseif ($type == RelationType::MORPH_TO_MANY) {
                 /** @var Relations\MorphToMany $relation */
                 $foreignKeys = [
-                    $relation->getQualifiedForeignKeyName(),
+                    $relation->getQualifiedForeignPivotKeyName(),
                     $relation->getMorphType(),
-                    $relation->getQualifiedRelatedKeyName(),
+                    $relation->getQualifiedRelatedPivotKeyName(),
                 ];
 
                 // The relation is inverse if the MorphClass is not this model
