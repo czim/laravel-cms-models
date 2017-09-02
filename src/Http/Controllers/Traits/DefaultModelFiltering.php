@@ -75,7 +75,7 @@ trait DefaultModelFiltering
     {
         $request = request();
 
-        if ($request->has('_clear')) {
+        if ($request->filled('_clear')) {
             $this->filters = [];
             $resetPage = ! empty($this->filters);
         } else {
