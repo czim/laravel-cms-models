@@ -14,7 +14,7 @@
         "czim/laravel-filter": "^1.0",
         "czim/laravel-repository": "~1.4",
 	    "doctrine/dbal": "^2.5",
-        "phpdocumentor/reflection-docblock": "^3.1"
+        "phpdocumentor/reflection-docblock": "^3.1|^4.1"
     },
     "require-dev": {
         "czim/laravel-cms-core": "~1.5.0",
