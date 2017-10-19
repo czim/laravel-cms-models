@@ -91,6 +91,32 @@ This uses the smallest available stapler resize by default.
 ```
 
 
+## [Paperclip File](https://github.com/czim/laravel-paperclip)
+
+Displays a Paperclip upload field as the filename, with a link to the uploaded file.
+
+
+## [Paperclip Image](https://github.com/czim/laravel-paperclip)
+
+Displays a Paperclip upload field for images as a thumbnail.
+This uses the smallest available Paperclip resize by default.
+ 
+- `width` (integer)  
+    Preview thumbnail width in pixels. Defaults to 64.  
+    If `height` is set and `width` is omitted, the `height` value is also used for the width.
+    
+- `height` (integer)  
+    Preview thumbnail height in pixels. Defaults to 64.  
+    If `width` is set and `height` is omitted, the `width` value is also used for the height.
+ 
+```php
+ 'options' => [
+     'width'  => 60,
+     'height' => 40,
+ ]
+```
+
+
 ### Options
 
 - `stapler_style` (string)  
