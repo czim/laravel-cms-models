@@ -71,7 +71,9 @@ return [
         'controller' => '\App\Custom\Controller',
     ],
 
-    'reference' => 'title',
+    'reference' => [
+        'source' => 'title',
+    ],
 
     'list' => [
 
