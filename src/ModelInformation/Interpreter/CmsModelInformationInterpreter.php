@@ -34,7 +34,8 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
     {
         $this->raw = $information;
 
-        $this->interpretListData()
+        $this->interpretReferenceData()
+             ->interpretListData()
              ->interpretFormData()
              ->interpretShowData()
              ->interpretExportData();
@@ -54,6 +55,19 @@ class CmsModelInformationInterpreter implements ModelInformationInterpreterInter
         return $info;
     }
 
+    /**
+     * @return $this
+     */
+    protected function interpretReferenceData()
+    {
+        if (array_has($this->raw, 'reference') && is_string($this->raw['reference'])) {
+            $this->raw['reference'] = [
+                'source' => $this->raw['reference'],
+            ];
+        }
+
+        return $this;
+    }
 
     /**
      * @return $this
