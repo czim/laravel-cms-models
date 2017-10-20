@@ -231,14 +231,14 @@ trait DefaultModelListParentHandling
     protected function updateActiveParent()
     {
         // If no update is required, return immediately
-        if ( ! request()->exists('parents') && ! request()->has('home') && ! request()->exists('parent')) {
+        if ( ! request()->has('parents') && ! request()->filled('home') && ! request()->has('parent')) {
             return $this;
         }
 
         $separator = $this->getListParentSeparator();
 
         // Check for either a full hierarchy or a 'current level' update
-        if (request()->exists('parents') || request()->has('home')) {
+        if (request()->has('parents') || request()->filled('home')) {
 
             $parents = request()->get('parents');
 
@@ -256,7 +256,7 @@ trait DefaultModelListParentHandling
                 if ($parents == 'all') {
                     $this->listParentRelation  = false;
                     $this->listParentRecordKey = null;
-                } elseif (request()->has('home') && $defaultTopRelation) {
+                } elseif (request()->filled('home') && $defaultTopRelation) {
                     $this->listParentRelation  = null;
                     $this->listParentRecordKey = null;
                 }
@@ -290,7 +290,7 @@ trait DefaultModelListParentHandling
                 $this->updateActiveParents(array_reverse($parents));
             }
 
-        } elseif (request()->exists('parent')) {
+        } elseif (request()->has('parent')) {
 
             $parent = request()->get('parent');
 

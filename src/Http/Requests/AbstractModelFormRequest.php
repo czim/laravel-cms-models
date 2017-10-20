@@ -4,6 +4,7 @@ namespace Czim\CmsModels\Http\Requests;
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\Http\Requests\ValidationRulesInterface;
 use Czim\CmsModels\Contracts\Support\Validation\ValidationRuleDecoratorInterface;
+use Czim\CmsModels\Exceptions\ModelValidationException;
 use Czim\CmsModels\Http\Controllers\DefaultModelController;
 use Czim\CmsModels\Http\Controllers\Traits\HandlesFormFields;
 use Illuminate\Contracts\Validation\Validator;
@@ -28,19 +29,14 @@ class AbstractModelFormRequest extends AbstractModelRequest
     }
 
     /**
-     * Format the errors from the given Validator instance.
-     *
-     * Adjusted to reformat errors and add __general__ errors.
-     *
      * {@inheritdoc}
+     * @throws \Czim\CmsModels\Exceptions\ModelValidationException
      */
-    protected function formatErrors(Validator $validator)
+    protected function failedValidation(Validator $validator)
     {
-        $errors = $validator->getMessageBag()->toArray();
-
-        $errors[ $this->generalErrorsKey() ] = $this->collectGeneralErrors($errors);
-
-        return $errors;
+        throw (new ModelValidationException($validator))
+            ->errorBag($this->errorBag)
+            ->redirectTo($this->getRedirectUrl());
     }
 
     /**

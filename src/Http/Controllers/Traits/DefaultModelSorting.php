@@ -35,11 +35,11 @@ trait DefaultModelSorting
     {
         $request = request();
 
-        if ($update && $request->exists('sort')) {
+        if ($update && $request->has('sort')) {
 
             $this->activeSort = $request->get('sort');
 
-            if ($request->has('sortdir') && ! empty($request->get('sortdir'))) {
+            if ($request->filled('sortdir') && ! empty($request->get('sortdir'))) {
                 $this->activeSortDescending = strtolower($request->get('sortdir')) === 'desc';
             } else {
                 $this->activeSortDescending = null;

@@ -37,8 +37,8 @@ trait DefaultModelPagination
     {
         $request = request();
 
-        $pageSetByRequest     = $request->exists('page') || $this->resetActivePage;
-        $pageSizeSetByRequest = $request->has('pagesize');
+        $pageSetByRequest     = $request->has('page') || $this->resetActivePage;
+        $pageSizeSetByRequest = $request->filled('pagesize');
 
         if ($update && $pageSetByRequest) {
 
