@@ -5,7 +5,9 @@ use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Writer\ModelInformationWriterInterface;
 use Czim\CmsModels\Exceptions\ModelInformationFileAlreadyExistsException;
+use Czim\CmsModels\Exceptions\ModelInformationFileWriteFailureException;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
+use Exception;
 use File;
 
 class CmsModelWriter implements ModelInformationWriterInterface
@@ -126,7 +128,17 @@ class CmsModelWriter implements ModelInformationWriterInterface
         $content = '<?php' . PHP_EOL . PHP_EOL
                  . 'return ' . $this->getCleanContent() . ';' . PHP_EOL;
 
-        File::put($this->path, $content);
+        try {
+            File::put($this->path, $content);
+
+        } catch (Exception $e) {
+
+            throw (new ModelInformationFileWriteFailureException(
+                    "Failed to write '{$this->path}', make sure the directory exists and is writable",
+                    $e->getCode(),
+                    $e
+                ))->setModelClass($this->information->modelClass());
+        }
     }
 
     /**
