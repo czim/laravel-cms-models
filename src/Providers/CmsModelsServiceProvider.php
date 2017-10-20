@@ -99,11 +99,13 @@ class CmsModelsServiceProvider extends ServiceProvider
         $this->app->singleton('cms.commands.models.cache-information', Commands\CacheModelInformation::class);
         $this->app->singleton('cms.commands.models.clear-information-cache', Commands\ClearModelInformationCache::class);
         $this->app->singleton('cms.commands.models.show-information', Commands\ShowModelInformation::class);
+        $this->app->singleton('cms.commands.models.write-information', Commands\WriteModelInformation::class);
 
         $this->commands([
             'cms.commands.models.cache-information',
             'cms.commands.models.clear-information-cache',
             'cms.commands.models.show-information',
+            'cms.commands.models.write-information',
         ]);
 
         return $this;
@@ -177,6 +179,7 @@ class CmsModelsServiceProvider extends ServiceProvider
 
         $this->app->singleton(ModelAnalyzerInterface::class, ModelAnalyzer::class);
         $this->app->singleton(DatabaseAnalyzerInterface::class, SimpleDatabaseAnalyzer::class);
+        $this->app->singleton(ModelInfoContracts\Writer\ModelInformationWriterInterface::class, ModelInformation\Writer\CmsModelWriter::class);
 
         $this->app->singleton(RepositoriesContracts\CurrentModelInformationInterface::class, Repositories\CurrentModelInformation::class);
 
