@@ -315,6 +315,7 @@ return [
                 Enums\ListDisplayStrategy::RELATION_REFERENCE_LINK => 'RelationReferenceLink',
                 Enums\ListDisplayStrategy::RELATION_COUNT_LINK     => 'RelationCountChildrenLink',
                 Enums\ListDisplayStrategy::TAGS                    => 'TagList',
+                Enums\ListDisplayStrategy::HEX_COLOR               => 'HexColor',
             ],
 
             // Aliases for sort strategy classes
