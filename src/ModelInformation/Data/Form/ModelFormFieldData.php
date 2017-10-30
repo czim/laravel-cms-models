@@ -4,6 +4,7 @@ namespace Czim\CmsModels\ModelInformation\Data\Form;
 use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
 use Czim\CmsModels\ModelInformation\Data\AbstractModelInformationDataObject;
 use Czim\CmsModels\ModelInformation\Data\ModelViewReferenceData;
+use Czim\CmsModels\Support\Enums\FormDisplayStrategy;
 
 /**
  * Class ModelFormFieldData
@@ -198,6 +199,11 @@ class ModelFormFieldData extends AbstractModelInformationDataObject implements M
     public function required()
     {
         if (null === $this->required) {
+            return false;
+        }
+
+        // A checkbox is always sent, required is unnecessary
+        if ($this->display_strategy === FormDisplayStrategy::BOOLEAN_CHECKBOX) {
             return false;
         }
 
