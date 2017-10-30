@@ -11,6 +11,7 @@ use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\ModelInformation\Data\ModelRelationData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
+use Czim\CmsModels\Support\Enums\FormDisplayStrategy;
 use Czim\CmsModels\Support\Enums\RelationType;
 
 class EnrichFormFieldData extends AbstractEnricherStep
@@ -211,14 +212,27 @@ class EnrichFormFieldData extends AbstractEnricherStep
      */
     protected function makeModelFormFieldDataForAttributeData(ModelAttributeData $attribute)
     {
+        $strategy = $this->determineFormDisplayStrategyForAttribute($attribute);
+
         return new ModelFormFieldData([
             'key'              => $attribute->name,
-            'display_strategy' => $this->determineFormDisplayStrategyForAttribute($attribute),
+            'display_strategy' => $strategy,
             'store_strategy'   => $this->determineFormStoreStrategyForAttribute($attribute),
             'translated'       => $attribute->translated,
-            'required'         => ! $attribute->nullable,
+            'required'         => $this->shouldModelFormFieldBeRequired($attribute, $strategy),
             'options'          => $this->determineFormFieldOptions($attribute),
         ]);
+    }
+
+    /**
+     * @param ModelAttributeData $attribute
+     * @param string             $strategy      the form display strategy alias
+     * @return bool
+     */
+    protected function shouldModelFormFieldBeRequired(ModelAttributeData $attribute, $strategy)
+    {
+        return  ! in_array($strategy, [ FormDisplayStrategy::BOOLEAN_CHECKBOX ])
+            &&  ! $attribute->nullable;
     }
 
     /**
