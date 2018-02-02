@@ -188,7 +188,7 @@
             });
 
             // Switch locales for translations
-            $('.translated-form-field-locale-option > a').click(function () {
+            $(document).on('click', '.translated-form-field-locale-option > a', function () {
 
                 var locale = $(this).attr('data-locale');
 
