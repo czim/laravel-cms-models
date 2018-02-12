@@ -37,7 +37,7 @@ class ModelLogListenerTest extends TestCase
         $coreMock->shouldReceive('log')->once()
             ->with(
                 'info',
-                matchesPattern('/^model was created: [a-z0-9\\\\_]+ #1 by user: ["\']?test@user\.com["\']? \(IP: ["\']?(\d+\.){3}\d+["\']?\)/i')
+                Mockery::pattern('/^model was created: [a-z0-9\\\\_]+ #1 by user: ["\']?test@user\.com["\']? \(IP: ["\']?(\d+\.){3}\d+["\']?\)/i')
             );
 
         $listener = new ModelLogListener($coreMock);
@@ -63,7 +63,7 @@ class ModelLogListenerTest extends TestCase
         $coreMock->shouldReceive('log')->once()
             ->with(
                 'info',
-                matchesPattern('/^model was updated: [a-z0-9\\\\_]+ #1 by user: ["\']?test@user\.com["\']? \(IP: ["\']?(\d+\.){3}\d+["\']?\)/i')
+                Mockery::pattern('/^model was updated: [a-z0-9\\\\_]+ #1 by user: ["\']?test@user\.com["\']? \(IP: ["\']?(\d+\.){3}\d+["\']?\)/i')
             );
 
         $listener = new ModelLogListener($coreMock);
@@ -89,7 +89,7 @@ class ModelLogListenerTest extends TestCase
         $coreMock->shouldReceive('log')->once()
             ->with(
                 'info',
-                matchesPattern('/^model was deleted: [a-z0-9\\\\_]+ #1 by user: ["\']?test@user\.com["\']? \(IP: ["\']?(\d+\.){3}\d+["\']?\)/i')
+                Mockery::pattern('/^model was deleted: [a-z0-9\\\\_]+ #1 by user: ["\']?test@user\.com["\']? \(IP: ["\']?(\d+\.){3}\d+["\']?\)/i')
             );
 
         $listener = new ModelLogListener($coreMock);
@@ -115,7 +115,7 @@ class ModelLogListenerTest extends TestCase
         $coreMock->shouldReceive('log')->once()
             ->with(
                 'info',
-                matchesPattern('/^model was activated: [a-z0-9\\\\_]+ #1 by user: ["\']?test@user\.com["\']? \(IP: ["\']?(\d+\.){3}\d+["\']?\)/i')
+                Mockery::pattern('/^model was activated: [a-z0-9\\\\_]+ #1 by user: ["\']?test@user\.com["\']? \(IP: ["\']?(\d+\.){3}\d+["\']?\)/i')
             );
 
         $listener = new ModelLogListener($coreMock);
@@ -141,7 +141,7 @@ class ModelLogListenerTest extends TestCase
         $coreMock->shouldReceive('log')->once()
             ->with(
                 'info',
-                matchesPattern('/^model was deactivated: [a-z0-9\\\\_]+ #1 by user: ["\']?test@user\.com["\']? \(IP: ["\']?(\d+\.){3}\d+["\']?\)/i')
+                Mockery::pattern('/^model was deactivated: [a-z0-9\\\\_]+ #1 by user: ["\']?test@user\.com["\']? \(IP: ["\']?(\d+\.){3}\d+["\']?\)/i')
             );
 
         $listener = new ModelLogListener($coreMock);
@@ -167,7 +167,7 @@ class ModelLogListenerTest extends TestCase
         $coreMock->shouldReceive('log')->once()
             ->with(
                 'info',
-                matchesPattern('/^model was repositioned: [a-z0-9\\\\_]+ #1 by user: ["\']?test@user\.com["\']? \(IP: ["\']?(\d+\.){3}\d+["\']?\)/i')
+                Mockery::pattern('/^model was repositioned: [a-z0-9\\\\_]+ #1 by user: ["\']?test@user\.com["\']? \(IP: ["\']?(\d+\.){3}\d+["\']?\)/i')
             );
 
         $listener = new ModelLogListener($coreMock);
@@ -193,7 +193,7 @@ class ModelLogListenerTest extends TestCase
         $coreMock->shouldReceive('log')->once()
             ->with(
                 'info',
-                matchesPattern('/^model list was exported \(["\']?csv["\']?\): [a-z0-9\\\\_]+ by user: ["\']?test@user\.com["\']? \(IP: ["\']?(\d+\.){3}\d+["\']?\)/i')
+                Mockery::pattern('/^model list was exported \(["\']?csv["\']?\): [a-z0-9\\\\_]+ by user: ["\']?test@user\.com["\']? \(IP: ["\']?(\d+\.){3}\d+["\']?\)/i')
             );
 
         $listener = new ModelLogListener($coreMock);
