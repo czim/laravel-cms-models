@@ -6,7 +6,7 @@ use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 use Czim\CmsModels\Test\Helpers\Models\Analyzer\TestActivatable;
-use Czim\CmsModels\Test\Helpers\Models\Analyzer\TestStapler;
+use Czim\CmsModels\Test\Helpers\Models\Analyzer\TestPaperclip;
 
 /**
  * Class DetectStaplerAttributesTest
@@ -22,7 +22,7 @@ class DetectStaplerAttributesTest extends AbstractStepCase
     function it_detects_stapler_attributes()
     {
         // Setup
-        $model    = new TestStapler;
+        $model    = new TestPaperclip;
         $analyzer = $this->prepareAnalyzerSetup($model);
         $info     = new ModelInformation;
 

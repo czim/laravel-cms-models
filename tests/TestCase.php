@@ -4,6 +4,7 @@ namespace Czim\CmsModels\Test;
 use App\Console\Kernel;
 use Czim\CmsModels\Test\Helpers\Traits\InteractsWithPages;
 use Illuminate\Contracts\Console\Kernel as ConsoleKernelContract;
+use Illuminate\Contracts\Foundation\Application;
 
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
@@ -25,6 +26,8 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         $app['config']->set('cms-models.defaults.default-listing-action-show', false);
 
         $app['view']->addNamespace('cms-models', realpath(dirname(__DIR__) . '/resources/views'));
+
+        $this->setUpPaperclip($app);
     }
 
     /**
@@ -148,6 +151,24 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     protected function appendResponseHtml($message)
     {
         return $message . PHP_EOL . $this->crawler()->html();
+    }
+
+    /**
+     * Sets up paperclip attachment basics.
+     *
+     * @param Application $app
+     * @return CmsBootTestCase
+     */
+    protected function setUpPaperclip($app)
+    {
+        $app->register(\Czim\Paperclip\Providers\PaperclipServiceProvider::class);
+
+        $app['config']->set('filesystems.disks.paperclip', [
+            'driver' => 'local',
+            'root'   => public_path('system'),
+        ]);
+
+        return $this;
     }
 
 }

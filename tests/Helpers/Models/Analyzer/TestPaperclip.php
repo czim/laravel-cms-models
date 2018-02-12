@@ -1,13 +1,13 @@
 <?php
 namespace Czim\CmsModels\Test\Helpers\Models\Analyzer;
 
-use Codesleeve\Stapler\ORM\EloquentTrait;
-use Codesleeve\Stapler\ORM\StaplerableInterface;
+use Czim\Paperclip\Contracts\AttachableInterface;
+use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class TestStapler extends Model implements StaplerableInterface
+class TestPaperclip extends Model implements AttachableInterface
 {
-    use EloquentTrait;
+    use PaperclipTrait;
 
     protected $fillable = [
         'name',
