@@ -40,11 +40,11 @@ This list is not exhaustive; custom strategy classes and aliases may be created 
 
 ### Files
 
-- [**`AttachmentStaplerFile`**](FormFieldDisplayStrategies/AttachmentStaplerFile.md)  
-    File upload field for [Stapler](https://github.com/CodeSleeve/laravel-stapler) attribute.
+- [**`AttachmentPaperclipFile`**](FormFieldDisplayStrategies/AttachmentPaperclipFile.md)  
+    File upload field for [Paperclip](https://github.com/czim/laravel-paperclip) attribute.
     
-- [**`AttachmentStaplerImage`**](FormFieldDisplayStrategies/AttachmentStaplerImage.md)  
-    File upload field for [Stapler](https://github.com/CodeSleeve/laravel-stapler) image attribute, with preview.
+- [**`AttachmentPaperclipImage`**](FormFieldDisplayStrategies/AttachmentPaperclipImage.md)  
+    File upload field for [Paperclip](https://github.com/czim/laravel-paperclip) image attribute, with preview.
 
 
 ### Relations
@@ -103,8 +103,8 @@ This list is not exhaustive; custom strategy classes and aliases may be created 
 - [**`PasswordUpdate`**](FormFieldStoreStrategies/PasswordUpdate.md)  
     For storing hashed passwords, but only if entered.
 
-- [**`Stapler`**](FormFieldStoreStrategies/Stapler.md)  
-    For storing file uploads for stapler attachments.
+- [**`Paperclip`**](FormFieldStoreStrategies/Paperclip.md)  
+    For storing file uploads for paperclip attachments.
 
 - [**`Taggable`**](FormFieldStoreStrategies/Taggable.md)  
     For storing tags to a model with the Taggable trait.

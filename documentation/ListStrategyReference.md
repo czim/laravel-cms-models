@@ -29,11 +29,11 @@ Strategies for displaying content of model listing table cells.
 - [**`Time`**](ListColumnDisplayStrategies/CommonStrategies.md#time)  
     Displays a formatted datetime value as time only.
 
-- [**`StaplerFile`**](ListColumnDisplayStrategies/CommonStrategies.md#stapler-file)  
-    Displays a stapler file name as a link.
+- [**`PaperclipFile`**](ListColumnDisplayStrategies/CommonStrategies.md#paperclip-file)  
+    Displays a paperclip file name as a link.
     
-- [**`StaplerImage`**](ListColumnDisplayStrategies/CommonStrategies.md#stapler-image)  
-    Displays a stapler image thumbnail.
+- [**`PaperclipImage`**](ListColumnDisplayStrategies/CommonStrategies.md#paperclip-image)  
+    Displays a paperclip image thumbnail.
     
 - [**`TagList`**](ListColumnDisplayStrategies/CommonStrategies.md#tag-list)  
     Displays a comma-separated list of tags for Taggable models.

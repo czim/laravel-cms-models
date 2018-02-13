@@ -65,32 +65,6 @@ Displays a `DateTime` value formatted to show only the time.
 ```
 
 
-## Stapler File
-
-Displays a Stapler upload field as the filename, with a link to the uploaded file.
-
-
-## Stapler Image
-
-Displays a Stapler upload field for images as a thumbnail.
-This uses the smallest available stapler resize by default.
- 
-- `width` (integer)  
-    Preview thumbnail width in pixels. Defaults to 64.  
-    If `height` is set and `width` is omitted, the `height` value is also used for the width.
-    
-- `height` (integer)  
-    Preview thumbnail height in pixels. Defaults to 64.  
-    If `width` is set and `height` is omitted, the `width` value is also used for the height.
- 
-```php
- 'options' => [
-     'width'  => 60,
-     'height' => 40,
- ]
-```
-
-
 ## [Paperclip File](https://github.com/czim/laravel-paperclip)
 
 Displays a Paperclip upload field as the filename, with a link to the uploaded file.
@@ -119,14 +93,14 @@ This uses the smallest available Paperclip resize by default.
 
 ### Options
 
-- `stapler_style` (string)  
-    The stapler resize style to use.  
+- `variant` (string)  
+    The paperclip variant (style) to use.  
     If not set, defaults to using the smallest available. 
     
 ```php
     'options' => [
-        // The stapler resize style to use
-        'stapler_style' => 'thumbnail',
+        // The paperclip variant to use
+        'variant' => 'thumbnail',
     ]
 ```
 

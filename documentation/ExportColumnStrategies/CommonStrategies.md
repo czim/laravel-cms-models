@@ -25,9 +25,9 @@ Displays a `DateTime` value formatted according to an optional format.
     ]
 ```
 
-## Stapler File Link
+## Paperclip File Link
 
-Displays a Stapler attribute as an URI to the uploaded file.
+Displays a Paperclip attribute as an URI to the uploaded file.
 
 
 ## Tag List

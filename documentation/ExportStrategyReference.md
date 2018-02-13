@@ -29,8 +29,8 @@ Strategies that determine the rendering of model attributes in columns (or, say,
 - [**`Date`**](ExportColumnStrategies/CommonStrategies.md#date)  
     Formatted date string.
     
-- [**`StaplerFileLink`**](ExportColumnStrategies/CommonStrategies.md#stapler-file-link)  
-    Stapler field as URI.
+- [**`PaperclipFileLink`**](ExportColumnStrategies/CommonStrategies.md#paperclip-file-link)  
+    Paperclip field as URI.
 
 - [**`TagList`**](ExportColumnStrategies/CommonStrategies.md#tag-list)  
     Comma-separated list of tags for Taggable models.

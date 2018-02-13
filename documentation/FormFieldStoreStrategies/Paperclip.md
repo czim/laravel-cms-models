@@ -1,6 +1,6 @@
-# Form Field Store Strategy: Stapler
+# Form Field Store Strategy: Paperclip
 
-This strategy stores values for the stapler attachment file or image strategies.
+This strategy stores values for the Paperclip attachment file or image strategies.
  
  If the [File Upload Module](https://github.com/czim/laravel-cms-upload-module) is installed, this strategy will use it and use the `upload_id` to look up the AJAX-uploaded file.
 
