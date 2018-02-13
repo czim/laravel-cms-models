@@ -38,7 +38,7 @@ abstract class AbstractPostCommentSeededTestCase extends DatabaseTestCase
             $table->integer('test_author_id')->nullable()->unsigned();
             $table->integer('test_genre_id')->nullable()->unsigned();
             $table->string('description', 255)->nullable();
-            $table->enum('type', [ 'announcement', 'news', 'notice', 'periodical' ])->default('news');
+            $table->enum('type', [ 'announcement', 'news', 'notice', 'periodical', 'warning' ])->default('news');
             $table->boolean('checked')->default(false);
             $table->integer('position')->unsigned()->nullable();
             $table->nullableTimestamps();
