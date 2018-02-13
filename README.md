@@ -33,6 +33,7 @@ For a better end-user experience when using file uploads, installing the [Larave
  5.3.x               | 1.3.x
  5.4.x               | 1.4.x
  5.5.x               | 1.5.x
+ 5.6.x               | 1.6.x
  
 ## Installation
 
