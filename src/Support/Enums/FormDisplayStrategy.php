@@ -29,8 +29,6 @@ class FormDisplayStrategy extends Enum
     const LOCATIONPICKER      = 'locationpicker';
     const TAGGABLE            = 'taggable';
 
-    const ATTACHMENT_STAPLER_FILE    = 'attachment-stapler-file';
-    const ATTACHMENT_STAPLER_IMAGE   = 'attachment-stapler-image';
     const ATTACHMENT_PAPERCLIP_FILE  = 'attachment-paperclip-file';
     const ATTACHMENT_PAPERCLIP_IMAGE = 'attachment-paperclip-image';
 

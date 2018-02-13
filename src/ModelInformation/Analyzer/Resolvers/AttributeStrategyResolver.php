@@ -49,15 +49,6 @@ class AttributeStrategyResolver
                 }
                 break;
 
-            // Special case: stapler file attachment
-            case 'stapler-attachment':
-                if ($data->type === 'image') {
-                    $type = ListDisplayStrategy::STAPLER_THUMBNAIL;
-                } else {
-                    $type = ListDisplayStrategy::STAPLER_FILENAME;
-                }
-                break;
-
             // Special case: paperclip file attachment
             case 'paperclip-attachment':
                 if ($data->type === 'image') {
@@ -158,15 +149,6 @@ class AttributeStrategyResolver
                 $type = FormDisplayStrategy::TEXTAREA;
                 break;
 
-            // Special case: stapler file attachment
-            case 'stapler-attachment':
-                if ($data->type === 'image') {
-                    $type = FormDisplayStrategy::ATTACHMENT_STAPLER_IMAGE;
-                } else {
-                    $type = FormDisplayStrategy::ATTACHMENT_STAPLER_FILE;
-                }
-                break;
-
             // Special case: paperclip file attachment
             case 'paperclip-attachment':
                 if ($data->type === 'image') {
@@ -202,11 +184,6 @@ class AttributeStrategyResolver
 
             case 'date':
                 $type = FormStoreStrategy::DATE;
-                break;
-
-            // Special case: stapler file attachment
-            case 'stapler-attachment':
-                $type = FormStoreStrategy::STAPLER;
                 break;
 
             // Special case: paperclip file attachment
@@ -306,10 +283,6 @@ class AttributeStrategyResolver
             case 'boolean':
             case 'bool':
                 $type = ExportColumnStrategy::BOOLEAN_STRING;
-                break;
-
-            case 'stapler-attachment':
-                $type = ExportColumnStrategy::STAPLER_FILE_LINK;
                 break;
 
             case 'paperclip-attachment':

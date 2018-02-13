@@ -1,7 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\ModelInformation\Analyzer\Processor\Steps;
 
-use Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps\DetectStaplerAttributes;
+use Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps\DetectAttachmentAttributes;
 use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Support\Enums\AttributeCast;
@@ -9,17 +9,17 @@ use Czim\CmsModels\Test\Helpers\Models\Analyzer\TestActivatable;
 use Czim\CmsModels\Test\Helpers\Models\Analyzer\TestPaperclip;
 
 /**
- * Class DetectStaplerAttributesTest
+ * Class DetectPaperclipAttributesTest
  *
  * @group analysis
  */
-class DetectStaplerAttributesTest extends AbstractStepCase
+class DetectPaperclipAttributesTest extends AbstractStepCase
 {
 
     /**
      * @test
      */
-    function it_detects_stapler_attributes()
+    function it_detects_paperclip_attributes()
     {
         // Setup
         $model    = new TestPaperclip;
@@ -70,13 +70,13 @@ class DetectStaplerAttributesTest extends AbstractStepCase
         ];
 
         // Test
-        $step = new DetectStaplerAttributes;
+        $step = new DetectAttachmentAttributes;
         $step->setAnalyzer($analyzer);
 
         $info = $step->analyze($info);
 
-        static::assertArrayHasKey('file', $info['attributes'], 'Stapler attribute not added');
-        static::assertArrayHasKey('image', $info['attributes'], 'Stapler attribute not added');
+        static::assertArrayHasKey('file', $info['attributes'], 'Paperclip attribute not added');
+        static::assertArrayHasKey('image', $info['attributes'], 'Paperclip attribute not added');
 
         static::assertEquals(
             [
@@ -84,14 +84,14 @@ class DetectStaplerAttributesTest extends AbstractStepCase
                 'image', 'image_file_name', 'image_file_size', 'image_content_type', 'image_updated_at',
             ],
             array_keys($info['attributes']),
-            'Order of stapler attributes incorrect'
+            'Order of paperclip attributes incorrect'
         );
     }
 
     /**
      * @test
      */
-    function it_does_not_detect_stapler_attributes_on_a_model_that_has_none()
+    function it_does_not_detect_paperclip_attributes_on_a_model_that_has_none()
     {
         // Setup
         $model    = new TestActivatable;
@@ -122,7 +122,7 @@ class DetectStaplerAttributesTest extends AbstractStepCase
         ];
 
         // Test
-        $step = new DetectStaplerAttributes;
+        $step = new DetectAttachmentAttributes;
         $step->setAnalyzer($analyzer);
 
         $info = $step->analyze($info);

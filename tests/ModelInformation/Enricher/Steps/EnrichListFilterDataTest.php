@@ -62,7 +62,7 @@ class EnrichListFilterDataTest extends TestCase
             ]),
             'unfilterable' => new ModelAttributeData([
                 'name' => 'unfilterable',
-                'cast' => AttributeCast::STAPLER_ATTACHMENT,
+                'cast' => AttributeCast::PAPERCLIP_ATTACHMENT,
             ]),
             'test_id'      => new ModelAttributeData(['name' => 'test_id']),
             'test2_id'     => new ModelAttributeData(['name' => 'test_id']),
@@ -273,7 +273,7 @@ class EnrichListFilterDataTest extends TestCase
         $info->attributes = [
             'title'    => new ModelAttributeData([
                 'name' => 'title',
-                'cast' => AttributeCast::STAPLER_ATTACHMENT,
+                'cast' => AttributeCast::PAPERCLIP_ATTACHMENT,
             ]),
         ];
 

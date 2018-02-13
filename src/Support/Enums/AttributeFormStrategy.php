@@ -22,6 +22,6 @@ class AttributeFormStrategy extends Enum
     const DATEPICKER_TIME     = 'datepickerTime';
     const DATEPICKER_DATETIME = 'datepickerDatetime';
 
-    const ATTACHMENT_STAPLER_FILE  = 'attachmentStaplerFile';
-    const ATTACHMENT_STAPLER_IMAGE = 'attachmentStaplerImage';
+    const ATTACHMENT_PAPERCLIP_FILE  = 'attachmentPaperclipFile';
+    const ATTACHMENT_PAPERCLIP_IMAGE = 'attachmentPaperclipImage';
 }

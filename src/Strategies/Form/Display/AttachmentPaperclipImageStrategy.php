@@ -1,8 +1,9 @@
 <?php
 namespace Czim\CmsModels\Strategies\Form\Display;
 
-class AttachmentPaperclipImageStrategy extends AttachmentStaplerImageStrategy
+class AttachmentPaperclipImageStrategy extends AbstractPaperclipStrategy
 {
+    const DEFAULT_ACCEPT = 'image/*';
 
     /**
      * Returns the view partial that should be used.
@@ -16,6 +17,25 @@ class AttachmentPaperclipImageStrategy extends AttachmentStaplerImageStrategy
         }
 
         return 'cms-models::model.partials.form.strategies.attachment_paperclip_image';
+    }
+
+    /**
+     * Enriches field data before passing it on to the view.
+     *
+     * @param array $data
+     * @return array
+     */
+    protected function decorateFieldData(array $data)
+    {
+        $data['accept'] = array_get($data['options'], 'accept', static::DEFAULT_ACCEPT);
+
+        if ($this->useFileUploader()) {
+            $data['uploadUrl']        = cms_route('fileupload.file.upload');
+            $data['uploadDeleteUrl']  = cms_route('fileupload.file.delete', ['ID_PLACEHOLDER']);
+            $data['uploadValidation'] = $this->getFileValidationRules();
+        }
+
+        return $data;
     }
 
 }

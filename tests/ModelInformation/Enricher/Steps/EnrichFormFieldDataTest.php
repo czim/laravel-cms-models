@@ -217,7 +217,7 @@ class EnrichFormFieldDataTest extends TestCase
 
         $info->attributes = [
             // Include a normal attribute (main stapler field)
-            'image'      => new ModelAttributeData(['name' => 'image', 'cast' => AttributeCast::STAPLER_ATTACHMENT]),
+            'image'      => new ModelAttributeData(['name' => 'image', 'cast' => AttributeCast::PAPERCLIP_ATTACHMENT]),
             // Exclude the incrementing key
             'id'         => new ModelAttributeData(['name' => 'id']),
             // Exclude hidden attributes

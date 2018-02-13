@@ -1,22 +1,18 @@
 <?php
 namespace Czim\CmsModels\ModelInformation\Analyzer\Processor\Steps;
 
-use Codesleeve\Stapler\Attachment as StaplerAttachmentInstance;
-use Codesleeve\Stapler\AttachmentConfig as StaplerAttachmentConfig;
-use Codesleeve\Stapler\ORM\StaplerableInterface;
 use Czim\CmsModels\Support\Data\Analysis\PaperclipAttachment as PaperclipAttachmentData;
-use Czim\CmsModels\Support\Data\Analysis\StaplerAttachment as StaplerAttachmentData;
 use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 use Czim\CmsModels\Support\Enums\AttributeCast;
 use Czim\Paperclip\Attachment\Attachment as PaperclipAttachmentInstance;
 use Czim\Paperclip\Contracts\AttachableInterface as PaperclippableInterface;
 
 /**
- * Class DetectStaplerAttributes
+ * Class DetectAttachmentAttributes
  *
- * This detects for both Stapler as well as its Paperclip replacement.
+ * This detects for Paperclip attributes.
  */
-class DetectStaplerAttributes extends AbstractAnalyzerStep
+class DetectAttachmentAttributes extends AbstractAnalyzerStep
 {
 
     /**
@@ -24,51 +20,7 @@ class DetectStaplerAttributes extends AbstractAnalyzerStep
      */
     protected function performStep()
     {
-        $this
-            ->handleStaplerAttachments()
-            ->handlePaperclipAttachments();
-    }
-
-    /**
-     * Handles analysis of stapler attachments.
-     *
-     * @return $this
-     */
-    protected function handleStaplerAttachments()
-    {
-        // Stapler / attachment attributes
-        $attachments = $this->detectStaplerAttachments();
-
-        // Make a list of attributes to insert before the stapler attributes
-        /** @var ModelAttributeData[] $inserts */
-        $inserts = [];
-
-        foreach ($attachments as $key => $attachment) {
-
-            $attribute = new ModelAttributeData([
-                'name'     => $key,
-                'cast'     => AttributeCast::STAPLER_ATTACHMENT,
-                'type'     => $attachment->image ? 'image' : 'file',
-            ]);
-
-            $inserts[ $key . '_file_name' ] = $attribute;
-        }
-
-
-        if ( ! count($inserts)) {
-            return $this;
-        }
-
-        $attributes = $this->info->attributes;
-
-        foreach ($inserts as $before => $attribute) {
-
-            $attributes = $this->insertInArray($attributes, $attribute->name, $attribute, $before);
-        }
-
-        $this->info->attributes = $attributes;
-
-        return $this;
+        $this->handlePaperclipAttachments();
     }
 
     /**
@@ -111,50 +63,6 @@ class DetectStaplerAttributes extends AbstractAnalyzerStep
         $this->info->attributes = $attributes;
 
         return $this;
-    }
-
-    /**
-     * Returns list of stapler attachments, if the model has any.
-     *
-     * @return StaplerAttachmentData[]  assoc, keyed by attribute name
-     */
-    protected function detectStaplerAttachments()
-    {
-        $model = $this->model();
-
-        if ( ! ($model instanceof StaplerableInterface)) {
-            return [];
-        }
-
-        $files = $model->getAttachedFiles();
-
-        $attachments = [];
-
-        /** @var StaplerAttachmentInstance[] $files */
-        foreach ($files as $attribute => $file) {
-
-            /** @var StaplerAttachmentConfig $config */
-            $config = $file->getConfig();
-            $styles = $config->styles;
-
-            $normalizedStyles = [];
-
-            foreach ($styles as $style) {
-
-                if ($style->name === 'original') {
-                    continue;
-                }
-
-                $normalizedStyles[ $style->name ] = $style->dimensions;
-            }
-
-            $attachments[ $attribute ] = new StaplerAttachmentData([
-                'image'   => (is_array($styles) && count($styles) > 1),
-                'resizes' => $normalizedStyles,
-            ]);
-        }
-
-        return $attachments;
     }
 
     /**

@@ -68,7 +68,7 @@ class PaperclipImageTest extends AbstractPostCommentSeededTestCase
     /**
      * @test
      */
-    function it_renders_a_stapler_attachment_as_a_thumbnail_using_a_configured_style()
+    function it_renders_a_paperclip_attachment_as_a_thumbnail_using_a_configured_style()
     {
         $strategy = new PaperclipImage;
 
@@ -108,7 +108,7 @@ class PaperclipImageTest extends AbstractPostCommentSeededTestCase
      * @test
      * @expectedException \UnexpectedValueException
      */
-    function it_throws_an_exception_if_source_is_not_a_stapler_attachment()
+    function it_throws_an_exception_if_source_is_not_a_paperclip_attachment()
     {
         $strategy = new PaperclipImage;
 

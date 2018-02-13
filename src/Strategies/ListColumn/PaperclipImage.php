@@ -38,7 +38,7 @@ class PaperclipImage extends AbstractListDisplayStrategy
             throw new UnexpectedValueException("Paperclip strategy expects Attachment as source");
         }
 
-        $resize = $this->getResizetoUse($source);
+        $resize = $this->getVarianttoUse($source);
 
         if ($this->listColumnData) {
             $width  = array_get($this->listColumnData->options, 'width');
@@ -59,17 +59,17 @@ class PaperclipImage extends AbstractListDisplayStrategy
     }
 
     /**
-     * Returns the stapler resize to display.
+     * Returns the paperclip variant to display.
      *
      * @param AttachmentInterface $attachment
      * @return string
      */
-    protected function getResizetoUse(AttachmentInterface $attachment)
+    protected function getVarianttoUse(AttachmentInterface $attachment)
     {
         return array_get(
             $this->options(),
             'variant',
-            $this->getSmallestResize($attachment)
+            $this->getSmallestVariant($attachment)
         );
     }
 
@@ -79,7 +79,7 @@ class PaperclipImage extends AbstractListDisplayStrategy
      * @param AttachmentInterface $attachment
      * @return null|string
      */
-    protected function getSmallestResize(AttachmentInterface $attachment)
+    protected function getSmallestVariant(AttachmentInterface $attachment)
     {
         $smallestKey = null;
         $smallest    = null;

@@ -15,8 +15,6 @@ class ListDisplayStrategy extends Enum
 
     const HEX_COLOR = 'hex-color';
 
-    const STAPLER_FILENAME    = 'stapler-filename';
-    const STAPLER_THUMBNAIL   = 'stapler-thumbnail';
     const PAPERCLIP_FILENAME  = 'paperclip-filename';
     const PAPERCLIP_THUMBNAIL = 'paperclip-thumbnail';
 

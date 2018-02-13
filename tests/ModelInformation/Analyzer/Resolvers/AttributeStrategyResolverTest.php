@@ -77,26 +77,6 @@ class AttributeStrategyResolverTest extends TestCase
     /**
      * @test
      */
-    function it_determines_list_strategy_for_stapler_attachment()
-    {
-        $resolver = new AttributeStrategyResolver;
-
-        $data = new ModelAttributeData([
-            'cast' => AttributeCast::STAPLER_ATTACHMENT,
-            'type' => 'image',
-        ]);
-        static::assertEquals(ListDisplayStrategy::STAPLER_THUMBNAIL, $resolver->determineListDisplayStrategy($data));
-
-        $data = new ModelAttributeData([
-            'cast' => AttributeCast::STAPLER_ATTACHMENT,
-            'type' => 'file',
-        ]);
-        static::assertEquals(ListDisplayStrategy::STAPLER_FILENAME, $resolver->determineListDisplayStrategy($data));
-    }
-
-    /**
-     * @test
-     */
     function it_falls_back_to_null_for_list_strategy()
     {
         $resolver = new AttributeStrategyResolver;
@@ -254,26 +234,6 @@ class AttributeStrategyResolverTest extends TestCase
     /**
      * @test
      */
-    function it_determines_form_display_strategy_for_stapler_attachment()
-    {
-        $resolver = new AttributeStrategyResolver;
-
-        $data = new ModelAttributeData([
-            'cast' => AttributeCast::STAPLER_ATTACHMENT,
-            'type' => 'image',
-        ]);
-        static::assertEquals(FormDisplayStrategy::ATTACHMENT_STAPLER_IMAGE, $resolver->determineFormDisplayStrategy($data));
-
-        $data = new ModelAttributeData([
-            'cast' => AttributeCast::STAPLER_ATTACHMENT,
-            'type' => 'file',
-        ]);
-        static::assertEquals(FormDisplayStrategy::ATTACHMENT_STAPLER_FILE, $resolver->determineFormDisplayStrategy($data));
-    }
-
-    /**
-     * @test
-     */
     function it_falls_back_to_null_for_form_display_strategy()
     {
         $resolver = new AttributeStrategyResolver;
@@ -321,17 +281,17 @@ class AttributeStrategyResolverTest extends TestCase
     /**
      * @test
      */
-    function it_determines_form_store_strategy_for_stapler_attachment()
+    function it_determines_form_store_strategy_for_paperclip_attachment()
     {
         $resolver = new AttributeStrategyResolver;
 
         $data = new ModelAttributeData([
-            'cast'       => AttributeCast::STAPLER_ATTACHMENT,
+            'cast'       => AttributeCast::PAPERCLIP_ATTACHMENT,
             'type'       => 'image',
             'nullable'   => false,
             'translated' => false,
         ]);
-        static::assertEquals(FormStoreStrategy::STAPLER, $resolver->determineFormStoreStrategy($data));
+        static::assertEquals(FormStoreStrategy::PAPERCLIP, $resolver->determineFormStoreStrategy($data));
     }
 
     /**
@@ -550,15 +510,15 @@ class AttributeStrategyResolverTest extends TestCase
     /**
      * @test
      */
-    function it_determines_export_column_strategy_for_stapler_attachment()
+    function it_determines_export_column_strategy_for_paperclip_attachment()
     {
         $resolver = new AttributeStrategyResolver;
 
         $data = new ModelAttributeData([
-            'cast' => AttributeCast::STAPLER_ATTACHMENT,
+            'cast' => AttributeCast::PAPERCLIP_ATTACHMENT,
             'type' => 'image',
         ]);
-        static::assertEquals(ExportColumnStrategy::STAPLER_FILE_LINK, $resolver->determineExportColumnStrategy($data));
+        static::assertEquals(ExportColumnStrategy::PAPERCLIP_FILE_LINK, $resolver->determineExportColumnStrategy($data));
     }
 
     /**

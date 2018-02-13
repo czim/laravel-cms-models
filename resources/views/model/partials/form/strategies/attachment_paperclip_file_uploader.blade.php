@@ -294,5 +294,5 @@
 </script>
 @cms_scriptend
 
-@include('cms-models::model.partials.form.strategies.attachment_stapler_shared_scripts')
-@include('cms-models::model.partials.form.strategies.attachment_stapler_uploader_shared_scripts')
+@include('cms-models::model.partials.form.strategies.attachment_paperclip_shared_scripts')
+@include('cms-models::model.partials.form.strategies.attachment_paperclip_uploader_shared_scripts')

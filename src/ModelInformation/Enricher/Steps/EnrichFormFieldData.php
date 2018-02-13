@@ -193,11 +193,11 @@ class EnrichFormFieldData extends AbstractEnricherStep
             return false;
         }
 
-        // Exclude stapler fields other than the main field
+        // Exclude paperclip fields other than the main field
         if (    preg_match('#^(?<field>[^_]+)_(file_name|file_size|content_type|updated_at)$#', $attribute->name, $matches)
             &&  array_has($info->attributes, $matches['field'])
         ) {
-            return $info->attributes[ $matches['field'] ]->cast !== AttributeCast::STAPLER_ATTACHMENT;
+            return $info->attributes[ $matches['field'] ]->cast !== AttributeCast::PAPERCLIP_ATTACHMENT;
         }
 
         // Any attribute that is a foreign key and should be handled with relation-based strategies

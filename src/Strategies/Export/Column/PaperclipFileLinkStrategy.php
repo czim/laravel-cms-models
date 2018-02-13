@@ -1,7 +1,6 @@
 <?php
 namespace Czim\CmsModels\Strategies\Export\Column;
 
-use Codesleeve\Stapler\Interfaces\Attachment;
 use Czim\Paperclip\Contracts\AttachmentInterface;
 use Illuminate\Database\Eloquent\Model;
 
@@ -23,7 +22,6 @@ class PaperclipFileLinkStrategy extends DefaultStrategy
             return null;
         }
 
-        /** @var Attachment $attachment */
         return $attachment->url();
     }
 

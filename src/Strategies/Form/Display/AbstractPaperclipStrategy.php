@@ -3,7 +3,7 @@ namespace Czim\CmsModels\Strategies\Form\Display;
 
 use Czim\CmsModels\Support\Strategies\Traits\UsesUploadModule;
 
-abstract class AbstractStaplerStrategy extends AbstractDefaultStrategy
+abstract class AbstractPaperclipStrategy extends AbstractDefaultStrategy
 {
     use UsesUploadModule;
 

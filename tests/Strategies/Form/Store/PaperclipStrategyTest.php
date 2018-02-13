@@ -4,18 +4,18 @@ namespace Czim\CmsModels\Test\Strategies\Form\Store;
 use Czim\CmsCore\Contracts\Modules\ModuleManagerInterface;
 use Czim\CmsCore\Support\Enums\Component;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
-use Czim\CmsModels\Strategies\Form\Store\StaplerStrategy;
+use Czim\CmsModels\Strategies\Form\Store\PaperclipStrategy;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Czim\CmsModels\Test\TestCase;
 use Mockery;
 
 /**
- * Class StaplerStrategyTest
+ * Class PaperclipStrategyTest
  *
  * @group strategies
  * @group strategies-form-store
  */
-class StaplerStrategyTest extends TestCase
+class PaperclipStrategyTest extends TestCase
 {
 
     /**
@@ -28,7 +28,7 @@ class StaplerStrategyTest extends TestCase
 
         $data = new ModelFormFieldData;
 
-        $strategy = new StaplerStrategy;
+        $strategy = new PaperclipStrategy;
         $strategy->setFormFieldData($data);
 
         static::assertEquals('test', $strategy->retrieve($model, 'test'));
@@ -46,7 +46,7 @@ class StaplerStrategyTest extends TestCase
 
         $data = new ModelFormFieldData;
 
-        $strategy = new StaplerStrategy;
+        $strategy = new PaperclipStrategy;
         $strategy->setFormFieldData($data);
 
         $strategy->store($model, 'test', [
@@ -69,7 +69,7 @@ class StaplerStrategyTest extends TestCase
 
         $data = new ModelFormFieldData;
 
-        $strategy = new StaplerStrategy;
+        $strategy = new PaperclipStrategy;
         $strategy->setFormFieldData($data);
 
         $strategy->store($model, 'test', [

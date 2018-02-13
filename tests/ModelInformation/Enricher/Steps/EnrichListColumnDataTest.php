@@ -275,7 +275,7 @@ class EnrichListColumnDataTest extends TestCase
 
         $info->attributes = [
             // Include a normal attribute (main stapler field)
-            'image'      => new ModelAttributeData(['name' => 'image', 'cast' => AttributeCast::STAPLER_ATTACHMENT]),
+            'image'      => new ModelAttributeData(['name' => 'image', 'cast' => AttributeCast::PAPERCLIP_ATTACHMENT]),
             // Exclude hidden attributes
             'name'       => new ModelAttributeData(['name' => 'name', 'hidden' => true]),
             // Exclude foreign keys
