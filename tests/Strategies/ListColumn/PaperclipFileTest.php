@@ -1,21 +1,21 @@
 <?php
 namespace Czim\CmsModels\Test\Strategies\ListColumn;
 
-use Codesleeve\Stapler\Attachment;
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
-use Czim\CmsModels\Strategies\ListColumn\StaplerFile;
+use Czim\CmsModels\Strategies\ListColumn\PaperclipFile;
 use Czim\CmsModels\Test\AbstractPostCommentSeededTestCase;
+use Czim\Paperclip\Attachment\Attachment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\View\View;
 use Mockery;
 
 /**
- * Class StaplerFileTest
+ * Class PaperclipFileTest
  *
  * @group strategies
  * @group strategies-listcolumn
  */
-class StaplerFileTest extends AbstractPostCommentSeededTestCase
+class PaperclipFileTest extends AbstractPostCommentSeededTestCase
 {
 
     public function setUp()
@@ -32,9 +32,9 @@ class StaplerFileTest extends AbstractPostCommentSeededTestCase
     /**
      * @test
      */
-    function it_renders_a_stapler_attachment_as_a_link()
+    function it_renders_a_paperclip_attachment_as_a_link()
     {
-        $strategy = new StaplerFile;
+        $strategy = new PaperclipFile;
 
         /** @var Attachment|Mockery\Mock $attachment */
         $attachment = Mockery::mock(Attachment::class);
@@ -61,9 +61,9 @@ class StaplerFileTest extends AbstractPostCommentSeededTestCase
      * @test
      * @expectedException \UnexpectedValueException
      */
-    function it_throws_an_exception_if_source_is_not_a_stapler_attachment()
+    function it_throws_an_exception_if_source_is_not_a_paperclip_attachment()
     {
-        $strategy = new StaplerFile;
+        $strategy = new PaperclipFile;
 
         /** @var Model|Mockery\Mock $model */
         $model = Mockery::mock(Model::class);
