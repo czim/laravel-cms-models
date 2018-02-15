@@ -360,7 +360,6 @@ return [
             'aliases' => [
                 Enums\FormDisplayStrategy::TEXT             => 'DefaultStrategy',
                 Enums\FormDisplayStrategy::TEXT_EMAIL       => 'DefaultStrategy',
-                Enums\FormDisplayStrategy::PASSWORD         => 'DefaultStrategy',
                 Enums\FormDisplayStrategy::NUMERIC_DECIMAL  => 'DefaultStrategy',
                 Enums\FormDisplayStrategy::NUMERIC_INTEGER  => 'DefaultStrategy',
                 Enums\FormDisplayStrategy::NUMERIC_PRICE    => 'DefaultStrategy',
@@ -368,6 +367,7 @@ return [
 
                 Enums\FormDisplayStrategy::BOOLEAN_CHECKBOX => 'BooleanCheckboxStrategy',
                 Enums\FormDisplayStrategy::BOOLEAN_DROPDOWN => 'BooleanDropdownStrategy',
+                Enums\FormDisplayStrategy::PASSWORD         => 'PasswordStrategy',
                 Enums\FormDisplayStrategy::TEXTAREA         => 'TextAreaStrategy',
                 Enums\FormDisplayStrategy::WYSIWYG          => 'WysiwygStrategy',
                 Enums\FormDisplayStrategy::DROPDOWN         => 'DropdownStrategy',
@@ -402,6 +402,7 @@ return [
                 Enums\FormStoreStrategy::DATE_RANGE             => 'DateRangeStrategy',
                 Enums\FormStoreStrategy::LOCATION_FIELDS        => 'LocationFieldsStrategy',
                 Enums\FormStoreStrategy::PAPERCLIP              => 'PaperclipStrategy',
+                Enums\FormStoreStrategy::PASSWORD_UPDATE        => 'PasswordUpdateStrategy',
                 Enums\FormStoreStrategy::TAGGABLE               => 'TaggableStrategy',
                 Enums\FormStoreStrategy::RELATION_SINGLE_KEY    => 'RelationSingleKey',
                 Enums\FormStoreStrategy::RELATION_PLURAL_KEYS   => 'RelationPluralKeys',
