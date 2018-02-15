@@ -34,7 +34,11 @@ For a better end-user experience when using file uploads, installing the [Larave
  5.4.x               | 1.4.x
  5.5.x               | 1.5.x
  5.6.x               | 1.6.x
- 
+
+## Changelog
+
+[View the changelog](CHANGELOG.md).
+
 ## Installation
 
 Add the module class to your `cms-modules.php` configuration file:
