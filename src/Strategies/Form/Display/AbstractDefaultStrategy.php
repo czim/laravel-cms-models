@@ -18,7 +18,7 @@ abstract class AbstractDefaultStrategy extends AbstractFormFieldDisplayStrategy
         $value         = $this->normalizeValue($value);
         $originalValue = $this->normalizeValue($originalValue, true);
 
-        $type = $this->field->type ?: array_get($this->field->options(), 'type', 'text');
+        $type = $this->field->type ?: array_get($this->field->options(), 'type', $this->getDefaultFieldType());
 
         $data = [
             'record'     => $this->model,
@@ -80,6 +80,16 @@ abstract class AbstractDefaultStrategy extends AbstractFormFieldDisplayStrategy
         }
 
         return $this->field->key() . '[' . $locale . ']';
+    }
+
+    /**
+     * Returns the field "type" value if none is explicitly set.
+     *
+     * @return string
+     */
+    protected function getDefaultFieldType()
+    {
+        return 'text';
     }
 
 }
