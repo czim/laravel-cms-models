@@ -12,6 +12,7 @@ class FormStoreStrategy extends Enum
     const STAPLER                = 'stapler';
     const PAPERCLIP              = 'paperclip';
     const TAGGABLE               = 'taggable';
+    const PASSWORD_UPDATE        = 'password-update';
     const RELATION_SINGLE_KEY    = 'relation-single-key';
     const RELATION_PLURAL_KEYS   = 'relation-plural-key';
     const RELATION_PIVOT_ORDERED = 'relation-pivot-ordered';
