@@ -101,7 +101,7 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
             ->assertStatus(200);
 
         static::assertResponseHasLink(route(static::ROUTE_BASE . '.index', ['page' => 2]), '2');
-        static::assertResponseHasLink(route(static::ROUTE_BASE . '.index', ['page' => 2]), '›');
+        static::assertResponseHasLink(route(static::ROUTE_BASE . '.index', ['page' => 2]), '»');
         static::assertNotResponseHasLink(route(static::ROUTE_BASE . '.index', ['page' => 3]), '3');
 
         // Make sure the correct model records are present
@@ -115,7 +115,7 @@ class DefaultListingTest extends AbstractControllerIntegrationTest
             ->assertStatus(200);
 
         static::assertResponseHasLink(route(static::ROUTE_BASE . '.index', ['page' => 1]), '1');
-        static::assertResponseHasLink(route(static::ROUTE_BASE . '.index', ['page' => 1]), '‹');
+        static::assertResponseHasLink(route(static::ROUTE_BASE . '.index', ['page' => 1]), '«');
     }
 
     /**
