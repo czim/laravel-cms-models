@@ -8,6 +8,7 @@ services:
   - mysql
 
 before_install:
+  - phpenv config-add travis.php.ini
   - mysql -e 'CREATE DATABASE testing;'
 
 install: travis_wait composer install
