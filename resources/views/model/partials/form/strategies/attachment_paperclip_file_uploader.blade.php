@@ -292,7 +292,7 @@
 
     })
 </script>
-@cms_scriptend
+@cms_endscript
 
 @include('cms-models::model.partials.form.strategies.attachment_paperclip_shared_scripts')
 @include('cms-models::model.partials.form.strategies.attachment_paperclip_uploader_shared_scripts')
