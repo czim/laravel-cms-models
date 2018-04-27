@@ -292,7 +292,7 @@
 
     })
 </script>
-@cms_scriptend
+@cms_endscript
 
 @include('cms-models::model.partials.form.strategies.attachment_stapler_shared_scripts')
 @include('cms-models::model.partials.form.strategies.attachment_stapler_uploader_shared_scripts')
