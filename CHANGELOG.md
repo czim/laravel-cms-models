@@ -18,6 +18,9 @@ Updated `cms-models.strategies.form` config section.
 
 ## Laravel 5.5
 
+### [1.5.8] - 2018-05-08
+Fixed incorrect Blade directive for Stapler strategy (by @JJWesterkamp).
+
 ### [1.5.7] - 2018-05-07
 See 1.6.3.
 
@@ -54,6 +57,7 @@ See 1.6.1.
 [1.6.2]: https://github.com/czim/laravel-cms-models/compare/1.6.1...1.6.2
 [1.6.1]: https://github.com/czim/laravel-cms-models/compare/1.6.0...1.6.1
 
+[1.5.8]: https://github.com/czim/laravel-cms-models/compare/1.5.7...1.5.8
 [1.5.7]: https://github.com/czim/laravel-cms-models/compare/1.5.6...1.5.7
 [1.5.6]: https://github.com/czim/laravel-cms-models/compare/1.5.5...1.5.6
 [1.5.5]: https://github.com/czim/laravel-cms-models/compare/1.5.4...1.5.5
