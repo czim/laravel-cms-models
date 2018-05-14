@@ -33,8 +33,10 @@ class RelationCountChildrenLink extends RelationCount
         $relation = $this->getActualNestedRelation($model, $source);
 
         $count = $this->getCount($relation);
+        
+        $showWhenEmpty = array_get($this->listColumnData->options(), 'show_when_empty');
 
-        if ( ! $count) {
+        if ( ! $count && ! $showWhenEmpty) {
             return '<span class="relation-count count-empty">&nbsp;</span>';
         }
 
