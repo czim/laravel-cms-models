@@ -51,7 +51,7 @@ class AnalyzeRelationsTest extends AbstractStepCase
 
         static::assertInternalType('array', $info['relations']);
         static::assertEquals(
-            ['testBelongsTo', 'testHasOne', 'testHasMany', 'testBelongsToMany'],
+            ['testBelongsTo', 'testHasOne', 'testHasMany', 'testBelongsToMany', 'testMultiLine'],
             array_keys($info['relations'])
         );
 
@@ -88,6 +88,14 @@ class AnalyzeRelationsTest extends AbstractStepCase
         static::assertEquals('testBelongsToMany', $relation->name);
         static::assertEquals(TestGlobalScope::class, $relation->relatedModel);
         static::assertEquals(['test_belongs_to_many.test_relation_id', 'test_belongs_to_many.test_global_scope_id'], $relation->foreign_keys);
+
+        $relation = $info['relations']['testMultiLine'];
+        static::assertInstanceOf(ModelRelationData::class, $relation);
+        static::assertEquals(RelationType::HAS_MANY, $relation->type);
+        static::assertEquals('testMultiLine', $relation->method);
+        static::assertEquals('testMultiLine', $relation->name);
+        static::assertEquals(TestOrderable::class, $relation->relatedModel);
+        static::assertEquals(['test_orderables.test_relation_id'], $relation->foreign_keys);
     }
 
     /**
