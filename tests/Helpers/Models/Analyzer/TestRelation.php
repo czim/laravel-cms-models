@@ -29,6 +29,12 @@ class TestRelation extends Model
         return $this->belongsToMany(TestGlobalScope::class, 'test_belongs_to_many', 'test_relation_id', 'test_global_scope_id');
     }
 
+    public function testMultiLine()
+    {
+        return $this
+            ->hasMany(TestOrderable::class, 'test_relation_id');
+    }
+
     /**
      * Public method that is not a relation.
      *

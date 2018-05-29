@@ -216,7 +216,7 @@ class AnalyzeRelations extends AbstractAnalyzerStep
      */
     protected function findRelationMethodCall($methodBody)
     {
-        $methodBody = trim(str_replace("\n", '', $methodBody));
+        $methodBody = trim(preg_replace('#\\n\\s*#', '', $methodBody));
 
         // find the last potential relation method opener and position
         $foundOpener  = null;
