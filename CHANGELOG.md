@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Merged fix by Jeffrey Westerkamp for analyzing multiline relation method definitions.
+
 ## Laravel 5.6
 
 ### [1.6.3] - 2018-05-07
