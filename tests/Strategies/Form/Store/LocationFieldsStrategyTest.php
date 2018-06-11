@@ -5,7 +5,6 @@ use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Strategies\Form\Store\LocationFieldsStrategy;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
-use Czim\CmsModels\Test\TestCase;
 
 /**
  * Class LocationFieldsStrategyTest
@@ -13,7 +12,7 @@ use Czim\CmsModels\Test\TestCase;
  * @group strategies
  * @group strategies-form-store
  */
-class LocationFieldsStrategyTest extends TestCase
+class LocationFieldsStrategyTest extends AbstractFormStoreStrategyTest
 {
 
     /**

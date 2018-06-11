@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Test\ModelInformation\Enricher;
 
 use Czim\CmsModels\Contracts\Support\Factories\FormStoreStrategyFactoryInterface;
+use Czim\CmsModels\Contracts\Support\Validation\ValidationRuleMergerInterface;
 use Czim\CmsModels\Exceptions\ModelConfigurationDataException;
 use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
 use Czim\CmsModels\ModelInformation\Data\Form\Layout\ModelFormFieldGroupData;
@@ -14,6 +15,7 @@ use Czim\CmsModels\Support\Enums\AttributeCast;
 use Czim\CmsModels\Support\Enums\FormDisplayStrategy;
 use Czim\CmsModels\Support\Enums\RelationType;
 use Czim\CmsModels\Support\Factories\FormStoreStrategyFactory;
+use Czim\CmsModels\Support\Validation\ValidationRuleMerger;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Czim\CmsModels\Test\TestCase;
 use Exception;
@@ -33,6 +35,7 @@ class ModelInformationEnricherTest extends TestCase
         parent::setUp();
 
         $this->app->bind(FormStoreStrategyFactoryInterface::class, FormStoreStrategyFactory::class);
+        $this->app->bind(ValidationRuleMergerInterface::class, ValidationRuleMerger::class);
     }
 
     /**
