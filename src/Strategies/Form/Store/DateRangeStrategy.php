@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Strategies\Form\Store;
 
 use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
+use Czim\CmsModels\ModelInformation\Data\Form\Validation\ValidationRuleData;
 use Illuminate\Database\Eloquent\Model;
 use UnexpectedValueException;
 
@@ -70,18 +71,18 @@ class DateRangeStrategy extends DefaultStrategy
     {
         $format = $this->getExpectedDateFormat();
 
-        $key = $this->formFieldData->key();
+        $base = $this->isNullable() ? ['nullable'] : [];
 
         if ( ! $format) {
             return [
-                $key . '.from' => [ 'date' ],
-                $key . '.to'   => [ 'date' ],
+                new ValidationRuleData(array_merge($base, [ 'date' ]), 'from'),
+                new ValidationRuleData(array_merge($base, [ 'date' ]), 'to'),
             ];
         }
 
         return [
-            $key . '.from' => [ 'date_format:' . $format ],
-            $key . '.to'   => [ 'date_format:' . $format ],
+            new ValidationRuleData(array_merge($base, [ 'date_format:' . $format ]), 'from'),
+            new ValidationRuleData(array_merge($base, [ 'date_format:' . $format ]), 'to'),
         ];
     }
 

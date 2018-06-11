@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Strategies\Form\Store;
 
 use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
+use Czim\CmsModels\ModelInformation\Data\Form\Validation\ValidationRuleData;
 use Illuminate\Database\Eloquent\Model;
 
 class LocationFieldsStrategy extends DefaultStrategy
@@ -69,9 +70,9 @@ class LocationFieldsStrategy extends DefaultStrategy
         $key = $this->formFieldData->key();
 
         $rules = [
-            $key . '.longitude' => [ 'numeric' ],
-            $key . '.latitude'  => [ 'numeric' ],
-            $key . '.text'      => [ 'string' ],
+            'longitude' => [ 'numeric' ],
+            'latitude'  => [ 'numeric' ],
+            'text'      => [ 'string', 'nullable' ],
         ];
 
         // Always require long/lat if the field itself is required
@@ -79,13 +80,22 @@ class LocationFieldsStrategy extends DefaultStrategy
         $required = $this->formFieldData->required();
 
         if ($required) {
-            $rules[ $key . '.longitude' ][] = 'required';
-            $rules[ $key . '.latitude' ][]  = 'required';
+            $rules[ 'longitude' ][] = 'required';
+            $rules[ 'latitude' ][]  = 'required';
+        } else {
+            $rules[ 'longitude' ][] = 'nullable';
+            $rules[ 'latitude' ][]  = 'nullable';
         }
 
         // todo: determine whether text column, if made available, is required
 
-        return $rules;
+        return array_map(
+            function (array $rules, $key) {
+                return new ValidationRuleData($rules, $key);
+            },
+            array_values($rules),
+            array_keys($rules)
+        );
     }
 
     /**
