@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Strategies\Form\Store;
 
 use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
+use Czim\CmsModels\ModelInformation\Data\Form\Validation\ValidationRuleData;
 use Czim\CmsModels\Strategies\Form\Display as FormFieldDisplayStrategies;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\Support\Enums\FormDisplayStrategy;
@@ -64,7 +65,11 @@ class DateStrategy extends DefaultStrategy
             return array_merge($base, [ 'date' ]);
         }
 
-        return array_merge($base, [ 'date_format:' . $format ]);
+        return [
+            new ValidationRuleData(
+                array_merge($base, [ 'date_format:' . $format ])
+            )
+        ];
     }
 
     /**
