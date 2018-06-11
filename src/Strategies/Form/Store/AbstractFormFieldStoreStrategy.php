@@ -1,6 +1,8 @@
 <?php
 namespace Czim\CmsModels\Strategies\Form\Store;
 
+use Czim\CmsModels\Contracts\ModelInformation\Data\Form\Validation\ValidationRuleDataInterface;
+use Czim\CmsModels\Contracts\Support\Validation\ValidationRuleMergerInterface;
 use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\AttributeValidationResolver;
 use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\RelationValidationResolver;
 use Czim\CmsModels\Contracts\ModelInformation\Data\ModelAttributeDataInterface;
@@ -15,6 +17,7 @@ use Czim\CmsModels\Support\Translation\TranslationLocaleHelper;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesSourceStrategies;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
+use RuntimeException;
 use UnexpectedValueException;
 
 abstract class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyInterface
@@ -198,87 +201,26 @@ abstract class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyI
             return false;
         }
 
-        // Default behavior is to check for attribute/relation validation rules
-        $rules = $this->getStrategySpecificRules($field);
 
-        // Fallback behavior is to check for attribute/relation validation rules
-        $modelRules = $this->getModelInformationBasedRules($field, $modelInformation);
-
-        // Merge the rules together sensibly
-        $rules = $this->mergeValidationRules($rules, $modelRules);
-
-        $key = $field->key();
-
-        // Translations are handled with locale-keyed associative arrays, using placeholders
-        if ($rules && $field->translated()) {
-
-            $placeholder = TranslationLocaleHelper::VALIDATION_LOCALE_PLACEHOLDER;
-
-            // Modify and overwrite required rule, if present to special locale-context required rule
-            if (is_string($rules)) {
-                if ($rules === 'required') {
-                    $rules = [ $this->getTranslationRequiredWithRule($modelInformation, $key) ];
-                }
-            } elseif ($index = array_search('required', $rules)) {
-                $rules[$index] = $this->getTranslationRequiredWithRule($modelInformation, $key);
-            }
-
-            // For now, make sure the fields are always nullable.
-            // If the field is required, it is always required_with.
-            // Note that this behaviour may change later!
-            if ( ! in_array('nullable', $rules)) {
-                $rules[] = 'nullable';
-            }
-
-            $rules = [
-                $key                      => 'array',
-                $key . '.' . $placeholder => $rules
-            ];
-        }
-
-        return $rules;
-    }
-
-    /**
-     * Returns required with rule for translated attributes.
-     *
-     * This collects all, except the indicated, attribute/field keys and
-     * combines them into a single 'required_with' validation rule, with
-     * a locale placeholder.
-     *
-     * @param ModelInformationInterface|ModelInformation $info
-     * @param string|null                                $key field/attribute key
-     * @return string
-     */
-    protected function getTranslationRequiredWithRule(ModelInformationInterface $info, $key = null)
-    {
-        $translated = array_keys(
-            array_filter(
-                $info->attributes,
-                function (ModelAttributeDataInterface $attribute) use ($key) {
-                    /** @var ModelAttributeData $attribute */
-
-                    if (null !== $key && $key == $attribute->name) {
-                        return false;
-                    }
-
-                    return $attribute->translated;
-                }
-            )
+        // Combine the rules provided by the strategy with the rules based on the
+        // relevant attribute / relation in the model information.
+        $rules = $this->getRuleMerger()->mergeStrategyAndAttributeBased(
+            $this->getStrategySpecificRules($field) ?: [],
+            $this->getModelInformationBasedRules($field, $modelInformation) ?: []
         );
 
-        if ( ! count($translated)) {
-            return '';
+
+        // Enrich the rule data sets with field data.
+        foreach ($rules as $rule) {
+
+            $fullKey = $field->key()
+                     . ($rule->key() ? '.' . $rule->key() : null);
+
+            $rule->setKey($fullKey);
+            $rule->setIsTranslated($field->translated());
         }
 
-        $translated = array_map(
-            function ($key) {
-                return $key . '.' . TranslationLocaleHelper::VALIDATION_LOCALE_PLACEHOLDER;
-            },
-            $translated
-        );
-
-        return 'required_with:' . implode(',', $translated);
+        return $rules->toArray();
     }
 
     /**
@@ -333,85 +275,6 @@ abstract class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyI
 
         return false;
     }
-
-    /**
-     * Sensibly merges validation rules set specifically for the model and determined by model information.
-     *
-     * @param array|string|false $specificRules
-     * @param array|string|false $modelRules
-     * @return array|string|false
-     */
-    protected function mergeValidationRules($specificRules, $modelRules)
-    {
-        if (empty($specificRules)) {
-            return $modelRules;
-        }
-
-        if (empty($modelRules)) {
-            return $specificRules;
-        }
-
-        $specificRules = is_array($specificRules) ? $specificRules : [ $specificRules ];
-        $modelRules    = is_array($modelRules)    ? $modelRules    : [ $modelRules ];
-
-        $flippedInheritable = array_flip($this->inheritableRules());
-
-        // Detect if any of the specific rules are nested, in which case the normal merging process should be skipped.
-        // Though it is technically possible that these nested properties will match an attribute directly,
-        // this should not be assumed -- configure validation rules manually for the best results.
-        if (count(array_filter($specificRules, 'is_array'))) {
-            return $specificRules;
-        }
-
-        // Remove rules that may not be inherited, because present in specific rules
-        array_forget($flippedInheritable, array_map([ $this, 'getRuleType' ], $specificRules));
-
-        foreach ($modelRules as $modelRule) {
-
-            $ruleType = $this->getRuleType($modelRule);
-
-            if ( ! array_key_exists($ruleType, $flippedInheritable)) {
-                continue;
-            }
-
-            $specificRules[] = $modelRule;
-        }
-
-        return $specificRules;
-    }
-
-    /**
-     * Returns validation rules that may be inherited from model information data,
-     * to be included into specific strategy rules if not already present.
-     *
-     * @return array
-     */
-    protected function inheritableRules()
-    {
-        return [
-            'required',
-            'filled',
-            'nullable',
-            'unique',
-            'exists',
-        ];
-    }
-
-    /**
-     * Returns a rule type for a given validation rule.
-     *
-     * @param $rule
-     * @return string
-     */
-    protected function getRuleType($rule)
-    {
-        if (false === ($pos = strpos($rule, ':'))) {
-            return $rule;
-        }
-
-        return substr($rule, 0, $pos);
-    }
-
 
     /**
      * Adjusts or normalizes a value before storing it.
@@ -475,5 +338,13 @@ abstract class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyI
     protected function getRelationValidationResolver()
     {
         return app(RelationValidationResolver::class);
+    }
+
+    /**
+     * @return ValidationRuleMergerInterface
+     */
+    protected function getRuleMerger()
+    {
+        return app(ValidationRuleMergerInterface::class);
     }
 }
