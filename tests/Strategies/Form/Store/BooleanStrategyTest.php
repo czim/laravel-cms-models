@@ -4,7 +4,6 @@ namespace Czim\CmsModels\Test\Strategies\Form\Store;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\Strategies\Form\Store\BooleanStrategy;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
-use Czim\CmsModels\Test\TestCase;
 
 /**
  * Class BooleanStrategyTest
@@ -12,7 +11,7 @@ use Czim\CmsModels\Test\TestCase;
  * @group strategies
  * @group strategies-form-store
  */
-class BooleanStrategyTest extends TestCase
+class BooleanStrategyTest extends AbstractFormStoreStrategyTest
 {
 
     /**
