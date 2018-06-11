@@ -4,6 +4,7 @@ namespace Czim\CmsModels\Providers;
 use Czim\CmsModels\Console\Commands;
 use Czim\CmsModels\Contracts\Support\Form\FormDataStorerInterface;
 use Czim\CmsModels\Contracts\Support\Validation\ValidationRuleDecoratorInterface;
+use Czim\CmsModels\Contracts\Support\Validation\ValidationRuleMergerInterface;
 use Czim\CmsModels\ModelInformation\Analyzer\Database\SimpleDatabaseAnalyzer;
 use Czim\CmsModels\ModelInformation\Analyzer\Processor\ModelAnalyzer;
 use Czim\CmsModels\Contracts\ModelInformation\Analyzer\DatabaseAnalyzerInterface;
@@ -30,6 +31,7 @@ use Czim\CmsModels\Support\Translation\TranslationLocaleHelper;
 use Czim\CmsCore\Contracts\Core\CoreInterface;
 use Czim\CmsCore\Support\Enums\Component;
 use Czim\CmsModels\Support\Validation\ValidationRuleDecorator;
+use Czim\CmsModels\Support\Validation\ValidationRuleMerger;
 use Event;
 use Illuminate\Support\ServiceProvider;
 
@@ -160,6 +162,7 @@ class CmsModelsServiceProvider extends ServiceProvider
         $this->app->singleton(TranslationLocaleHelperInterface::class, TranslationLocaleHelper::class);
         $this->app->singleton(ModelListMemoryInterface::class, ModelListMemory::class);
         $this->app->singleton(ValidationRuleDecoratorInterface::class, ValidationRuleDecorator::class);
+        $this->app->bind(ValidationRuleMergerInterface::class, ValidationRuleMerger::class);
 
         return $this;
     }
