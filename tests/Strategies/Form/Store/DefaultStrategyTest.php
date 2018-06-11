@@ -1,11 +1,13 @@
 <?php
 namespace Czim\CmsModels\Test\Strategies\Form\Store;
 
+use Czim\CmsModels\Contracts\Support\Validation\ValidationRuleMergerInterface;
 use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\AttributeValidationResolver;
 use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\RelationValidationResolver;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Strategies\Form\Store\DefaultStrategy;
+use Czim\CmsModels\Support\Validation\ValidationRuleMerger;
 use Czim\CmsModels\Test\DatabaseTestCase;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Illuminate\Support\Facades\Schema;
@@ -19,6 +21,16 @@ use Mockery;
  */
 class DefaultStrategyTest extends DatabaseTestCase
 {
+
+    /**
+     * @inheritdoc
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->app->bind(ValidationRuleMergerInterface::class, ValidationRuleMerger::class);
+    }
 
     protected function migrateDatabase()
     {
@@ -268,7 +280,7 @@ class DefaultStrategyTest extends DatabaseTestCase
 
         $strategy->setFormFieldData($field);
 
-        static::assertFalse($strategy->validationRules($info, false));
+        static::assertEmpty($strategy->validationRules($info, false));
 
 
         // With attribute model information data

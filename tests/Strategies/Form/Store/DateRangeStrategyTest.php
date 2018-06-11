@@ -6,7 +6,6 @@ use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Strategies\Form\Store\DateRangeStrategy;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
-use Czim\CmsModels\Test\TestCase;
 
 /**
  * Class DateRangeStrategyTest
@@ -14,7 +13,7 @@ use Czim\CmsModels\Test\TestCase;
  * @group strategies
  * @group strategies-form-store
  */
-class DateRangeStrategyTest extends TestCase
+class DateRangeStrategyTest extends AbstractFormStoreStrategyTest
 {
 
     /**
