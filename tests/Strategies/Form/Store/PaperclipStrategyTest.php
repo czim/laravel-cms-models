@@ -6,7 +6,6 @@ use Czim\CmsCore\Support\Enums\Component;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\Strategies\Form\Store\PaperclipStrategy;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
-use Czim\CmsModels\Test\TestCase;
 use Mockery;
 
 /**
@@ -15,7 +14,7 @@ use Mockery;
  * @group strategies
  * @group strategies-form-store
  */
-class PaperclipStrategyTest extends TestCase
+class PaperclipStrategyTest extends AbstractFormStoreStrategyTest
 {
 
     /**

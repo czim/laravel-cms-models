@@ -7,7 +7,6 @@ use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Strategies\Form\Store\DateStrategy;
 use Czim\CmsModels\Support\Enums\FormDisplayStrategy;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
-use Czim\CmsModels\Test\TestCase;
 
 /**
  * Class DateStrategyTest
@@ -15,7 +14,7 @@ use Czim\CmsModels\Test\TestCase;
  * @group strategies
  * @group strategies-form-store
  */
-class DateStrategyTest extends TestCase
+class DateStrategyTest extends AbstractFormStoreStrategyTest
 {
 
     /**
@@ -129,7 +128,7 @@ class DateStrategyTest extends TestCase
         $strategy = new DateStrategy;
         $strategy->setFormFieldData($data);
 
-        static::assertEquals(['date'], $strategy->validationRules($info, false));
+        static::assertEquals(['date' => ['date']], $strategy->validationRules($info, false));
     }
 
     /**
@@ -155,7 +154,7 @@ class DateStrategyTest extends TestCase
         $strategy = new DateStrategy;
         $strategy->setFormFieldData($data);
 
-        static::assertEquals(['date_format:d-m-Y H:i'], $strategy->validationRules($info, false));
+        static::assertEquals(['date' => ['date_format:d-m-Y H:i']], $strategy->validationRules($info, false));
     }
 
     /**
@@ -179,7 +178,7 @@ class DateStrategyTest extends TestCase
         $strategy = new DateStrategy;
         $strategy->setFormFieldData($data);
 
-        static::assertEquals(['date_format:H:i'], $strategy->validationRules($info, false));
+        static::assertEquals(['date' => ['date_format:H:i']], $strategy->validationRules($info, false));
     }
 
 }

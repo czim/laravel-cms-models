@@ -67,8 +67,9 @@ class DefaultCreateFormTest extends AbstractControllerIntegrationTest
                 ->setValues([
                     'type'        => 'news',
                     'description' => 'Test description!',
-                    'title'       => ['en' => 'Testing Title'],
-                    'body'        => ['en' => 'Testing Body Content'],
+                    'title'       => ['en' => 'Testing Title', 'nl' => 'Testtitel'],
+                    'body'        => ['en' => 'Testing Body Content', 'nl' => 'Inhoud'],
+
                 ])
         )
             ->assertStatus(200);
@@ -106,8 +107,8 @@ class DefaultCreateFormTest extends AbstractControllerIntegrationTest
                     '__save_and_close__' => 1,
                     'type'               => 'news',
                     'description'        => 'Test description!',
-                    'title'              => ['en' => 'Testing Title'],
-                    'body'               => ['en' => 'Testing Body Content'],
+                    'title'              => ['en' => 'Testing Title', 'nl' => 'Testtitel'],
+                    'body'               => ['en' => 'Testing Body Content', 'nl' => 'Inhoud'],
                 ])
         )
             ->assertStatus(200);
@@ -132,7 +133,7 @@ class DefaultCreateFormTest extends AbstractControllerIntegrationTest
                 ->setValues([
                     'type'        => 'incorrect',
                     'description' => 'Test description!',
-                    'title'       => ['en' => 'Testing Title'],
+                    'title'       => ['en' => 'Testing Title', 'nl' => 'Testtitel'],
                     // Missing body for en
                 ])
         )
