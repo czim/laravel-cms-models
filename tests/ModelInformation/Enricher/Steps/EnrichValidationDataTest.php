@@ -3,11 +3,13 @@ namespace Czim\CmsModels\Test\ModelInformation\Enricher\Steps;
 
 use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;
 use Czim\CmsModels\Contracts\Support\Factories\FormStoreStrategyFactoryInterface;
+use Czim\CmsModels\Contracts\Support\Validation\ValidationRuleMergerInterface;
 use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\ModelInformation\Data\ModelAttributeData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\ModelInformation\Enricher\Steps\EnrichValidationData;
+use Czim\CmsModels\Support\Validation\ValidationRuleMerger;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Czim\CmsModels\Test\Helpers\Strategies\Form\Store\TestSimpleAssocArrayFormatValidation;
 use Czim\CmsModels\Test\Helpers\Strategies\Form\Store\TestSimpleBrokenValidation;
@@ -36,8 +38,9 @@ class EnrichValidationDataTest extends TestCase
             ->andReturnUsing(function ($strategy) {
                 return new $strategy;
             });
-
         $this->app->instance(FormStoreStrategyFactoryInterface::class, $mockStrategyFactory);
+
+        $this->app->bind(ValidationRuleMergerInterface::class, ValidationRuleMerger::class);
     }
 
     /**
@@ -47,7 +50,8 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData($mockEnricher);
+        $step = new EnrichValidationData();
+        $step->setEnricher($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -69,7 +73,8 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData($mockEnricher);
+        $step = new EnrichValidationData();
+        $step->setEnricher($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -136,7 +141,8 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData($mockEnricher);
+        $step = new EnrichValidationData();
+        $step->setEnricher($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -178,7 +184,8 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData($mockEnricher);
+        $step = new EnrichValidationData();
+        $step->setEnricher($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -225,7 +232,8 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData($mockEnricher);
+        $step = new EnrichValidationData();
+        $step->setEnricher($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -272,7 +280,8 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData($mockEnricher);
+        $step = new EnrichValidationData();
+        $step->setEnricher($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -327,7 +336,8 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData($mockEnricher);
+        $step = new EnrichValidationData();
+        $step->setEnricher($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -371,26 +381,38 @@ class EnrichValidationDataTest extends TestCase
         $step->enrich($info, []);
 
         $rules = $info->form->validation->create;
-        static::assertCount(5, $rules);
+        static::assertCount(6, $rules);
         static::assertArrayHasKey('name', $rules);
         static::assertArrayHasKey('number', $rules);
+        static::assertArrayHasKey('extra', $rules);
+        static::assertArrayHasKey('string_format', $rules);
+        static::assertArrayHasKey('assoc_format.field_a', $rules);
+        static::assertArrayHasKey('assoc_format.field_b', $rules);
         static::assertEquals(['string', 'size:10'], $rules['name']);
         static::assertEquals(['integer', 'max:99'], $rules['number']);
+        static::assertEquals(['nullable'], $rules['extra']);
         static::assertEquals(['string|size:10'], $rules['string_format']);
-        static::assertEquals(['required', 'string'], $rules['field_a']);
-        static::assertEquals('size:10', $rules['field_b']);
+        static::assertEquals(['required', 'string'], $rules['assoc_format.field_a']);
+        static::assertEquals(['size:10'], $rules['assoc_format.field_b']);
 
         $rules = $info->form->validation->update;
         static::assertCount(6, $rules);
         static::assertArrayHasKey('name', $rules);
         static::assertArrayHasKey('number', $rules);
         static::assertArrayHasKey('extra', $rules);
+        static::assertArrayHasKey('string_format', $rules);
+        static::assertArrayHasKey('assoc_format.field_a', $rules);
+        static::assertArrayHasKey('assoc_format.field_b', $rules);
         static::assertEquals(['string', 'size:20'], $rules['name']);
         static::assertEquals(['integer', 'max:250'], $rules['number']);
         static::assertEquals(['required'], $rules['extra']);
         static::assertEquals(['string|size:20'], $rules['string_format']);
-        static::assertEquals(['required', 'string'], $rules['field_a']);
-        static::assertEquals('size:20', $rules['field_b']);
+        static::assertEquals(['required', 'string'], $rules['assoc_format.field_a']);
+        static::assertEquals(
+            ['size:20'],
+            $rules['assoc_format.field_b'],
+            'assoc_format.field_b rule should differ from create rule (20 vs 10)'
+        );
     }
 
     /**
@@ -400,7 +422,8 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData($mockEnricher);
+        $step = new EnrichValidationData();
+        $step->setEnricher($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -469,7 +492,8 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData($mockEnricher);
+        $step = new EnrichValidationData();
+        $step->setEnricher($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -515,18 +539,20 @@ class EnrichValidationDataTest extends TestCase
         $step->enrich($info, []);
 
         $rules = $info->form->validation->create;
-        static::assertCount(2, $rules);
+        static::assertCount(3, $rules);
         static::assertArrayHasKey('name', $rules);
         static::assertArrayHasKey('number', $rules);
+        static::assertArrayHasKey('extra', $rules);
         static::assertEquals(['string', 'size:10'], $rules['name']);
         static::assertEquals(['max:1'], $rules['number']);
+        static::assertEquals(['nullable'], $rules['extra']);
 
         $rules = $info->form->validation->update;
         static::assertCount(2, $rules);
         static::assertArrayHasKey('number', $rules);
         static::assertArrayHasKey('extra', $rules);
         static::assertEquals(['max:2'], $rules['number']);
-        static::assertEquals(['required'], $rules['extra']);
+        static::assertEquals(['required'], $rules['extra'], 'extra should be required for update');
     }
 
     /**
@@ -536,7 +562,8 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData($mockEnricher);
+        $step = new EnrichValidationData();
+        $step->setEnricher($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -574,7 +601,8 @@ class EnrichValidationDataTest extends TestCase
 
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData($mockEnricher);
+        $step = new EnrichValidationData();
+        $step->setEnricher($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -634,7 +662,8 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData($mockEnricher);
+        $step = new EnrichValidationData();
+        $step->setEnricher($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -682,6 +711,14 @@ class EnrichValidationDataTest extends TestCase
     protected function getMockStrategyFactory()
     {
         return Mockery::mock(FormStoreStrategyFactoryInterface::class);
+    }
+
+    /**
+     * @return ValidationRuleMergerInterface|Mockery\MockInterface
+     */
+    protected function getMockRuleMerger()
+    {
+        return Mockery::mock(ValidationRuleMergerInterface::class);
     }
 
 }

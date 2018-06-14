@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Test\Strategies\Form\Store;
 
 use Carbon\Carbon;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Form\Validation\ValidationRuleDataInterface;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Strategies\Form\Store\DateStrategy;
@@ -128,7 +129,13 @@ class DateStrategyTest extends AbstractFormStoreStrategyTest
         $strategy = new DateStrategy;
         $strategy->setFormFieldData($data);
 
-        static::assertEquals(['date' => ['date']], $strategy->validationRules($info, false));
+        /** @var ValidationRuleDataInterface[] $rules */
+        $rules = $strategy->validationRules($info, false);
+
+        static::assertCount(1, $rules);
+        static::assertInstanceOf(ValidationRuleDataInterface::class, $rules[0]);
+        static::assertEmpty($rules[0]->key());
+        static::assertEquals(['date'], $rules[0]->rules());
     }
 
     /**
@@ -154,7 +161,13 @@ class DateStrategyTest extends AbstractFormStoreStrategyTest
         $strategy = new DateStrategy;
         $strategy->setFormFieldData($data);
 
-        static::assertEquals(['date' => ['date_format:d-m-Y H:i']], $strategy->validationRules($info, false));
+        /** @var ValidationRuleDataInterface[] $rules */
+        $rules = $strategy->validationRules($info, false);
+
+        static::assertCount(1, $rules);
+        static::assertInstanceOf(ValidationRuleDataInterface::class, $rules[0]);
+        static::assertEmpty($rules[0]->key());
+        static::assertEquals(['date_format:d-m-Y H:i'], $rules[0]->rules());
     }
 
     /**
@@ -178,7 +191,13 @@ class DateStrategyTest extends AbstractFormStoreStrategyTest
         $strategy = new DateStrategy;
         $strategy->setFormFieldData($data);
 
-        static::assertEquals(['date' => ['date_format:H:i']], $strategy->validationRules($info, false));
+        /** @var ValidationRuleDataInterface[] $rules */
+        $rules = $strategy->validationRules($info, false);
+
+        static::assertCount(1, $rules);
+        static::assertInstanceOf(ValidationRuleDataInterface::class, $rules[0]);
+        static::assertEmpty($rules[0]->key());
+        static::assertEquals(['date_format:H:i'], $rules[0]->rules());
     }
 
 }

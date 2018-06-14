@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Test\Strategies\Form\Store;
 
 use Carbon\Carbon;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Form\Validation\ValidationRuleDataInterface;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Strategies\Form\Store\DateRangeStrategy;
@@ -160,13 +161,16 @@ class DateRangeStrategyTest extends AbstractFormStoreStrategyTest
         $strategy = new DateRangeStrategy;
         $strategy->setFormFieldData($data);
 
-        static::assertEquals(
-            [
-                'date_range.from' => ['date'],
-                'date_range.to'   => ['date'],
-            ],
-            $strategy->validationRules($info, false)
-        );
+        /** @var ValidationRuleDataInterface[] $rules */
+        $rules = $strategy->validationRules($info, false);
+
+        static::assertCount(2, $rules);
+        static::assertInstanceOf(ValidationRuleDataInterface::class, $rules[0]);
+        static::assertInstanceOf(ValidationRuleDataInterface::class, $rules[1]);
+        static::assertEquals('from', $rules[0]->key());
+        static::assertEquals(['date'], $rules[0]->rules());
+        static::assertEquals('to', $rules[1]->key());
+        static::assertEquals(['date'], $rules[1]->rules());
     }
 
     /**
@@ -194,13 +198,16 @@ class DateRangeStrategyTest extends AbstractFormStoreStrategyTest
         $strategy = new DateRangeStrategy;
         $strategy->setFormFieldData($data);
 
-        static::assertEquals(
-            [
-                'date_range.from' => ['date_format:d-m-Y H:i'],
-                'date_range.to'   => ['date_format:d-m-Y H:i'],
-            ],
-            $strategy->validationRules($info, false)
-        );
+        /** @var ValidationRuleDataInterface[] $rules */
+        $rules = $strategy->validationRules($info, false);
+
+        static::assertCount(2, $rules);
+        static::assertInstanceOf(ValidationRuleDataInterface::class, $rules[0]);
+        static::assertInstanceOf(ValidationRuleDataInterface::class, $rules[1]);
+        static::assertEquals('from', $rules[0]->key());
+        static::assertEquals(['date_format:d-m-Y H:i'], $rules[0]->rules());
+        static::assertEquals('to', $rules[1]->key());
+        static::assertEquals(['date_format:d-m-Y H:i'], $rules[1]->rules());
     }
 
 }
