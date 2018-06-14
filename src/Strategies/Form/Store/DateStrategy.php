@@ -2,6 +2,7 @@
 namespace Czim\CmsModels\Strategies\Form\Store;
 
 use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Form\Validation\ValidationRuleDataInterface;
 use Czim\CmsModels\ModelInformation\Data\Form\Validation\ValidationRuleData;
 use Czim\CmsModels\Strategies\Form\Display as FormFieldDisplayStrategies;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
@@ -53,7 +54,7 @@ class DateStrategy extends DefaultStrategy
      * Returns validation rules specific for the strategy.
      *
      * @param ModelFormFieldDataInterface|ModelFormFieldData $field
-     * @return array|false|null null to fall back to default rules.
+     * @return ValidationRuleDataInterface[] null to fall back to default rules.
      */
     protected function getStrategySpecificRules(ModelFormFieldDataInterface $field = null)
     {
@@ -62,13 +63,13 @@ class DateStrategy extends DefaultStrategy
         $base = $this->isNullable() ? ['nullable'] : [];
 
         if ( ! $format) {
-            return array_merge($base, [ 'date' ]);
+            return [
+                new ValidationRuleData(array_merge($base, [ 'date' ]))
+            ];
         }
 
         return [
-            new ValidationRuleData(
-                array_merge($base, [ 'date_format:' . $format ])
-            )
+            new ValidationRuleData(array_merge($base, [ 'date_format:' . $format ]))
         ];
     }
 
