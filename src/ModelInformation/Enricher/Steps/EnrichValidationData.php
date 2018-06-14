@@ -2,18 +2,32 @@
 namespace Czim\CmsModels\ModelInformation\Enricher\Steps;
 
 use Czim\CmsModels\Contracts\ModelInformation\Data\Form\ModelFormFieldDataInterface;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Form\Validation\ValidationRuleDataInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\ModelInformationInterface;
+use Czim\CmsModels\Contracts\Support\Validation\ValidationRuleMergerInterface;
 use Czim\CmsModels\Exceptions\ModelInformationEnrichmentException;
+use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\AttributeValidationResolver;
+use Czim\CmsModels\ModelInformation\Analyzer\Resolvers\RelationValidationResolver;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
+use Czim\CmsModels\ModelInformation\Data\Form\Validation\ValidationRuleData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesFormStoreStrategies;
 use Exception;
-use Illuminate\Support\Arr;
 use UnexpectedValueException;
 
 class EnrichValidationData extends AbstractEnricherStep
 {
     use ResolvesFormStoreStrategies;
+
+    /**
+     * This key, in array validation rule configuration, identifies
+     * a special data set that should be interpreted as a validation
+     * rule data object with various properties. It serves to identify
+     * it as opposed to 'normal' arrays with validation rules.
+     *
+     * @var string
+     */
+    const VALIDATION_RULE_DATA_KEY = '**';
 
 
     /**
@@ -32,6 +46,8 @@ class EnrichValidationData extends AbstractEnricherStep
 
     /**
      * Performs enrichment of validation rules based on form field strategies.
+     *
+     * @throws ModelInformationEnrichmentException
      */
     protected function performEnrichment()
     {
@@ -41,8 +57,27 @@ class EnrichValidationData extends AbstractEnricherStep
 
         $this->layoutFields = $this->info->form->getLayoutFormFieldKeys();
 
-        $this->enrichRules(true)
-             ->enrichRules(false);
+        $this
+            ->enrichCreateRules()
+            ->enrichUpdateRules();
+    }
+
+    /**
+     * @return EnrichValidationData
+     * @throws ModelInformationEnrichmentException
+     */
+    protected function enrichCreateRules()
+    {
+        return $this->enrichRules(true);
+    }
+
+    /**
+     * @return EnrichValidationData
+     * @throws ModelInformationEnrichmentException
+     */
+    protected function enrichUpdateRules()
+    {
+        return $this->enrichRules(false);
     }
 
     /**
@@ -50,6 +85,7 @@ class EnrichValidationData extends AbstractEnricherStep
      *
      * @param bool $forCreate
      * @return $this
+     * @throws ModelInformationEnrichmentException
      */
     protected function enrichRules($forCreate = true)
     {
@@ -257,12 +293,169 @@ class EnrichValidationData extends AbstractEnricherStep
     {
         $this->generatedRulesMap[ $field->key() ] = [];
 
-        // Leave out fields that are not relevant (or not in the layout)
-        if (    $forCreate && ! $field->create()
-            ||  ! $forCreate && ! $field->update()
-            ||  ! in_array($field->key(), $this->layoutFields)
-        ) {
+        if ( ! $this->isFormFieldRelevant($field, $forCreate)) {
             return;
+        }
+
+        $fieldRules = $this->getAndMergeFormFieldRulesForStrategyAndBasedOnModelInformation($field, $forCreate);
+
+
+        // At this point we have a normalized array of data objects,
+        // which has dot-notation keys (for array-nested rules) that is offset
+        // for the field (so it leaves out the field key itself).
+        // Rules for the field key itself will thus have empty/null keys.
+
+
+
+        // The strategy specific rules must be got separately
+        // from field type (attribute/relation) rules, and this
+        // logic must be removed from the strategy and moved here.
+
+        // The rules returned by a strategy (specific),
+        // and those provided by the field type (attribute/relation),
+        // must first be combined -- and in preparation for that
+        // be cast as uniform arrays of ValidationRuleData instances.
+
+        // then the logic below can be a lot simpler
+        // and the generated rules map can be derived from a
+        // merged validationruledata array.
+
+        // The validationrulemerger should include
+        // the means to do this, and the validationrulecollection
+        // can be scrapped (too inconsistent to be used anyway).
+
+        foreach ($fieldRules as $rule) {
+
+            if (empty($rule->key())) {
+                $rules[ $field->key() ] = $rule->rules();
+                $this->generatedRulesMap[ $field->key() ][] = $field->key();
+                continue;
+            }
+
+            $fullKey = $this->prefixDotKey($field->key(), $rule->key());
+
+            $rules[ $fullKey ] = $rule->rules();
+            $this->generatedRulesMap[ $field->key() ][] = $fullKey;
+        }
+    }
+
+    /**
+     * @param ModelFormFieldDataInterface $field
+     * @param bool                        $forCreate
+     * @return ValidationRuleDataInterface[]
+     */
+    protected function getAndMergeFormFieldRulesForStrategyAndBasedOnModelInformation(ModelFormFieldDataInterface $field, $forCreate = false)
+    {
+        // Get and normalize the rules to be merged
+        $strategyRules = $this->getFormFieldRulesForStoreStrategy($field, $forCreate);
+        $baseRules     = $this->getFormFieldModelInformationBasedRules($field);
+
+        $strategyRules = $this->normalizeValidationRuleSourceData($strategyRules);
+        $baseRules     = $this->normalizeValidationRuleSourceData($baseRules);
+
+        return $this->getRuleMerger()->mergeStrategyAndAttributeBased($strategyRules, $baseRules);
+    }
+
+    /**
+     * Normalizes configured validation rule data to an array of data object instances.
+     *
+     * @param mixed $rules
+     * @return ValidationRuleDataInterface[]
+     */
+    protected function normalizeValidationRuleSourceData($rules)
+    {
+        if (false === $rules || empty($rules)) {
+            return [];
+        }
+
+        if (is_string($rules)) {
+            $rules = (array) $rules;
+        }
+
+        if ( ! is_array($rules)) {
+            throw new UnexpectedValueException("Form field base validation rules not array or arrayable");
+        }
+
+        // Loop through and cast anything not alraedy a data object into one
+        $rules = array_map([$this, 'normalizeRulesProperty'], $rules, array_keys($rules));
+
+        return $this->getRuleMerger()->collapseRulesForDuplicateKeys($rules);
+    }
+
+    /**
+     * Normalizes rules data for a single validation rule key.
+     *
+     * @param mixed      $rules
+     * @param int|string $key       The source array key
+     * @return ValidationRuleDataInterface
+     */
+    protected function normalizeRulesProperty($rules, $key)
+    {
+        if ($rules instanceof ValidationRuleDataInterface) {
+            return $rules;
+        }
+
+        if ( ! is_array($rules)) {
+            $rules = (array) $rules;
+        }
+
+        // If the array is marked up in a special format, it can reflect the
+        // contents of a validation rule dataobject directly.
+        if (is_array(array_get($rules, static::VALIDATION_RULE_DATA_KEY))) {
+
+            return $this->makeValidationRuleDataFromSpecialArraySyntax($rules, $key);
+        }
+
+        // If the array is associative (and the key is non-numeric), included
+        // it as a nested postfix for the field key, by including it in the data.
+        return new ValidationRuleData($rules, is_numeric($key) ? null : $key);
+    }
+
+    /**
+     * Makes a validation rule data object from a special configuration array.
+     *
+     * @param array       $rules
+     * @param null|string $key
+     * @return ValidationRuleData
+     */
+    protected function makeValidationRuleDataFromSpecialArraySyntax(array $rules, $key)
+    {
+        $data = new ValidationRuleData(
+            array_get($rules, 'rules'),
+            array_get($rules, 'key', is_numeric($key) ? null : $key)
+        );
+
+        if (array_has($rules, 'translated')) {
+            $data->setIsTranslated((bool) $rules['translated']);
+        }
+
+        if (array_has($rules, 'locale_index')) {
+
+            if ((int) $rules['locale_index'] < 1) {
+                throw new UnexpectedValueException(
+                    "Locale index for configured validation data cannot be less than 1 (key/index: {$key})"
+                );
+            }
+
+            $data->setLocaleIndex((int) $rules['locale_index']);
+        }
+
+        if (array_has($rules, 'required_with_translation')) {
+            $data->setRequiredWithTranslation((bool) $rules['required_with_translation']);
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param ModelFormFieldDataInterface|ModelFormFieldData $field
+     * @param bool                                           $forCreate
+     * @return array|false
+     */
+    protected function getFormFieldRulesForStoreStrategy(ModelFormFieldDataInterface $field, $forCreate = false)
+    {
+        if ( ! $field->store_strategy) {
+            return [];
         }
 
         $instance = $this->getFormFieldStoreStrategyInstanceForField($field);
@@ -272,32 +465,67 @@ class EnrichValidationData extends AbstractEnricherStep
             $this->getFormFieldStoreStrategyParametersForField($field)
         );
 
-        $fieldRules = $instance->validationRules($this->info, $forCreate);
+        return $instance->validationRules($this->info, $forCreate);
+    }
 
-        if (false === $fieldRules) {
-            return;
+    /**
+     * @param ModelFormFieldDataInterface $field
+     * @param bool                        $forCreate
+     * @return bool
+     */
+    protected function isFormFieldRelevant(ModelFormFieldDataInterface $field, $forCreate = false)
+    {
+        return  ! ( $forCreate && ! $field->create()
+                ||  ! $forCreate && ! $field->update()
+                ||  ! in_array($field->key(), $this->layoutFields)
+                );
+    }
+
+    /**
+     * Returns validation rules based on model information for a given form field.
+     *
+     * @param ModelFormFieldDataInterface|ModelFormFieldData|null $field
+     * @return array|false
+     */
+    protected function getFormFieldModelInformationBasedRules(ModelFormFieldDataInterface $field)
+    {
+        $key              = $field->key();
+        $modelInformation = $this->getModelInformation();
+
+
+        if (array_key_exists($key, $modelInformation->attributes)) {
+
+            return $this->getAttributeValidationResolver()->determineValidationRules(
+                $modelInformation->attributes[ $key ],
+                $field
+            );
         }
 
-        if (is_string($fieldRules)) {
-            $fieldRules = (array) $fieldRules;
+        if (array_key_exists($key, $modelInformation->relations)) {
+
+            return $this->getRelationValidationResolver()->determineValidationRules(
+                $modelInformation->relations[ $key ],
+                $field
+            );
         }
 
-        if ( ! is_array($fieldRules)) {
-            throw new UnexpectedValueException("Form field store strategy offered validation rules not an array");
+        return false;
+    }
+
+    /**
+     * Prefixes a dot-notation key with a string.
+     *
+     * @param string      $prefix
+     * @param null|string $key
+     * @return string
+     */
+    protected function prefixDotKey($prefix, $key)
+    {
+        if (empty($key)) {
+            return $prefix;
         }
 
-        if (Arr::isAssoc($fieldRules)) {
-
-            foreach ($fieldRules as $key => $nestedFieldRules) {
-                $rules[ $key ] = $nestedFieldRules;
-                $this->generatedRulesMap[ $field->key() ][] = $key;
-            }
-
-        } else {
-
-            $rules[ $field->key() ] = $fieldRules;
-            $this->generatedRulesMap[ $field->key() ][] = $field->key();
-        }
+        return $prefix . '.' . $key;
     }
 
     /**
@@ -307,6 +535,30 @@ class EnrichValidationData extends AbstractEnricherStep
     protected function getModelInformation()
     {
         return $this->info;
+    }
+
+    /**
+     * @return AttributeValidationResolver
+     */
+    protected function getAttributeValidationResolver()
+    {
+        return app(AttributeValidationResolver::class);
+    }
+
+    /**
+     * @return RelationValidationResolver
+     */
+    protected function getRelationValidationResolver()
+    {
+        return app(RelationValidationResolver::class);
+    }
+
+    /**
+     * @return ValidationRuleMergerInterface
+     */
+    protected function getRuleMerger()
+    {
+        return app(ValidationRuleMergerInterface::class);
     }
 
 }
