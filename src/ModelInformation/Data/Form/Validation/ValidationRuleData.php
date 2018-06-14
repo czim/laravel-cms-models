@@ -179,7 +179,7 @@ class ValidationRuleData implements ValidationRuleDataInterface
      */
     public function setRules(array $rules)
     {
-        $this->rules;
+        $this->rules = $rules;
 
         return $this;
     }
