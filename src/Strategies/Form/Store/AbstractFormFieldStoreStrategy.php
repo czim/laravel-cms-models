@@ -201,26 +201,7 @@ abstract class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyI
             return false;
         }
 
-
-        // Combine the rules provided by the strategy with the rules based on the
-        // relevant attribute / relation in the model information.
-        $rules = $this->getRuleMerger()->mergeStrategyAndAttributeBased(
-            $this->getStrategySpecificRules($field) ?: [],
-            $this->getModelInformationBasedRules($field, $modelInformation) ?: []
-        );
-
-
-        // Enrich the rule data sets with field data.
-        foreach ($rules as $rule) {
-
-            $fullKey = $field->key()
-                     . ($rule->key() ? '.' . $rule->key() : null);
-
-            $rule->setKey($fullKey);
-            $rule->setIsTranslated($field->translated());
-        }
-
-        return $rules->toArray();
+        return $this->getStrategySpecificRules($field);
     }
 
     /**
@@ -236,44 +217,6 @@ abstract class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyI
     protected function getStrategySpecificRules(ModelFormFieldDataInterface $field = null)
     {
         return null;
-    }
-
-    /**
-     * Returns validation rules based on model information.
-     *
-     * @param ModelFormFieldDataInterface|ModelFormFieldData|null $field
-     * @param ModelInformationInterface|ModelInformation|null     $modelInformation
-     * @return array|false
-     */
-    protected function getModelInformationBasedRules(
-        ModelFormFieldDataInterface $field = null,
-        ModelInformationInterface $modelInformation = null
-    ) {
-        if ( ! $field || ! $modelInformation) {
-            // @codeCoverageIgnoreStart
-            return false;
-            // @codeCoverageIgnoreEnd
-        }
-
-        $key = $field->key();
-
-        if (array_key_exists($key, $modelInformation->attributes)) {
-
-            return $this->getAttributeValidationResolver()->determineValidationRules(
-                $modelInformation->attributes[ $key ],
-                $field
-            );
-        }
-
-        if (array_key_exists($key, $modelInformation->relations)) {
-
-            return $this->getRelationValidationResolver()->determineValidationRules(
-                $modelInformation->relations[ $key ],
-                $field
-            );
-        }
-
-        return false;
     }
 
     /**
@@ -324,27 +267,4 @@ abstract class AbstractFormFieldStoreStrategy implements FormFieldStoreStrategyI
         return app(ModelInformationRepositoryInterface::class);
     }
 
-    /**
-     * @return AttributeValidationResolver
-     */
-    protected function getAttributeValidationResolver()
-    {
-        return app(AttributeValidationResolver::class);
-    }
-
-    /**
-     * @return RelationValidationResolver
-     */
-    protected function getRelationValidationResolver()
-    {
-        return app(RelationValidationResolver::class);
-    }
-
-    /**
-     * @return ValidationRuleMergerInterface
-     */
-    protected function getRuleMerger()
-    {
-        return app(ValidationRuleMergerInterface::class);
-    }
 }
