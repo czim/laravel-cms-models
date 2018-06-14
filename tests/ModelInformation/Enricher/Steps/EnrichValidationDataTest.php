@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnhandledExceptionInspection */
 namespace Czim\CmsModels\Test\ModelInformation\Enricher\Steps;
 
 use Czim\CmsModels\Contracts\ModelInformation\ModelInformationEnricherInterface;
