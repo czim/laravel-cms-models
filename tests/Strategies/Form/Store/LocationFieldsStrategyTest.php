@@ -1,6 +1,7 @@
 <?php
 namespace Czim\CmsModels\Test\Strategies\Form\Store;
 
+use Czim\CmsModels\Contracts\ModelInformation\Data\Form\Validation\ValidationRuleDataInterface;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Strategies\Form\Store\LocationFieldsStrategy;
@@ -178,14 +179,20 @@ class LocationFieldsStrategyTest extends AbstractFormStoreStrategyTest
         $strategy = new LocationFieldsStrategy;
         $strategy->setFormFieldData($data);
 
-        static::assertEquals(
-            [
-                'location.latitude'  => ['numeric', 'nullable'],
-                'location.longitude' => ['numeric', 'nullable'],
-                'location.text'      => ['string', 'nullable'],
-            ],
-            $strategy->validationRules($info, false)
-        );
+
+        /** @var ValidationRuleDataInterface[] $rules */
+        $rules = $strategy->validationRules($info, false);
+
+        static::assertCount(3, $rules);
+        static::assertInstanceOf(ValidationRuleDataInterface::class, $rules[0]);
+        static::assertInstanceOf(ValidationRuleDataInterface::class, $rules[1]);
+        static::assertInstanceOf(ValidationRuleDataInterface::class, $rules[2]);
+        static::assertEquals('longitude', $rules[0]->key());
+        static::assertEquals('latitude', $rules[1]->key());
+        static::assertEquals('text', $rules[2]->key());
+        static::assertEquals(['numeric', 'nullable'], $rules[0]->rules());
+        static::assertEquals(['numeric', 'nullable'], $rules[1]->rules());
+        static::assertEquals(['string', 'nullable'], $rules[2]->rules());
     }
 
     /**
@@ -209,14 +216,20 @@ class LocationFieldsStrategyTest extends AbstractFormStoreStrategyTest
         $strategy = new LocationFieldsStrategy;
         $strategy->setFormFieldData($data);
 
-        static::assertEquals(
-            [
-                'location.latitude'  => ['numeric', 'required'],
-                'location.longitude' => ['numeric', 'required'],
-                'location.text'      => ['string', 'nullable'],
-            ],
-            $strategy->validationRules($info, false)
-        );
+
+        /** @var ValidationRuleDataInterface[] $rules */
+        $rules = $strategy->validationRules($info, false);
+
+        static::assertCount(3, $rules);
+        static::assertInstanceOf(ValidationRuleDataInterface::class, $rules[0]);
+        static::assertInstanceOf(ValidationRuleDataInterface::class, $rules[1]);
+        static::assertInstanceOf(ValidationRuleDataInterface::class, $rules[2]);
+        static::assertEquals('longitude', $rules[0]->key());
+        static::assertEquals('latitude', $rules[1]->key());
+        static::assertEquals('text', $rules[2]->key());
+        static::assertEquals(['numeric', 'required'], $rules[0]->rules());
+        static::assertEquals(['numeric', 'required'], $rules[1]->rules());
+        static::assertEquals(['string', 'nullable'], $rules[2]->rules());
     }
 
 }

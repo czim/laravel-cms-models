@@ -268,75 +268,7 @@ class DefaultStrategyTest extends DatabaseTestCase
         $strategy = new DefaultStrategy;
 
         static::assertFalse($strategy->validationRules(new ModelInformation, false));
-
-
-        // Without relevant model information data
-
-        $info  = new ModelInformation;
-        $field = new ModelFormFieldData([
-            'key'    => 'type',
-            'source' => 'type',
-        ]);
-
-        $strategy->setFormFieldData($field);
-
-        static::assertEmpty($strategy->validationRules($info, false));
-
-
-        // With attribute model information data
-
-        /** @var AttributeValidationResolver|Mockery\Mock $mockResolver */
-        $mockResolver = Mockery::mock(AttributeValidationResolver::class);
-        $mockResolver->shouldReceive('determineValidationRules')->once()->andReturn([]);
-        $this->app->instance(AttributeValidationResolver::class, $mockResolver);
-
-        $info = new ModelInformation([
-            'attributes' => [
-                'type' => [
-                    'name' => 'type',
-                    'cast' => 'string',
-                    'type' => 'string',
-                ],
-            ],
-        ]);
-
-        $field = new ModelFormFieldData([
-            'key'    => 'type',
-            'source' => 'type',
-        ]);
-
-        $strategy->setFormFieldData($field);
-
-        static::assertEmpty($strategy->validationRules($info, false));
-
-
-        // With relation model information data
-
-        /** @var RelationValidationResolver|Mockery\Mock $mockResolver */
-        $mockResolver = Mockery::mock(RelationValidationResolver::class);
-        $mockResolver->shouldReceive('determineValidationRules')->once()->andReturn([]);
-        $this->app->instance(RelationValidationResolver::class, $mockResolver);
-
-        $info = new ModelInformation([
-            'relations' => [
-                'type' => [
-                    'name'   => 'type',
-                    'method' => 'type',
-                ],
-            ],
-        ]);
-
-        $field = new ModelFormFieldData([
-            'key'    => 'type',
-            'source' => 'type',
-        ]);
-
-        $strategy->setFormFieldData($field);
-
-        static::assertEmpty($strategy->validationRules($info, false));
     }
-    
-
 
     /**
      * @return TestPost
