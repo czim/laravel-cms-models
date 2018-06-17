@@ -108,11 +108,11 @@ class ValidationRuleMerger implements ValidationRuleMergerInterface
     }
 
     /**
-     * Merges together the validation rules defined for a strategy with rules defined
-     * for a form field's attribute (or relation).
+     * Merges together the validation rules defined for a strategy,
+     * with rules defined for a form field's attribute (or relation).
      *
-     * Before passing arrays of rule objects to this class, they must be normalized
-     * and collapsed per key.
+     * Before passing arrays of rule objects to this class,
+     * they must be normalized and collapsed per key.
      *
      * @param ValidationRuleDataInterface[] $strategyRules
      * @param ValidationRuleDataInterface[] $attributeRules
@@ -136,56 +136,55 @@ class ValidationRuleMerger implements ValidationRuleMergerInterface
             return $strategyRules;
         }
 
-        // todo
-        return $strategyRules;
+        $attributeRules = new Collection($attributeRules);
 
+        /** @var ValidationRuleDataInterface[]|Collection $attributeRules */
+        $attributeRules = $attributeRules->keyBy(
+            function (ValidationRuleDataInterface $rule) { return $rule->key(); }
+        );
 
         // Todo: This needs to be cleaned up and ready to deal with much more complicated
         //       scenario's than will currently occur. Right now the following are not
         //       taken into account:
         //          - localeIndex, translated, and requiredWith translated differences
+        // For now, the strategy rules are kept mostly as-is.
 
-        $groupedStrategyRules = (new Collection($strategyRules))
-            ->groupBy(function (ValidationRuleDataInterface $rule) {
-                return $rule->key() ?: '';
-            });
+        foreach ($strategyRules as &$rule) {
 
-        $groupedAttributeRules = (new Collection($attributeRules))
-            ->groupBy(function (ValidationRuleDataInterface $rule) {
-                return $rule->key() ?: '';
-            });
+            if ( ! $attributeRules->has($rule->key())) {
+                continue;
+            }
 
-        // Make a list of inheritable rules that do not appear in the strategy rules.
-        // See if those rules appear in any of the attribute rules.
-        // If they do, add those rules (but only those specifically) to the strategy rules.
+            $rule = $this->mergeIndividualStrategyAndAttributeBasedRule($rule, $attributeRules->get($rule->key()));
+        }
+        unset ($rule);
 
-        //foreach ($groupedStrategyRules as $key => $strategyRules) {
-        //
-        //    $combinedRules = $strategyRules;
-        //
-        //    // Remove rules that may not be inherited, because present in specific rules.
-        //    $flippedInheritable = array_flip($this->inheritableRules());
-        //
-        //    // List inheritable rules that do not appear in the strategy-specific rules.
-        //    array_forget($flippedInheritable, array_map([$this, 'getRuleType'], $combinedRules));
-        //
-        //
-        //}
+        return $strategyRules;
+    }
 
-        //$combinedRules = $strategyRules;
-        //
-        //foreach ($attributeRules as $rule) {
-        //
-        //    $ruleType = $this->getRuleType($rule);
-        //
-        //    if ( ! array_key_exists($ruleType, $flippedInheritable)) {
-        //        continue;
-        //    }
-        //
-        //    $combinedRules[] = $rule;
-        //}
-        //
-        //return $combinedRules;
+    /**
+     * @param ValidationRuleDataInterface $strategyRule
+     * @param ValidationRuleDataInterface $attributeRule
+     * @return ValidationRuleDataInterface
+     */
+    protected function mergeIndividualStrategyAndAttributeBasedRule(
+        ValidationRuleDataInterface $strategyRule,
+        ValidationRuleDataInterface $attributeRule
+    ) {
+        $strategyRules     = $strategyRule->rules();
+        $strategyRuleTypes = array_map([$this, 'getRuleType'], $strategyRules);
+
+        // Find the inheritable rules that may be merged if found
+        $inheritable = array_diff($this->inheritableRules(), $strategyRuleTypes);
+
+        foreach ($attributeRule->rules() as $rule) {
+
+            if (in_array($this->getRuleType($rule), $inheritable)) {
+                $strategyRules[] = $rule;
+            }
+        }
+
+        return $strategyRule->setRules($strategyRules);
     }
 
     /**
@@ -209,12 +208,16 @@ class ValidationRuleMerger implements ValidationRuleMergerInterface
     /**
      * Returns a rule type for a given validation rule.
      *
-     * @param ValidationRuleDataInterface $rule
+     * @param string $rule
      * @return string
      */
-    protected function getRuleType(ValidationRuleDataInterface $rule)
+    protected function getRuleType($rule)
     {
-        if (false === ($pos = strpos($rule->rules(), ':'))) {
+        if ( ! is_string($rule)) {
+            return '';
+        }
+
+        if (false === ($pos = strpos($rule, ':'))) {
             return $rule;
         }
 
