@@ -103,6 +103,25 @@ class ValidationRuleData implements ValidationRuleDataInterface
     }
 
     /**
+     * Prefixes the currently set key with a dot-notation parent.
+     *
+     * The (final) dot (.) should not be included in the prefix string.
+     *
+     * @param string $prefix
+     * @return $this
+     */
+    public function prefixKey($prefix)
+    {
+        if (empty($this->key)) {
+            $this->key = $prefix;
+        } else {
+            $this->key = $prefix . '.' . $this->key;
+        }
+
+        return $this;
+    }
+
+    /**
      * Sets whether the field is translated.
      *
      * @param bool $translated
