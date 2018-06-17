@@ -7,6 +7,18 @@ interface ValidationRuleMergerInterface
 {
 
     /**
+     * Merges model configuration rules for the shared section with the create or update section.
+     *
+     * This results in user-specified validation rules, which may be further enriched.
+     *
+     * @param array           $shared       shared validation rules
+     * @param array|null|bool $specific     specific validation rules for create or update
+     * @param bool            $replace      whether we're replacing or merging the rulesets
+     * @return array
+     */
+    public function mergeSharedConfiguredRulesWithCreateOrUpdate($shared, $specific, $replace = false);
+
+    /**
      * Takes any duplicate presence of a key() in a set of rules and
      * collapses the rules into a single entry per key.
      *
