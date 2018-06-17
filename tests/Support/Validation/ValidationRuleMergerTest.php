@@ -3,23 +3,29 @@ namespace Czim\CmsModels\Test\Support\Validation;
 
 use Czim\CmsModels\Contracts\ModelInformation\Data\Form\Validation\ValidationRuleCollectionInterface;
 use Czim\CmsModels\Contracts\ModelInformation\Data\Form\Validation\ValidationRuleDataInterface;
+use Czim\CmsModels\ModelInformation\Data\Form\Validation\ValidationRuleData;
 use Czim\CmsModels\Support\Validation\ValidationRuleMerger;
 use Czim\CmsModels\Test\TestCase;
 
+/**
+ * Class ValidationRuleMergerTest
+ *
+ * @uses \Czim\CmsModels\ModelInformation\Data\Form\Validation\ValidationRuleData
+ */
 class ValidationRuleMergerTest extends TestCase
 {
 
     /**
      * @test
      */
-    function it_returns_empty_collection_for_empty_input()
+    function it_returns_empty_results_for_empty_input()
     {
         $merger = new ValidationRuleMerger;
 
-        $collection = $merger->mergeStrategyAndAttributeBased([], []);
+        $rules = $merger->mergeStrategyAndAttributeBased([], []);
 
-        static::assertInstanceOf(ValidationRuleCollectionInterface::class, $collection);
-        static::assertTrue($collection->isEmpty());
+        static::assertInternalType('array', $rules);
+        static::assertCount(0, $rules);
     }
 
     /**
@@ -29,21 +35,21 @@ class ValidationRuleMergerTest extends TestCase
     {
         $merger = new ValidationRuleMerger;
 
-        $collection = $merger->mergeStrategyAndAttributeBased([], [
-            'test' => [ 'nullable', 'string' ],
-            'required',
+        $merged = $merger->mergeStrategyAndAttributeBased([], [
+            new ValidationRuleData(['nullable', 'string'], 'test'),
+            new ValidationRuleData(['required']),
         ]);
 
-        static::assertInstanceOf(ValidationRuleCollectionInterface::class, $collection);
-        static::assertCount(2, $collection);
+        static::assertInternalType('array', $merged);
+        static::assertCount(2, $merged);
 
         /** @var ValidationRuleDataInterface $item */
-        $item = $collection->first();
+        $item = $merged[0];
         static::assertInstanceOf(ValidationRuleDataInterface::class, $item);
         static::assertEquals('test', $item->key());
         static::assertEquals(['nullable', 'string'], $item->rules());
 
-        $item = $collection->last();
+        $item = $merged[1];
         static::assertInstanceOf(ValidationRuleDataInterface::class, $item);
         static::assertEmpty($item->key());
         static::assertEquals(['required'], $item->rules());
@@ -56,21 +62,21 @@ class ValidationRuleMergerTest extends TestCase
     {
         $merger = new ValidationRuleMerger;
 
-        $collection = $merger->mergeStrategyAndAttributeBased([
-            'test' => [ 'nullable', 'string' ],
-            'required',
+        $merged = $merger->mergeStrategyAndAttributeBased([
+            new ValidationRuleData(['nullable', 'string'], 'test'),
+            new ValidationRuleData(['required']),
         ], []);
 
-        static::assertInstanceOf(ValidationRuleCollectionInterface::class, $collection);
-        static::assertCount(2, $collection);
+        static::assertInternalType('array', $merged);
+        static::assertCount(2, $merged);
 
         /** @var ValidationRuleDataInterface $item */
-        $item = $collection->first();
+        $item = $merged[0];
         static::assertInstanceOf(ValidationRuleDataInterface::class, $item);
         static::assertEquals('test', $item->key());
         static::assertEquals(['nullable', 'string'], $item->rules());
 
-        $item = $collection->last();
+        $item = $merged[1];
         static::assertInstanceOf(ValidationRuleDataInterface::class, $item);
         static::assertEmpty($item->key());
         static::assertEquals(['required'], $item->rules());
@@ -79,34 +85,24 @@ class ValidationRuleMergerTest extends TestCase
     /**
      * @test
      */
-    function it_merges_strategy_and_information_based_rules_without_overlap()
+    function it_merges_inheritable_information_based_rules_into_strategy_rules_without_overlap_for_empty_key()
     {
         $merger = new ValidationRuleMerger;
 
-        $collection = $merger->mergeStrategyAndAttributeBased([
-            'nullable', 'string',
+        $merged = $merger->mergeStrategyAndAttributeBased([
+            new ValidationRuleData(['required', 'string']),
         ], [
-            'required',
+            new ValidationRuleData(['filled']),
         ]);
 
-        static::assertInstanceOf(ValidationRuleCollectionInterface::class, $collection);
-        static::assertCount(3, $collection);
+        static::assertInternalType('array', $merged);
+        static::assertCount(1, $merged);
 
         /** @var ValidationRuleDataInterface $item */
-        $item = $collection->first();
+        $item = $merged[0];
         static::assertInstanceOf(ValidationRuleDataInterface::class, $item);
         static::assertEmpty($item->key());
-        static::assertEquals(['nullable'], $item->rules());
-
-        $item = $collection->offsetGet(1);
-        static::assertInstanceOf(ValidationRuleDataInterface::class, $item);
-        static::assertEmpty($item->key());
-        static::assertEquals(['string'], $item->rules());
-
-        $item = $collection->last();
-        static::assertInstanceOf(ValidationRuleDataInterface::class, $item);
-        static::assertEmpty($item->key());
-        static::assertEquals(['required'], $item->rules());
+        static::assertEquals(['required', 'string', 'filled'], $item->rules());
     }
 
 }
