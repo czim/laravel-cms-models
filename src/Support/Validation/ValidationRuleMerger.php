@@ -15,6 +15,63 @@ class ValidationRuleMerger implements ValidationRuleMergerInterface
 {
 
     /**
+     * Merges model configuration rules for the shared section with the create or update section.
+     *
+     * This results in user-specified validation rules, which may be further enriched.
+     *
+     * @param array           $shared       shared validation rules
+     * @param array|null|bool $specific     specific validation rules for create or update
+     * @param bool            $replace      whether we're replacing or merging the rulesets
+     * @return array
+     */
+    public function mergeSharedConfiguredRulesWithCreateOrUpdate($shared, $specific, $replace = false)
+    {
+        // If specific is flagged false, then base rules should be ignored.
+        if ($specific === false) {
+            return [];
+        }
+
+        // Otherwise, make sure the rules are merged as arrays
+        if ($specific === null || $specific === true) {
+            $specific = [];
+        }
+
+        // In replace mode, rules should be merged in from shared only per key, if present as value.
+        // When shared rules are merged in specifically like this, their 'value-only' key marker is
+        // replaced by the actual key-value pair from the shared rules.
+        if ($replace) {
+
+            $sharedKeys = array_filter(
+                $specific,
+                function ($value, $key) {
+                    return is_string($value) && is_numeric($key);
+                },
+                ARRAY_FILTER_USE_BOTH
+            );
+
+            // After this, there may still be string values in the array that do not have (non-numeric)
+            // keys. These are explicit inclusions of form-field rules.
+            $specific = array_filter(
+                $specific,
+                function ($value, $key) use ($shared) {
+                    return ! is_string($value) || ! is_numeric($key) || ! array_key_exists($value, $shared);
+                },
+                ARRAY_FILTER_USE_BOTH
+            );
+
+            return array_merge(
+                array_only($shared, $sharedKeys),
+                $specific
+            );
+        }
+
+        return array_merge(
+            $shared ?: [],
+            $specific
+        );
+    }
+
+    /**
      * Takes any duplicate presence of a key() in a set of rules and
      * collapses the rules into a single entry per key.
      *
