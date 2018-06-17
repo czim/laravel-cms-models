@@ -391,7 +391,7 @@ class EnrichValidationDataTest extends TestCase
         static::assertEquals(['string', 'size:10'], $rules['name']);
         static::assertEquals(['integer', 'max:99'], $rules['number']);
         static::assertEquals(['nullable'], $rules['extra']);
-        static::assertEquals(['string|size:10'], $rules['string_format']);
+        static::assertEquals(['string', 'size:10'], $rules['string_format']);
         static::assertEquals(['required', 'string'], $rules['assoc_format.field_a']);
         static::assertEquals(['size:10'], $rules['assoc_format.field_b']);
 
@@ -406,7 +406,7 @@ class EnrichValidationDataTest extends TestCase
         static::assertEquals(['string', 'size:20'], $rules['name']);
         static::assertEquals(['integer', 'max:250'], $rules['number']);
         static::assertEquals(['required'], $rules['extra']);
-        static::assertEquals(['string|size:20'], $rules['string_format']);
+        static::assertEquals(['string', 'size:20'], $rules['string_format']);
         static::assertEquals(['required', 'string'], $rules['assoc_format.field_a']);
         static::assertEquals(
             ['size:20'],
