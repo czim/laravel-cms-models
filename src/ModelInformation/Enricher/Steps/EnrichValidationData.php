@@ -31,18 +31,23 @@ class EnrichValidationData extends AbstractEnricherStep
 
 
     /**
-     * Mapping of generated rules per form field.
+     * Mapping of CMS generated rule keys per form field.
      *
-     * Set while collecting generated rules from form fields.
+     * Set while collecting generated rules from form fields,
+     * and used to determine which rules should be replaced,
+     * overwritten or ignored.
      *
      * @var array   associative, list of rule keys, keyed by form field key
      */
     protected $generatedRulesMap = [];
 
     /**
+     * The fields present in the layout for the form.
+     *
      * @var array
      */
     protected $layoutFields = [];
+
 
     /**
      * Performs enrichment of validation rules based on form field strategies.
@@ -63,12 +68,31 @@ class EnrichValidationData extends AbstractEnricherStep
     }
 
     /**
-     * @return EnrichValidationData
+
      * @throws ModelInformationEnrichmentException
      */
     protected function enrichCreateRules()
     {
-        return $this->enrichRules(true);
+        $customRules     = $this->mergeConfiguredSharedRulesWithSpecific(true);
+        $generatedRules  = $this->getFormFieldGeneratedRules(true);
+
+        $excludeKeys     = $this->getCustomizedRuleKeysToExclude($customRules);
+        $keepDefaultKeys = $this->getCustomizedRuleKeysToKeepDefault($customRules);
+
+        $customRules = $this->normalizeValidationRuleSourceDataFromConfig($customRules);
+
+        $replace = (bool) $this->info->form->validation->create_replace;
+
+        $this->info->form->validation->create = $this->enrichRulesNew(
+            $customRules,
+            $generatedRules,
+            $replace,
+            $excludeKeys,
+            $keepDefaultKeys,
+            $this->generatedRulesMap
+        );
+
+        return $this;
     }
 
     /**
@@ -77,172 +101,166 @@ class EnrichValidationData extends AbstractEnricherStep
      */
     protected function enrichUpdateRules()
     {
-        return $this->enrichRules(false);
-    }
+        $customRules     = $this->mergeConfiguredSharedRulesWithSpecific(false);
+        $generatedRules  = $this->getFormFieldGeneratedRules(false);
 
-    /**
-     * Enriches validation rules for create or update form data.
-     *
-     * @param bool $forCreate
-     * @return $this
-     * @throws ModelInformationEnrichmentException
-     */
-    protected function enrichRules($forCreate = true)
-    {
-        $type = $forCreate ? 'create' : 'update';
+        $excludeKeys     = $this->getCustomizedRuleKeysToExclude($customRules);
+        $keepDefaultKeys = $this->getCustomizedRuleKeysToKeepDefault($customRules);
 
-        $this->generatedRulesMap = [];
+        $customRules = $this->normalizeValidationRuleSourceDataFromConfig($customRules);
 
-        $rules = $this->mergeDefaultRulesWithSpecific($this->info->form->validation->{$type}, $forCreate);
+        $replace = (bool) $this->info->form->validation->update_replace;
 
-        $generatedRules = $this->getFormFieldBaseRules($forCreate);
-
-        if ( ! count($rules)) {
-            $rules = $generatedRules;
-        } else {
-            $rules = $this->enrichRulesWithFormRules($rules, $generatedRules, $this->generatedRulesMap, $forCreate);
-        }
-
-        $this->info->form->validation->{$type} = $rules;
+        $this->info->form->validation->update = $this->enrichRulesNew(
+            $customRules,
+            $generatedRules,
+            $replace,
+            $excludeKeys,
+            $keepDefaultKeys,
+            $this->generatedRulesMap
+        );
 
         return $this;
     }
 
     /**
-     * @param array|null|bool $specific
-     * @param bool            $forCreate    whether merging is for the 'create' section
-     * @return array
-     */
-    protected function mergeDefaultRulesWithSpecific($specific, $forCreate = false)
-    {
-        $replace = (bool) $this->info->form->validation->{($forCreate ? 'create' : 'update') . '_replace'};
-
-        // If specific is flagged false, then base rules should be ignored.
-        if ($specific === false) {
-            return [];
-        }
-
-        // Otherwise, make sure the rules are merged as arrays
-        if ($specific === null || $specific === true) {
-            $specific = [];
-        }
-
-        // In replace mode, rules should be merged in from shared only per key, if present as value.
-        // When shared rules are merged in specifically like this, their 'value-only' key marker is
-        // replaced by the actual key-value pair from the shared rules.
-        if ($replace) {
-
-            $sharedKeys = array_filter(
-                $specific,
-                function ($value, $key) {
-                    return is_string($value) && is_numeric($key);
-                },
-                ARRAY_FILTER_USE_BOTH
-            );
-
-            $sharedRules = $this->info->form->validation->sharedRules();
-
-            // After this, there may still be string values in the array that do not have (non-numeric)
-            // keys. These are explicit inclusions of form-field rules.
-            $specific = array_filter(
-                $specific,
-                function ($value, $key) use ($sharedRules) {
-                    return ! is_string($value) || ! is_numeric($key) || ! array_key_exists($value, $sharedRules);
-                },
-                ARRAY_FILTER_USE_BOTH
-            );
-
-            return array_merge(
-                array_only($this->info->form->validation->sharedRules(), $sharedKeys),
-                $specific
-            );
-        }
-
-        return array_merge(
-            $this->info->form->validation->sharedRules() ?: [],
-            $specific
-        );
-    }
-
-    /**
-     * Enrich a given set of rules with form field data determined.
+     * Returns keys for rules that should not be included by custom configuration.
      *
-     * @param array $rules          rules to be enriched
-     * @param array $formRules      generated form field rules
-     * @param array $rulesFieldMap  mapping for which rules were added by which field
-     * @param bool  $forCreate      whether the enrichment is for the 'create' section
-     * @return array
+     * @param array $customRules
+     * @return string[]
      */
-    protected function enrichRulesWithFormRules(array $rules, array $formRules, array $rulesFieldMap, $forCreate = false)
+    protected function getCustomizedRuleKeysToExclude(array $customRules)
     {
-        // If rules are set, they should not overwritten by form field rules.
-        // and unkeyed string values should be enriched.
-        // But keys not present should not be enriched or included.
+        $keys = [];
 
-        $enrichedRules    = [];
-        $disabledRuleKeys = [];
-
-        $replace = (bool) $this->info->form->validation->{($forCreate ? 'create' : 'update') . '_replace'};
-
-        foreach ($rules as $key => $ruleParts) {
+        foreach ($customRules as $key => $ruleParts) {
 
             // If the set value for this key is false/null, the rule must be ignored entirely.
             // This will disable enrichment using form field rules.
             if (false === $ruleParts || empty($ruleParts)) {
-                $disabledRuleKeys[] = $key;
-                continue;
+                $keys[] = $key;
             }
-
-            // Enrich keys without values if possible. Here, the value is the name of a key
-            // and this key exists in the form rules array, it should be taken as-is from the field rules.
-            // This option exists to allow a config to specify that a form field rule should be included as-is,
-            // even while overriding others.
-            if (is_string($ruleParts) && is_numeric($key)) {
-                if (array_key_exists($ruleParts, $formRules)) {
-                    $enrichedRules[ $ruleParts ] = $formRules[ $ruleParts ];
-                }
-                continue;
-            }
-
-            // The rule has a key and is neither disabled nor taken as-is.
-            // Normalize the rule (make an array) and keep it as defined by the user.
-            // This means that the form field rule for this key is ignored.
-
-            if ( ! is_array($ruleParts)) {
-                $ruleParts = explode('|', $ruleParts);
-            }
-
-            $enrichedRules[ $key ] = $ruleParts;
         }
 
-        // If not explicitly replacing default rules, append any form field defined rule that is
-        // not yet included, as long as it is not explicitly disabled.
+        return $keys;
+    }
+
+
+    /**
+     * Returns keys for rules that should be kept from the default generated rules,
+     * even when in replace mode.
+     *
+     * @param array $customRules
+     * @return string[]
+     */
+    protected function getCustomizedRuleKeysToKeepDefault(array $customRules)
+    {
+        $keys = [];
+
+        foreach ($customRules as $key => $ruleParts) {
+
+            // If the configured value is the name of a key (and so it is a non-associative
+            // part of the rules), it indicates that the default should be kept/copied over,
+            // for the key the value denotes.
+            if (is_string($ruleParts) && is_numeric($key)) {
+                $keys[] = $ruleParts;
+            }
+        }
+
+        return $keys;
+    }
+
+    /**
+     * Enriches rules and returns the enriched rules array.
+     *
+     * @param array    $customRules         rules custom-defined in the configuration, normalized
+     * @param array    $generatedRules      rules generated by the CMS, normalized
+     * @param bool     $replace             whether to replace rules entirely (and not enricht non-present rules)
+     * @param string[] $excludeKeys         keys for rules that should be excluded
+     * @param string[] $keepDefaultKeys     keys for rules that should be kept as generated by default
+     * @param array[]  $generatedRulesMap   the mapped rules per form field for generated rules
+     * @return array
+     */
+    protected function enrichRulesNew(
+        array $customRules,
+        array $generatedRules,
+        $replace,
+        array $excludeKeys,
+        array $keepDefaultKeys,
+        array $generatedRulesMap
+    ) {
+        // so use them as a starting point.
+        // If custom rules are configured, they should not overwritten by form field rules,
+        $result = $customRules;
+
+        // Include any generated rules explicitly marked for inclusion.
+        foreach ($keepDefaultKeys as $key) {
+            if ( ! array_key_exists($key, $generatedRules)) {
+                continue;
+            }
+
+            $result[ $key ] = $generatedRules[ $key ];
+        }
+
+        // If the generated rules are explicitly replaced default rules, we don't have to merge them.
+        // Otherwise, append any form field defined rule that is
+        // not yet included and not marked for exclusion.
         if ( ! $replace) {
 
-            foreach ($rulesFieldMap as $fieldKey => $ruleKeys) {
+            foreach ($generatedRulesMap as $fieldKey => $ruleKeys) {
 
-                // The field key or any of the child rules keys may be disabled.
-                if (in_array($fieldKey, $disabledRuleKeys) || array_key_exists($fieldKey, $enrichedRules)) {
+                // The field key or any of its nested child rules keys may be disabled.
+                // If the field key itself is excluded, find the mapped keys for that
+                // field and exclude any of them.
+
+                // So skip any set of rules belonging to a field whose key has
+                // been excluded (as a rule key).
+                if (in_array($fieldKey, $excludeKeys)) {
                     continue;
                 }
 
-                foreach (array_diff($ruleKeys, $disabledRuleKeys) as $ruleKey) {
+                foreach ($ruleKeys as $key) {
 
-                    if (    ! array_key_exists($ruleKey, $formRules)
-                        ||  ! count($formRules[ $ruleKey ])
-                        ||  array_key_exists($ruleKey, $enrichedRules)
+                    // Skip if ..
+                    if (
+                        // .. the key is already included, or marked for exclusion
+                            in_array($key, $excludeKeys)
+                        ||  in_array($key, $keepDefaultKeys)
+                        // .. the result array already has an entry for the key
+                        ||  array_key_exists($key, $result)
+                        // .. no generated rule exists for the key (safeguard)
+                        ||  ! array_key_exists($key, $generatedRules)
                     ) {
-                        // @codeCoverageIgnoreStart
                         continue;
-                        // @codeCoverageIgnoreEnd
                     }
 
-                    $enrichedRules[ $ruleKey ] = $formRules[ $ruleKey ];
+                    $result[ $key ] = $generatedRules[ $key ];
                 }
             }
         }
 
-        return $enrichedRules;
+        return $this->castValidationRulesToArray($result);
+    }
+
+    /**
+     * Note that this does not normalize the rules to data objects, since the
+     * configuration format is semantic (in ways to nullify or default rules).
+     *
+     * @param bool $forCreate   whether merging is for the 'create' section
+     * @return array
+     */
+    protected function mergeConfiguredSharedRulesWithSpecific($forCreate = false)
+    {
+        $type = $forCreate ? 'create' : 'update';
+
+        $replace  = (bool) $this->info->form->validation->{$type . '_replace'};
+        $specific = $this->info->form->validation->{$type};
+
+        return $this->getRuleMerger()->mergeSharedConfiguredRulesWithCreateOrUpdate(
+            $this->info->form->validation->sharedRules(),
+            $specific,
+            $replace
+        );
     }
 
     /**
@@ -252,7 +270,7 @@ class EnrichValidationData extends AbstractEnricherStep
      * @return array
      * @throws ModelInformationEnrichmentException
      */
-    protected function getFormFieldBaseRules($forCreate = true)
+    protected function getFormFieldGeneratedRules($forCreate = true)
     {
         $this->generatedRulesMap = [];
 
@@ -261,7 +279,7 @@ class EnrichValidationData extends AbstractEnricherStep
         foreach ($this->info->form->fields as $field) {
 
             try {
-                $this->getFormFieldBaseRule($field, $forCreate, $rules);
+                $this->getFormFieldGeneratedRule($field, $forCreate, $rules);
 
             } catch (Exception $e) {
 
@@ -288,7 +306,7 @@ class EnrichValidationData extends AbstractEnricherStep
      * @param bool                                           $forCreate
      * @param array                                          $rules     by reference
      */
-    protected function getFormFieldBaseRule(ModelFormFieldDataInterface $field, $forCreate, array &$rules)
+    protected function getFormFieldGeneratedRule(ModelFormFieldDataInterface $field, $forCreate, array &$rules)
     {
         $this->generatedRulesMap[ $field->key() ] = [];
 
@@ -296,45 +314,37 @@ class EnrichValidationData extends AbstractEnricherStep
             return;
         }
 
-        $fieldRules = $this->getAndMergeFormFieldRulesForStrategyAndBasedOnModelInformation($field, $forCreate);
+        // The rules returned by a strategy (specific), and those provided by the
+        // field type (attribute/relation), must first be combined --
+        // and in preparation for that be cast as uniform arrays of ValidationRuleData instances.
 
+        $fieldRules = $this->getAndMergeFormFieldRulesForStrategyAndBasedOnModelInformation($field, $forCreate);
 
         // At this point we have a normalized array of data objects,
         // which has dot-notation keys (for array-nested rules) that is offset
         // for the field (so it leaves out the field key itself).
         // Rules for the field key itself will thus have empty/null keys.
 
-
-
-        // The strategy specific rules must be got separately
-        // from field type (attribute/relation) rules, and this
-        // logic must be removed from the strategy and moved here.
-
-        // The rules returned by a strategy (specific),
-        // and those provided by the field type (attribute/relation),
-        // must first be combined -- and in preparation for that
-        // be cast as uniform arrays of ValidationRuleData instances.
-
-        // then the logic below can be a lot simpler
-        // and the generated rules map can be derived from a
-        // merged validationruledata array.
-
-        // The validationrulemerger should include
-        // the means to do this, and the validationrulecollection
-        // can be scrapped (too inconsistent to be used anyway).
+        // The rules will also have been collapsed to one per key.
 
         foreach ($fieldRules as $rule) {
 
+            // If the field is translated, mark the rules for it
+            if ($field->translated()) {
+                $rule->setIsTranslated();
+            }
+
             if (empty($rule->key())) {
-                $rules[ $field->key() ] = $rule->rules();
+                $rule->setKey($field->key());
+                $rules[ $field->key() ] = $rule;
                 $this->generatedRulesMap[ $field->key() ][] = $field->key();
                 continue;
             }
 
-            $fullKey = $this->prefixDotKey($field->key(), $rule->key());
+            $rule->prefixKey($field->key());
 
-            $rules[ $fullKey ] = $rule->rules();
-            $this->generatedRulesMap[ $field->key() ][] = $fullKey;
+            $rules[ $rule->key() ] = $rule;
+            $this->generatedRulesMap[ $field->key() ][] = $rule->key();
         }
     }
 
@@ -343,8 +353,10 @@ class EnrichValidationData extends AbstractEnricherStep
      * @param bool                        $forCreate
      * @return ValidationRuleDataInterface[]
      */
-    protected function getAndMergeFormFieldRulesForStrategyAndBasedOnModelInformation(ModelFormFieldDataInterface $field, $forCreate = false)
-    {
+    protected function getAndMergeFormFieldRulesForStrategyAndBasedOnModelInformation(
+        ModelFormFieldDataInterface $field,
+        $forCreate = false
+    ) {
         // Get and normalize the rules to be merged
         $strategyRules = $this->getFormFieldRulesForStoreStrategy($field, $forCreate);
         $baseRules     = $this->getFormFieldModelInformationBasedRules($field);
@@ -356,7 +368,32 @@ class EnrichValidationData extends AbstractEnricherStep
     }
 
     /**
-     * Normalizes configured validation rule data to an array of data object instances.
+     * Normalizes custom configured rules data to include only specified rules.
+     *
+     * This leaves out rules nullified to exclude them, as well as rules
+     * marked to be included/kept as generated by default.
+     *
+     * @param array $rules
+     * @return ValidationRuleDataInterface[]
+     */
+    protected function normalizeValidationRuleSourceDataFromConfig(array $rules)
+    {
+        // Remove entries to be ignored and excluded
+        $filteredRules = array_filter($rules, function ($rule, $key) {
+
+            return  false !== $rule
+                &&  ! empty($rule)
+                &&  ! (is_string($rule) && is_numeric($key));
+
+        }, ARRAY_FILTER_USE_BOTH);
+
+        return $this->normalizeValidationRuleSourceData($filteredRules);
+    }
+
+    /**
+     * Normalizes generated validation rule data to an array of data object instances.
+     *
+     * The entries will be collapsed to one per key, and the array will be keyed by the key.
      *
      * @param mixed $rules
      * @return ValidationRuleDataInterface[]
@@ -375,10 +412,19 @@ class EnrichValidationData extends AbstractEnricherStep
             throw new UnexpectedValueException("Form field base validation rules not array or arrayable");
         }
 
-        // Loop through and cast anything not alraedy a data object into one
+        // Loop through and cast anything not already a data object
         $rules = array_map([$this, 'normalizeRulesProperty'], $rules, array_keys($rules));
 
-        return $this->getRuleMerger()->collapseRulesForDuplicateKeys($rules);
+        // Make sure there is only one entry per rule key
+        $rules = $this->getRuleMerger()->collapseRulesForDuplicateKeys($rules);
+
+        // Key the array by the rule key
+        return array_combine(
+            array_map(function (ValidationRuleDataInterface $rule) {
+                return $rule->key() ?: '';
+            }, $rules),
+            $rules
+        );
     }
 
     /**
@@ -392,6 +438,11 @@ class EnrichValidationData extends AbstractEnricherStep
     {
         if ($rules instanceof ValidationRuleDataInterface) {
             return $rules;
+        }
+
+        if (is_string($rules)) {
+            // Convert Laravel's pipe-syntax to array
+            $rules = explode('|', $rules);
         }
 
         if ( ! is_array($rules)) {
@@ -408,6 +459,21 @@ class EnrichValidationData extends AbstractEnricherStep
         // If the array is associative (and the key is non-numeric), included
         // it as a nested postfix for the field key, by including it in the data.
         return new ValidationRuleData($rules, is_numeric($key) ? null : $key);
+    }
+
+    /**
+     * Casts an array of validation rule data objects to array-only format.
+     *
+     * The rules array argument must be collapsed to one per key.
+     *
+     * @param ValidationRuleDataInterface[] $rules
+     * @return array
+     */
+    protected function castValidationRulesToArray(array $rules)
+    {
+        return array_map(function (ValidationRuleDataInterface $rule) {
+            return $rule->rules();
+        }, $rules);
     }
 
     /**
@@ -476,8 +542,17 @@ class EnrichValidationData extends AbstractEnricherStep
     {
         return  ! ( $forCreate && ! $field->create()
                 ||  ! $forCreate && ! $field->update()
-                ||  ! in_array($field->key(), $this->layoutFields)
+                ||  ! $this->isFormFieldPresentInLayout($field->key())
                 );
+    }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    protected function isFormFieldPresentInLayout($key)
+    {
+        return in_array($key, $this->layoutFields);
     }
 
     /**
