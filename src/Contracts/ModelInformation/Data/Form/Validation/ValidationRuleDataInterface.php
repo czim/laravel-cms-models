@@ -14,11 +14,21 @@ interface ValidationRuleDataInterface extends Arrayable
     public function setKey($key);
 
     /**
-     * Returns the key in dot notation.
+     * Returns the key in dot notation, with locale placeholder where relevant.
      *
      * @return string
      */
     public function key();
+
+    /**
+     * Prefixes the currently set key with a dot-notation parent.
+     *
+     * The (final) dot (.) should not be included in the prefix string.
+     *
+     * @param string $prefix
+     * @return $this
+     */
+    public function prefixKey($prefix);
 
     /**
      * Sets whether the field is translated.
