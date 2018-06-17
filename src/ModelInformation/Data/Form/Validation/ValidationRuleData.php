@@ -85,9 +85,9 @@ class ValidationRuleData implements ValidationRuleDataInterface
     }
 
     /**
-     * Returns the key in dot notation.
+     * Returns the key in dot notation, with locale placeholder where relevant.
      *
-     * @return string
+     * @return string|null
      */
     public function key()
     {
@@ -99,7 +99,7 @@ class ValidationRuleData implements ValidationRuleDataInterface
 
         array_splice($parts, $this->localeIndex, 0, $this->getLocalePlaceholder());
 
-        return implode('.', $parts);
+        return trim(implode('.', $parts), '.');
     }
 
     /**
