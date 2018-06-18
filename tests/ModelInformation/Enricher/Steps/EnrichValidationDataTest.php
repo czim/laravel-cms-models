@@ -388,8 +388,8 @@ class EnrichValidationDataTest extends TestCase
         static::assertArrayHasKey('string_format', $rules);
         static::assertArrayHasKey('assoc_format.field_a', $rules);
         static::assertArrayHasKey('assoc_format.field_b', $rules);
-        static::assertEquals(['string', 'size:10'], $rules['name']);
-        static::assertEquals(['integer', 'max:99'], $rules['number']);
+        static::assertEquals(['string', 'size:10', 'nullable'], $rules['name']);
+        static::assertEquals(['integer', 'max:99', 'nullable'], $rules['number']);
         static::assertEquals(['nullable'], $rules['extra']);
         static::assertEquals(['string', 'size:10'], $rules['string_format']);
         static::assertEquals(['required', 'string'], $rules['assoc_format.field_a']);
@@ -403,9 +403,11 @@ class EnrichValidationDataTest extends TestCase
         static::assertArrayHasKey('string_format', $rules);
         static::assertArrayHasKey('assoc_format.field_a', $rules);
         static::assertArrayHasKey('assoc_format.field_b', $rules);
-        static::assertEquals(['string', 'size:20'], $rules['name']);
-        static::assertEquals(['integer', 'max:250'], $rules['number']);
-        static::assertEquals(['required'], $rules['extra']);
+        static::assertEquals(['string', 'size:20', 'nullable'], $rules['name']);
+        static::assertEquals(['integer', 'max:250', 'nullable'], $rules['number']);
+        // Note that normally the following rules cancel eachother out at the resolver level,
+        // but since the 'required' rule has been injected at the strategy level, nullable is merged in.
+        static::assertEquals(['required', 'nullable'], $rules['extra']);
         static::assertEquals(['string', 'size:20'], $rules['string_format']);
         static::assertEquals(['required', 'string'], $rules['assoc_format.field_a']);
         static::assertEquals(
@@ -471,7 +473,7 @@ class EnrichValidationDataTest extends TestCase
         static::assertArrayHasKey('name', $rules);
         static::assertArrayHasKey('number', $rules);
         static::assertArrayHasKey('extra', $rules);
-        static::assertEquals(['string', 'size:10'], $rules['name']);
+        static::assertEquals(['string', 'size:10', 'nullable'], $rules['name']);
         static::assertEquals(['max:1'], $rules['number']);
         static::assertEquals(['date'], $rules['extra']);
 
@@ -480,7 +482,7 @@ class EnrichValidationDataTest extends TestCase
         static::assertArrayHasKey('name', $rules);
         static::assertArrayHasKey('number', $rules);
         static::assertArrayHasKey('extra', $rules);
-        static::assertEquals(['string', 'size:20'], $rules['name']);
+        static::assertEquals(['string', 'size:20', 'nullable'], $rules['name']);
         static::assertEquals(['max:2'], $rules['number']);
         static::assertEquals(['date'], $rules['extra']);
     }
@@ -527,9 +529,10 @@ class EnrichValidationDataTest extends TestCase
         $info->form->validation->create = [
             'name',
             'number' => 'max:1',
-            'extra', // should still not be present due to store not offering rules
+            'extra',
         ];
         $info->form->validation->update = [
+            // name should be left out
             'number' => 'max:2',
             'extra',
         ];
@@ -543,7 +546,8 @@ class EnrichValidationDataTest extends TestCase
         static::assertArrayHasKey('name', $rules);
         static::assertArrayHasKey('number', $rules);
         static::assertArrayHasKey('extra', $rules);
-        static::assertEquals(['string', 'size:10'], $rules['name']);
+        static::assertEquals(['string', 'size:10', 'nullable'], $rules['name']);
+        // Since the rules for number are custom configured, the strategy/attribute level 'nullable' should be excluded
         static::assertEquals(['max:1'], $rules['number']);
         static::assertEquals(['nullable'], $rules['extra']);
 
@@ -552,7 +556,7 @@ class EnrichValidationDataTest extends TestCase
         static::assertArrayHasKey('number', $rules);
         static::assertArrayHasKey('extra', $rules);
         static::assertEquals(['max:2'], $rules['number']);
-        static::assertEquals(['required'], $rules['extra'], 'extra should be required for update');
+        static::assertEquals(['required', 'nullable'], $rules['extra'], 'extra should be required for update');
     }
 
     /**
@@ -647,12 +651,12 @@ class EnrichValidationDataTest extends TestCase
         $rules = $info->form->validation->create;
         static::assertCount(1, $rules);
         static::assertArrayHasKey('number', $rules);
-        static::assertEquals(['integer', 'max:99'], $rules['number']);
+        static::assertEquals(['integer', 'max:99', 'nullable'], $rules['number']);
 
         $rules = $info->form->validation->update;
         static::assertCount(1, $rules);
         static::assertArrayHasKey('name', $rules);
-        static::assertEquals(['string', 'size:20'], $rules['name']);
+        static::assertEquals(['string', 'size:20', 'nullable'], $rules['name']);
     }
 
     /**
