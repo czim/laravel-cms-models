@@ -73,15 +73,23 @@ class EnrichValidationData extends AbstractEnricherStep
      */
     protected function enrichCreateRules()
     {
-        $customRules     = $this->mergeConfiguredSharedRulesWithSpecific(true);
-        $generatedRules  = $this->getFormFieldGeneratedRules(true);
+        $replace = (bool) $this->info->form->validation->create_replace;
+
+        // Note that custom rules are not normalized to data objects until later,
+        // to allow interpretation of configuration for exclusion and defaulting.
+        $customRules = $this->getRuleMerger()->mergeSharedConfiguredRulesWithCreateOrUpdate(
+            $this->info->form->validation->sharedRules(),
+            $this->info->form->validation->create,
+            $replace
+        );
+
+        $generatedRules = $this->getFormFieldGeneratedRules(true);
 
         $excludeKeys     = $this->getCustomizedRuleKeysToExclude($customRules);
         $keepDefaultKeys = $this->getCustomizedRuleKeysToKeepDefault($customRules);
 
         $customRules = $this->normalizeValidationRuleSourceDataFromConfig($customRules);
 
-        $replace = (bool) $this->info->form->validation->create_replace;
 
         $this->info->form->validation->create = $this->enrichRulesNew(
             $customRules,
@@ -101,15 +109,23 @@ class EnrichValidationData extends AbstractEnricherStep
      */
     protected function enrichUpdateRules()
     {
-        $customRules     = $this->mergeConfiguredSharedRulesWithSpecific(false);
-        $generatedRules  = $this->getFormFieldGeneratedRules(false);
+        $replace = (bool) $this->info->form->validation->update_replace;
+
+        // Note that custom rules are not normalized to data objects until later,
+        // to allow interpretation of configuration for exclusion and defaulting.
+        $customRules = $this->getRuleMerger()->mergeSharedConfiguredRulesWithCreateOrUpdate(
+            $this->info->form->validation->sharedRules(),
+            $this->info->form->validation->update,
+            $replace
+        );
+
+        $generatedRules = $this->getFormFieldGeneratedRules(false);
 
         $excludeKeys     = $this->getCustomizedRuleKeysToExclude($customRules);
         $keepDefaultKeys = $this->getCustomizedRuleKeysToKeepDefault($customRules);
 
         $customRules = $this->normalizeValidationRuleSourceDataFromConfig($customRules);
 
-        $replace = (bool) $this->info->form->validation->update_replace;
 
         $this->info->form->validation->update = $this->enrichRulesNew(
             $customRules,
@@ -144,7 +160,6 @@ class EnrichValidationData extends AbstractEnricherStep
 
         return $keys;
     }
-
 
     /**
      * Returns keys for rules that should be kept from the default generated rules,
@@ -202,6 +217,7 @@ class EnrichValidationData extends AbstractEnricherStep
             $result[ $key ] = $generatedRules[ $key ];
         }
 
+
         // If the generated rules are explicitly replaced default rules, we don't have to merge them.
         // Otherwise, append any form field defined rule that is
         // not yet included and not marked for exclusion.
@@ -243,27 +259,6 @@ class EnrichValidationData extends AbstractEnricherStep
     }
 
     /**
-     * Note that this does not normalize the rules to data objects, since the
-     * configuration format is semantic (in ways to nullify or default rules).
-     *
-     * @param bool $forCreate   whether merging is for the 'create' section
-     * @return array
-     */
-    protected function mergeConfiguredSharedRulesWithSpecific($forCreate = false)
-    {
-        $type = $forCreate ? 'create' : 'update';
-
-        $replace  = (bool) $this->info->form->validation->{$type . '_replace'};
-        $specific = $this->info->form->validation->{$type};
-
-        return $this->getRuleMerger()->mergeSharedConfiguredRulesWithCreateOrUpdate(
-            $this->info->form->validation->sharedRules(),
-            $specific,
-            $replace
-        );
-    }
-
-    /**
      * Returns rules determined by form field strategies.
      *
      * @param bool $forCreate
@@ -273,8 +268,7 @@ class EnrichValidationData extends AbstractEnricherStep
     protected function getFormFieldGeneratedRules($forCreate = true)
     {
         $this->generatedRulesMap = [];
-
-        $rules = [];
+        $rules                   = [];
 
         foreach ($this->info->form->fields as $field) {
 
@@ -452,9 +446,12 @@ class EnrichValidationData extends AbstractEnricherStep
 
         // If the array is marked up in a special format, it can reflect the
         // contents of a validation rule dataobject directly.
-        if (is_array(array_get($rules, static::VALIDATION_RULE_DATA_KEY))) {
+        if ($key === static::VALIDATION_RULE_DATA_KEY) {
+            return $this->makeValidationRuleDataFromSpecialArraySyntax($rules, '');
+        }
 
-            return $this->makeValidationRuleDataFromSpecialArraySyntax($rules, $key);
+        if (is_array(array_get($rules, static::VALIDATION_RULE_DATA_KEY))) {
+            return $this->makeValidationRuleDataFromSpecialArraySyntax($rules[static::VALIDATION_RULE_DATA_KEY], $key);
         }
 
         // If the array is associative (and the key is non-numeric), included
@@ -487,7 +484,7 @@ class EnrichValidationData extends AbstractEnricherStep
     protected function makeValidationRuleDataFromSpecialArraySyntax(array $rules, $key)
     {
         $data = new ValidationRuleData(
-            array_get($rules, 'rules'),
+            array_get($rules, 'rules', []),
             array_get($rules, 'key', is_numeric($key) ? null : $key)
         );
 
@@ -497,11 +494,13 @@ class EnrichValidationData extends AbstractEnricherStep
 
         if (array_has($rules, 'locale_index')) {
 
+            // @codeCoverageIgnoreStart
             if ((int) $rules['locale_index'] < 1) {
                 throw new UnexpectedValueException(
                     "Locale index for configured validation data cannot be less than 1 (key/index: {$key})"
                 );
             }
+            // @codeCoverageIgnoreEnd
 
             $data->setLocaleIndex((int) $rules['locale_index']);
         }
@@ -585,22 +584,6 @@ class EnrichValidationData extends AbstractEnricherStep
         }
 
         return false;
-    }
-
-    /**
-     * Prefixes a dot-notation key with a string.
-     *
-     * @param string      $prefix
-     * @param null|string $key
-     * @return string
-     */
-    protected function prefixDotKey($prefix, $key)
-    {
-        if (empty($key)) {
-            return $prefix;
-        }
-
-        return $prefix . '.' . $key;
     }
 
     /**
