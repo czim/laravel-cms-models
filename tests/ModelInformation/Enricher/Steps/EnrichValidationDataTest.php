@@ -11,12 +11,15 @@ use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\ModelInformation\Enricher\Steps\EnrichValidationData;
 use Czim\CmsModels\Support\Validation\ValidationRuleMerger;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
+use Czim\CmsModels\Test\Helpers\Strategies\Form\Store\TestRuleObjectValidation;
 use Czim\CmsModels\Test\Helpers\Strategies\Form\Store\TestSimpleAssocArrayFormatValidation;
 use Czim\CmsModels\Test\Helpers\Strategies\Form\Store\TestSimpleBrokenValidation;
 use Czim\CmsModels\Test\Helpers\Strategies\Form\Store\TestSimpleNoValidation;
 use Czim\CmsModels\Test\Helpers\Strategies\Form\Store\TestSimpleNumericValidation;
 use Czim\CmsModels\Test\Helpers\Strategies\Form\Store\TestSimpleStringFormatValidation;
 use Czim\CmsModels\Test\Helpers\Strategies\Form\Store\TestSimpleStringValidation;
+use Czim\CmsModels\Test\Helpers\Strategies\Form\Store\TestSpecialRuleObjectArrayFormatValidation;
+use Czim\CmsModels\Test\Helpers\Strategies\Form\Store\TestStringFormatValidation;
 use Czim\CmsModels\Test\TestCase;
 use Mockery;
 
@@ -698,6 +701,170 @@ class EnrichValidationDataTest extends TestCase
             static::assertEquals('form.validation.create', $e->getSection());
             static::assertEquals('name', $e->getKey());
         }
+    }
+    
+    /**
+     * @test
+     */
+    function it_silently_ignores_keys_marked_for_default_rule_inclusion_when_no_default_exists_for_them()
+    {
+        $mockEnricher = $this->getMockEnricher();
+
+        $step = new EnrichValidationData();
+        $step->setEnricher($mockEnricher);
+
+        $info = new ModelInformation;
+
+        $info->model          = TestPost::class;
+        $info->original_model = TestPost::class;
+
+        $info->attributes = [
+            'name' => new ModelAttributeData(['name' => 'name']),
+        ];
+
+        $info->form->fields = [
+            'name' => new ModelFormfieldData([
+                'key'    => 'name',
+                'source' => 'name',
+            ]),
+        ];
+
+        $info->form->layout = [
+            'name',
+        ];
+
+        $info->form->validation->create_replace = false;
+        $info->form->validation->create = [
+            'name',
+            'doesnotexist'
+        ];
+
+        $step->enrich($info, []);
+
+        $rules = $info->form->validation->create;
+        static::assertCount(1, $rules);
+        static::assertArrayHasKey('name', $rules);
+        static::assertEquals(['nullable'], $rules['name']);
+    }
+
+    /**
+     * @test
+     */
+    function it_accepts_strategy_validation_rules_in_validation_rule_data_object_format()
+    {
+        $mockEnricher = $this->getMockEnricher();
+
+        $step = new EnrichValidationData();
+        $step->setEnricher($mockEnricher);
+
+        $info = new ModelInformation;
+
+        $info->model          = TestPost::class;
+        $info->original_model = TestPost::class;
+
+        $info->attributes = [
+            'name' => new ModelAttributeData(['name' => 'name']),
+        ];
+
+        $info->form->fields = [
+            'name' => new ModelFormfieldData([
+                'key'            => 'name',
+                'source'         => 'name',
+                'store_strategy' => TestRuleObjectValidation::class,
+            ]),
+        ];
+
+        $info->form->layout = [
+            'name',
+        ];
+
+        $step->enrich($info, []);
+
+        $rules = $info->form->validation->create;
+        static::assertCount(1, $rules);
+        static::assertArrayHasKey('name', $rules);
+        static::assertEquals(['required', 'nullable'], $rules['name']);
+    }
+
+    /**
+     * @test
+     */
+    function it_accepts_strategy_validation_rules_in_special_validation_rule_data_object_array_formats()
+    {
+        $mockEnricher = $this->getMockEnricher();
+
+        $step = new EnrichValidationData();
+        $step->setEnricher($mockEnricher);
+
+        $info = new ModelInformation;
+
+        $info->model          = TestPost::class;
+        $info->original_model = TestPost::class;
+
+        $info->attributes = [
+            'name' => new ModelAttributeData(['name' => 'name']),
+        ];
+
+        $info->form->fields = [
+            'name' => new ModelFormfieldData([
+                'key'            => 'name',
+                'source'         => 'name',
+                'store_strategy' => TestSpecialRuleObjectArrayFormatValidation::class,
+            ]),
+        ];
+
+        $info->form->layout = [
+            'name',
+        ];
+
+        $step->enrich($info, []);
+
+        $rules = $info->form->validation->create;
+        static::assertCount(2, $rules);
+        static::assertArrayHasKey('name.test_a', $rules);
+        static::assertEquals(['required'], $rules['name.test_a']);
+        static::assertArrayHasKey('name.test_b.<trans>', $rules);
+        static::assertEquals(['max:2'], $rules['name.test_b.<trans>']);
+
+    }
+
+    /**
+     * @test
+     */
+    function it_accepts_strategy_validation_rules_in_string_format()
+    {
+        $mockEnricher = $this->getMockEnricher();
+
+        $step = new EnrichValidationData();
+        $step->setEnricher($mockEnricher);
+
+        $info = new ModelInformation;
+
+        $info->model          = TestPost::class;
+        $info->original_model = TestPost::class;
+
+        $info->attributes = [
+            'name' => new ModelAttributeData(['name' => 'name']),
+        ];
+
+        $info->form->fields = [
+            'name' => new ModelFormfieldData([
+                'key'            => 'name',
+                'source'         => 'name',
+                'store_strategy' => TestStringFormatValidation::class,
+            ]),
+        ];
+
+        $info->form->layout = [
+            'name',
+        ];
+
+        $step->enrich($info, []);
+
+        $rules = $info->form->validation->create;
+        static::assertCount(1, $rules);
+        static::assertArrayHasKey('name', $rules);
+        static::assertEquals(['required', 'nullable'], $rules['name']);
     }
 
 
