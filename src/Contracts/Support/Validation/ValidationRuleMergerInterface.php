@@ -37,4 +37,12 @@ interface ValidationRuleMergerInterface
      */
     public function mergeStrategyAndAttributeBased(array $strategyRules, array $attributeRules);
 
+    /**
+     * Updates a list of validation rules to make required fields work in a per-locale context.
+     *
+     * @param ValidationRuleDataInterface[] $rules
+     * @return ValidationRuleDataInterface[]
+     */
+    public function convertRequiredForTranslatedFields(array $rules);
+
 }

@@ -255,6 +255,8 @@ class EnrichValidationData extends AbstractEnricherStep
             }
         }
 
+        $result = $this->getRuleMerger()->convertRequiredForTranslatedFields($result);
+
         return $this->castValidationRulesToArray($result);
     }
 
