@@ -162,6 +162,70 @@ class ValidationRuleMerger implements ValidationRuleMergerInterface
         return $strategyRules;
     }
 
+
+    /**
+     * Updates a list of validation rules to make required fields work in a per-locale context.
+     *
+     * The challenge here is to prevent a required translated field to be required *for all
+     * available locales* -- instead requiring it only if *anything* for that locale is
+     * entered.
+     *
+     * @param ValidationRuleDataInterface[] $rules
+     * @return ValidationRuleDataInterface[]
+     */
+    public function convertRequiredForTranslatedFields(array $rules)
+    {
+        $isTranslatedKeys = [];  // list of rule keys that are translated
+        $hasRequiredKeys  = [];  // list of rule keys that are translated and 'required'
+
+        foreach ($rules as $index => $rule) {
+
+            if ( ! $rule->isTranslated()) {
+                continue;
+            }
+
+            $isTranslatedKeys[] = $rule->key() ?: '';
+
+            if (in_array('required', $rule->rules())) {
+                $hasRequiredKeys[ $index ] = $rule->key() ?: '';
+            }
+        }
+
+        // For each required translated rule,
+        // get all the keys for all other translated field rules (except itself)
+        // and inject them into a required_with rule, that replaces the required rule.
+
+        foreach ($hasRequiredKeys as $index => $key) {
+
+            $rule = $rules[ $index ];
+
+            $this->replaceRequiredForRequiredWith($rule, array_diff($isTranslatedKeys, [ $key ]));
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Updates the rules in a validation data object to replace the required rule with
+     * a required_with rule for multiple fields.
+     *
+     * @param ValidationRuleDataInterface $rule
+     * @param array                       $requiredWithKeys
+     */
+    protected function replaceRequiredForRequiredWith(ValidationRuleDataInterface $rule, array $requiredWithKeys)
+    {
+        $rules = array_diff($rule->rules(), ['required']);
+
+        // If there are no required_with keys to replace it with, leave the rule out
+        if (count($requiredWithKeys)) {
+
+            $rules[] = 'required_with:' . implode(',', $requiredWithKeys);
+        }
+
+        $rule->setRules($rules);
+    }
+
+
     /**
      * @param ValidationRuleDataInterface $strategyRule
      * @param ValidationRuleDataInterface $attributeRule
