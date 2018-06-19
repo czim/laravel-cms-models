@@ -45,20 +45,6 @@ class ValidationRuleData implements ValidationRuleDataInterface
      */
     protected $localeIndex = 1;
 
-    /**
-     * The locale placeholder to use in the dot notation key, if not default.
-     *
-     * @var null|string
-     */
-    protected $localePlaceholder;
-
-    /**
-     * If true, the key should be required_with when used in translation context.
-     *
-     * @var bool
-     */
-    protected $requiredWithTranslation = false;
-
 
     /**
      * @param array       $rules        the rules for this key in Laravel array notation
@@ -168,29 +154,6 @@ class ValidationRuleData implements ValidationRuleDataInterface
     }
 
     /**
-     * Sets the context to be required_with for translations.
-     *
-     * @param bool $required
-     * @return $this
-     */
-    public function setRequiredWithTranslation($required = true)
-    {
-        $this->requiredWithTranslation = (bool) $required;
-
-        return $this;
-    }
-
-    /**
-     * Returns whether the context is set to be required_with for translations.
-     *
-     * @return bool
-     */
-    public function isRequiredWithTranslation()
-    {
-        return $this->requiredWithTranslation;
-    }
-
-    /**
      * Sets validation rules.
      *
      * @param array|string[] $rules
@@ -220,10 +183,10 @@ class ValidationRuleData implements ValidationRuleDataInterface
     {
         return [
             static::IDENTIFIER_KEY => [
-                'key'                     => $this->key,
-                'rules'                   => $this->rules,
-                'localeIndex'             => $this->localeIndex,
-                'requiredWithTranslation' => $this->requiredWithTranslation,
+                'key'         => $this->key,
+                'rules'       => $this->rules,
+                'translated'  => $this->translated,
+                'localeIndex' => $this->localeIndex,
             ]
         ];
     }
@@ -236,18 +199,6 @@ class ValidationRuleData implements ValidationRuleDataInterface
      * @return string
      */
     protected function getLocalePlaceholder()
-    {
-        if ($this->localePlaceholder === null) {
-            return $this->getDefaultLocalePlaceholder();
-        }
-
-        return $this->localePlaceholder;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getDefaultLocalePlaceholder()
     {
         return TranslationLocaleHelper::VALIDATION_LOCALE_PLACEHOLDER;
     }

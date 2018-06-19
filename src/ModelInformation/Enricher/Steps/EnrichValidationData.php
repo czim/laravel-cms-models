@@ -505,10 +505,6 @@ class EnrichValidationData extends AbstractEnricherStep
             $data->setLocaleIndex((int) $rules['locale_index']);
         }
 
-        if (array_has($rules, 'required_with_translation')) {
-            $data->setRequiredWithTranslation((bool) $rules['required_with_translation']);
-        }
-
         return $data;
     }
 
