@@ -46,19 +46,6 @@ interface ValidationRuleDataInterface extends Arrayable
     public function isTranslated();
 
     /**
-     * Sets the context to be required_with for translations.
-     *
-     * @param bool $required
-     * @return $this
-     */
-    public function setRequiredWithTranslation($required = true);
-
-    /**
-     * @return bool
-     */
-    public function isRequiredWithTranslation();
-
-    /**
      * Sets validation rules.
      *
      * @param array|string[] $rules

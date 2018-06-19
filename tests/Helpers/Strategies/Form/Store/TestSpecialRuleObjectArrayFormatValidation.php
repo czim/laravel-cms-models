@@ -30,10 +30,9 @@ class TestSpecialRuleObjectArrayFormatValidation extends AbstractTestSimpleValid
             ],
             'test_b' => [
                 '**' => [
-                    'rules'                     => ['max:2'],
-                    'translated'                => true,
-                    'locale_index'              => 2,
-                    'required_with_translation' => true,
+                    'rules'        => ['max:2'],
+                    'translated'   => true,
+                    'locale_index' => 2,
                 ]
             ]
         ];
