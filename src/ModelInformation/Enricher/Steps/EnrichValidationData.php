@@ -12,6 +12,7 @@ use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\ModelInformation\Data\Form\Validation\ValidationRuleData;
 use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Support\Strategies\Traits\ResolvesFormStoreStrategies;
+use Czim\CmsModels\Support\Translation\TranslationLocaleHelper;
 use Exception;
 use UnexpectedValueException;
 
@@ -28,6 +29,15 @@ class EnrichValidationData extends AbstractEnricherStep
      * @var string
      */
     const VALIDATION_RULE_DATA_KEY = '**';
+
+    /**
+     * The placeholder that may be expected in configured rules and
+     * should be replaced with the field's key, including any locale
+     * placeholder where relevant.
+     *
+     * @var string
+     */
+    const FIELD_KEY_PLACEHOLDER = '<field>';
 
 
     /**
@@ -316,6 +326,20 @@ class EnrichValidationData extends AbstractEnricherStep
 
         $fieldRules = $this->getAndMergeFormFieldRulesForStrategyAndBasedOnModelInformation($field, $forCreate);
 
+        // If the field is translated, mark the rules for it in preparation for further decoration
+        if ($field->translated()) {
+            array_map(function (ValidationRuleDataInterface $rule) {
+                $rule->setIsTranslated();
+            }, $fieldRules);
+        }
+
+        // The keys in the strategy or model information might have placeholders
+        // in its rules, to allow referring to other 'relative' validation keys
+        // for the field such as in required_with... rules.
+        // These placeholders need to be replaced.
+        $fieldRules = $this->replaceFieldKeyPlaceholderInValidationRules($field, $fieldRules);
+
+
         // At this point we have a normalized array of data objects,
         // which has dot-notation keys (for array-nested rules) that is offset
         // for the field (so it leaves out the field key itself).
@@ -324,11 +348,6 @@ class EnrichValidationData extends AbstractEnricherStep
         // The rules will also have been collapsed to one per key.
 
         foreach ($fieldRules as $rule) {
-
-            // If the field is translated, mark the rules for it
-            if ($field->translated()) {
-                $rule->setIsTranslated();
-            }
 
             if (empty($rule->key())) {
                 $rule->setKey($field->key());
@@ -584,12 +603,55 @@ class EnrichValidationData extends AbstractEnricherStep
     }
 
     /**
+     * Replaces placeholders for the field key (as prefix).
+     *
+     * @param ModelFormFieldDataInterface   $field
+     * @param ValidationRuleDataInterface[] $rules
+     * @return ValidationRuleDataInterface[]
+     */
+    protected function replaceFieldKeyPlaceholderInValidationRules(ModelFormFieldDataInterface $field, array $rules)
+    {
+        foreach ($rules as $rule) {
+
+            // Prepare field prefix with locale placeholder if relevant
+            $fieldPrefix = $field->key();
+
+            if ($rule->isTranslated() && $rule->localeIndex() < 2) {
+                $fieldPrefix .= '.' . $this->getLocalePlaceholder();
+            }
+
+            // For each rule, if it is a string, replace the field placeholder with this prefix
+            $rule->setRules(
+                array_map(function ($rule) use ($fieldPrefix) {
+
+                    if ( ! is_string($rule)) {
+                        return $rule;
+                    }
+
+                    return str_replace(static::FIELD_KEY_PLACEHOLDER, $fieldPrefix, $rule);
+
+                }, $rule->rules())
+            );
+        }
+
+        return $rules;
+    }
+
+    /**
      * @return ModelInformationInterface|ModelInformation
      * @codeCoverageIgnore
      */
     protected function getModelInformation()
     {
         return $this->info;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getLocalePlaceholder()
+    {
+        return TranslationLocaleHelper::VALIDATION_LOCALE_PLACEHOLDER;
     }
 
     /**
