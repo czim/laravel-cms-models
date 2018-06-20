@@ -176,9 +176,9 @@ class StaplerStrategy extends DefaultStrategy
 
         // Modify rules for required fields that may be either uploaded directly or asynchronously.
         if ($this->formFieldData->required && ! $this->formFieldData->translated) {
-            $fileRules[]   = 'required_without_all:' . $field->key() . '.upload_id,' . $field->key() . '.keep';
-            $keepRules[]   = 'required_without_all:' . $field->key() . '.upload,' . $field->key() . '.upload_id';
-            $fileIdRules[] = 'required_without_all:' . $field->key() . '.upload,' . $field->key() . '.keep';
+            $fileRules[]   = 'required_without_all:<field>.upload_id,<field>.keep';
+            $keepRules[]   = 'required_without_all:<field>.upload,<field>.upload_id';
+            $fileIdRules[] = 'required_without_all:<field>.upload,<field>.keep';
         } else {
             if ( ! in_array('nullable', $fileRules)) {
                 $fileRules[] = 'nullable';
