@@ -3,7 +3,9 @@ namespace Czim\CmsModels\Test\Strategies\Form\Store;
 
 use Czim\CmsCore\Contracts\Modules\ModuleManagerInterface;
 use Czim\CmsCore\Support\Enums\Component;
+use Czim\CmsModels\Contracts\ModelInformation\Data\Form\Validation\ValidationRuleDataInterface;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
+use Czim\CmsModels\ModelInformation\Data\ModelInformation;
 use Czim\CmsModels\Strategies\Form\Store\PaperclipStrategy;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Mockery;
@@ -78,6 +80,108 @@ class PaperclipStrategyTest extends AbstractFormStoreStrategyTest
 
         static::assertFalse($model->test);
     }
+
+    /**
+     * @test
+     */
+    function it_returns_validation_rules()
+    {
+        $data = new ModelFormFieldData;
+
+        $info = new ModelInformation([
+            'form' => [
+                'fields' => [
+                    'attachment' => [],
+                ],
+            ],
+        ]);
+
+        $strategy = new PaperclipStrategy;
+        $strategy->setFormFieldData($data);
+
+        /** @var array|ValidationRuleDataInterface[] $rules */
+        $rules = $strategy->validationRules($info, true);
+
+        static::assertCount(3, $rules);
+        static::assertArrayHasKey('keep', $rules);
+        static::assertArrayHasKey('upload', $rules);
+        static::assertArrayHasKey('upload_id', $rules);
+        static::assertEquals(['boolean', 'nullable'], $rules['keep']);
+        static::assertEquals(['file', 'nullable'], $rules['upload']);
+        static::assertEquals(['integer', 'nullable'], $rules['upload_id']);
+    }
+
+    /**
+     * @test
+     */
+    function it_returns_validation_rules_with_custom_configured_additions()
+    {
+        $data = new ModelFormFieldData([
+            'key'     => 'attachment',
+            'options' => [
+                'validation' => [
+                    'dimensions:min_width=100,min_height=200',
+                    'max:40000',
+                ],
+            ],
+        ]);
+
+        $info = new ModelInformation([
+            'form' => [
+                'fields' => [
+                    'attachment' => [],
+                ],
+            ],
+        ]);
+
+        $strategy = new PaperclipStrategy;
+        $strategy->setFormFieldData($data);
+
+        /** @var array|ValidationRuleDataInterface[] $rules */
+        $rules = $strategy->validationRules($info, true);
+
+        static::assertCount(3, $rules);
+        static::assertArrayHasKey('keep', $rules);
+        static::assertArrayHasKey('upload', $rules);
+        static::assertArrayHasKey('upload_id', $rules);
+        static::assertEquals(['boolean', 'nullable'], $rules['keep']);
+        static::assertEquals(['dimensions:min_width=100,min_height=200', 'max:40000', 'file', 'nullable'], $rules['upload']);
+        static::assertEquals(['integer', 'nullable'], $rules['upload_id']);
+    }
+
+    /**
+     * @test
+     */
+    function it_returns_validation_rules_for_required_field()
+    {
+        $data = new ModelFormFieldData([
+            'key'      => 'attachment',
+            'required' => true,
+        ]);
+
+        $info = new ModelInformation([
+            'form' => [
+                'fields' => [
+                    'attachment' => [],
+                ],
+            ],
+        ]);
+
+        $strategy = new PaperclipStrategy;
+        $strategy->setFormFieldData($data);
+
+        /** @var array|ValidationRuleDataInterface[] $rules */
+        $rules = $strategy->validationRules($info, true);
+
+        static::assertCount(3, $rules);
+        static::assertArrayHasKey('keep', $rules);
+        static::assertArrayHasKey('upload', $rules);
+        static::assertArrayHasKey('upload_id', $rules);
+        static::assertEquals(['boolean', 'required_without_all:<field>.upload,<field>.upload_id'], $rules['keep']);
+        static::assertEquals(['file', 'required_without_all:<field>.upload_id,<field>.keep'], $rules['upload']);
+        static::assertEquals(['integer', 'required_without_all:<field>.upload,<field>.keep'], $rules['upload_id']);
+    }
+
 
     /**
      * @return ModuleManagerInterface|Mockery\MockInterface|Mockery\Mock
