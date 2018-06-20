@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnhandledExceptionInspection */
 namespace Czim\CmsModels\Test\Strategies\Form\Store;
 
 use Czim\CmsCore\Contracts\Modules\ModuleManagerInterface;
