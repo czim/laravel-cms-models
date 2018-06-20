@@ -188,9 +188,9 @@ class StaplerStrategy extends DefaultStrategy
         }
 
         return [
-            $field->key() . '.keep'      => $keepRules,
-            $field->key() . '.upload'    => $fileRules,
-            $field->key() . '.upload_id' => $fileIdRules,
+            'keep'      => $keepRules,
+            'upload'    => $fileRules,
+            'upload_id' => $fileIdRules,
         ];
     }
 
