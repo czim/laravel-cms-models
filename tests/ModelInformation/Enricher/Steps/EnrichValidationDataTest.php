@@ -20,6 +20,7 @@ use Czim\CmsModels\Test\Helpers\Strategies\Form\Store\TestSimpleStringFormatVali
 use Czim\CmsModels\Test\Helpers\Strategies\Form\Store\TestSimpleStringValidation;
 use Czim\CmsModels\Test\Helpers\Strategies\Form\Store\TestSpecialRuleObjectArrayFormatValidation;
 use Czim\CmsModels\Test\Helpers\Strategies\Form\Store\TestStringFormatValidation;
+use Czim\CmsModels\Test\Helpers\Strategies\Form\Store\TestWithFieldPlaceholderValidation;
 use Czim\CmsModels\Test\TestCase;
 use Mockery;
 
@@ -825,7 +826,6 @@ class EnrichValidationDataTest extends TestCase
         static::assertEquals(['required'], $rules['name.test_a']);
         static::assertArrayHasKey('name.test_b.<trans>', $rules);
         static::assertEquals(['max:2'], $rules['name.test_b.<trans>']);
-
     }
 
     /**
@@ -865,6 +865,85 @@ class EnrichValidationDataTest extends TestCase
         static::assertCount(1, $rules);
         static::assertArrayHasKey('name', $rules);
         static::assertEquals(['required', 'nullable'], $rules['name']);
+    }
+
+    /**
+     * @test
+     */
+    function it_replaces_field_key_placeholders_in_validation_rules()
+    {
+        $mockEnricher = $this->getMockEnricher();
+
+        $step = new EnrichValidationData();
+        $step->setEnricher($mockEnricher);
+
+        $info = new ModelInformation;
+
+        $info->model          = TestPost::class;
+        $info->original_model = TestPost::class;
+
+        $info->attributes = [
+            'name' => new ModelAttributeData(['name' => 'name']),
+        ];
+
+        $info->form->fields = [
+            'name' => new ModelFormfieldData([
+                'key'            => 'name',
+                'source'         => 'name',
+                'store_strategy' => TestWithFieldPlaceholderValidation::class,
+            ]),
+        ];
+
+        $info->form->layout = [
+            'name',
+        ];
+
+        $step->enrich($info, []);
+
+        $rules = $info->form->validation->create;
+        static::assertCount(1, $rules);
+        static::assertArrayHasKey('name', $rules);
+        static::assertEquals(['required_with:name.test,name.another', 'nullable'], $rules['name']);
+    }
+
+    /**
+     * @test
+     */
+    function it_replaces_field_key_placeholders_in_validation_rules_for_translated_fields()
+    {
+        $mockEnricher = $this->getMockEnricher();
+
+        $step = new EnrichValidationData();
+        $step->setEnricher($mockEnricher);
+
+        $info = new ModelInformation;
+
+        $info->model          = TestPost::class;
+        $info->original_model = TestPost::class;
+
+        $info->attributes = [
+            'name' => new ModelAttributeData(['name' => 'name']),
+        ];
+
+        $info->form->fields = [
+            'name' => new ModelFormfieldData([
+                'key'            => 'name',
+                'source'         => 'name',
+                'store_strategy' => TestWithFieldPlaceholderValidation::class,
+                'translated'     => true,
+            ]),
+        ];
+
+        $info->form->layout = [
+            'name',
+        ];
+
+        $step->enrich($info, []);
+
+        $rules = $info->form->validation->create;
+        static::assertCount(1, $rules);
+        static::assertArrayHasKey('name.<trans>', $rules);
+        static::assertEquals(['required_with:name.<trans>.test,name.<trans>.another', 'nullable'], $rules['name.<trans>']);
     }
 
 
