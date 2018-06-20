@@ -7,6 +7,12 @@ use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Czim\CmsModels\Test\TestCase;
 use Mockery;
 
+/**
+ * Class ValidationRuleDecoratorTest
+ *
+ * @group support
+ * @group support-validation
+ */
 class ValidationRuleDecoratorTest extends TestCase
 {
 
