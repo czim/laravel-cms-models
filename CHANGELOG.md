@@ -73,6 +73,7 @@ See 1.6.1.
 [1.6.2]: https://github.com/czim/laravel-cms-models/compare/1.6.1...1.6.2
 [1.6.1]: https://github.com/czim/laravel-cms-models/compare/1.6.0...1.6.1
 
+[1.5.10]: https://github.com/czim/laravel-cms-models/compare/1.5.9...1.5.10
 [1.5.9]: https://github.com/czim/laravel-cms-models/compare/1.5.8...1.5.9
 [1.5.8]: https://github.com/czim/laravel-cms-models/compare/1.5.7...1.5.8
 [1.5.7]: https://github.com/czim/laravel-cms-models/compare/1.5.6...1.5.7
