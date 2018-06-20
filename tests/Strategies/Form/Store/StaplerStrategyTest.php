@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnhandledExceptionInspection */
 namespace Czim\CmsModels\Test\Strategies\Form\Store;
 
 use Czim\CmsCore\Contracts\Modules\ModuleManagerInterface;
@@ -6,7 +6,6 @@ use Czim\CmsCore\Support\Enums\Component;
 use Czim\CmsModels\ModelInformation\Data\Form\ModelFormFieldData;
 use Czim\CmsModels\Strategies\Form\Store\StaplerStrategy;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
-use Czim\CmsModels\Test\TestCase;
 use Mockery;
 
 /**
@@ -15,7 +14,7 @@ use Mockery;
  * @group strategies
  * @group strategies-form-store
  */
-class StaplerStrategyTest extends TestCase
+class StaplerStrategyTest extends AbstractFormStoreStrategyTest
 {
 
     /**
