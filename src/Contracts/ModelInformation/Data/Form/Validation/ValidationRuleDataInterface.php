@@ -46,6 +46,21 @@ interface ValidationRuleDataInterface extends Arrayable
     public function isTranslated();
 
     /**
+     * Sets the index at which the locale placeholder should be inserted for a full key.
+     *
+     * @param int $index
+     * @return $this
+     */
+    public function setLocaleIndex($index);
+
+    /**
+     * Returns the index at which the locale placeholder is inserted for a full key.
+     *
+     * @return int
+     */
+    public function localeIndex();
+
+    /**
      * Sets validation rules.
      *
      * @param array|string[] $rules
