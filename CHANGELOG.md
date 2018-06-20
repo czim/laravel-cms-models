@@ -40,16 +40,17 @@ Fixed incorrect Blade directive for Stapler strategy (by @JJWesterkamp).
 ### [1.5.7] - 2018-05-07
 See 1.6.3.
 
-
 ### [1.5.6] - 2018-04-12
 See 1.6.2.
-
 
 ### [1.5.5] - 2018-02-15
 See 1.6.1.
 
 
 ## Laravel 5.4
+
+### [1.4.11] - 2018-06-20
+See 1.6.5.
 
 ### [1.4.10] - 2018-04-12
 See 1.6.2.
@@ -80,6 +81,7 @@ See 1.6.1.
 [1.5.6]: https://github.com/czim/laravel-cms-models/compare/1.5.5...1.5.6
 [1.5.5]: https://github.com/czim/laravel-cms-models/compare/1.5.4...1.5.5
 
+[1.4.11]: https://github.com/czim/laravel-cms-models/compare/1.4.10...1.4.11
 [1.4.10]: https://github.com/czim/laravel-cms-models/compare/1.4.9...1.4.10
 [1.4.9]: https://github.com/czim/laravel-cms-models/compare/1.4.8...1.4.9
 
