@@ -10,6 +10,8 @@ use Czim\CmsModels\Test\TestCase;
 /**
  * Class ValidationRuleMergerTest
  *
+ * @group support
+ * @group support-validation
  * @uses \Czim\CmsModels\ModelInformation\Data\Form\Validation\ValidationRuleData
  */
 class ValidationRuleMergerTest extends TestCase
