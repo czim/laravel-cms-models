@@ -3,9 +3,14 @@
 
 ## Laravel 5.6
 
+### [1.6.5] - 2018-06-20
+- Some cleanup and correction of omissions for validation handling during enrichment.
+- Added '<field>' placeholder handling for model information and strategy generated validation rule content.
+- Fixed validation rule generation for Paperclip strategy (for older versions, this goes for Stapler too). 
+
 ### [1.6.4] - 2018-06-19
 - Rebuilt validation handling to allow for more control over configuring rules, and to solve an issue with nested rules for translated fields (incorrect locale placeholder position).
-- Merged fix by Jeffrey Westerkamp for analyzing multiline relation method definitions.
+- Merged fix by @JJWesterkamp for analyzing multiline relation method definitions.
 
 ### [1.6.3] - 2018-05-07
 Fixed incorrect Blade directive with file upload form display strategy (with upload module).
@@ -22,6 +27,9 @@ Updated `cms-models.strategies.form` config section.
 
 
 ## Laravel 5.5
+
+### [1.5.10] - 2018-06-20
+See 1.6.5.
 
 ### [1.5.9] - 2018-06-19
 See 1.6.4.
@@ -59,7 +67,7 @@ See 1.6.2.
 See 1.6.1.
 
 
-
+[1.6.5]: https://github.com/czim/laravel-cms-models/compare/1.6.4...1.6.5
 [1.6.4]: https://github.com/czim/laravel-cms-models/compare/1.6.3...1.6.4
 [1.6.3]: https://github.com/czim/laravel-cms-models/compare/1.6.2...1.6.3
 [1.6.2]: https://github.com/czim/laravel-cms-models/compare/1.6.1...1.6.2
