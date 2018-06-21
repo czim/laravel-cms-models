@@ -61,6 +61,9 @@ See 1.6.1.
 
 ## Laravel 5.3
 
+### [1.3.12] - 2018-06-21
+See 1.6.5.
+
 ### [1.3.11] - 2018-04-12
 See 1.6.2.
 
@@ -85,5 +88,6 @@ See 1.6.1.
 [1.4.10]: https://github.com/czim/laravel-cms-models/compare/1.4.9...1.4.10
 [1.4.9]: https://github.com/czim/laravel-cms-models/compare/1.4.8...1.4.9
 
+[1.3.12]: https://github.com/czim/laravel-cms-models/compare/1.3.11...1.3.12
 [1.3.11]: https://github.com/czim/laravel-cms-models/compare/1.3.10...1.3.11
 [1.3.10]: https://github.com/czim/laravel-cms-models/compare/1.3.9...1.3.10
