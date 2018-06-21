@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnhandledExceptionInspection */
 namespace Czim\CmsModels\Test\ModelInformation\Enricher;
 
 use Czim\CmsModels\Contracts\Support\Factories\FormStoreStrategyFactoryInterface;
@@ -85,8 +85,8 @@ class ModelInformationEnricherTest extends TestCase
         static::assertTrue($enriched->form->fields['single']->required);
         static::assertEquals(FormDisplayStrategy::RELATION_PLURAL_AUTOCOMPLETE, $enriched->form->fields['many']->display_strategy);
 
-        static::assertCount(4, $enriched->form->validation->create);
-        static::assertCount(4, $enriched->form->validation->update);
+        static::assertCount(3, $enriched->form->validation->create);
+        static::assertCount(3, $enriched->form->validation->update);
         static::assertCount(3, $enriched->show->fields);
         static::assertCount(4, $enriched->export->columns);
     }
