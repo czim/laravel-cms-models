@@ -54,8 +54,7 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData();
-        $step->setEnricher($mockEnricher);
+        $step = new EnrichValidationData($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -77,8 +76,7 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData();
-        $step->setEnricher($mockEnricher);
+        $step = new EnrichValidationData($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -145,8 +143,7 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData();
-        $step->setEnricher($mockEnricher);
+        $step = new EnrichValidationData($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -188,8 +185,7 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData();
-        $step->setEnricher($mockEnricher);
+        $step = new EnrichValidationData($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -236,8 +232,7 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData();
-        $step->setEnricher($mockEnricher);
+        $step = new EnrichValidationData($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -284,8 +279,7 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData();
-        $step->setEnricher($mockEnricher);
+        $step = new EnrichValidationData($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -340,8 +334,7 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData();
-        $step->setEnricher($mockEnricher);
+        $step = new EnrichValidationData($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -428,8 +421,7 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData();
-        $step->setEnricher($mockEnricher);
+        $step = new EnrichValidationData($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -498,8 +490,7 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData();
-        $step->setEnricher($mockEnricher);
+        $step = new EnrichValidationData($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -570,8 +561,7 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData();
-        $step->setEnricher($mockEnricher);
+        $step = new EnrichValidationData($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -609,8 +599,7 @@ class EnrichValidationDataTest extends TestCase
 
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData();
-        $step->setEnricher($mockEnricher);
+        $step = new EnrichValidationData($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -670,8 +659,7 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData();
-        $step->setEnricher($mockEnricher);
+        $step = new EnrichValidationData($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -711,8 +699,7 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData();
-        $step->setEnricher($mockEnricher);
+        $step = new EnrichValidationData($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -755,8 +742,7 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData();
-        $step->setEnricher($mockEnricher);
+        $step = new EnrichValidationData($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -794,8 +780,7 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData();
-        $step->setEnricher($mockEnricher);
+        $step = new EnrichValidationData($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -835,8 +820,7 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData();
-        $step->setEnricher($mockEnricher);
+        $step = new EnrichValidationData($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -874,8 +858,7 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData();
-        $step->setEnricher($mockEnricher);
+        $step = new EnrichValidationData($mockEnricher);
 
         $info = new ModelInformation;
 
@@ -913,8 +896,7 @@ class EnrichValidationDataTest extends TestCase
     {
         $mockEnricher = $this->getMockEnricher();
 
-        $step = new EnrichValidationData();
-        $step->setEnricher($mockEnricher);
+        $step = new EnrichValidationData($mockEnricher);
 
         $info = new ModelInformation;
 
