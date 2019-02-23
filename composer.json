@@ -24,7 +24,7 @@
         "orchestra/database": "~3.7",
         "dimsav/laravel-translatable": "^9.0",
         "czim/laravel-listify": "^1.0",
-        "czim/laravel-paperclip": "^1.5",
+        "czim/laravel-paperclip": "^1.6|^2.6",
         "satooshi/php-coveralls": "^1.0",
         "symfony/dom-crawler": "^3.3"
     },
