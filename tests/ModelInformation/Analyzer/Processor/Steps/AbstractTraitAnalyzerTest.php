@@ -29,7 +29,7 @@ class AbstractTraitAnalyzerTest extends AbstractStepCase
         $test = array_values(array_filter(
             $step->publicGetTraitNames(),
             function ($trait) {
-                return ! starts_with($trait, 'Illuminate\\Database\\Eloquent\\');
+                return  ! starts_with($trait, 'Illuminate\\');
             }
         ));
 
