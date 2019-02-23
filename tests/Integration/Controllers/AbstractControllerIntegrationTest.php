@@ -13,7 +13,9 @@ use Czim\CmsModels\Test\Helpers\Models\TestAuthor;
 use Czim\CmsModels\Test\Helpers\Models\TestComment;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Czim\CmsModels\Test\Helpers\Models\TestSeo;
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 abstract class AbstractControllerIntegrationTest extends CmsBootTestCase
@@ -63,6 +65,8 @@ abstract class AbstractControllerIntegrationTest extends CmsBootTestCase
 
     /**
      * {@inheritdoc}
+     *
+     * @param Application $app
      */
     protected function getEnvironmentSetUp($app)
     {
@@ -70,38 +74,41 @@ abstract class AbstractControllerIntegrationTest extends CmsBootTestCase
 
         parent::getEnvironmentSetUp($app);
 
+        /** @var Repository $config */
+        $config = $app['config'];
+
         // Set up configuration for modules & models
-        $app['config']->set('cms-modules.modules', [
+        $config->set('cms-modules.modules', [
             ModelModuleGenerator::class,
         ]);
 
-        $app['config']->set('cms-models.models', [
+        $config->set('cms-models.models', [
             TestPost::class,
             TestComment::class,
             TestAuthor::class,
             TestSeo::class,
         ]);
 
-        $app['config']->set(
+        $config->set(
             'cms-models.collector.source.dir',
             realpath('tests/Helpers/ModelConfiguration/Integration')
         );
 
-        $app['config']->set(
+        $config->set(
             'cms-models.collector.source.models-dir',
             realpath('tests/Helpers/Models')
         );
 
-        $app['config']->set(
+        $config->set(
             'cms-models.collector.source.models-namespace',
             'Czim\\CmsModels\\Test\\Helpers\\Models'
         );
 
         // Adjust middleware to disable authorization
-        $app['config']->set(
+        $config->set(
             'cms-core.middleware.load',
             array_merge(
-                $app['config']->get('cms-core.middleware.load'),
+                $config->get('cms-core.middleware.load'),
                 [
                     \Czim\CmsCore\Support\Enums\CmsMiddleware::AUTHENTICATED => NullMiddleware::class,
                     \Czim\CmsCore\Support\Enums\CmsMiddleware::GUEST         => NullMiddleware::class,
