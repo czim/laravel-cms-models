@@ -3,7 +3,7 @@ namespace Czim\CmsModels\Console\Commands;
 
 use Czim\CmsModels\Contracts\Repositories\ModelInformationRepositoryInterface;
 use Illuminate\Console\Command;
-use Illuminate\Support\Debug\Dumper;
+use Symfony\Component\VarDumper\VarDumper;
 
 class ShowModelInformation extends Command
 {
@@ -114,11 +114,11 @@ class ShowModelInformation extends Command
     }
 
     /**
-     * @return Dumper
+     * @return VarDumper
      */
     protected function getDumper()
     {
-        return app(Dumper::class);
+        return app(VarDumper::class);
     }
 
 }

@@ -8,8 +8,8 @@ use Czim\CmsModels\Test\Helpers\Models\TestAuthor;
 use Czim\CmsModels\Test\Helpers\Models\TestComment;
 use Czim\CmsModels\Test\Helpers\Models\TestPost;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Debug\Dumper;
 use Mockery;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Class ShowModelInformationTest
@@ -23,6 +23,12 @@ class ShowModelInformationTest extends ConsoleTestCase
      * @var Collection
      */
     protected $models;
+
+    /**
+     * @var bool
+     */
+    public $mockConsoleOutput = false;
+
 
     public function setUp()
     {
@@ -83,7 +89,7 @@ class ShowModelInformationTest extends ConsoleTestCase
         $this->setUpModels();
 
         $dumper = $this->getMockDumper();
-        $this->app->instance(Dumper::class, $dumper);
+        $this->app->instance(VarDumper::class, $dumper);
 
         $dumper->shouldReceive('dump')->once()->with(
             $this->models->get('models.app-models-testauthor')->toArray()
@@ -103,7 +109,7 @@ class ShowModelInformationTest extends ConsoleTestCase
         $this->setUpModels();
 
         $dumper = $this->getMockDumper();
-        $this->app->instance(Dumper::class, $dumper);
+        $this->app->instance(VarDumper::class, $dumper);
 
         $dumper->shouldReceive('dump')->once()->with(
             $this->models->get('models.app-models-testpost')->toArray()
@@ -124,7 +130,7 @@ class ShowModelInformationTest extends ConsoleTestCase
         $this->setUpModels();
 
         $dumper = $this->getMockDumper();
-        $this->app->instance(Dumper::class, $dumper);
+        $this->app->instance(VarDumper::class, $dumper);
 
         $dumper->shouldReceive('dump')->once()->with(
             $this->models->get('models.app-models-testauthor')->toArray()
@@ -161,7 +167,7 @@ class ShowModelInformationTest extends ConsoleTestCase
         $this->setUpModels();
 
         $dumper = $this->getMockDumper();
-        $this->app->instance(Dumper::class, $dumper);
+        $this->app->instance(VarDumper::class, $dumper);
 
         $dumper->shouldReceive('dump')->once()->with(
             array_get($this->models->get('models.app-models-testpost')->toArray(), 'list.columns')
@@ -178,7 +184,7 @@ class ShowModelInformationTest extends ConsoleTestCase
         $this->setUpModels();
 
         $dumper = $this->getMockDumper();
-        $this->app->instance(Dumper::class, $dumper);
+        $this->app->instance(VarDumper::class, $dumper);
 
         $dumper->shouldReceive('dump')->once()->with(
             array_keys(array_get($this->models->get('models.app-models-testpost')->toArray(), 'list.columns'))
@@ -217,11 +223,11 @@ class ShowModelInformationTest extends ConsoleTestCase
     }
 
     /**
-     * @return Dumper|Mockery\MockInterface|Mockery\Mock
+     * @return VarDumper|Mockery\MockInterface|Mockery\Mock
      */
     protected function getMockDumper()
     {
-        return Mockery::mock(Dumper::class);
+        return Mockery::mock(VarDumper::class);
     }
 
     protected function setUpModels()
