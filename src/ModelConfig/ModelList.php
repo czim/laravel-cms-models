@@ -159,7 +159,7 @@ class ModelList
      *
      * @param string $view
      * @param array  $variables     optional list of variable names to pass through to the included view
-     * @return ModelList
+     * @return ModelList|$this
      */
     public function viewBefore(string $view, array $variables = []): ModelList
     {
@@ -173,7 +173,7 @@ class ModelList
      *
      * @param string $view
      * @param array  $variables     optional list of variable names to pass through to the included view
-     * @return ModelList
+     * @return ModelList|$this
      */
     public function viewAfter(string $view, array $variables = []): ModelList
     {

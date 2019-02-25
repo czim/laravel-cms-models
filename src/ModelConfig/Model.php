@@ -39,10 +39,16 @@ class Model
      */
     protected $list;
 
+    /**
+     * @var ModelForm
+     */
+    protected $form;
+
 
     public function __construct()
     {
         $this->list = new ModelList;
+        $this->form = new ModelForm;
     }
 
 
@@ -82,6 +88,19 @@ class Model
         return $this;
     }
 
+    /**
+     * Provide a callable to configure the editing form.
+     *
+     * @param callable $configureForm
+     * @return Model|$this
+     * @see ModelList
+     */
+    public function form(callable $configureForm): Model
+    {
+        $configureForm($this->form);
+
+        return $this;
+    }
 
     // ------------------------------------------------------------------------------
     //      Main
