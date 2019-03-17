@@ -61,7 +61,7 @@ class AbstractModelFormLayoutNodeData extends AbstractModelInformationDataObject
      * @param string $key
      * @return mixed|DataObjectInterface
      */
-    public function &getAttributeValue($key)
+    public function &getAttributeValue(string $key)
     {
         if ($key !== 'children') {
             return parent::getAttributeValue($key);
