@@ -3,6 +3,7 @@ namespace Czim\CmsModels\Test;
 
 use App\Console\Kernel;
 use Czim\CmsModels\Test\Helpers\Traits\InteractsWithPages;
+use Illuminate\Config\Repository;
 use Illuminate\Contracts\Console\Kernel as ConsoleKernelContract;
 use Illuminate\Contracts\Foundation\Application;
 
@@ -15,15 +16,18 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
      */
     protected function getEnvironmentSetUp($app)
     {
-        $app['config']->set('translatable.locales', [ 'en', 'nl' ]);
-        $app['config']->set('translatable.use_fallback', true);
-        $app['config']->set('translatable.fallback_locale', 'en');
+        /** @var Repository $config */
+        $config = $app['config'];
 
-        $app['config']->set('cms-models', include(realpath(dirname(__DIR__) . '/config/cms-models.php')));
-        $app['config']->set('cms-models.analyzer.database.class', null);
+        $config->set('translatable.locales', [ 'en', 'nl' ]);
+        $config->set('translatable.use_fallback', true);
+        $config->set('translatable.fallback_locale', 'en');
 
-        $app['config']->set('cms-models.defaults.default-listing-action-edit', false);
-        $app['config']->set('cms-models.defaults.default-listing-action-show', false);
+        $config->set('cms-models', include(realpath(dirname(__DIR__) . '/config/cms-models.php')));
+        $config->set('cms-models.analyzer.database.class', null);
+
+        $config->set('cms-models.defaults.default-listing-action-edit', false);
+        $config->set('cms-models.defaults.default-listing-action-show', false);
 
         $app['view']->addNamespace('cms-models', realpath(dirname(__DIR__) . '/resources/views'));
 
@@ -163,7 +167,10 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     {
         $app->register(\Czim\Paperclip\Providers\PaperclipServiceProvider::class);
 
-        $app['config']->set('filesystems.disks.paperclip', [
+        /** @var Repository $config */
+        $config = $app['config'];
+
+        $config->set('filesystems.disks.paperclip', [
             'driver' => 'local',
             'root'   => public_path('system'),
         ]);
