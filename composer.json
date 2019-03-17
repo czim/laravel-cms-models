@@ -17,7 +17,7 @@
         "phpdocumentor/reflection-docblock": "^3.1|^4.1"
     },
     "require-dev": {
-        "czim/laravel-cms-core": "~1.6.0",
+        "czim/laravel-cms-core": "^1.7.0",
         "phpunit/phpunit": "~7.0",
         "mockery/mockery": "~1.0",
         "orchestra/testbench": "~3.7",
