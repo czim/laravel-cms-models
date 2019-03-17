@@ -30,10 +30,11 @@ For a better end-user experience when using file uploads, installing the [Larave
 
  Laravel             | Package 
 :--------------------|:--------
- 5.3.x               | 1.3.x
- 5.4.x               | 1.4.x
- 5.5.x               | 1.5.x
- 5.6.x               | 1.6.x
+ 5.3                 | 1.3
+ 5.4                 | 1.4
+ 5.5                 | 1.5
+ 5.6                 | 1.6
+ 5.7                 | 1.7
 
 ## Changelog
 
