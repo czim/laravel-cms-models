@@ -30,7 +30,7 @@ use Mockery;
 class ModelInformationEnricherTest extends TestCase
 {
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

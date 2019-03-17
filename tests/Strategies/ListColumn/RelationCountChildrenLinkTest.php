@@ -30,7 +30,7 @@ use Mockery;
 class RelationCountChildrenLinkTest extends AbstractPostCommentSeededTestCase
 {
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

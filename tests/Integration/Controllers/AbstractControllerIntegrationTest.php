@@ -50,7 +50,7 @@ abstract class AbstractControllerIntegrationTest extends CmsBootTestCase
     protected $customModelConfiguration = [];
 
 
-    public function setUp()
+    public function setUp(): void
     {
         // Prepare the database before the CMS can boot. This hacky approach is required
         // because the database must have analyzable contents for model analysis.

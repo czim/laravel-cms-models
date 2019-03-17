@@ -19,12 +19,12 @@ use Mockery;
 class ModelInformationRepositoryTest extends TestCase
 {
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->deleteModelsCacheFile();
 

@@ -18,7 +18,7 @@ use Mockery;
 class PaperclipImageTest extends AbstractPostCommentSeededTestCase
 {
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
