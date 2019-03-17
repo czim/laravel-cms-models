@@ -227,7 +227,7 @@ class ModelFormData extends AbstractModelInformationDataObject implements ModelF
      * @param string $key
      * @return mixed|DataObjectInterface
      */
-    public function &getAttributeValue($key)
+    public function &getAttributeValue(string $key)
     {
         if ($key !== 'layout') {
             return parent::getAttributeValue($key);

@@ -28,7 +28,7 @@ abstract class AbstractModelInformationDataObject extends AbstractDataObject
      * {@inheritdoc}
      * @throws ModelConfigurationDataException
      */
-    protected function checkAttributeAssignable($attribute)
+    protected function checkAttributeAssignable($attribute): void
     {
         if ( ! $this->exceptionOnUnknown || empty($this->known)) {
             // @codeCoverageIgnoreStart
@@ -60,7 +60,7 @@ abstract class AbstractModelInformationDataObject extends AbstractDataObject
      * @return mixed
      * @throws ModelConfigurationDataException
      */
-    protected function makeNestedDataObject($class, $data, $key)
+    protected function makeNestedDataObject(string $class, $data, string $key)
     {
         try {
             return parent::makeNestedDataObject($class, $data, $key);
