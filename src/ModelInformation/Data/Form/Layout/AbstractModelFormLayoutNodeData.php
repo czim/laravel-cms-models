@@ -26,7 +26,7 @@ class AbstractModelFormLayoutNodeData extends AbstractModelInformationDataObject
      *
      * @return string
      */
-    public function type()
+    public function type(): string
     {
         return $this->type;
     }
@@ -36,7 +36,7 @@ class AbstractModelFormLayoutNodeData extends AbstractModelInformationDataObject
      *
      * @return string|null
      */
-    public function display()
+    public function display(): ?string
     {
         if ($this->label_translated) {
             return cms_trans($this->label_translated);
@@ -50,7 +50,7 @@ class AbstractModelFormLayoutNodeData extends AbstractModelInformationDataObject
      *
      * @return bool
      */
-    public function required()
+    public function required(): bool
     {
         return (bool) $this->required;
     }
@@ -82,7 +82,7 @@ class AbstractModelFormLayoutNodeData extends AbstractModelInformationDataObject
      * @param string $topKey
      * @throws ModelConfigurationDataException
      */
-    protected function decorateChildrenAttribute($topKey = 'children')
+    protected function decorateChildrenAttribute(string $topKey = 'children'): void
     {
         foreach ($this->attributes[$topKey] as $key => &$value) {
 
@@ -130,7 +130,7 @@ class AbstractModelFormLayoutNodeData extends AbstractModelInformationDataObject
      *
      * @return string[]|ModelFormLayoutNodeInterface[]
      */
-    public function children()
+    public function children(): array
     {
         return $this->children;
     }
@@ -140,7 +140,7 @@ class AbstractModelFormLayoutNodeData extends AbstractModelInformationDataObject
      *
      * @return string[]
      */
-    public function descendantFieldKeys()
+    public function descendantFieldKeys(): array
     {
         $keys = [];
 
@@ -162,7 +162,7 @@ class AbstractModelFormLayoutNodeData extends AbstractModelInformationDataObject
      *
      * @return string|null
      */
-    public function labelFor()
+    public function labelFor(): ?string
     {
         return $this->label_for;
     }

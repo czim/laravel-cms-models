@@ -47,7 +47,7 @@ class ModelFormFieldsetData extends AbstractModelFormLayoutNodeData implements M
      *
      * @return bool
      */
-    public function shouldDisplay()
+    public function shouldDisplay(): bool
     {
         return (bool) count($this->children);
     }
@@ -55,7 +55,7 @@ class ModelFormFieldsetData extends AbstractModelFormLayoutNodeData implements M
     /**
      * @param ModelFormFieldsetDataInterface|ModelFormFieldsetData $with
      */
-    public function merge(ModelFormFieldsetDataInterface $with)
+    public function merge(ModelFormFieldsetDataInterface $with): void
     {
         foreach ($this->getKeys() as $key) {
             $this->mergeAttribute($key, $with->{$key});

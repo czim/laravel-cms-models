@@ -61,7 +61,7 @@ class ModelFormTabData extends AbstractModelFormLayoutNodeData implements ModelF
      *
      * @return bool
      */
-    public function shouldDisplay()
+    public function shouldDisplay(): bool
     {
         if ($this->before || $this->after) {
             return true;
@@ -73,7 +73,7 @@ class ModelFormTabData extends AbstractModelFormLayoutNodeData implements ModelF
     /**
      * @param ModelFormTabDataInterface|ModelFormTabData $with
      */
-    public function merge(ModelFormTabDataInterface $with)
+    public function merge(ModelFormTabDataInterface $with): void
     {
         foreach ($this->getKeys() as $key) {
             $this->mergeAttribute($key, $with->{$key});

@@ -60,7 +60,7 @@ class ModelFormFieldGroupData extends AbstractModelFormLayoutNodeData
      *
      * @return int[]
      */
-    public function columns()
+    public function columns(): array
     {
         $columns = $this->columns ?: [];
 
@@ -82,7 +82,7 @@ class ModelFormFieldGroupData extends AbstractModelFormLayoutNodeData
      * @param string[] $keys
      * @return bool
      */
-    public function matchesFieldKeys(array $keys)
+    public function matchesFieldKeys(array $keys): bool
     {
         if ( ! count($keys)) return false;
 
@@ -94,7 +94,7 @@ class ModelFormFieldGroupData extends AbstractModelFormLayoutNodeData
      *
      * @return int[]
      */
-    protected function getGroupContentColumns()
+    protected function getGroupContentColumns(): array
     {
         $contents = $this->getGroupContents();
 
@@ -138,7 +138,7 @@ class ModelFormFieldGroupData extends AbstractModelFormLayoutNodeData
      *
      * @return array    list of arrays with key, type child data
      */
-    protected function getGroupContents()
+    protected function getGroupContents(): array
     {
         $contents = [];
 
@@ -161,7 +161,7 @@ class ModelFormFieldGroupData extends AbstractModelFormLayoutNodeData
      * @param int[] $columns
      * @return int
      */
-    protected function getRemainderForColumns(array $columns)
+    protected function getRemainderForColumns(array $columns): int
     {
         $total = array_reduce($columns, function ($total, $column) { return $total + $column; });
 
