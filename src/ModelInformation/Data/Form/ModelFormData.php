@@ -87,7 +87,7 @@ class ModelFormData extends AbstractModelInformationDataObject implements ModelF
      *
      * @return bool
      */
-    public function hasTabs()
+    public function hasTabs(): bool
     {
         if ( ! $this->layout || ! count($this->layout)) {
             return false;
@@ -108,7 +108,7 @@ class ModelFormData extends AbstractModelInformationDataObject implements ModelF
      *
      * @return array|ModelFormTabData[]
      */
-    public function tabs()
+    public function tabs(): array
     {
         if ( ! $this->layout || ! count($this->layout)) {
             return [];
@@ -131,7 +131,7 @@ class ModelFormData extends AbstractModelInformationDataObject implements ModelF
      *
      * @return array|mixed[]
      */
-    public function layout()
+    public function layout(): array
     {
         if ($this->layout && count($this->layout)) {
             return $this->layout;
@@ -145,7 +145,7 @@ class ModelFormData extends AbstractModelInformationDataObject implements ModelF
      *
      * @return string[]
      */
-    public function getLayoutFormFieldKeys()
+    public function getLayoutFormFieldKeys(): array
     {
         return array_unique($this->getNestedFormFieldKeys());
     }
@@ -156,7 +156,7 @@ class ModelFormData extends AbstractModelInformationDataObject implements ModelF
      * @param ModelFormLayoutNodeInterface $node
      * @return string[]
      */
-    protected function getNestedFormFieldKeys(ModelFormLayoutNodeInterface $node = null)
+    protected function getNestedFormFieldKeys(ModelFormLayoutNodeInterface $node = null): array
     {
         if (null === $node) {
             $children = $this->layout();
@@ -185,7 +185,7 @@ class ModelFormData extends AbstractModelInformationDataObject implements ModelF
     /**
      * @param ModelFormDataInterface|ModelFormData $with
      */
-    public function merge(ModelFormDataInterface $with)
+    public function merge(ModelFormDataInterface $with): void
     {
         // Overwrite fields intelligently: keep only the fields for keys that were set
         // and merge those for which data is set.
@@ -247,7 +247,7 @@ class ModelFormData extends AbstractModelInformationDataObject implements ModelF
     /**
      * @param string $topKey
      */
-    protected function decorateLayoutAttribute($topKey = 'layout')
+    protected function decorateLayoutAttribute(string $topKey = 'layout'): void
     {
         foreach ($this->attributes[$topKey] as $key => &$value) {
 
@@ -275,7 +275,7 @@ class ModelFormData extends AbstractModelInformationDataObject implements ModelF
             }
         }
 
-        unset ($value);
+        unset($value);
     }
 
 }
