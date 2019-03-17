@@ -73,13 +73,13 @@ class AnalyzeRelations extends AbstractAnalyzerStep
 
             if ($type == RelationType::BELONGS_TO || $type == RelationType::BELONGS_TO_THROUGH) {
                 /** @var $relation Relations\BelongsTo */
-                $foreignKeys = [ $relation->getForeignKey() ];
-                $nullableKey = $this->isNullableKey($relation->getForeignKey());
+                $foreignKeys = [ $relation->getForeignKeyName() ];
+                $nullableKey = $this->isNullableKey($relation->getForeignKeyName());
 
             } elseif ($type == RelationType::MORPH_TO) {
                 /** @var Relations\MorphTo $relation */
-                $foreignKeys = [$relation->getForeignKey(), $relation->getMorphType()];
-                $nullableKey = $this->isNullableKey($relation->getForeignKey());
+                $foreignKeys = [$relation->getForeignKeyName(), $relation->getMorphType()];
+                $nullableKey = $this->isNullableKey($relation->getForeignKeyName());
 
                 $morphModels = $this->getMorphedModelsFromMorphToReflectionMethod($method);
 
