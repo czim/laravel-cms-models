@@ -1,5 +1,10 @@
 # Changelog
 
+## Laravel 5.7
+
+### [1.7.0] - 2019-03-17
+
+Laravel 5.7 support.
 
 ## Laravel 5.6
 
