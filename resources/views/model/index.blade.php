@@ -78,7 +78,7 @@
                 ])
             @endif
 
-            @include('cms-models::model.partials.list.filters', compact('model', 'filters', 'filterStrategies'))
+            @include('cms-models::model.partials.list.filters', compact('model', 'filterStrategies'))
 
             @if (count($records))
 
