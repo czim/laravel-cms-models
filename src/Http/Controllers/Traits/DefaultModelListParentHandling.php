@@ -176,7 +176,7 @@ trait DefaultModelListParentHandling
             $query
                 ->withoutGlobalScopes()
                 ->where($query->getModel()->getTable() . '.' . $relationInstance->getMorphType(), $parentType)
-                ->where($relationInstance->getQualifiedForeignKey(), $parentKey);
+                ->where($relationInstance->getQualifiedForeignKeyName(), $parentKey);
 
             return $this;
         }
