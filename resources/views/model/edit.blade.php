@@ -45,7 +45,7 @@
                     </small>
                 </div>
                 <div id="form-field-general-errors-full" style="display: none">
-                    @include('cms-models::model.partials.form.general_errors', compact('$errors'))
+                    @include('cms-models::model.partials.form.general_errors', compact('errors'))
                 </div>
             @endif
         </div>
