@@ -2,7 +2,7 @@
 @if ($records->lastPage() > 1)
 
     <div class="listing-pagination">
-        {{ $records->links() }}
+        {{ $records->links(config('cms-theme.pagination.partial')) }}
     </div>
 
 @endif
