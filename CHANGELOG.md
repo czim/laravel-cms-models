@@ -2,6 +2,11 @@
 
 ## Laravel 5.7
 
+### [1.7.2] - 2019-09-06
+
+Fixed issue with $errors variable in validation view.
+When using `czim/laravel-cms-theme` version `0.9.10` and up, you can now change the pagination view partial used.
+
 ### [1.7.1] - 2019-09-06
 
 Fixed issue with unset variable in filter view that caused any page with filters to error on some setups.
