@@ -89,7 +89,7 @@ class RelationPluralKeys extends AbstractRelationStrategy
             throw new UnexpectedValueException("{$source} is a single relation, expecting plural");
         }
 
-        if (null === $value) {
+        if (null === $value || $value === [null] || $value === ['']) {
             $value = [];
         }
 
