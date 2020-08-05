@@ -21,6 +21,10 @@ Laravel 5.7 support.
 
 ## Laravel 5.6
 
+### [1.6.6] - 2020-08-05
+
+See 1.5.11.
+
 ### [1.6.5] - 2018-06-20
 - Some cleanup and correction of omissions for validation handling during enrichment.
 - Added '<field>' placeholder handling for model information and strategy generated validation rule content.
