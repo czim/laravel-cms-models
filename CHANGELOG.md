@@ -2,6 +2,10 @@
 
 ## Laravel 5.7
 
+### [1.7.3] - 2020-08-05
+
+See 1.5.11.
+
 ### [1.7.2] - 2019-09-06
 
 Fixed issue with $errors variable in validation view.
@@ -89,6 +93,7 @@ See 1.6.2.
 See 1.6.1.
 
 
+[1.7.3]: https://github.com/czim/laravel-cms-models/compare/1.7.1...1.7.3
 [1.7.1]: https://github.com/czim/laravel-cms-models/compare/1.7.0...1.7.1
 
 [1.7.0]: https://github.com/czim/laravel-cms-models/compare/1.6.5...1.7.0
